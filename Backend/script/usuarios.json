@@ -1,0 +1,8 @@
+{"_id":{"$oid":"5cbef7113f5a8c45e073e098"},"nombre":"Eze","apellido":"Cufre","email":"cufre@gmail.com","usuarioId":"ecufreId","password":"cufres","__v":0}
+{"_id":{"$oid":"5cc0a9ee4e69371e0c3e84a9"},"nombre":"Licha","apellido":"Rodriguez","email":"rodriguez@gmail.com","usuarioId":"lichaRoId","password":"lichaRo","__v":0}
+{"_id":{"$oid":"5cc0b87835d0cb2efc7049ed"},"nombre":"Admin","apellido":"Admin","email":"adminz@gmail.com","usuarioId":"admin","password":"admin","__v":0}
+{"_id":{"$oid":"5cc0da8647707f3170a9e4ff"},"nombre":"Melvin","apellido":"Kucuk","email":"melvinalek@gmail.com","usuarioId":"mkucuk","password":"admin","__v":0}
+{"_id":{"$oid":"5cc0ff528748a92e8c306459"},"nombre":"a","apellido":"a","email":"a@gmail.com","usuarioId":"a","password":"b","__v":0}
+{"_id":{"$oid":"5cc1b82351eda51064f71afd"},"nombre":"awwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww","apellido":"a","email":"a@gmail.com","usuarioId":"awwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww","password":"b","__v":0}
+{"_id":{"$oid":"5cc201d30cbce40da4e94ee8"},"nombre":"Lisandro","apellido":"Rodriguez","email":"lisandrorp1997@gmail.com","usuarioId":"lisandrorp","password":"hola","__v":0}
+{"_id":{"$oid":"5cc3122c51510b2224a47867"},"nombre":"lisandro","apellido":"Rodriguez","email":"melvinalexk@gmail.com","usuarioId":"lisa","password":"123","__v":0}
