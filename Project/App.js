@@ -3,23 +3,19 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { LinearGradient } from 'expo'
 import Icon from '@expo/vector-icons/Ionicons';
 import Detalle from './components/Detalle';
-import Prueba from './components/MapaConAnimaciones'
-import Conciertos from './components/Conciertos'
-import Shows from './components/Shows'
-import Exposicion from './components/Exposicion'
+import Ejercicios from './components/Ejercicios'
+import EjerciciosEspecifico from './components/EjercicioEspecifico'
 import ChangePassword from './components/ChangePassword'
 import CreateUser from './components/CreateUser'
-import Gastronomy from './components/Gastronomy'
 import Information from './components/DatosPersonales';
 import Comments from './components/Comentarios';
 import Craigslist from './components/Craigslist'
-import Deportes from './components/Deportes';
 import LogInCards from './components/LogInCards'
 import Festivales from './components/Festivales';
-import Bares from './components/Bar'
 import MapaVarios from './components/MapaVarios';
 import MapaUnEvento from './components/MapaUnEvento'
 import Search from './components/Search';
+import Musculo from './components/Musculo'
 import MenuDrawer from './components/MenuDrawer';
 import { AsyncStorage } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
@@ -138,13 +134,78 @@ class MockedViewScreen extends React.Component {
   }
 
 }
-class ConciertosScreen extends React.Component {
+class PechoScreen extends React.Component {
 
   static navigationOptions = {
-    title: 'Concerts',
+    title: 'Pecho',
     headerStyle: {
-      backgroundColor: 'white',
-      height: 45
+      backgroundColor: 'black',
+      height: 45,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      musculo: props.navigation.getParam('musculo')
+  }
+}
+  render() {
+    return (
+      <Musculo
+        onPressGo={this.pasarEjercicio.bind(this)}
+        queMusculo={this.agarrarMusculo.bind(this)}
+      />
+    );
+  }
+  pasarEjercicio(idEjercicio) {
+    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
+  }
+  agarrarMusculo(){
+    return this.state.musculo
+  }
+}
+class EspaldaScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Espalda',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 45,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      musculo: props.navigation.getParam('musculo')
+  }
+  }
+  render() {
+    return (
+      <Musculo
+        onPressGo={this.pasarEjercicio.bind(this)}
+        queMusculo={this.agarrarMusculo.bind(this)}
+      />
+    );
+  }
+  pasarEjercicio(idEjercicio) {
+    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+  }
+  agarrarMusculo(){
+    return this.state.musculo
+  }
+}
+class HombrosScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Hombros',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 45,
+      borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
   };
@@ -153,13 +214,222 @@ class ConciertosScreen extends React.Component {
   }
   render() {
     return (
-      <Conciertos
-        onPressGo={this.pasarConcierto.bind(this)}
+      <Musculo
+        onPressGo={this.pasarEjercicio.bind(this)}
       />
     );
   }
-  pasarConcierto(id) {
-    this.props.navigation.navigate('Detalle', { IdEvento: id });
+  pasarEjercicio(idEjercicio) {
+    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+  }
+}
+class BicepScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Bicep',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 45,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <Musculo
+        onPressGo={this.pasarEjercicio.bind(this)}
+      />
+    );
+  }
+  pasarEjercicio(idEjercicio) {
+    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+  }
+}
+class TricepScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Tricep',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 45,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <Musculo
+        onPressGo={this.pasarEjercicio.bind(this)}
+      />
+    );
+  }
+  pasarEjercicio(idEjercicio) {
+    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+  }
+}
+class PiernasScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Piernas',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 45,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <Musculo
+        onPressGo={this.pasarEjercicio.bind(this)}
+      />
+    );
+  }
+  pasarEjercicio(idEjercicio) {
+    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+  }
+}
+class AbdominalesScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Abdominales',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 45,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <Musculo
+        onPressGo={this.pasarEjercicio.bind(this)}
+      />
+    );
+  }
+  pasarEjercicio(idEjercicio) {
+    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+  }
+}
+class CardioScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Cardio',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 45,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <Musculo
+        onPressGo={this.pasarEjercicio.bind(this)}
+      />
+    );
+  }
+  pasarEjercicio(idEjercicio) {
+    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+  }
+}
+class EjerciciosEspecificoScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Detalles',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 45,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+    this.state = {
+      idEjercicio: props.navigation.getParam('idEjercicio')
+    }
+  }
+  render() {
+    return (
+      <EjerciciosEspecifico
+        onPressGo={this.pasarEjercicio.bind(this)}
+      />
+    );
+  }
+  pasarEjercicio(idEjercicio) {
+    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
+  }
+}
+class EjerciciosScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Ejercicios',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 45,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <Ejercicios
+        onPressGo={this.pasarMusculo.bind(this)}
+      />
+    );
+  }
+  pasarMusculo(musculo) {
+    if(musculo=='Pecho')
+    {
+    this.props.navigation.navigate('Pecho', { musculo: musculo });
+    }
+    if(musculo=='Espalda')
+    {
+    this.props.navigation.navigate('Espalda', { musculo: musculo });
+    }
+    if(musculo=='Hombros')
+    {
+    this.props.navigation.navigate('Hombros', { musculo: musculo });
+    }
+    if(musculo=='Piernas')
+    {
+    this.props.navigation.navigate('Piernas', { musculo: musculo });
+    }
+    if(musculo=='Bicep')
+    {
+    this.props.navigation.navigate('Bicep', { musculo: musculo });
+    }
+    if(musculo=='Tricep')
+    {
+    this.props.navigation.navigate('Tricep', { musculo: musculo });
+    }
+    if(musculo=='Abdominales')
+    {
+    this.props.navigation.navigate('Abdominales', { musculo: musculo });
+    }
+    if(musculo=='Cardio')
+    {
+    this.props.navigation.navigate('Cardio', { musculo: musculo });
+    }
   }
 }
 class FestivalesScreen extends React.Component {
@@ -178,126 +448,6 @@ class FestivalesScreen extends React.Component {
   render() {
     return (
       <Festivales
-        onPressGo={this.pasarConcierto.bind(this)}
-      />
-    );
-  }
-  pasarConcierto(id) {
-    this.props.navigation.navigate('Detalle', { IdEvento: id });
-  }
-}
-class ShowsScreen extends React.Component {
-
-  static navigationOptions = {
-    title: 'Shows',
-    headerStyle: {
-      backgroundColor: 'white',
-      height: 45
-    },
-    headerTintColor: '#3399ff',
-  };
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <Shows
-        onPressGo={this.pasarConcierto.bind(this)}
-      />
-    );
-  }
-  pasarConcierto(id) {
-    this.props.navigation.navigate('Detalle', { IdEvento: id });
-  }
-}
-class BaresScreen extends React.Component {
-
-  static navigationOptions = {
-    title: 'Bars',
-    headerStyle: {
-      backgroundColor: 'white',
-      height: 45
-    },
-    headerTintColor: '#3399ff',
-  };
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <Bares
-        onPressGo={this.pasarConcierto.bind(this)}
-      />
-    );
-  }
-  pasarConcierto(id) {
-    this.props.navigation.navigate('Detalle', { IdEvento: id });
-  }
-}
-class DeportesScreen extends React.Component {
-
-  static navigationOptions = {
-    title: 'Sports',
-    headerStyle: {
-      backgroundColor: 'white',
-      height: 45
-    },
-    headerTintColor: '#3399ff',
-  };
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <Deportes
-        onPressGo={this.pasarConcierto.bind(this)}
-      />
-    );
-  }
-  pasarConcierto(id) {
-    this.props.navigation.navigate('Detalle', { IdEvento: id });
-  }
-}
-class ExposicionScreen extends React.Component {
-
-  static navigationOptions = {
-    title: 'Exposure',
-    headerStyle: {
-      backgroundColor: 'white',
-      height: 45
-    },
-    headerTintColor: '#3399ff',
-  };
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <Exposicion
-        onPressGo={this.pasarConcierto.bind(this)}
-      />
-    );
-  }
-  pasarConcierto(id) {
-    this.props.navigation.navigate('Detalle', { IdEvento: id });
-  }
-}
-class GastronomyScreen extends React.Component {
-
-  static navigationOptions = {
-    title: 'Gastronomy',
-    headerStyle: {
-      backgroundColor: 'white',
-      height: 45
-    },
-    headerTintColor: '#3399ff',
-  };
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <Gastronomy
         onPressGo={this.pasarConcierto.bind(this)}
       />
     );
@@ -449,7 +599,6 @@ const MockedViewStackNavigator = createStackNavigator(
         }
       }
     },
-    Prueba: {screen: Prueba},
     Helado: { screen: SearchScreen },
     Detalle: { screen: DetalleScreen },
     MapaVarios: { screen: MapaVariosScreen },
@@ -460,10 +609,10 @@ const MockedViewStackNavigator = createStackNavigator(
   }
 );
 
-const ConciertosStackNavigator = createStackNavigator(
+const EjerciciosStackNavigator = createStackNavigator(
   {
-    ConciertosScreen: {
-      screen: ConciertosScreen,
+    EjerciciosScreen: {
+      screen: EjerciciosScreen,
       navigationOptions: ({ navigation }) => {
         return {
           headerLeft: (
@@ -491,210 +640,20 @@ const ConciertosStackNavigator = createStackNavigator(
     },
     Helado: { screen: SearchScreen },
     Detalle: { screen: DetalleScreen },
+    Pecho: {screen: PechoScreen},
+    Espalda: {screen: EspaldaScreen},
+    Hombros: {screen: HombrosScreen},
+    Bicep: {screen: BicepScreen},
+    Tricep: {screen: TricepScreen},
+    Piernas: {screen: PiernasScreen},
+    Abdominales: {screen: AbdominalesScreen},
+    Cardio: {screen: CardioScreen},
+    EjercicioEspecifico: {screen:EjerciciosEspecificoScreen},
     MapaVarios: { screen: MapaVariosScreen },
     MapaUnEvento: { screen: MapaUnEvento },
   },
   {
-    initialRouteName: 'ConciertosScreen',
-  }
-);
-const ShowsStackNavigator = createStackNavigator(
-  {
-    ShowsScreen: {
-      screen: ShowsScreen,
-      navigationOptions: ({ navigation }) => {
-        return {
-          headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
-          ),
-          headerRight: (
-            <View style={{ flexDirection: 'row' }}>
-              <FontAwesome name="search" style={{ marginRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('Helado', { tipo: 'Show' })}
-                size={22}
-              />
-              <FontAwesome name="map" style={{ paddingRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate("MapaVarios", { tipo: 'Show' })}
-                size={22}
-              />
-            </View>
-          )
-        }
-      }
-    },
-    Helado: { screen: SearchScreen },
-    Detalle: { screen: DetalleScreen },
-    MapaVarios: { screen: MapaVariosScreen },
-    MapaUnEvento: { screen: MapaUnEvento },
-  },
-  {
-    initialRouteName: 'ShowsScreen',
-  }
-);
-const ExposicionStackNavigator = createStackNavigator(
-  {
-    ExposicionScreen: {
-      screen: ExposicionScreen,
-
-
-      navigationOptions: ({ navigation }) => {
-        return {
-          headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
-          ),
-          headerRight: (
-            <View style={{ flexDirection: 'row' }}>
-              <FontAwesome name="search" style={{ marginRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('Helado', { tipo: 'Exposicion' })}
-                size={22}
-              />
-              <FontAwesome name="map" style={{ paddingRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('MapaVarios', { tipo: 'Exposicion' })}
-                size={22}
-              />
-            </View>
-          )
-        }
-      }
-    },
-    Helado: { screen: SearchScreen },
-    Detalle: { screen: DetalleScreen },
-    MapaVarios: { screen: MapaVariosScreen },
-    MapaUnEvento: { screen: MapaUnEvento },
-  },
-  {
-    initialRouteName: 'ExposicionScreen',
-  }
-);
-const BaresStackNavigator = createStackNavigator(
-  {
-    BaresScreen: {
-      screen: BaresScreen,
-
-
-      navigationOptions: ({ navigation }) => {
-        return {
-          headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
-          ),
-          headerRight: (
-            <View style={{ flexDirection: 'row' }}>
-              <FontAwesome name="search" style={{ marginRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('Helado', { tipo: 'Bar' })}
-                size={22}
-              />
-              <FontAwesome name="map" style={{ paddingRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('MapaVarios', { tipo: 'Bar' })}
-                size={22}
-              />
-            </View>
-          )
-        }
-      }
-    },
-    Helado: { screen: SearchScreen },
-    Detalle: { screen: DetalleScreen },
-    MapaVarios: { screen: MapaVariosScreen },
-    MapaUnEvento: { screen: MapaUnEvento },
-  },
-  {
-    initialRouteName: 'BaresScreen',
-  }
-);
-const DeportesStackNavigator = createStackNavigator(
-  {
-    DeportesScreen: {
-      screen: DeportesScreen,
-
-
-      navigationOptions: ({ navigation }) => {
-        return {
-          headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
-          ),
-          headerRight: (
-            <View style={{ flexDirection: 'row' }}>
-              <FontAwesome name="search" style={{ marginRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('Helado', { tipo: 'Deporte' })}
-                size={22}
-              />
-              <FontAwesome name="map" style={{ paddingRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('MapaVarios', { tipo: 'Deporte' })}
-                size={22}
-              />
-            </View>
-          )
-        }
-      }
-    },
-    Helado: { screen: SearchScreen },
-    Detalle: { screen: DetalleScreen },
-    MapaVarios: { screen: MapaVariosScreen },
-    MapaUnEvento: { screen: MapaUnEvento },
-  },
-  {
-    initialRouteName: 'DeportesScreen',
-  }
-);
-
-const GastronomyStackNavigator = createStackNavigator(
-  {
-    GastronomyScreen: {
-      screen: GastronomyScreen,
-
-
-      navigationOptions: ({ navigation }) => {
-        return {
-          headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
-          ),
-          headerRight: (
-            <View style={{ flexDirection: 'row' }}>
-              <FontAwesome name="search" style={{ marginRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('Helado', { tipo: 'Gastronomia' })}
-                size={22}
-              />
-              <FontAwesome name="map" style={{ paddingRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('MapaVarios', { tipo: 'Gastronomia' })}
-                size={22}
-              />
-            </View>
-          )
-        }
-      }
-    },
-    Helado: { screen: SearchScreen },
-    Detalle: { screen: DetalleScreen },
-    MapaVarios: { screen: MapaVariosScreen },
-    MapaUnEvento: { screen: MapaUnEvento },
-  },
-  {
-    initialRouteName: 'GastronomyScreen',
+    initialRouteName: 'EjerciciosScreen',
   }
 );
 const FestivalesStackNavigator = createStackNavigator(
@@ -815,7 +774,7 @@ const DrawerConfig = {
 }
 const customDrawerComponent = (props) => (
   <View style={{ flex: 1 }}>
-    <LinearGradient colors={['#1D71B8', '#2D2E83']} style={styles.profile}>
+    <LinearGradient colors={['grey', 'black']} style={styles.profile}>
     <View style={{alignContent:'center',alignItems:'center'}}>
       <Image
         style={{ height: 100, width:200, resizeMode: 'contain', alignSelf:'center' }}
@@ -829,15 +788,16 @@ const customDrawerComponent = (props) => (
 )
 const AppDrawerNavigator = createDrawerNavigator({
   Inicio: MockedViewStackNavigator,
-  GuiaDeEjercicios: ConciertosStackNavigator,
+  Ejercicios: EjerciciosStackNavigator,
   MiRutina: FestivalesStackNavigator,
-  Suplementacion: ExposicionStackNavigator,
+
+  //Suplementacion: ExposicionStackNavigator,
   Perfil: PerfilStackNavigator,
 },
   // DrawerConfig,
   {
     contentComponent: customDrawerComponent,
-    drawerBackgroundColor: '#ebf0f7',
+    drawerBackgroundColor: 'black',
     contentOptions: {
       //Esto sirve para cambiar algunos colores
       activeTintColor: '#6666ff',

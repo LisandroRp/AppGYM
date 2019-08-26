@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ApiController from '../controller/ApiController'
+import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
   Text,
@@ -13,6 +14,7 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
+import { Reducer } from 'react-native-router-flux';
 
 function createData(item) {
   return {
@@ -28,19 +30,28 @@ function createData(item) {
   };
 }
 
-class Conciertos extends Component {
+class EjercicioEspecifico extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
       userSelected: [],
-      eventos: [],
-      isLoading: true,
+      idEjercicio: this.props.navigation.getParam('idEjercicio'),
+      nombre:'Diegote Lomonaco',
+      eventos: [{musculo: 'Pecho', imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Espalda', imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Hombros',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Bicep',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Tricep',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Piernas',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Abdominales',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Cardio',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'}],
+      isLoading: false,
       refreshing: false,
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-    this.obtenerEventos()
+    //this.obtenerEventos()
   }
   obtenerEventos() {
     ApiController.getEventos(this.okEventos.bind(this));
@@ -73,40 +84,9 @@ class Conciertos extends Component {
   } else {
     return (
       <View style={styles.container}>
-      <ScrollView refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.obtenerEventos.bind(this)}
-          />
-        }>
-        <FlatList
-          style={styles.contentList}
-          columnWrapperStyle={styles.listContainer}
-          data={this.state.eventos}
-          initialNumToRender={50}
-          // keyExtractor= {(item) => {
-          //   return item.id;
-          // }}
-          renderItem={({ item }) => {
-            if(item.tipo=='Concierto'){
-            return (
-              <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.idEvento)}>
-                <View  style={{flexDirection:"row"}} >
-                 <Image style={styles.image} source={{ uri: item.imagen }} />
-                <View style={styles.cardContent}>
-                  <Text style={styles.name}>{item.nombre}</Text>
-                  <Text style={styles.count}>{item.ubicacion}</Text>
-                  <Text style={{fontSize: 11}}>Entrada General: {item.precioE}$</Text>
-                  </View>
-                  <View  style={{flexDirection:"column", alignItems:'center', paddingLeft:300, paddingTop:15, position: 'absolute'}} >
-                  <Image style={styles.StarImage} source={{uri: this.Star }} />
-                  <Text style={styles.followButtonText}>{item.rating}/5</Text>
-                  </View>
-                  </View>
-              </TouchableOpacity>
-            )
-            }
-          }} />
+      <ScrollView>
+      <Text>{this.state.idEjercicio}</Text>
+         
           </ScrollView>
       </View>
     );
@@ -118,11 +98,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: "#ebf0f7"
+    backgroundColor: "red"
   },
   contentList: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding:2,
   },
   cardContent: {
     marginLeft: 20,
@@ -130,12 +112,17 @@ const styles = StyleSheet.create({
     width:180,
     flexDirection: "column"
   },
+  imageContainer: {
+    width: Dimensions.get('window').width /2 -6,
+    height: 200,
+    margin:2,
+    justifyContent: 'center',
+    alignItems:'center',
+    backgroundColor: 'red'
+  },
   image: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    borderWidth: 2,
-    borderColor: "#ebf0f7"
+    width: Dimensions.get('window').width /2 -6,
+    height: 200,
   },
 
   card: {
@@ -198,4 +185,4 @@ const styles = StyleSheet.create({
 },
 })
 
-export default Conciertos;
+export default withNavigation(EjercicioEspecifico);

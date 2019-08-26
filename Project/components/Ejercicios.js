@@ -13,6 +13,8 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
+import { LinearGradient } from 'expo'
+import { Reducer } from 'react-native-router-flux';
 
 function createData(item) {
   return {
@@ -28,19 +30,25 @@ function createData(item) {
   };
 }
 
-class Shows extends Component {
+class Ejercicios extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
       userSelected: [],
-      eventos: [],
-      isLoading: true,
-      refreshing: false,
+      eventos: [{musculo: 'Pecho', imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Espalda', imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Hombros',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Piernas',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Bicep',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Tricep',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Abdominales',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'},
+      {musculo: 'Cardio',imagen: 'https://i.blogs.es/247d10/captura-de-pantalla-2015-09-03-a-las-17.02.08/450_1000.png'}],
+      isLoading: false,
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-    this.obtenerEventos()
+    //this.obtenerEventos()
   }
   obtenerEventos() {
     ApiController.getEventos(this.okEventos.bind(this));
@@ -73,39 +81,21 @@ class Shows extends Component {
   } else {
     return (
       <View style={styles.container}>
-      <ScrollView refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.obtenerEventos.bind(this)}
-          />
-        }>
+      <ScrollView>
         <FlatList
           style={styles.contentList}
-          columnWrapperStyle={styles.listContainer}
+          numColumns={2}
           data={this.state.eventos}
           initialNumToRender={50}
-          // keyExtractor= {(item) => {
-          //   return item.id;
-          // }}
           renderItem={({ item }) => {
-            if(item.tipo=='Show'){
+
             return (
-              <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.idEvento)}>
-                <View  style={{flexDirection:"row"}} >
-                 <Image style={styles.image} source={{ uri: item.imagen }} />
-                <View style={styles.cardContent}>
-                  <Text style={styles.name}>{item.nombre}</Text>
-                  <Text style={styles.count}>{item.ubicacion}</Text>
-                  <Text style={{fontSize: 11}}>Entrada General: {item.precioE}$</Text>
-                  </View>
-                  <View  style={{flexDirection:"column", alignItems:'center', paddingLeft:300, paddingTop:15, position: 'absolute'}} >
-                  <Image style={styles.StarImage} source={{uri: this.Star }} />
-                  <Text style={styles.followButtonText}>{item.rating}/5</Text>
-                  </View>
-                  </View>
+              <TouchableOpacity onPress={() => this.props.onPressGo(item.musculo)}>
+                <View style={styles.imageContainer}>
+                <Image style={styles.image} source={{ uri: item.imagen }} />
+                </View>
               </TouchableOpacity>
             )
-            }
           }} />
           </ScrollView>
       </View>
@@ -118,22 +108,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: "#ebf0f7"
+    backgroundColor: "grey"
   },
   contentList: {
     flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding:2,
   },
   cardContent: {
     marginLeft: 20,
     marginTop: 10,
-    width: 180,
+    width:180,
+    flexDirection: "column"
+  },
+  imageContainer: {
+    width: Dimensions.get('window').width /2 -6,
+    height: 200,
+    margin:2,
+    justifyContent: 'center',
+    alignItems:'center',
+    backgroundColor: 'black'
   },
   image: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    borderWidth: 2,
-    borderColor: "#ebf0f7"
+    width: Dimensions.get('window').width /2 -6,
+    height: 200,
   },
 
   card: {
@@ -185,9 +184,9 @@ const styles = StyleSheet.create({
     borderColor: "#dcdcdc",
   },
  followButtonText: {
-  color: "black",
-  fontSize: 15,
-  marginTop: 4,
+    color: "black",
+    marginTop:4,
+    fontSize: 15,
   },
   StarImage: {
     width: 40,
@@ -196,4 +195,4 @@ const styles = StyleSheet.create({
 },
 })
 
-export default Shows;
+export default Ejercicios;
