@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ApiController from '../controller/ApiController'
-import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
   Text,
@@ -14,12 +13,11 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import { Reducer } from 'react-native-router-flux';
 
 function createData(item) {
   return {
     key: item._id,
-    idEjercicio: item._id,
+    idEvento: item._id,
     imagen: item.imagen,
     nombre: item.nombre,
     rating: item.rating,
@@ -30,54 +28,37 @@ function createData(item) {
   };
 }
 
-class EjercicioEspecifico extends Component {
+class Suplementacion extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
-      detalle: {
-        "nombre": 'AcDc',
-        "descripcion": "Re copada la banduli de rock",
-        "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGkzHiLqaw3MedLtDd7EPKBlqhPW1IJE9jRFC1je3lLo79mDQ-",
-        "genero": "Rock",
-        rating: 3,
-        votos: [],
-        personas: 0,
-        "duracion": "165",
-        precioE: 10,
-        'precios': [],
-        'tipo': 'Concierto',
-        'latitude': null,
-        'longitude': null,
-    },
-      idEjercicio: this.props.navigation.getParam('idEjercicio'),
-      isLoading: false,
+      userSelected: [],
+      eventos: [],
+      isLoading: true,
       refreshing: false,
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
+    this.obtenerEventos()
   }
-  componentDidMount() {
-    this.cargarEjercicio();
-}
-
-cargarEjercicio() {
-  ApiController.getDetalle(this.okEjercicio.bind(this), this.state.idEjercicio);
-}
-
-okEjercicio(data) {
-  if (data != null) {
-      this.setState({
-          detalle: data[0],
-          isLoading: false
-      });
-  } else {
-      alert("Intentar de nuevo")
-  }
-}
   obtenerEventos() {
     ApiController.getEventos(this.okEventos.bind(this));
   }
+
+  okEventos(data) {
+    if (data != null) {
+      var i, newArray = [];
+      for (i = 0; i < data.length; i++) {
+        newArray.push(createData(data[i], i));
+      }
+      this.setState({ eventos: newArray, isLoading: false});
+
+    } else {
+      alert("Intentar de nuevo")
+    }
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -90,16 +71,41 @@ okEjercicio(data) {
     return (
       <View style={styles.container}>
       <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
-        <ScrollView>
-        <View style={styles.todo}>
-          <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.detalle.nombre}</Text></View>
-          <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
-          </View>
-          <View style={styles.todo}>
-          <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Ejecucion</Text></View>
-          <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
-        </View>
-        </ScrollView>
+      <ScrollView refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.obtenerEventos.bind(this)}
+          />
+        }>
+        <FlatList
+          style={styles.contentList}
+          columnWrapperStyle={styles.listContainer}
+          data={this.state.eventos}
+          initialNumToRender={50}
+          // keyExtractor= {(item) => {
+          //   return item.id;
+          // }}
+          renderItem={({ item }) => {
+            if(item.tipo=='Exposicion'){
+            return (
+              <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.idEvento)}>
+                <View  style={{flexDirection:"row"}} >
+                 <Image style={styles.image} source={{ uri: item.imagen }} />
+                <View style={styles.cardContent}>
+                  <Text style={styles.name}>{item.nombre}</Text>
+                  <Text style={styles.count}>{item.ubicacion}</Text>
+                  <Text style={{fontSize: 11}}>Entrada General: {item.precioE}$</Text>
+                  </View>
+                  <View  style={{flexDirection:"column", alignItems:'center', paddingLeft:300, paddingTop:15, position: 'absolute'}} >
+                  <Image style={styles.StarImage} source={{uri: this.Star }} />
+                  <Text style={styles.followButtonText}>{item.rating}/5</Text>
+                  </View>
+                  </View>
+              </TouchableOpacity>
+            )
+            }
+          }} />
+          </ScrollView>
       </View>
     );
   }
@@ -123,9 +129,6 @@ const styles = StyleSheet.create({
   },
   contentList: {
     flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding:2,
   },
   cardContent: {
     marginLeft: 20,
@@ -133,40 +136,12 @@ const styles = StyleSheet.create({
     width:180,
     flexDirection: "column"
   },
-  todo:{
-    backgroundColor: 'grey',
-    margin: 20,
-    padding: 10,
-    borderRadius: 20
-  },
-  backgroundTitulo:{
-    backgroundColor: 'black',
-    alignItems: 'center',
-    margin: 10,
-    padding: 10,
-    borderRadius: 20
-  },
-  titulo:{
-    fontSize: 33,
-    fontWeight: 'bold',
-    color: '#3399ff'
-  },
-  descripcion:{
-    color: 'white',
-    margin:10,
-    fontSize: 15,
-  },
-  imageContainer: {
-    width: Dimensions.get('window').width /2 -6,
-    height: 200,
-    margin:2,
-    justifyContent: 'center',
-    alignItems:'center',
-    backgroundColor: 'red'
-  },
   image: {
-    width: Dimensions.get('window').width /2 -6,
-    height: 200,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 2,
+    borderColor: "#ebf0f7"
   },
 
   card: {
@@ -219,8 +194,8 @@ const styles = StyleSheet.create({
   },
  followButtonText: {
     color: "black",
-    marginTop:4,
     fontSize: 15,
+    marginTop:4,
   },
   StarImage: {
     width: 40,
@@ -229,4 +204,4 @@ const styles = StyleSheet.create({
 },
 })
 
-export default withNavigation(EjercicioEspecifico);
+export default Suplementacion;

@@ -41,6 +41,7 @@ class LogInCards extends Component {
     return (
       <KeyboardAvoidingView style={{backgroundColor: '#9FA8DA' }} behavior="padding" enabled>
        <LinearGradient colors={['#1D71B8', '#2D2E83']} style={styles.container}>
+       <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
        {/* <Image style={styles.bgImage} source={{ uri: "https://lorempixel.com/900/1400/nightlife/8/" }}/> */}
        <View style={[styles.imageContainer]}>
                         <Image
@@ -91,7 +92,6 @@ class LogInCards extends Component {
 }
 
 const resizeMode = 'center';
-
 const styles = StyleSheet.create({
   container: {
     //flex: 1,

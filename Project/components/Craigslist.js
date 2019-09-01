@@ -126,6 +126,7 @@ class Craigslist extends Component {
       return (
         //<View style={styles.container}>
         <LinearGradient colors={['black', 'grey']} style={styles.container}>
+        <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
         {/* <ScrollView refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
@@ -151,7 +152,6 @@ class Craigslist extends Component {
             //   return item.id;
             // }}
             renderItem={({ item }) => {
-              //if (item.rating >= 4 || this.esGenero(item.genero)) {
                 if (item.rating >= 4) {
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.idEvento)}>
@@ -178,7 +178,7 @@ class Craigslist extends Component {
     }
   }
 }
-
+const resizeMode = 'center';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -187,6 +187,15 @@ const styles = StyleSheet.create({
   },
   contentList: {
     flex: 1,
+  },
+  bgImage:{
+    flex: 1,
+    resizeMode,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    resizeMode: 'cover'
   },
   cardContent: {
     marginLeft: 20,

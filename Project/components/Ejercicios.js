@@ -70,17 +70,15 @@ class Ejercicios extends Component {
   render() {
     if (this.state.isLoading) {
       return (
-          //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
-          //<View style={styles.container}>
           <View style={styles.container}>
+          <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
               <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
           </View>
-          //</View>
-          // </LinearGradient>
       );
   } else {
     return (
       <View style={styles.container}>
+      <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
       <ScrollView>
         <FlatList
           style={styles.contentList}
@@ -103,7 +101,7 @@ class Ejercicios extends Component {
   }
 }
 }
-
+const resizeMode = 'center';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -134,7 +132,15 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width /2 -6,
     height: 200,
   },
-
+  bgImage:{
+    flex: 1,
+    resizeMode,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    resizeMode: 'cover'
+  },
   card: {
     shadowColor: '#00000021',
     shadowOffset: {

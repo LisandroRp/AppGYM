@@ -16,6 +16,7 @@ import MapaVarios from './components/MapaVarios';
 import MapaUnEvento from './components/MapaUnEvento'
 import Search from './components/Search';
 import Musculo from './components/Musculo'
+import Suplementacion from './components/Suplementacion'
 import MenuDrawer from './components/MenuDrawer';
 import { AsyncStorage } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
@@ -140,7 +141,7 @@ class PechoScreen extends React.Component {
     title: 'Pecho',
     headerStyle: {
       backgroundColor: 'black',
-      height: 45,
+      height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
@@ -172,7 +173,7 @@ class EspaldaScreen extends React.Component {
     title: 'Espalda',
     headerStyle: {
       backgroundColor: 'black',
-      height: 45,
+      height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
@@ -192,7 +193,7 @@ class EspaldaScreen extends React.Component {
     );
   }
   pasarEjercicio(idEjercicio) {
-    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
   }
   agarrarMusculo(){
     return this.state.musculo
@@ -204,23 +205,30 @@ class HombrosScreen extends React.Component {
     title: 'Hombros',
     headerStyle: {
       backgroundColor: 'black',
-      height: 45,
+      height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
   };
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = {
+      musculo: props.navigation.getParam('musculo')
   }
+}
   render() {
     return (
       <Musculo
         onPressGo={this.pasarEjercicio.bind(this)}
+        queMusculo={this.agarrarMusculo.bind(this)}
       />
     );
   }
   pasarEjercicio(idEjercicio) {
-    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
+  }
+  agarrarMusculo(){
+    return this.state.musculo
   }
 }
 class BicepScreen extends React.Component {
@@ -229,23 +237,30 @@ class BicepScreen extends React.Component {
     title: 'Bicep',
     headerStyle: {
       backgroundColor: 'black',
-      height: 45,
+      height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
   };
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = {
+      musculo: props.navigation.getParam('musculo')
   }
+}
   render() {
     return (
       <Musculo
         onPressGo={this.pasarEjercicio.bind(this)}
+        queMusculo={this.agarrarMusculo.bind(this)}
       />
     );
   }
   pasarEjercicio(idEjercicio) {
-    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
+  }
+  agarrarMusculo(){
+    return this.state.musculo
   }
 }
 class TricepScreen extends React.Component {
@@ -254,23 +269,30 @@ class TricepScreen extends React.Component {
     title: 'Tricep',
     headerStyle: {
       backgroundColor: 'black',
-      height: 45,
+      height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
   };
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = {
+      musculo: props.navigation.getParam('musculo')
   }
+}
   render() {
     return (
       <Musculo
         onPressGo={this.pasarEjercicio.bind(this)}
+        queMusculo={this.agarrarMusculo.bind(this)}
       />
     );
   }
   pasarEjercicio(idEjercicio) {
-    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
+  }
+  agarrarMusculo(){
+    return this.state.musculo
   }
 }
 class PiernasScreen extends React.Component {
@@ -279,23 +301,30 @@ class PiernasScreen extends React.Component {
     title: 'Piernas',
     headerStyle: {
       backgroundColor: 'black',
-      height: 45,
+      height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
   };
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = {
+      musculo: props.navigation.getParam('musculo')
   }
+}
   render() {
     return (
       <Musculo
         onPressGo={this.pasarEjercicio.bind(this)}
+        queMusculo={this.agarrarMusculo.bind(this)}
       />
     );
   }
   pasarEjercicio(idEjercicio) {
-    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
+  }
+  agarrarMusculo(){
+    return this.state.musculo
   }
 }
 class AbdominalesScreen extends React.Component {
@@ -304,23 +333,30 @@ class AbdominalesScreen extends React.Component {
     title: 'Abdominales',
     headerStyle: {
       backgroundColor: 'black',
-      height: 45,
+      height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
   };
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = {
+      musculo: props.navigation.getParam('musculo')
   }
+}
   render() {
     return (
       <Musculo
         onPressGo={this.pasarEjercicio.bind(this)}
+        queMusculo={this.agarrarMusculo.bind(this)}
       />
     );
   }
   pasarEjercicio(idEjercicio) {
-    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
+  }
+  agarrarMusculo(){
+    return this.state.musculo
   }
 }
 class CardioScreen extends React.Component {
@@ -329,23 +365,30 @@ class CardioScreen extends React.Component {
     title: 'Cardio',
     headerStyle: {
       backgroundColor: 'black',
-      height: 45,
+      height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
   };
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = {
+      musculo: props.navigation.getParam('musculo')
   }
+}
   render() {
     return (
       <Musculo
         onPressGo={this.pasarEjercicio.bind(this)}
+        queMusculo={this.agarrarMusculo.bind(this)}
       />
     );
   }
   pasarEjercicio(idEjercicio) {
-    this.props.navigation.navigate('Ejercicio', { idEjercicio: idEjercicio });
+    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
+  }
+  agarrarMusculo(){
+    return this.state.musculo
   }
 }
 class EjerciciosEspecificoScreen extends React.Component {
@@ -354,7 +397,7 @@ class EjerciciosEspecificoScreen extends React.Component {
     title: 'Detalles',
     headerStyle: {
       backgroundColor: 'black',
-      height: 45,
+      height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
@@ -382,7 +425,7 @@ class EjerciciosScreen extends React.Component {
     title: 'Ejercicios',
     headerStyle: {
       backgroundColor: 'black',
-      height: 45,
+      height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
@@ -430,6 +473,31 @@ class EjerciciosScreen extends React.Component {
     {
     this.props.navigation.navigate('Cardio', { musculo: musculo });
     }
+  }
+}
+class SuplementacionScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Suplementacion',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <Suplementacion
+        onPressGo={this.pasarSuplemento.bind(this)}
+      />
+    );
+  }
+  pasarSuplemento(suplemento) {
+
   }
 }
 class FestivalesScreen extends React.Component {
@@ -656,6 +724,28 @@ const EjerciciosStackNavigator = createStackNavigator(
     initialRouteName: 'EjerciciosScreen',
   }
 );
+const SuplementacionStackNavigator = createStackNavigator(
+  {
+    SuplementacionScreen: {
+      screen: SuplementacionScreen,
+      navigationOptions: ({ navigation }) => {
+        return {
+          headerLeft: (
+            <Icon
+              style={{ paddingLeft: 10, color: '#3399ff' }}
+              onPress={() => navigation.openDrawer()}
+              name="md-menu"
+              size={30}
+            />
+          ),
+        }
+      }
+    },
+  },
+  {
+    initialRouteName: 'SuplementacionScreen',
+  }
+);
 const FestivalesStackNavigator = createStackNavigator(
   {
     FestivalesScreen: {
@@ -790,8 +880,7 @@ const AppDrawerNavigator = createDrawerNavigator({
   Inicio: MockedViewStackNavigator,
   Ejercicios: EjerciciosStackNavigator,
   MiRutina: FestivalesStackNavigator,
-
-  //Suplementacion: ExposicionStackNavigator,
+  Suplementacion: SuplementacionStackNavigator,
   Perfil: PerfilStackNavigator,
 },
   // DrawerConfig,

@@ -45,7 +45,7 @@ class Musculo extends Component {
       modalVisible: false,
       userSelected: [],
       eventos: [],
-      ejercicios:[{id: 1,tipo: 'Pecho',nombre: 'Pechoide Plano'},
+      ejercicios:[{id: '5d68515cb8540621a82a22a1',tipo: 'Pecho',nombre: 'Pechoide Plano'},
     {id:2, tipo:'Pecho', nombre:'Pechovich Inclinado'},
   {id:3, tipo:'Espalda', nombre: 'Trasnucovich'}],
       isLoading: false,
@@ -84,18 +84,15 @@ class Musculo extends Component {
   render() {
     if (this.state.isLoading) {
       return (
-        //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
-        //<View style={styles.container}>
         <View style={styles.container}>
+        <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
-        //</View>
-        // </LinearGradient>
       );
     } else {
       return (
-        //<View style={styles.container}>
-        <LinearGradient colors={['grey', 'black']} style={styles.container}>
+        <View style={styles.container}>
+        <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
           <FlatList      
             style={styles.contentList}
             columnWrapperStyle={styles.listContainer}
@@ -118,20 +115,29 @@ class Musculo extends Component {
                 )
               }
             } />
-        </LinearGradient>
+        </View>
       );
     }
   }
 }
-
+const resizeMode = 'center';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: "grey"
+    backgroundColor: "black"
   },
   contentList: {
     flex: 1,
+  },
+  bgImage:{
+    flex: 1,
+    resizeMode,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    resizeMode: 'cover'
   },
   cardContent: {
     marginLeft: 20,
