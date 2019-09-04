@@ -15,7 +15,10 @@ import {
   ActivityIndicator,
   ScrollView
 } from 'react-native';
-import { LinearGradient } from 'expo'
+import { LinearGradient,SQLite } from 'expo'
+// import { openDatabase } from 'react-native-sqlite-storage';
+// //Connction to access the pre-populated user_db.db
+// var db = SQLite.openDatabase({ name: 'AppGYM.db', createFromLocation : 1});
 
 function createData(item) {
   return {
@@ -45,17 +48,28 @@ class Musculo extends Component {
       modalVisible: false,
       userSelected: [],
       eventos: [],
-      ejercicios:[{id: '5d68515cb8540621a82a22a1',tipo: 'Pecho',nombre: 'Pechoide Plano'},
-    {id:2, tipo:'Pecho', nombre:'Pechovich Inclinado'},
-  {id:3, tipo:'Espalda', nombre: 'Trasnucovich'}],
+      ejercicios:[{id: 1,musculo: 'Pecho',nombre: 'Press de Banca Plano', descripcion: './Pecho.txt' ,ejecucion:''},
+    {id:2, musculo:'Pecho', nombre:'Pechovich Inclinado'},
+  {id:3, musculo:'Espalda', nombre: 'Trasnucovich'}],
       isLoading: false,
-      generoEvento: [],
+      FlatListItems: [],
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
     //this._storeData(this.state.IdUser);
     //this.getUserData()
     //this.obtenerEventos();
+    // db.transaction(tx => {
+    //   tx.executeSql('SELECT * FROM Ejercicios', [], (tx, results) => {
+    //     var temp = [];
+    //     for (let i = 0; i < results.rows.length; ++i) {
+    //       temp.push(results.rows.item(i));
+    //     }
+    //     this.setState({
+    //       FlatListItems: temp,
+    //     });
+    //   });
+    // });
   }
   static navigationOptions = {
     headerStyle: {
@@ -63,6 +77,11 @@ class Musculo extends Component {
       height: 50
     },
   };
+  // ListViewItemSeparator = () => {
+  //   return (
+  //     <View style={{ height: 0.2, width: '100%', backgroundColor: '#808080' }} />
+  //   );
+  // };
   _storeData = async () => {
     try {
       await AsyncStorage.setItem('IdUser', this.state.IdUser);
@@ -102,13 +121,15 @@ class Musculo extends Component {
             //   return item.id;
             // }}
             renderItem={({ item }) => {
-              if(this.state.musculo==item.tipo)
+              if(this.state.musculo==item.musculo)
                 return (
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id)}>
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id,item.nombre,item.descripcion)}>
                     <View style={{ flexDirection: "row" }} >
                       <Image style={styles.image} source={{ uri: item.imagen }} />
                       <View style={styles.cardContent}>
                         <Text style={styles.name}>{item.nombre}</Text>
+                        <Text style={styles.name}>{item.descripcion}</Text>
+                        <Text style={styles.name}>{item.id}</Text>
                       </View>
                     </View>
                   </TouchableOpacity>

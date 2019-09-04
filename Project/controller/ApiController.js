@@ -1,9 +1,9 @@
 import { Component } from 'react';
 
-  //var ip = '172.20.10.5';
+  var ip = '172.20.10.5';
  //var ip = '192.168.1.110';
  //var ip = '192.168.1.122';
-var ip = '172.20.10.8';
+//var ip = '172.20.10.8';
 var url = 'http://'+ip+':8080/apiAppEventos';
 
 class ApiController extends Component {

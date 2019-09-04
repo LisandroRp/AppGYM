@@ -17,6 +17,7 @@ import MapaUnEvento from './components/MapaUnEvento'
 import Search from './components/Search';
 import Musculo from './components/Musculo'
 import Suplementacion from './components/Suplementacion'
+import SuplementacionEspecifica from './components/SuplementacionEspecifica'
 import MenuDrawer from './components/MenuDrawer';
 import { AsyncStorage } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
@@ -160,8 +161,8 @@ class PechoScreen extends React.Component {
       />
     );
   }
-  pasarEjercicio(idEjercicio) {
-    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
+  pasarEjercicio(id,nombre,descripcion) {
+    this.props.navigation.navigate('EjercicioEspecifico', { id: id,nombre:nombre,descripcion:descripcion });
   }
   agarrarMusculo(){
     return this.state.musculo
@@ -419,6 +420,34 @@ class EjerciciosEspecificoScreen extends React.Component {
     this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
   }
 }
+class SuplementacionEspecificaScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Detalles',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+    this.state = {
+      idEjercicio: props.navigation.getParam('idEjercicio')
+    }
+  }
+  render() {
+    return (
+      <SuplementacionEspecifica
+        onPressGo={this.pasarEjercicio.bind(this)}
+      />
+    );
+  }
+  pasarEjercicio(idEjercicio) {
+    this.props.navigation.navigate(' SuplementacionEspecifica', { idEjercicio: idEjercicio });
+  }
+}
 class EjerciciosScreen extends React.Component {
 
   static navigationOptions = {
@@ -496,8 +525,8 @@ class SuplementacionScreen extends React.Component {
       />
     );
   }
-  pasarSuplemento(suplemento) {
-
+  pasarSuplemento(id, nombre) {
+    this.props.navigation.navigate('SuplementacionEspecifica', { id: id, nombre:nombre});
   }
 }
 class FestivalesScreen extends React.Component {
@@ -741,6 +770,7 @@ const SuplementacionStackNavigator = createStackNavigator(
         }
       }
     },
+    SuplementacionEspecifica: { screen: SuplementacionEspecificaScreen },
   },
   {
     initialRouteName: 'SuplementacionScreen',

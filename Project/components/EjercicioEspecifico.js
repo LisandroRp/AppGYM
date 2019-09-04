@@ -36,22 +36,10 @@ class EjercicioEspecifico extends Component {
     super(props);
     this.state = {
       modalVisible: false,
-      detalle: {
-        "nombre": 'AcDc',
-        "descripcion": "Re copada la banduli de rock",
-        "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGkzHiLqaw3MedLtDd7EPKBlqhPW1IJE9jRFC1je3lLo79mDQ-",
-        "genero": "Rock",
-        rating: 3,
-        votos: [],
-        personas: 0,
-        "duracion": "165",
-        precioE: 10,
-        'precios': [],
-        'tipo': 'Concierto',
-        'latitude': null,
-        'longitude': null,
-    },
-      idEjercicio: this.props.navigation.getParam('idEjercicio'),
+      id: this.props.navigation.getParam('id'),
+      nombre: this.props.navigation.getParam('nombre'),
+      descripcion: this.props.navigation.getParam('descripcion'),
+      ejecucion:'',
       isLoading: false,
       refreshing: false,
     };
@@ -92,12 +80,12 @@ okEjercicio(data) {
       <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
         <ScrollView>
         <View style={styles.todo}>
-          <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.detalle.nombre}</Text></View>
-          <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
+          <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.nombre}</Text></View>
+          <Text style={styles.descripcion}>{this.state.descripcion}</Text>
           </View>
           <View style={styles.todo}>
           <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Ejecucion</Text></View>
-          <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
+          <Text style={styles.descripcion}>{this.state.ejecucion}</Text>
         </View>
         </ScrollView>
       </View>
