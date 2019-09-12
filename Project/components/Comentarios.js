@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, StyleSheet, Text, ActivityIndicator, TouchableOpacity, Modal, Dimensions,ScrollView, RefreshControl, TextInput } from 'react-native';
+import { View, FlatList, StyleSheet, Text, ActivityIndicator,Image, TouchableOpacity, Modal, Dimensions,ScrollView, RefreshControl, TextInput } from 'react-native';
 import { LinearGradient } from 'expo'
 import ApiController from '../controller/ApiController';
 import { AsyncStorage } from 'react-native';
@@ -23,12 +23,12 @@ class Comentarios extends Component {
     super(props);
     this.state = {
       IdUser: null,
-      isLoading: true,
+      isLoading: false,
       comentarios: [],
       modalVisible: false,
       refreshing: false,
     }
-    this._retrieveData();
+    //this._retrieveData();
   }
 
   _retrieveData = async () => {
@@ -84,8 +84,8 @@ class Comentarios extends Component {
       );
     } else {
       return (
-        //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
           <View style={[styles.detalleContainer]}>
+          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
           <ScrollView refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
@@ -109,7 +109,6 @@ class Comentarios extends Component {
             </FlatList>
             </ScrollView>
           </View>
-        //</LinearGradient>
       )
     }
   }
@@ -241,12 +240,12 @@ okDelete(){
 }
 
 
-
+const resizeMode = 'center';
 const styles = StyleSheet.create({
   detalleContainer: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#ebf0f7'
+    backgroundColor: 'black'
   },
   CircleShapeView: {
     width: 35,
@@ -262,6 +261,15 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
   },
+  bgImage: {
+    flex: 1,
+    resizeMode,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    resizeMode: 'cover'
+},
   fab: {
     position: 'absolute',
     width: 25,

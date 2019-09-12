@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withNavigation } from 'react-navigation';
 import ApiController from '../controller/ApiController'
 import {
   StyleSheet,
@@ -13,6 +14,7 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
+import DropDownItem from 'react-native-drop-down-item';
 import { LinearGradient } from 'expo'
 import { Reducer } from 'react-native-router-flux';
 
@@ -31,22 +33,15 @@ function createData(item) {
   };
 }
 
-class Ejercicios extends Component {
+class RutinaEspecifica extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      nombre: this.props.navigation.getParam('nombre'),
       modalVisible: false,
-      userSelected: [],
-      musculos: [{id:1,musculo: 'Pecho', imagen: require('./Fotos/PECHO.png')},
-      {id:2,musculo: 'Espalda', imagen: require('./Fotos/ESPALDA.png')},
-      {"id":3,"musculo": 'Hombros',"imagen": require('./Fotos/HOMBROS.png')},
-      {id:4,musculo: 'Piernas',imagen: require('./Fotos/PIERNAS.png')},
-      {id:5,musculo: 'Biceps',imagen: require('./Fotos/BICEPS.png')},
-      {id:6,musculo: 'Triceps',imagen: require('./Fotos/TRICEPS.png')},
-      {id:7,musculo: 'Abdominales',imagen: require('./Fotos/ABS.png')},
-      {id:8,musculo: 'Cardio',imagen: require('./Fotos/CARDIO.png')}],
-      isLoading: false, 
+      dias: [{ nombre: 1, ejercicios: [{ id: 1, nombre: 'Press Plano', series: 4, repeticiones: [15, 12, 10, 8] }] },
+      { nombre: 2, ejercicios: [{ id: 3, nombre: 'Trasnucovich', series: 4, repeticiones: [15, 12, 10, 8] }] }]
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.obtenerEventos()
@@ -55,38 +50,47 @@ class Ejercicios extends Component {
   render() {
     if (this.state.isLoading) {
       return (
-          <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
-              <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
-          </View>
+        <View style={styles.container}>
+          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
+        </View>
       );
-  } else {
-    return (
-      <View style={styles.container}>
-      <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
-      <ScrollView>
-        <FlatList
-          style={styles.contentList}
-          numColumns={2}
-          data={this.state.musculos}
-          initialNumToRender={50}
-          keyExtractor={(item) => {
-              return item.id;
-            }}
-          renderItem={({ item }) => {
-            return (
-              <TouchableOpacity onPress={() => this.props.onPressGo(item.musculo)}>
-                <View style={styles.imageContainer}>
-                <Image style={styles.image} source={item.imagen} />
-                </View>
-              </TouchableOpacity>
-            )
-          }} />
+    } else {
+      return (
+        <View style={styles.container}>
+          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <ScrollView>
+            <FlatList
+              style={styles.contentList}
+              columnWrapperStyle={styles.listContainer}
+              data={this.state.dias}
+              initialNumToRender={50}
+              keyExtractor={(item) => {
+                return item.nombre;
+              }}
+              renderItem={({ item }) => {
+                return (
+                  <View style={{ borderRadius: 10, backgroundColor: 'white', marginBottom: 10, marginTop: 10, marginHorizontal: 10, paddingBottom: 10 }}>
+                    <DropDownItem key={1} contentVisible={false}
+                      header={
+                        <Text style={styles.detalleGenresTitles}>
+                          Día {item.nombre}
+                        </Text>
+                      }
+                    >
+                      <Text style={styles.detalleGenres}>
+                        {item.ejercicios[0].nombre}
+                      </Text>
+
+                    </DropDownItem>
+                  </View>
+                )
+              }} />
           </ScrollView>
-      </View>
-    );
+        </View>
+      );
+    }
   }
-}
 }
 const resizeMode = 'center';
 const styles = StyleSheet.create({
@@ -95,31 +99,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "grey"
   },
-  contentList: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding:2,
-  },
   cardContent: {
     marginLeft: 20,
     marginTop: 10,
-    width:180,
+    width: 180,
     flexDirection: "column"
   },
   imageContainer: {
-    width: Dimensions.get('window').width /2 -4,
+    width: Dimensions.get('window').width / 2 - 4,
     height: 200,
-    margin:1,
+    margin: 1,
     justifyContent: 'center',
-    alignItems:'center',
+    alignItems: 'center',
     backgroundColor: 'black'
   },
   image: {
-    width: Dimensions.get('window').width /2 -4,
+    width: Dimensions.get('window').width / 2 - 4,
     height: 200,
   },
-  bgImage:{
+  bgImage: {
     flex: 1,
     resizeMode,
     position: 'absolute',
@@ -148,7 +146,7 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    paddingTop:12,
+    paddingTop: 12,
     fontSize: 18,
     flex: 1,
     //alignSelf: 'center',
@@ -157,7 +155,7 @@ const styles = StyleSheet.create({
   },
   count: {
     fontSize: 14,
-    paddingBottom:11,
+    paddingBottom: 11,
     flex: 1,
     //alignSelf: 'center',
     color: "#6666ff"
@@ -176,16 +174,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#dcdcdc",
   },
- followButtonText: {
+  followButtonText: {
     color: "black",
-    marginTop:4,
+    marginTop: 4,
     fontSize: 15,
   },
   StarImage: {
     width: 40,
     height: 40,
     resizeMode: 'cover',
-},
+  },
+  detalleGenresTitles: {
+    fontSize: 33,
+    margin: 10,
+    marginBottom: 2.5,
+    color: '#3399ff',
+    fontWeight: 'bold'
+  },
 })
 
-export default Ejercicios;
+export default withNavigation(RutinaEspecifica);

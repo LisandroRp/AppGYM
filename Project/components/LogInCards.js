@@ -12,7 +12,6 @@ import {
 import ApiController from '../controller/ApiController';
 import {KeyboardAvoidingView} from 'react-native';
 import { LinearGradient } from 'expo'
-import UserDataManager from './UserDataManager';
 
 class LogInCards extends Component {
   constructor(props) {
@@ -37,7 +36,6 @@ class LogInCards extends Component {
   }
  
   render() {
-    UserDataManager.getInstance().setCurrentPositionFromReact()
     return (
       <KeyboardAvoidingView style={{backgroundColor: '#9FA8DA' }} behavior="padding" enabled>
        <LinearGradient colors={['#1D71B8', '#2D2E83']} style={styles.container}>
@@ -78,7 +76,8 @@ class LogInCards extends Component {
         <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.onPressCreate()}>
             <Text style={styles.btnText}>Create an account</Text>
         </TouchableOpacity>
-        <View style={{flexDirection:'center', width:100}}>
+        {/* <View style={{flexDirection:'center', width:100}}> */}
+        <View style={{width:100}}>
         <TouchableOpacity style={styles.buttonContainerPass} onPress={() => this.props.onPressPass()}>
             <Text style={styles.btnText}>Change password</Text>
         </TouchableOpacity>

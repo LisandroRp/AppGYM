@@ -5,7 +5,6 @@ import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import DropDownItem from 'react-native-drop-down-item';
 import { Rating, AirbnbRating } from 'react-native-elements';
-import MapaUnEvento from './MapaUnEvento';
 import ApiController from '../controller/ApiController';
 import { AsyncStorage } from 'react-native';
 import { LinearGradient } from 'expo'

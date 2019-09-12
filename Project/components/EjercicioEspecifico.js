@@ -36,9 +36,9 @@ class EjercicioEspecifico extends Component {
     super(props);
     this.state = {
       modalVisible: false,
-      id: this.props.navigation.getParam('id'),
-      nombre: this.props.navigation.getParam('nombre'),
-      descripcion: this.props.navigation.getParam('descripcion'),
+      id: this.props.navigation.getParam('idEjercicio'),
+      nombre: this.props.navigation.getParam('nombreEjercicio'),
+      descripcion: this.props.navigation.getParam('descripcionEjercicio'),
       ejecucion:'',
       isLoading: false,
       refreshing: false,

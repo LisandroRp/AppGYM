@@ -31,7 +31,7 @@ function createData(item) {
   };
 }
 
-class Ejercicios extends Component {
+class EjerciciosAgregar extends Component {
 
   constructor(props) {
     super(props);
@@ -188,4 +188,4 @@ const styles = StyleSheet.create({
 },
 })
 
-export default Ejercicios;
+export default EjerciciosAgregar;

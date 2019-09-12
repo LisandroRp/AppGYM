@@ -23,15 +23,6 @@ class DatosPersonales extends Component {
         };
         this._retrieveData();
     }
-    static navigationOptions = {
-        title: 'Profile',
-        headerStyle: {
-            backgroundColor: 'white',
-            height: 45,
-            borderBottomWidth: 0
-        },
-        headerTintColor: '#3399ff',
-    };
     _retrieveData = async () => {
         try {
             const value = await AsyncStorage.getItem('IdUser');
@@ -106,28 +97,18 @@ class DatosPersonales extends Component {
         var key = 0
         if (this.state.isLoading) {
             return (
-                //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
-                //<View style={styles.container}>
+                <LinearGradient colors={['grey', 'black']} style={{ flex: 1 }}>
                 <View style={styles.detalleContainer}>
                     <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 1 }}></ActivityIndicator>
                 </View>
-                //</View>
-                // </LinearGradient>
+                </LinearGradient>
             );
         } else {
             return (
-                //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
                 <View style={[styles.detalleContainer]} >
-                    <SearchBar
-                        placeholder="Add your favorites genres"
-                        platform='ios'
-                        onChangeText={value => this.changeGenre(value)}
-                        value={this.state.value}
-                        containerStyle={{ backgroundColor: 'white', height: 50, paddingBottom: 22 }}
-                        buttonStyle={{ paddingBottom: 22 }}
-                    />
-                    <LinearGradient colors={['#1D71B8', '#2D2E83']} style={{ alignSelf: 'center', alignItems: 'center', paddingBottom: 30, backgroundColor: '#3399ff', width: 2000 }}>
-
+                <LinearGradient colors={['grey', 'black']} style={styles.profile}>
+                    <View style={[styles.firstContainer]}>
+                        <Image style={styles.bgImage} source={require('./Pared.jpg')} />
                         <View style={styles.CircleShapeView}>
                             <Text style={{ fontSize: 50, color: 'white', paddingTop: 45, alignContent: 'center' }}>
                                 {this.state.nombre.slice(0, 1).toUpperCase()}
@@ -143,48 +124,33 @@ class DatosPersonales extends Component {
                         <Text style={{ color: 'white', fontSize: 20 }}>{this.state.nombre}{this.state.apellido}</Text>
                         <Text style={{ color: 'white', fontSize: 15 }}>{this.state.IdUser}</Text>
                         <Text style={{ color: 'white', fontSize: 15 }}>{this.state.email}</Text>
-                    </LinearGradient>
+                    </View>
                     <ScrollView style={{}}>
-                        <View style={{ flexDirection: 'row', backgroundColor: '#D2E5FF', marginTop: 18, paddingBottom: 18, paddingHorizontal: 9, marginHorizontal: 18,height:300, borderRadius: 10, }}>
-                            <View style={styles.contentList}>
-                                <View style={[styles.underline]}>
-                                    <Text style={[styles.TextUnderline]}>Favorite Genres:</Text>
-                                </View>
-                                <View>
-                                    <FlatList
-                                        style={styles.hola}
-                                        columnWrapperStyle={styles.listContainer}
-                                        data={this.state.generoEvento}
-                                        keyExtractor={(item) => {
-                                            return item;
-                                        }}
-                                        renderItem={({ item }) => {
-                                            return (<View style={styles.contentList2}>
-                                                <Text style={[styles.textInput]}>• {item}</Text>
-                                            </View>)
-                                        }} />
-                                </View>
-                            </View>
-                            <View style={{alignItems: 'center', marginTop:133, marginLeft:10 }}>
-                                <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]}
-                                    onPress={() => this.borrarGenero()}>
-                                    <Text style={styles.loginText}>Erase</Text>
-                                    <Text style={styles.loginText}>Genres</Text>
-                                </TouchableOpacity>
-                            </View>
+                        <View style={{ flexDirection: 'row', backgroundColor: 'grey', marginTop: 18, paddingBottom: 18, paddingHorizontal: 9, marginHorizontal: 18, height: 300, borderRadius: 10, }}>
                         </View>
                     </ScrollView>
+                    </LinearGradient>
                 </View>
-                //</LinearGradient>
             )
         }
     }
 };
-
+const resizeMode = 'center';
 const styles = StyleSheet.create({
     detalleContainer: {
         flex: 1,
         backgroundColor: '#ebf0f7'
+    },
+    bgImage: {
+        resizeMode,
+        position: 'absolute',
+        width: 1000,
+        height: 300,
+        justifyContent: 'center',
+        resizeMode: 'cover',
+    },
+    firstContainer: {
+        alignSelf: 'center', alignItems: 'center', paddingBottom: 30, width: 2000
     },
     textInput: {
         color: '#3399ff',
@@ -192,7 +158,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
     },
     underline: {
-        marginTop:5,
+        marginTop: 5,
         flexDirection: 'row',
     },
     TextUnderline: {

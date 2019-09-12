@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { SearchBar, Icon } from 'react-native-elements';
+import { SearchBar, Icon, ThemeConsumer } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Modal, TextInput } from 'react-native';
 import ApiController from '../controller/ApiController'
+import { FontAwesome } from '@expo/vector-icons';
 import {
   StyleSheet,
   Text,
@@ -18,7 +19,8 @@ import {
 } from 'react-native';
 //import { LinearGradient, SQLite } from 'expo'
 import Ejercicios from './Ejercicios';
- import { openDatabase } from 'react-native-sqlite-storage';
+import { openDatabase } from 'react-native-sqlite-storage';
+import RutinaNew from './RutinaNew';
 // //Connction to access the pre-populated user_db.db
 //const db = SQLite.openDatabase('AppGYM.db');
 //Connction to access the pre-populated user_db.db
@@ -27,22 +29,15 @@ import Ejercicios from './Ejercicios';
 // import { SQLite } from 'expo-sqlite'
 // import { BaseModel, types } from 'expo-sqlite-orm'
 
+var { height, width } = Dimensions.get('window');
 function createData(item) {
   return {
-    key: item._id,
-    idEvento: item._id,
-    imagen: item.imagen,
-    nombre: item.nombre,
-    rating: item.rating,
-    descripcion: item.descripcion,
-    tipo: item.tipo,
-    ubicacion: item.ubicacion,
-    precioE: item.precioE,
-    genero: item.genero,
+    id: item.id,
+    nombreEjercicio: item.no
   };
 }
 
-class Musculo extends Component {
+class MusculoAgregar extends Component {
 
 
   constructor(props) {
@@ -50,7 +45,7 @@ class Musculo extends Component {
     this.state = {
       //IdUser: props.navigation.getParam('IdUser'),
       searchBarFocused: false,
-      FlatListItems:[],
+      FlatListItems: [],
       musculo: this.props.navigation.getParam('musculo'),
       modalVisible: false,
       ejercicios: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
@@ -60,6 +55,16 @@ class Musculo extends Component {
       { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
       { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
       isLoading: false,
+      modalVisible: false,
+      idEjercicio: 0,
+      nombreEjercicio: '',
+      musculoEjercicio: '',
+      series: '',
+      repeticiones: '',
+      rutinaNueva: [],
+      flag: 0,
+      flag2:0,
+      ejercicioNuevo: [{ id: 0, nombre: '', repeticiones: '', series: '' }]
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
@@ -71,7 +76,7 @@ class Musculo extends Component {
   // static get database() {
   //   return async () => SQLite.openDatabase('AppGYM.db')
   // }
- 
+
   // static get tableName() {
   //   return 'animals'
   // }
@@ -98,13 +103,6 @@ class Musculo extends Component {
   //     <View style={{ height: 0.2, width: '100%', backgroundColor: '#808080' }} />
   //   );
   // };
-  _storeData = async () => {
-    try {
-      await AsyncStorage.setItem('IdUser', this.state.IdUser);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   esGenero(genero) {
     for (i = 0; i <= this.state.generoEvento.length; i++) {
       if (this.state.generoEvento[i] == genero) {
@@ -113,7 +111,41 @@ class Musculo extends Component {
     }
     return false
   }
+  guardarEjercicio() {
+    this.setState({ modalVisible: false})
+    this._retrieveData();
+  }
+  _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('rutina');
+      if (value != null) {
+        this.setState({
+          rutinaNueva: JSON.parse(value),
 
+        })
+        this.cargarEjercicio();
+      }
+      else {
+        this.cargarEjercicio()
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  cargarEjercicio() {
+    terminada = {
+      id: this.state.idEjercicio,
+      musculo: this.state.musculoEjercicio,
+      nombre: this.state.nombreEjercicio,
+      repeticiones: this.state.repeticiones,
+      series: this.state.series
+    }
+    this.state.rutinaNueva.push(terminada)
+    this.props.onPressSave(this.state.rutinaNueva, 'hola')
+  }
+  setModalVisible(visible, id, nombre, musculo) {
+    this.setState({ modalVisible: visible, nombreEjercicio: nombre, idEjercicio: id, musculoEjercicio: musculo });
+  }
   componentDidMount() {
     this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
     this.keyboardWillShow = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
@@ -195,11 +227,57 @@ class Musculo extends Component {
                         <Text style={styles.name}>{item.nombre}</Text>
                         <Text style={styles.descripcion}>{item.descripcion}</Text>
                       </View>
+                      <View style={styles.masita}>
+                        <FontAwesome name="plus" style={styles.plus}
+                          onPress={() => this.setModalVisible(true, item.id, item.nombre, item.musculo)}
+                          size={44}
+                        /></View>
                     </View>
                   </TouchableOpacity>
                 )
             }
             } />
+          <Modal
+            animationType="fade"
+            visible={this.state.modalVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalVisible: false })}  >
+
+            <View style={styles.modal}>
+              {/* <View style={{ flexDirection: 'column' }}>
+                  <Text>Repeticiones:</Text>
+                  <Text>Series:</Text>
+                </View> */}
+              <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: height * 0.03 }}>
+                <View style={styles.containerInput}>
+                  <TextInput placeholder='Series' style={styles.textInput} multiline={true} autoFocus={true} maxLength={100} onChangeText={(text) => this.setState({ series: text })} value={this.state.series}></TextInput>
+                </View>
+                <View style={styles.containerInput}>
+                  <TextInput placeholder='Repeticiones' style={styles.textInput} multiline={true} autoFocus={true} maxLength={100} onChangeText={(text) => this.setState({ repeticiones: text })} value={this.state.repeticiones}></TextInput>
+                </View>
+              </View>
+              <View style={styles.modal2}>
+                <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderRadius: 22 }}>
+                  <View style={[styles.outterButtonCreate]}>
+
+                    <View style={[styles.buttonContainer]}
+                      onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
+                      <Text style={styles.textButton}> Cancel</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                {/* <View style={{borderColor: 'red', borderRightWidth: '2'}} /> */}
+                <TouchableOpacity onPress={() => this.guardarEjercicio()} style={{ justifyContent: 'center', alignItems: 'center', borderLeftWidth: 2, paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                  <View style={[styles.outterButtonCreate]}>
+                    <View style={[styles.buttonContainer]}>
+                      <Text style={styles.textButton}>Accept</Text>
+                    </View>
+                  </View>
+
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </View>
       );
     }
@@ -215,6 +293,42 @@ const styles = StyleSheet.create({
   contentList: {
     flex: 1,
   },
+
+  textInput: {
+    color: '#3399ff',
+    fontSize: 20,
+    alignSelf: 'center',
+    backgroundColor: 'white'
+  },
+  CircleShapeView: {
+    width: 35,
+    height: 35,
+    borderRadius: 35 / 2,
+    backgroundColor: '#6666ff',
+    marginTop: 15,
+    alignItems: 'center',
+    alignContent: 'center'
+  },
+  textButton: {
+    color: '#3399ff',
+    fontSize: 15,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  SubmitButtonStyle: {
+    width: 100,
+    height: 50,
+    marginTop: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    marginLeft: 20,
+    marginRight: 20,
+    backgroundColor: '#373737',
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: '#fff'
+  },
   bgImage: {
     flex: 1,
     resizeMode,
@@ -223,6 +337,17 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     resizeMode: 'cover'
+  },
+  masita: {
+    alignItems: "center",
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  plus: {
+    alignItems: "center",
+    alignContent: 'center',
+    alignSelf: 'center',
+    color: 'white',
   },
   cardContent: {
     marginLeft: 20,
@@ -303,6 +428,79 @@ const styles = StyleSheet.create({
     height: 40,
     resizeMode: 'cover',
   },
+  modal: {
+    height: height * 0.25,
+    width: width * 0.75,
+    position: 'absolute',
+    top: height * 0.3,
+    left: width * 0.13,
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22
+  },
+  modal1: {
+    paddingTop: 22,
+    paddingLeft: width * 0.11,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  modal2: {
+    flexDirection: 'row', borderColor: 'black', borderTopWidth: 2, width: width * 0.74, height: height * 0.08, position: 'absolute', bottom: 0
+  },
+  modalText: {
+    fontSize: 20,
+    margin: 10,
+    color: '#3399ff',
+    fontWeight: 'bold'
+  },
+  textInput: {
+    color: '#3399ff',
+    fontSize: 20,
+    alignSelf: 'center',
+  },
+  CircleShapeView: {
+    width: 35,
+    height: 35,
+    borderRadius: 35 / 2,
+    backgroundColor: '#6666ff',
+    marginTop: 15,
+    alignItems: 'center',
+    alignContent: 'center'
+  },
+  textButton: {
+    color: 'white',
+    fontSize: 15,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  buttonContainer: {
+    alignSelf: 'center',
+    justifyContent: 'center'
+  },
+  SubmitButtonStyle: {
+    width: 100,
+    height: 50,
+    marginTop: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    marginLeft: 20,
+    marginRight: 20,
+    backgroundColor: '#373737',
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: '#fff'
+  },
+  containerInput: {
+    backgroundColor: 'white',
+    marginVertical: 4,
+    borderRadius: 22,
+    height: height * 0.04,
+    width: width * 0.5
+  }
 })
 
-export default withNavigation(Musculo);
+export default withNavigation(MusculoAgregar);
