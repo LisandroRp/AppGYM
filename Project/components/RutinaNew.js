@@ -55,26 +55,25 @@ class RutinaNew extends Component {
       refreshing: false,
       rutinaVacia: [],
       flag: 1,
+      pedro: this.props.navigation.getParam('isLoading'),
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.obtenerEventos()
   }
-
-  cargar() {
-    if (this.state.flag == 0) {
-      this.setState({ isLoading: true })
-      this._retrieveData()
-    }
+  componentWillReceiveProps()
+  {
+    console.log('chauuuu')
+    this._retrieveData()
   }
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem('rutina');
       if (value !== null) {
         if (this.yaEsta(JSON.parse(value)[0])) {
+          this.setState({ isLoading: true })
           this.state.rutina.push(JSON.parse(value)[0])
           this.termino()
-        }
-        else{
+        } else {
           this._storeData()
           alert('Este ejercicio ya esta en el dia seleccionado')
         }
@@ -87,16 +86,12 @@ class RutinaNew extends Component {
     console.log(this.state.rutina)
     this._storeData()
   }
-  touch(musculo) {
-    this.setState({
-      flag: 0
-    })
-    this.props.onPressGo(musculo)
+  touch(dia) {
+    this.props.onPressGo(dia)
   }
-  yaEsta(data){
-    for(i=0;i<this.state.rutina.length;i++){
-      if(this.state.rutina[i].id==data.id)
-      {
+  yaEsta(data) {
+    for (i = 0; i < this.state.rutina.length; i++) {
+      if (this.state.rutina[i].id == data.id) {
         return false
       }
     }
@@ -107,7 +102,6 @@ class RutinaNew extends Component {
       await AsyncStorage.setItem('rutina', JSON.stringify(this.state.rutinaVacia));
       this.setState({
         isLoading: false,
-        flag: 1
       })
     } catch (error) {
       console.log(error);
@@ -125,24 +119,19 @@ class RutinaNew extends Component {
       return (
         <View style={styles.container}>
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
-          <ScrollView refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.cargar.bind(this)}
-            />
-          }>
+          <ScrollView>
             <View style={styles.inputContainer}>
               <TextInput style={styles.inputContainer} placeholder='Nombre' placeholderTextColor='black'></TextInput>
             </View>
             <View style={styles.cuadraditos}>
               <DropDownItem key={1} contentVisible={false}
                 header={
-                  <View style={{flexDirection: 'row',justifyContent: "space-between", alignItems:'center'}}>
+                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                     <Text style={styles.detalleGenresTitles}>
-                      Pecho
+                      Dia 1
                 </Text>
                     <TouchableOpacity onPress={() => {
-                      this.touch('Pecho');
+                      this.touch('1');
                     }} style={styles.fab}>
                       <AntDesign name="plus" size={20} color="white" />
                     </TouchableOpacity>
@@ -161,12 +150,12 @@ class RutinaNew extends Component {
                     if (item.musculo == 'Pecho')
                       return (
                         <TouchableOpacity style={styles.card} onPress={() => this.props.onPressInfo(item.nombre)}>
-                        <View style={{flexDirection: 'column'}}>
-                          <Text style={{fontWeight: 'bold'}}>{item.nombre}</Text>
-                          <Text>Reps: {item.repeticiones}</Text>
-                          <Text>Series: {item.series}</Text>
+                          <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ fontWeight: 'bold' }}>{item.nombre}</Text>
+                            <Text>Reps: {item.repeticiones}</Text>
+                            <Text>Series: {item.series}</Text>
                           </View>
-                          </TouchableOpacity>
+                        </TouchableOpacity>
                       )
                   }} />
               </DropDownItem>
@@ -179,7 +168,7 @@ class RutinaNew extends Component {
                 </Text>
                 }
               >
-              <FlatList
+                <FlatList
                   style={styles.contentList}
                   columnWrapperStyle={styles.listContainer}
                   data={this.state.rutina}
@@ -197,7 +186,7 @@ class RutinaNew extends Component {
               </DropDownItem>
             </View>
             <View style={styles.cuadraditos}>
-              <DropDownItem key={1} contentVisible={false}
+              <DropDownItem key={3} contentVisible={false}
                 header={
                   <Text style={styles.detalleGenresTitles}>
                     Hombros
@@ -207,7 +196,7 @@ class RutinaNew extends Component {
               </DropDownItem>
             </View>
             <View style={styles.cuadraditos}>
-              <DropDownItem key={1} contentVisible={false}
+              <DropDownItem key={4} contentVisible={false}
                 header={
                   <Text style={styles.detalleGenresTitles}>
                     Piernas
@@ -217,7 +206,7 @@ class RutinaNew extends Component {
               </DropDownItem>
             </View>
             <View style={styles.cuadraditos}>
-              <DropDownItem key={1} contentVisible={false}
+              <DropDownItem key={5} contentVisible={false}
                 header={
                   <Text style={styles.detalleGenresTitles}>
                     Biceps
@@ -227,7 +216,7 @@ class RutinaNew extends Component {
               </DropDownItem>
             </View>
             <View style={styles.cuadraditos}>
-              <DropDownItem key={1} contentVisible={false}
+              <DropDownItem key={6} contentVisible={false}
                 header={
                   <Text style={styles.detalleGenresTitles}>
                     Triceps
@@ -237,7 +226,7 @@ class RutinaNew extends Component {
               </DropDownItem>
             </View>
             <View style={styles.cuadraditos}>
-              <DropDownItem key={1} contentVisible={false}
+              <DropDownItem key={7} contentVisible={false}
                 header={
                   <Text style={styles.detalleGenresTitles}>
                     Abdominales
@@ -379,7 +368,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginRight: 10,
     marginTop: 10,
-},
+  },
 })
 
 

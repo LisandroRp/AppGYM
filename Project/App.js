@@ -5,7 +5,7 @@ import Icon from '@expo/vector-icons/Ionicons';
 import Detalle from './components/Detalle';
 import Ejercicios from './components/Ejercicios'
 import EjerciciosEspecifico from './components/EjercicioEspecifico'
-import EjerciciosAgregar from './components/EjerciciosAgregar'
+import EjercicioAgregar from './components/EjercicioAgregar'
 import ChangePassword from './components/ChangePassword'
 import CreateUser from './components/CreateUser'
 import Informacion from './components/DatosPersonales';
@@ -274,6 +274,38 @@ class EjerciciosEspecificoScreen extends React.Component {
     this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio });
   }
 }
+class EjercicioAgregarScreen extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      musculo: props.navigation.getParam('musculo'),
+      rutina:[],
+      flag:0,
+  }
+}
+static navigationOptions = ({ navigation }) => {
+  return {
+    title: navigation.getParam('musculo', 'Musculo'),
+  headerStyle: {
+    backgroundColor: 'black',
+    height: 55,
+    borderBottomWidth: 0
+  },
+  headerTintColor: '#3399ff',
+};
+}
+  render() {
+    return (
+      <EjercicioAgregar
+        onPressGo={this.pasarEjercicio.bind(this)}
+      />
+    );
+  }
+  pasarEjercicio(dia, musculo) {
+    this.props.navigation.navigate('MusculoAgregar', {musculo:musculo,dia:dia});
+  }
+}
 class RutinasScreen extends React.Component {
   constructor(props) {
     super(props)
@@ -305,7 +337,10 @@ class RutinasScreen extends React.Component {
 }
 class RutinaNewScreen extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
+    this.state={
+          pedro: this.props.navigation.getParam('isLoading'),
+    }
   }
   static navigationOptions = ({ navigation }) => {
     return {
@@ -326,8 +361,8 @@ class RutinaNewScreen extends React.Component {
       />
     );
   }
-  agregarEjercicio(musculo) {
-    this.props.navigation.navigate('MusculoAgregar',{musculo:musculo});
+  agregarEjercicio(dia) {
+    this.props.navigation.navigate('EjercicioAgregar',{dia:dia});
   }
   verInfo(nombre){
     this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre});
@@ -647,10 +682,10 @@ const RutinasStackNavigator = createStackNavigator(
         }
       }
     },
-    RutinaNew: { screen: RutinaNewScreen },
     RutinaEspecifica: { screen: RutinaEspecificaScreen },
+    RutinaNew: { screen: RutinaNewScreen },
+    EjercicioAgregar: {screen:EjercicioAgregarScreen},
     MusculoAgregar: {screen: MusculoAgregarScreen},
-    Detalle: { screen: DetalleScreen },
     EjercicioEspecifico: {screen: EjerciciosEspecificoScreen}
   },
   {

@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo'
 import { Reducer } from 'react-native-router-flux';
+import { withNavigation } from 'react-navigation';
 
 
 function createData(item) {
@@ -31,7 +32,7 @@ function createData(item) {
   };
 }
 
-class EjerciciosAgregar extends Component {
+class EjercicioAgregar extends Component {
 
   constructor(props) {
     super(props);
@@ -47,6 +48,7 @@ class EjerciciosAgregar extends Component {
       {id:7,musculo: 'Abdominales',imagen: require('./Fotos/ABS.png')},
       {id:8,musculo: 'Cardio',imagen: require('./Fotos/CARDIO.png')}],
       isLoading: false, 
+      dia: this.props.navigation.getParam('dia')
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.obtenerEventos()
@@ -65,6 +67,7 @@ class EjerciciosAgregar extends Component {
       <View style={styles.container}>
       <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
       <ScrollView>
+      <Text style={{color: 'white'}}>{this.state.dia}</Text>
         <FlatList
           style={styles.contentList}
           numColumns={2}
@@ -188,4 +191,4 @@ const styles = StyleSheet.create({
 },
 })
 
-export default EjerciciosAgregar;
+export default withNavigation(EjercicioAgregar);
