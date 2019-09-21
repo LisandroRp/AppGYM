@@ -67,7 +67,6 @@ class EjercicioAgregar extends Component {
       <View style={styles.container}>
       <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
       <ScrollView>
-      <Text style={{color: 'white'}}>{this.state.dia}</Text>
         <FlatList
           style={styles.contentList}
           numColumns={2}
@@ -78,7 +77,7 @@ class EjercicioAgregar extends Component {
             }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity onPress={() => this.props.onPressGo(item.musculo)}>
+              <TouchableOpacity onPress={() => this.props.onPressGo(this.state.dia, item.musculo)}>
                 <View style={styles.imageContainer}>
                 <Image style={styles.image} source={item.imagen} />
                 </View>

@@ -47,6 +47,7 @@ class MusculoAgregar extends Component {
       searchBarFocused: false,
       FlatListItems: [],
       musculo: this.props.navigation.getParam('musculo'),
+      dia: this.props.navigation.getParam('dia'),
       modalVisible: false,
       ejercicios: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
       { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
@@ -62,8 +63,6 @@ class MusculoAgregar extends Component {
       series: '',
       repeticiones: '',
       rutinaNueva: [],
-      flag: 0,
-      flag2:0,
       ejercicioNuevo: [{ id: 0, nombre: '', repeticiones: '', series: '' }]
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
@@ -138,10 +137,11 @@ class MusculoAgregar extends Component {
       musculo: this.state.musculoEjercicio,
       nombre: this.state.nombreEjercicio,
       repeticiones: this.state.repeticiones,
-      series: this.state.series
+      series: this.state.series,
+      dia: this.state.dia
     }
     this.state.rutinaNueva.push(terminada)
-    this.props.onPressSave(this.state.rutinaNueva, 'hola')
+    this.props.onPressSave(this.state.rutinaNueva)
   }
   setModalVisible(visible, id, nombre, musculo) {
     this.setState({ modalVisible: visible, nombreEjercicio: nombre, idEjercicio: id, musculoEjercicio: musculo });
@@ -220,7 +220,7 @@ class MusculoAgregar extends Component {
             renderItem={({ item }) => {
               if (this.state.musculo == item.musculo)
                 return (
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id, item.nombre, item.descripcion)}>
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id, item.nombre, item.descripcion, this.state.dia)}>
                     <View style={{ flexDirection: "row" }} >
                       <Image style={styles.image} source={{ uri: item.imagen }} />
                       <View style={styles.cardContent}>

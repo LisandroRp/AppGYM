@@ -61,7 +61,7 @@ class SignUpClass extends React.Component {
   }
   checkLogin(IdUser) {
     //this.props.navigation.navigate('MockedViewScreen', { IdUser: IdUser });
-    this.props.navigation.navigate('MockedViewScreen');
+    this.props.navigation.navigate('Ejercicios');
   }
 
   goPass() {
@@ -231,9 +231,9 @@ static navigationOptions = ({ navigation }) => {
   pasarEjercicio(idEjercicio,nombre,descripcion) {
     this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio, nombreEjercicio:nombre, descripcionEjercicio: descripcion });
   }
-  guardarRutina(rutina, hola){
+  guardarRutina(rutina){
     this._storeData(rutina);
-    this.props.navigation.navigate('RutinaNew', { rutina: rutina, isLoading:true})
+    this.props.navigation.navigate('RutinaNew', { rutina: rutina})
   }
   agarrarMusculo(){
     return this.state.musculo
@@ -303,7 +303,7 @@ static navigationOptions = ({ navigation }) => {
     );
   }
   pasarEjercicio(dia, musculo) {
-    this.props.navigation.navigate('MusculoAgregar', {musculo:musculo,dia:dia});
+    this.props.navigation.navigate('MusculoAgregar', {dia:dia,musculo:musculo});
   }
 }
 class RutinasScreen extends React.Component {
@@ -380,7 +380,7 @@ class RutinaEspecificaScreen extends React.Component {
       title: navigation.getParam('nombre', 'Rutina'),
     headerStyle: {
       backgroundColor: 'black',
-      height: 50,
+      height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
@@ -815,7 +815,7 @@ const customDrawerComponent = (props) => (
   </View>
 )
 const AppDrawerNavigator = createDrawerNavigator({
-  Inicio: MockedViewStackNavigator,
+  //Inicio: MockedViewStackNavigator,
   Ejercicios: EjerciciosStackNavigator,
   Rutinas: RutinasStackNavigator,
   Suplementacion: SuplementacionStackNavigator,

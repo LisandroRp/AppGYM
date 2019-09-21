@@ -43,19 +43,12 @@ class RutinaNew extends Component {
       userSelected: [],
       rutina1: [],
       rutina: [],
-      musculos: [{ id: 1, musculo: 'Pecho', imagen: require('./Fotos/PECHO.png') },
-      { id: 2, musculo: 'Espalda', imagen: require('./Fotos/ESPALDA.png') },
-      { "id": 3, "musculo": 'Hombros', "imagen": require('./Fotos/HOMBROS.png') },
-      { id: 4, musculo: 'Piernas', imagen: require('./Fotos/PIERNAS.png') },
-      { id: 5, musculo: 'Biceps', imagen: require('./Fotos/BICEPS.png') },
-      { id: 6, musculo: 'Triceps', imagen: require('./Fotos/TRICEPS.png') },
-      { id: 7, musculo: 'Abdominales', imagen: require('./Fotos/ABS.png') },
-      { id: 8, musculo: 'Cardio', imagen: require('./Fotos/CARDIO.png') }],
+
       isLoading: false,
       refreshing: false,
       rutinaVacia: [],
-      flag: 1,
-      pedro: this.props.navigation.getParam('isLoading'),
+      ultimoDia: 0,
+      dia1:[],
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.obtenerEventos()
@@ -87,11 +80,13 @@ class RutinaNew extends Component {
     this._storeData()
   }
   touch(dia) {
+    this.setState({ultimoDia: dia})
     this.props.onPressGo(dia)
   }
   yaEsta(data) {
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].id == data.id) {
+        if(this.state.rutina[i].dia == data.dia)
         return false
       }
     }
@@ -118,7 +113,7 @@ class RutinaNew extends Component {
     } else {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
           <ScrollView>
             <View style={styles.inputContainer}>
               <TextInput style={styles.inputContainer} placeholder='Nombre' placeholderTextColor='black'></TextInput>
@@ -147,7 +142,7 @@ class RutinaNew extends Component {
                     return item.id;
                   }}
                   renderItem={({ item }) => {
-                    if (item.musculo == 'Pecho')
+                    if (item.dia == 1)
                       return (
                         <TouchableOpacity style={styles.card} onPress={() => this.props.onPressInfo(item.nombre)}>
                           <View style={{ flexDirection: 'column' }}>
@@ -162,10 +157,17 @@ class RutinaNew extends Component {
             </View>
             <View style={styles.cuadraditos}>
               <DropDownItem key={2} contentVisible={false}
-                header={
-                  <Text style={styles.detalleGenresTitles}>
-                    Espalda
+                 header={
+                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                    <Text style={styles.detalleGenresTitles}>
+                      Dia 2
                 </Text>
+                    <TouchableOpacity onPress={() => {
+                      this.touch('2');
+                    }} style={styles.fab}>
+                      <AntDesign name="plus" size={20} color="white" />
+                    </TouchableOpacity>
+                  </View>
                 }
               >
                 <FlatList
@@ -177,10 +179,15 @@ class RutinaNew extends Component {
                     return item.id;
                   }}
                   renderItem={({ item }) => {
-                    if (item.musculo == 'Espada')
+                    if (item.dia == 2)
                       return (
                         <TouchableOpacity style={styles.card} onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <Text>{item.nombre}</Text></TouchableOpacity>
+                          <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ fontWeight: 'bold' }}>{item.nombre}</Text>
+                            <Text>Reps: {item.repeticiones}</Text>
+                            <Text>Series: {item.series}</Text>
+                          </View>
+                        </TouchableOpacity>
                       )
                   }} />
               </DropDownItem>
@@ -188,52 +195,192 @@ class RutinaNew extends Component {
             <View style={styles.cuadraditos}>
               <DropDownItem key={3} contentVisible={false}
                 header={
-                  <Text style={styles.detalleGenresTitles}>
-                    Hombros
+                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                    <Text style={styles.detalleGenresTitles}>
+                      Dia 3
                 </Text>
+                    <TouchableOpacity onPress={() => {
+                      this.touch('3');
+                    }} style={styles.fab}>
+                      <AntDesign name="plus" size={20} color="white" />
+                    </TouchableOpacity>
+                  </View>
                 }
               >
+                <FlatList
+                  style={styles.contentList}
+                  columnWrapperStyle={styles.listContainer}
+                  data={this.state.rutina}
+                  initialNumToRender={50}
+                  keyExtractor={(item) => {
+                    return item.id;
+                  }}
+                  renderItem={({ item }) => {
+                    if (item.dia == 3)
+                      return (
+                        <TouchableOpacity style={styles.card} onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ fontWeight: 'bold' }}>{item.nombre}</Text>
+                            <Text>Reps: {item.repeticiones}</Text>
+                            <Text>Series: {item.series}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }} />
               </DropDownItem>
             </View>
             <View style={styles.cuadraditos}>
               <DropDownItem key={4} contentVisible={false}
                 header={
-                  <Text style={styles.detalleGenresTitles}>
-                    Piernas
+                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                    <Text style={styles.detalleGenresTitles}>
+                      Dia 4
                 </Text>
+                    <TouchableOpacity onPress={() => {
+                      this.touch('4');
+                    }} style={styles.fab}>
+                      <AntDesign name="plus" size={20} color="white" />
+                    </TouchableOpacity>
+                  </View>
                 }
               >
+                <FlatList
+                  style={styles.contentList}
+                  columnWrapperStyle={styles.listContainer}
+                  data={this.state.rutina}
+                  initialNumToRender={50}
+                  keyExtractor={(item) => {
+                    return item.id;
+                  }}
+                  renderItem={({ item }) => {
+                    if (item.dia == 4)
+                      return (
+                        <TouchableOpacity style={styles.card} onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ fontWeight: 'bold' }}>{item.nombre}</Text>
+                            <Text>Reps: {item.repeticiones}</Text>
+                            <Text>Series: {item.series}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }} />
               </DropDownItem>
             </View>
             <View style={styles.cuadraditos}>
               <DropDownItem key={5} contentVisible={false}
                 header={
-                  <Text style={styles.detalleGenresTitles}>
-                    Biceps
+                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                    <Text style={styles.detalleGenresTitles}>
+                      Dia 5
                 </Text>
+                    <TouchableOpacity onPress={() => {
+                      this.touch('5');
+                    }} style={styles.fab}>
+                      <AntDesign name="plus" size={20} color="white" />
+                    </TouchableOpacity>
+                  </View>
                 }
               >
+                <FlatList
+                  style={styles.contentList}
+                  columnWrapperStyle={styles.listContainer}
+                  data={this.state.rutina}
+                  initialNumToRender={50}
+                  keyExtractor={(item) => {
+                    return item.id;
+                  }}
+                  renderItem={({ item }) => {
+                    if (item.dia == 5)
+                      return (
+                        <TouchableOpacity style={styles.card} onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ fontWeight: 'bold' }}>{item.nombre}</Text>
+                            <Text>Reps: {item.repeticiones}</Text>
+                            <Text>Series: {item.series}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }} />
               </DropDownItem>
             </View>
             <View style={styles.cuadraditos}>
               <DropDownItem key={6} contentVisible={false}
                 header={
-                  <Text style={styles.detalleGenresTitles}>
-                    Triceps
+                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                    <Text style={styles.detalleGenresTitles}>
+                      Dia 6
                 </Text>
+                    <TouchableOpacity onPress={() => {
+                      this.touch('6');
+                    }} style={styles.fab}>
+                      <AntDesign name="plus" size={20} color="white" />
+                    </TouchableOpacity>
+                  </View>
                 }
               >
+                <FlatList
+                  style={styles.contentList}
+                  columnWrapperStyle={styles.listContainer}
+                  data={this.state.rutina}
+                  initialNumToRender={50}
+                  keyExtractor={(item) => {
+                    return item.id;
+                  }}
+                  renderItem={({ item }) => {
+                    if (item.dia == 6)
+                      return (
+                        <TouchableOpacity style={styles.card} onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ fontWeight: 'bold' }}>{item.nombre}</Text>
+                            <Text>Reps: {item.repeticiones}</Text>
+                            <Text>Series: {item.series}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }} />
               </DropDownItem>
             </View>
             <View style={styles.cuadraditos}>
               <DropDownItem key={7} contentVisible={false}
                 header={
-                  <Text style={styles.detalleGenresTitles}>
-                    Abdominales
+                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                    <Text style={styles.detalleGenresTitles}>
+                      Dia 7
                 </Text>
+                    <TouchableOpacity onPress={() => {
+                      this.touch('7');
+                    }} style={styles.fab}>
+                      <AntDesign name="plus" size={20} color="white" />
+                    </TouchableOpacity>
+                  </View>
                 }
               >
+                <FlatList
+                  style={styles.contentList}
+                  columnWrapperStyle={styles.listContainer}
+                  data={this.state.rutina}
+                  initialNumToRender={50}
+                  keyExtractor={(item) => {
+                    return item.id;
+                  }}
+                  renderItem={({ item }) => {
+                    if (item.dia == 7)
+                      return (
+                        <TouchableOpacity style={styles.card} onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ fontWeight: 'bold' }}>{item.nombre}</Text>
+                            <Text>Reps: {item.repeticiones}</Text>
+                            <Text>Series: {item.series}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }} />
               </DropDownItem>
+              <TouchableOpacity style={styles.guardarButton} onPress={() => this.props.onPressInfo(item.nombre)}>
+                <Text>
+                  Guardar
+                </Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
@@ -369,6 +516,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 10,
   },
+  guardarButton:{
+    backgroundColor:'grey',
+    borderRadius:50,
+  }
 })
 
 
