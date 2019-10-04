@@ -48,6 +48,7 @@ class MusculoAgregar extends Component {
       FlatListItems: [],
       musculo: this.props.navigation.getParam('musculo'),
       dia: this.props.navigation.getParam('dia'),
+      tipo: this.props.navigation.getParam('tipo'),
       modalVisible: false,
       ejercicios: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
       { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
@@ -133,6 +134,7 @@ class MusculoAgregar extends Component {
   };
   cargarEjercicio() {
     terminada = {
+      key: this.state.dia +'.'+ this.state.idEjercicio,
       id: this.state.idEjercicio,
       musculo: this.state.musculoEjercicio,
       nombre: this.state.nombreEjercicio,
@@ -141,7 +143,7 @@ class MusculoAgregar extends Component {
       dia: this.state.dia
     }
     this.state.rutinaNueva.push(terminada)
-    this.props.onPressSave(this.state.rutinaNueva)
+    this.props.onPressSave(this.state.rutinaNueva,this.state.tipo)
   }
   setModalVisible(visible, id, nombre, musculo) {
     this.setState({ modalVisible: visible, nombreEjercicio: nombre, idEjercicio: id, musculoEjercicio: musculo });
@@ -250,29 +252,24 @@ class MusculoAgregar extends Component {
                 </View> */}
               <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: height * 0.03 }}>
                 <View style={styles.containerInput}>
-                  <TextInput placeholder='Series' style={styles.textInput} multiline={true} autoFocus={true} maxLength={100} onChangeText={(text) => this.setState({ series: text })} value={this.state.series}></TextInput>
+                  <TextInput placeholder='Series' style={styles.textInput} multiline={true} autoFocus={true} maxLength={1} onChangeText={(text) => this.setState({ series: text })} value={this.state.series}></TextInput>
                 </View>
                 <View style={styles.containerInput}>
-                  <TextInput placeholder='Repeticiones' style={styles.textInput} multiline={true} autoFocus={true} maxLength={100} onChangeText={(text) => this.setState({ repeticiones: text })} value={this.state.repeticiones}></TextInput>
+                  <TextInput placeholder='Repeticiones' style={styles.textInput} multiline={true} autoFocus={true} maxLength={15} onChangeText={(text) => this.setState({ repeticiones: text })} value={this.state.repeticiones}></TextInput>
                 </View>
               </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderRadius: 22 }}>
-                  <View style={[styles.outterButtonCreate]}>
-
                     <View style={[styles.buttonContainer]}
                       onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
                       <Text style={styles.textButton}> Cancel</Text>
                     </View>
-                  </View>
                 </TouchableOpacity>
                 {/* <View style={{borderColor: 'red', borderRightWidth: '2'}} /> */}
                 <TouchableOpacity onPress={() => this.guardarEjercicio()} style={{ justifyContent: 'center', alignItems: 'center', borderLeftWidth: 2, paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
-                  <View style={[styles.outterButtonCreate]}>
                     <View style={[styles.buttonContainer]}>
                       <Text style={styles.textButton}>Accept</Text>
                     </View>
-                  </View>
 
                 </TouchableOpacity>
               </View>
@@ -358,7 +355,6 @@ const styles = StyleSheet.create({
   image: {
     width: 90,
     height: 90,
-    borderRadius: 45,
     borderWidth: 2,
     borderColor: "#ebf0f7",
     margin: 5,
@@ -381,7 +377,6 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     padding: 10,
     flexDirection: 'row',
-    borderRadius: 30,
   },
 
   name: {
@@ -440,12 +435,6 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 5.0,
     borderRadius: 22
-  },
-  modal1: {
-    paddingTop: 22,
-    paddingLeft: width * 0.11,
-    flexDirection: 'row',
-    alignItems: 'center'
   },
   modal2: {
     flexDirection: 'row', borderColor: 'black', borderTopWidth: 2, width: width * 0.74, height: height * 0.08, position: 'absolute', bottom: 0

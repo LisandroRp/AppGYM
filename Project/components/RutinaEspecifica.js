@@ -17,7 +17,7 @@ import {
 import DropDownItem from 'react-native-drop-down-item';
 import { LinearGradient } from 'expo'
 import { Reducer } from 'react-native-router-flux';
-
+var { height, width } = Dimensions.get('window');
 
 function createData(item) {
   return {
@@ -40,13 +40,42 @@ class RutinaEspecifica extends Component {
     this.state = {
       nombre: this.props.navigation.getParam('nombre'),
       modalVisible: false,
-      dias: [{ nombre: 1, ejercicios: [{ id: 1, nombre: 'Press Plano', series: 4, repeticiones: [15, 12, 10, 8] }] },
-      { nombre: 2, ejercicios: [{ id: 3, nombre: 'Trasnucovich', series: 4, repeticiones: [15, 12, 10, 8] }] }]
+      rutina: { id: 1, nombre: 'Arnold N1', imagen: require('./arnold-schwarzenegger-biceps_0.jpg'), dias: 7, fav: 1,modificable:false,
+      rutina:[{key:'50', id: 55,dia:'2', nombre: 'Press Plano', series: '4', repeticiones: '15-12-10-8' },
+      {key:'55',id: 11,dia: '1', nombre: 'espalda', series: '4', repeticiones: '5-4-3-2-1' },
+      {key:'51',id: 87,dia: '3', nombre: 'caca', series: '4', repeticiones: '5-4-3-2-1' },
+      {key:'58',id: 12,dia: '2', nombre: 'oh my god', series: '4', repeticiones: '5-4-3-2-1' }]},
+      diasTotal:'',
+      contador:1
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.obtenerEventos()
   }
-
+  componentDidMount(){
+    this.props.editable(this.state.rutina)
+    this.contarDias()
+  }
+  contarDias(){
+    aux=1
+    num=1
+    cant=[]
+    cant.push(num)
+    num++
+    for(i=0;i<this.state.rutina.rutina.length;i++){
+      if(this.state.rutina.rutina[i].dia>aux){
+        aux=this.state.rutina.rutina[i].dia
+        cant.push(num)
+        num++
+      }
+    }
+    this.setState({diasTotal:cant})
+  }
+  cuanto1(item){
+    this.setState({contador:item})
+  }
+  cuanto2(){
+    return this.state.contador
+  }
   render() {
     if (this.state.isLoading) {
       return (
@@ -60,28 +89,57 @@ class RutinaEspecifica extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
           <ScrollView>
+          <View style={{alignItems:'center', marginVertical:height*0.03}}>
+          <TouchableOpacity onPress={() => {}}>
+                <View style={styles.imageContainer}>
+                <Image style={styles.image} source={this.state.rutina.imagen} />
+                </View>
+          </TouchableOpacity>
+          </View>
             <FlatList
               style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
-              data={this.state.dias}
+              data={this.state.diasTotal}
               initialNumToRender={50}
               keyExtractor={(item) => {
-                return item.nombre;
-              }}
+                    return item;
+                  }}
               renderItem={({ item }) => {
+                aux=item
                 return (
-                  <View style={{ borderRadius: 10, backgroundColor: 'white', marginBottom: 10, marginTop: 10, marginHorizontal: 10, paddingBottom: 10 }}>
-                    <DropDownItem key={1} contentVisible={false}
+                  <View style={styles.cuadraditos}>
+                    <DropDownItem key={item} contentVisible={false}
                       header={
                         <Text style={styles.detalleGenresTitles}>
-                          Día {item.nombre}
+                          Día {item}
                         </Text>
                       }
                     >
-                      <Text style={styles.detalleGenres}>
-                        {item.ejercicios[0].nombre}
-                      </Text>
+                      <FlatList
+                  style={styles.contentList}
+                  columnWrapperStyle={styles.listContainer}
+                  data={this.state.rutina.rutina}
+                  initialNumToRender={50}
+                  keyExtractor={(item) => {
+                    return item.key;
+                  }}
+                  renderItem={({ item }) => {
+                    if (item.dia == aux){
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'column' }}>
+                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                              <Text>Reps: {item.repeticiones}</Text>
+                              <Text>Series: {item.series}</Text>
+                            </View>
 
+                          </View>
+                        </TouchableOpacity>
+                      )
+                    }
+                  }} />
                     </DropDownItem>
                   </View>
                 )
@@ -106,16 +164,20 @@ const styles = StyleSheet.create({
     flexDirection: "column"
   },
   imageContainer: {
-    width: Dimensions.get('window').width / 2 - 4,
-    height: 200,
+    height: height * 0.28,
+    width: width * 0.51,
     margin: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black'
+    backgroundColor: 'black',
+    borderWidth: 4,
+    borderColor: "#ebf0f7"
   },
   image: {
-    width: Dimensions.get('window').width / 2 - 4,
-    height: 200,
+    height: height * 0.28,
+    width: width * 0.51,
+    borderWidth: 4,
+    borderColor: "#ebf0f7"
   },
   bgImage: {
     flex: 1,
@@ -190,6 +252,12 @@ const styles = StyleSheet.create({
     marginBottom: 2.5,
     color: '#3399ff',
     fontWeight: 'bold'
+  },
+  cuadraditos: {
+    backgroundColor: 'black', marginBottom: 5, marginTop: 5, marginHorizontal: 10, paddingBottom: 10
+  },
+  cuadraditosDeAdentro: {
+    backgroundColor: 'grey', marginVertical: 5, marginTop: 2, paddingVertical: 10, paddingLeft: 10, alignSelf: 'stretch', width: Dimensions.get('window').width * 0.88
   },
 })
 

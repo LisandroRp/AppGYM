@@ -41,11 +41,11 @@ class Suplementacion extends Component {
       memory: [{ id: '1', nombre: 'Falopa', descripcion: 'Droguita' },
       { id: 2, nombre: 'Falopa2', descripcion: 'Droguita' },
       { id: 3, nombre: 'Falopa3', descripcion: 'Droguita' }],
-      isLoading: true,
+      isLoading: false,
       refreshing: false,
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-    this.obtenerEventos()
+    //this.obtenerEventos()
   }
   obtenerEventos() {
     ApiController.getEventos(this.okEventos.bind(this));
@@ -182,7 +182,6 @@ const styles = StyleSheet.create({
   image: {
     width: 90,
     height: 90,
-    borderRadius: 45,
     borderWidth: 2,
     borderColor: "#ebf0f7",
     margin: 5,
@@ -205,7 +204,6 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     padding: 10,
     flexDirection: 'row',
-    borderRadius: 30,
   },
 
   name: {

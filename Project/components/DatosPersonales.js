@@ -11,17 +11,17 @@ class DatosPersonales extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            IdUser: null,
-            nombre: null,
-            apellido: null,
-            email: null,
-            isLoading: true,
+            IdUser: 'LorenzoR',
+            nombre: 'Lorenzo',
+            apellido: 'Rodriguez',
+            email: 'LorenzoR@gmail.com',
+            isLoading: false,
             genrePosta: null,
             searchBarFocused: false,
             generoEvento: [],
             generoVacio: [],
         };
-        this._retrieveData();
+        //this._retrieveData();
     }
     _retrieveData = async () => {
         try {

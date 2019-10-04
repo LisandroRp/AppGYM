@@ -20,7 +20,9 @@ import Suplementacion from './components/Suplementacion'
 import SuplementacionEspecifica from './components/SuplementacionEspecifica'
 import Rutinas from './components/Rutinas';
 import RutinaNew from './components/RutinaNew'
+import RutinaModificable from './components/RutinaModificable'
 import RutinaEspecifica from './components/RutinaEspecifica'
+import RutinasFavs from './components/RutinasFavs'
 import MenuDrawer from './components/MenuDrawer';
 import { AsyncStorage } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
@@ -33,6 +35,7 @@ import {
   DrawerItems,
 } from 'react-navigation';
 import { ScrollView } from 'react-native-gesture-handler';
+import CamaraPage from './components/Camara/CamaraPage';
 console.disableYellowBox=true
 
 function handleSearch() {
@@ -231,9 +234,13 @@ static navigationOptions = ({ navigation }) => {
   pasarEjercicio(idEjercicio,nombre,descripcion) {
     this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio, nombreEjercicio:nombre, descripcionEjercicio: descripcion });
   }
-  guardarRutina(rutina){
+  guardarRutina(rutina,tipo){
     this._storeData(rutina);
+    if(tipo=='nuevo'){
     this.props.navigation.navigate('RutinaNew', { rutina: rutina})
+    }else{
+      this.props.navigation.navigate('RutinaModificable', { rutina: rutina})
+    }
   }
   agarrarMusculo(){
     return this.state.musculo
@@ -302,8 +309,8 @@ static navigationOptions = ({ navigation }) => {
       />
     );
   }
-  pasarEjercicio(dia, musculo) {
-    this.props.navigation.navigate('MusculoAgregar', {dia:dia,musculo:musculo});
+  pasarEjercicio(dia, musculo, tipo) {
+    this.props.navigation.navigate('MusculoAgregar', {dia:dia,musculo:musculo,tipo:tipo});
   }
 }
 class RutinasScreen extends React.Component {
@@ -330,17 +337,18 @@ class RutinasScreen extends React.Component {
       />
     );
   }
-  irRutina(id,nombre) {
-    this.props.navigation.navigate('RutinaEspecifica', { id: id ,nombre: nombre});
+  irRutina(id,nombre,modificable) {
+    if(modificable){
+    this.props.navigation.navigate('RutinaEspecificaM', { id: id ,nombre: nombre});
+    }else{
+      this.props.navigation.navigate('RutinaEspecificaNoM', { id: id ,nombre: nombre});
+    }
   }
 
 }
 class RutinaNewScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-          pedro: this.props.navigation.getParam('isLoading'),
-    }
   }
   static navigationOptions = ({ navigation }) => {
     return {
@@ -358,20 +366,107 @@ class RutinaNewScreen extends React.Component {
       <RutinaNew
         onPressGo={this.agregarEjercicio.bind(this)}
         onPressInfo={this.verInfo.bind(this)}
+        onPressCancelar={this.cancelar.bind(this)}
       />
     );
   }
-  agregarEjercicio(dia) {
-    this.props.navigation.navigate('EjercicioAgregar',{dia:dia});
+  agregarEjercicio(dia,tipo) {
+    this.props.navigation.navigate('EjercicioAgregar',{dia:dia,tipo: tipo});
   }
   verInfo(nombre){
     this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre});
+  }
+  cancelar(){
+    this.props.navigation.navigate('RutinasScreen');
   }
   pasarUsuario() {
     //return this.state.idUser
   }
 }
-class RutinaEspecificaScreen extends React.Component {
+class RutinaModificableScreen extends React.Component{
+  constructor(props) {
+    super(props);
+  }
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Editar Rutina',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+}
+  render() {
+    return (
+      <RutinaModificable
+      onPressGo={this.agregarEjercicio.bind(this)}
+      onPressInfo={this.verInfo.bind(this)}
+      onPressCancelar={this.cancelar.bind(this)}
+      />
+    );
+  }
+  agregarEjercicio(dia,tipo) {
+    this.props.navigation.navigate('EjercicioAgregar',{dia:dia,tipo: tipo});
+  }
+  verInfo(nombre){
+    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre});
+  }
+  cancelar(){
+    this.props.navigation.navigate('RutinasScreen');
+  }
+}
+class RutinaEspecificaMScreen extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  static navigationOptions = ({ navigation}) => {
+    return {
+      headerRight: (
+        <View style={{ flexDirection: 'row' }}>
+          <FontAwesome name="edit" style={{ marginRight: 20, color: '#3399ff' }}
+            onPress={() => navigation.navigate('RutinaModificable')}
+            size={22}
+          />
+        </View>
+      ),
+      title: navigation.getParam('nombre', 'Rutina'),
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+}
+  render() {
+    return (
+      <RutinaEspecifica
+        onPressGo={this.pasarConcierto.bind(this)}
+        editable={this.editar.bind(this)}
+        onPressInfo={this.verInfo.bind(this)}
+      />
+    );
+  }
+  pasarConcierto(id) {
+    this.props.navigation.navigate('Detalle', { IdEvento: id });
+  }
+  verInfo(nombre){
+    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre});
+  }
+  editar(id){
+    this._storeData(id);
+  }
+  _storeData = async (id) => {
+    try {
+        await AsyncStorage.setItem('rutinaEditable', JSON.stringify(id));
+    } catch (error) {
+        console.log(error);
+    }
+  }
+}
+class RutinaEspecificaNoMScreen extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -390,19 +485,59 @@ class RutinaEspecificaScreen extends React.Component {
     return (
       <RutinaEspecifica
         onPressGo={this.pasarConcierto.bind(this)}
-        agarrarId={this.pasarIdEvento.bind(this)}
-        agarrarIdUsuario={this.pasarUsuario.bind(this)}
+        editable={this.editar.bind(this)}
+        onPressInfo={this.verInfo.bind(this)}
       />
     );
   }
   pasarConcierto(id) {
     this.props.navigation.navigate('Detalle', { IdEvento: id });
   }
-  pasarIdEvento() {
-    return this.state.idEvento
+  verInfo(nombre){
+    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre});
   }
-  pasarUsuario() {
-    //return this.state.idUser
+  editar(id){
+    this.setState({idModificable:id})
+  }
+}
+class RutinasFavsScreen extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  static navigationOptions= ({ navigation }) => {
+    return {
+    },{
+    title: 'Mis Rutinas',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  }
+  }
+//   static navigationOptions = {
+//       title: 'Mis Rutinas',
+//     headerStyle: {
+//       backgroundColor: 'black',
+//       height: 55,
+//       borderBottomWidth: 0
+//     },
+//     headerTintColor: '#3399ff',
+// }
+  render() {
+    return (
+      <RutinasFavs
+        onPressGo={this.irRutina.bind(this)}
+      />
+    );
+  }
+  irRutina(id,nombre,modificable) {
+    if(modificable){
+    this.props.navigation.navigate('RutinaEspecificaMScreen', { id: id ,nombre: nombre});
+    }else{
+      this.props.navigation.navigate('RutinaEspecificaNoMScreen', { id: id ,nombre: nombre});
+    }
   }
 }
 class FestivalesScreen extends React.Component {
@@ -553,6 +688,26 @@ class SuplementacionScreen extends React.Component {
     this.props.navigation.navigate('SuplementacionEspecifica', { id: id, nombre:nombre});
   }
 }
+class CamaraPageScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Camara',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <CamaraPage/>
+    );
+  }
+}
 const MockedViewStackNavigator = createStackNavigator(
   {
     MockedViewScreen: {
@@ -674,7 +829,7 @@ const RutinasStackNavigator = createStackNavigator(
           headerRight: (
             <View style={{ flexDirection: 'row' }}>
               <FontAwesome name="plus" style={{ marginRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('RutinaNew',{ tipo: 'Recomendados' })}
+                onPress={() => navigation.navigate('RutinaNew',{ tipo: 'nuevo' })}
                 size={22}
               />
             </View>
@@ -682,11 +837,13 @@ const RutinasStackNavigator = createStackNavigator(
         }
       }
     },
-    RutinaEspecifica: { screen: RutinaEspecificaScreen },
+    RutinaEspecificaM: { screen: RutinaEspecificaMScreen },
+    RutinaEspecificaNoM: { screen: RutinaEspecificaNoMScreen },
+    RutinaModificable: {screen: RutinaModificableScreen},
     RutinaNew: { screen: RutinaNewScreen },
     EjercicioAgregar: {screen:EjercicioAgregarScreen},
     MusculoAgregar: {screen: MusculoAgregarScreen},
-    EjercicioEspecifico: {screen: EjerciciosEspecificoScreen}
+    EjercicioEspecifico: {screen: EjerciciosEspecificoScreen},
   },
   {
     initialRouteName: 'RutinasScreen',
@@ -748,13 +905,13 @@ const FestivalesStackNavigator = createStackNavigator(
   }
 );
 const PerfilTabNavigator = createBottomTabNavigator({
-  Informacion,
-  MisRutinas
+  Perfil: Informacion,
+  RutinasFavs: RutinasFavsScreen
 }, {
     navigationOptions: ({ navigation }) => {
       const { routeName } = navigation.state.routes[navigation.state.index]
       return {
-        headerTitle: 'Profile',
+        headerTitle: 'Perfil',
         headerTintColor: '#3399ff',
         headerLeft: (
           <Icon
@@ -766,7 +923,7 @@ const PerfilTabNavigator = createBottomTabNavigator({
         ),
         headerStyle: {
           backgroundColor: 'black',
-          height: 50,
+          height: 55,
           borderBottomWidth: 0
         }
       }
@@ -789,7 +946,10 @@ const PerfilTabNavigator = createBottomTabNavigator({
 
 
 const PerfilStackNavigator = createStackNavigator({
-  PerfilTabNavigator: PerfilTabNavigator
+  PerfilTabNavigator: PerfilTabNavigator,
+  RutinaEspecificaMScreen: RutinaEspecificaMScreen,
+  RutinaEspecificaNoMScreen: RutinaEspecificaNoMScreen,
+  RutinaModificable: RutinaModificable
 });
 
 const DrawerConfig = {
@@ -820,6 +980,7 @@ const AppDrawerNavigator = createDrawerNavigator({
   Rutinas: RutinasStackNavigator,
   Suplementacion: SuplementacionStackNavigator,
   Perfil: PerfilStackNavigator,
+  Camara: CamaraPageScreen,
 },
   // DrawerConfig,
   {

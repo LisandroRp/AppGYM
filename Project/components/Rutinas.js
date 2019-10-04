@@ -44,16 +44,17 @@ class Rutinas extends Component {
       Status: 'none',
       modalVisible: false,
       userSelected: [],
-      rutinas: [{id:1,nombre: 'Arnold N1', imagen: require('./Fotos/PECHO.png'),dias: 7},
-      {id:2,nombre: 'La Roca', imagen: require('./Fotos/ESPALDA.png'),dias: 6},
-      {"id":3,"nombre": 'Vin Disell',"imagen": require('./Fotos/HOMBROS.png'),dias: 5},
-      {id:4,nombre: 'Wachiturro',imagen: require('./Fotos/PIERNAS.png'),dias: 1},
-      {id:5,nombre: 'Navy SEAL',imagen: require('./Fotos/BICEPS.png'),dias: 15},],
+      rutinas: [{ id: 1, nombre: 'Arnold N1', imagen: require('./Fotos/PECHO.png'), dias: 7, fav: 1,modificable:false },
+      { id: 2, nombre: 'La Roca', imagen: require('./Fotos/ESPALDA.png'), dias: 6, fav: 1,modificable:true },
+      { "id": 3, "nombre": 'Vin Disell', "imagen": require('./Fotos/HOMBROS.png'), dias: 5, fav: 1,modificable:true },
+      { id: 4, nombre: 'Wachiturro', imagen: require('./Fotos/PIERNAS.png'), dias: 1, fav: 0,modificable:true },
+      { id: 5, nombre: 'Navy SEAL', imagen: require('./Fotos/BICEPS.png'), dias: 15, fav: 0,modificable:true },],
       isLoading: false,
       generoEvento: [],
       refreshing: false,
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
+    this.Star_With_Border = 'https://img.icons8.com/color/96/000000/star.png';
     //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
     //this._storeData(this.state.IdUser);
     //this.getUserData()
@@ -90,9 +91,9 @@ class Rutinas extends Component {
     // })
     this.obtenerEventos()
   }
-  _storeData = async () => {
+  _storeData = async (id) => {
     try {
-      await AsyncStorage.setItem('IdUser', this.state.IdUser);
+      await AsyncStorage.setItem('rutinaEditable', id);
     } catch (error) {
       console.log(error);
     }
@@ -108,13 +109,30 @@ class Rutinas extends Component {
   clickEventListener = (item) => {
     Alert.alert('Message', 'Item clicked. ' + JSON.stringify(item));
   }
-  _onRefresh(getUserData){
-    this.setState({refreshing: true});
-    console.log(this.state.refreshing)
-    getUserData().then(() => {
-      this.setState({refreshing: false});
-    });
+  favear(id) {
+    var i = 0
+    aux = 0
+    rutinas2 = []
+    while (i < this.state.rutinas.length) {
+      if (this.state.rutinas[i].id == id) {
+        aux = i
+        console.log(aux)
+      }
+      rutinas2.push(this.state.rutinas[i])
+      i++
+    }
+    if (rutinas2[aux].fav == 1) {
+      rutinas2[aux].fav = 0
+    } else {
+      rutinas2[aux].fav = 1
+    }
+    this.setState({ rutinas: rutinas2 })
+    this.termino()
   }
+  termino() {
+    this.setState({ isLoading: false })
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -130,42 +148,60 @@ class Rutinas extends Component {
       return (
         //<View style={styles.container}>
         <LinearGradient colors={['black', 'grey']} style={styles.container}>
-        <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
-        <ScrollView refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.getUserData.bind(this)}
-          />
-        }>
-          <FlatList
-        
-            style={styles.contentList}
-            columnWrapperStyle={styles.listContainer}
-            data={this.state.rutinas}
-            initialNumToRender={50}
-             keyExtractor={(item) => {
-               return item.id;
-             }}
-            renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id, item.nombre)}>
-                    <View style={{ flexDirection: "row" }} >
-                      <Image style={styles.image} source={item.imagen } />
-                      <View style={styles.cardContent}>
-                        <Text style={styles.name}>{item.nombre}</Text>
-                        <Text style={styles.descripcion}>{item.dias} Dias</Text>
-                        {/* <Text style={styles.count}>{item.ubicacion}</Text>
+          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <ScrollView>
+            <FlatList
+              style={styles.contentList}
+              columnWrapperStyle={styles.listContainer}
+              data={this.state.rutinas}
+              initialNumToRender={50}
+              keyExtractor={(item) => {
+                return item.nombre;
+              }}
+              renderItem={({ item }) => {
+                if (item.fav == 1) {
+                  return (
+                    // <TouchableOpacity style={styles.card} onPress={() => {this.props.onPressGo(item.id, item.nombre, item.modificable),this._storeData(item.id)}}>
+                    <TouchableOpacity style={styles.card} onPress={() => {this.props.onPressGo(item.id, item.nombre, item.modificable)}}>
+                      <View style={{ flexDirection: "row" }} >
+                        <Image style={styles.image} source={item.imagen} />
+                        <View style={styles.cardContent}>
+                          <Text style={styles.name}>{item.nombre}</Text>
+                          <Text style={styles.descripcion}>{item.dias} Dias</Text>
+                          {/* <Text style={styles.count}>{item.ubicacion}</Text>
                         <Text style={{ fontSize: 11 }}>Entrada General: {item.precioE}$</Text> */}
+                        </View>
+                        <View style={{ alignItems: 'center', justifyContent: "center" }} >
+                          <TouchableOpacity onPress={() =>{ this.setState({ isLoading: true }), this.favear(item.id)}}>
+                            <Image style={styles.StarImage} source={{ uri: this.Star }} />
+                          </TouchableOpacity>
+                        </View>
                       </View>
-                      {/* <View style={{ flexDirection: "column", alignItems: 'center', paddingLeft: 300, paddingTop: 15, position: 'absolute' }} >
-                        <Image style={styles.StarImage} source={{ uri: this.Star }} />
-                        <Text style={styles.followButtonText}>{item.rating}/5</Text>
-                      </View> */}
-                    </View>
-                  </TouchableOpacity>
-                )
-            }} />
-        </ScrollView>
+                    </TouchableOpacity>
+                  )
+                }
+                else {
+                  return (
+                    <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id, item.nombre)}>
+                      <View style={{ flexDirection: "row" }} >
+                        <Image style={styles.image} source={item.imagen} />
+                        <View style={styles.cardContent}>
+                          <Text style={styles.name}>{item.nombre}</Text>
+                          <Text style={styles.descripcion}>{item.dias} Dias</Text>
+                          {/* <Text style={styles.count}>{item.ubicacion}</Text>
+                        <Text style={{ fontSize: 11 }}>Entrada General: {item.precioE}$</Text> */}
+                        </View>
+                        <View style={{ alignItems: 'center', justifyContent: "center" }} >
+                          <TouchableOpacity onPress={() => { this.setState({ isLoading: true }), this.favear(item.id)}}>
+                            <Image style={styles.StarImage} source={{ uri: this.Star_With_Border }} />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  )
+                }
+              }} />
+          </ScrollView>
         </LinearGradient>
         //</View>
       );
@@ -182,7 +218,7 @@ const styles = StyleSheet.create({
   contentList: {
     flex: 1,
   },
-  bgImage:{
+  bgImage: {
     flex: 1,
     resizeMode,
     position: 'absolute',

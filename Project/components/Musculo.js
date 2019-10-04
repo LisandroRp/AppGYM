@@ -17,10 +17,11 @@ import {
   ScrollView
 } from 'react-native';
 //import { LinearGradient, SQLite } from 'expo'
+import * as SQLite from 'expo-sqlite'
 import Ejercicios from './Ejercicios';
  import { openDatabase } from 'react-native-sqlite-storage';
 // //Connction to access the pre-populated user_db.db
-//const db = SQLite.openDatabase('AppGYM.db');
+const db = SQLite.openDatabase('AppGYM.db');
 //Connction to access the pre-populated user_db.db
 //var db = openDatabase({ name: 'AppGYM.db', createFromLocation : 1});
 //Otro intento
@@ -66,7 +67,7 @@ class Musculo extends Component {
     //this._storeData(this.state.IdUser);
     //this.getUserData()
     //this.obtenerEventos();
-    //this.obtenerEjercicios();
+    this.obtenerEjercicios();
   }
   // static get database() {
   //   return async () => SQLite.openDatabase('AppGYM.db')
@@ -75,24 +76,24 @@ class Musculo extends Component {
   // static get tableName() {
   //   return 'animals'
   // }
-  // obtenerEjercicios(){
-  //   db.transaction(tx => {
-  //     tx.executeSql('SELECT * FROM Ejercicios', [], (tx, results) => {
-  //       var temp = [];
-  //       console.log(temp +'Pedro')
-  //       for (let i = 0; i < results.rows.length; ++i) {
-  //         temp.push(results.rows.item(i));
-  //         console.log(temp +'hola')
-  //       }
-  //       this.setState({
-  //         ejercicios: temp,
-  //       });
-  //     },
-  //     () => {console.log('fail')},
-  // () => {console.log('success')}
-  // );
-  //   });
-  // }
+  obtenerEjercicios(){
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM Ejercicios', [], (results) => {
+        var temp = [];
+        console.log(temp +'Pedro')
+        for (let i = 0; i < results.rows.length; ++i) {
+          temp.push(results.rows.item(i));
+          console.log(temp +'hola')
+        }
+        this.setState({
+          ejercicios: temp,
+        });
+      },
+      () => {console.log('fail')},
+  () => {console.log('success')}
+  );
+    });
+  }
   // ListViewItemSeparator = () => {
   //   return (
   //     <View style={{ height: 0.2, width: '100%', backgroundColor: '#808080' }} />
@@ -233,7 +234,6 @@ const styles = StyleSheet.create({
   image: {
     width: 90,
     height: 90,
-    borderRadius: 45,
     borderWidth: 2,
     borderColor: "#ebf0f7",
     margin: 5,
@@ -256,7 +256,6 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     padding: 10,
     flexDirection: 'row',
-    borderRadius: 30,
   },
 
   name: {

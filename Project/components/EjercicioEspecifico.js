@@ -46,7 +46,7 @@ class EjercicioEspecifico extends Component {
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
   }
   componentDidMount() {
-    this.cargarEjercicio();
+    //this.cargarEjercicio();
 }
 
 cargarEjercicio() {

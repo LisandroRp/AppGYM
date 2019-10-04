@@ -18,10 +18,10 @@ import { LinearGradient } from 'expo'
 import DropDownItem from 'react-native-drop-down-item';
 import { Reducer } from 'react-native-router-flux';
 import { TextInput } from 'react-native-gesture-handler';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Modal } from 'react-native';
 import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
-
 var { height, width } = Dimensions.get('window');
+
 function createData(item) {
   return {
     key: item.id,
@@ -33,17 +33,16 @@ function createData(item) {
   };
 }
 
-class RutinaNew extends Component {
+class RutinaModificable extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: true,
       nombre: 'Nombre',
       modalVisible: false,
       userSelected: [],
-      //rutina: [],
       rutina: [],
-      isLoading: false,
       rutinaVacia: [],
       ultimoDia: 0,
       imagen:'',
@@ -55,7 +54,22 @@ class RutinaNew extends Component {
     console.log('chauuuu')
     this._retrieveData()
   }
-
+  componentWillMount(){
+    this._retrieveModificable()
+  }
+  _retrieveModificable = async () => {
+    try {
+      const value = await AsyncStorage.getItem('rutinaEditable');
+      rutinaNueva2=[]
+      if (value !== null) {
+          rutinaNueva2=JSON.parse(value)
+          this.setState({rutina: rutinaNueva2.rutina, nombre:rutinaNueva2.nombre})
+        }
+        this.termino()
+      }catch (error) {
+      console.log(error);
+    }
+  }
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem('rutina');
@@ -68,6 +82,8 @@ class RutinaNew extends Component {
           this._storeData()
           alert('Este ejercicio ya esta en el dia seleccionado')
         }
+      }else{
+        this.setState({isLoading:false})
       }
     } catch (error) {
       console.log(error);
@@ -80,7 +96,7 @@ class RutinaNew extends Component {
   touch(dia) {
     if(this.diaAnterior(dia) || dia==1){
       this.setState({ ultimoDia: dia })
-      this.props.onPressGo(dia,'nuevo')
+      this.props.onPressGo(dia,'modificar')
     }else{
       alert('Debe agregar ejercicios en el dia '+(dia-1)+' para poder agregar los en este dia')
     }
@@ -218,11 +234,14 @@ class RutinaNew extends Component {
     rutinaNueva.rutina=this.state.rutina
     console.log(rutinaNueva)
   }
-  cancelarRutina(){
+  borrarRutina(){
     this.props.onPressCancelar()
   }
   nuevoId(){
     //buscar el ultimo id en la base de datos
+  }
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible});
   }
   render() {
     if (this.state.isLoading) {
@@ -230,6 +249,9 @@ class RutinaNew extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
+          <AntDesign name="up" size={1} color="white" />
+                                <AntDesign name="down" size={1} color="white" />
+                                <AntDesign name="delete" size={1} color="white" />
         </View>
       );
     } else {
@@ -237,15 +259,6 @@ class RutinaNew extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
           <ScrollView>
-          <View style={{alignItems:'center', marginVertical:height*0.03}}>
-          {/* <TouchableOpacity onPress={() => {}> */}
-          <TouchableOpacity>
-                <View style={styles.imageContainer}>
-                <Image style={styles.image}/>
-                {/* <Image style={styles.image} source={} /> */}
-                </View>
-          </TouchableOpacity>
-          </View>
             <View style={styles.inputContainer}>
               <TextInput style={styles.TextContainer} maxLength={15} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
               <TouchableOpacity onPress={() => { this.borrarTodo()}} style={styles.borrarTodo}>
@@ -610,9 +623,9 @@ class RutinaNew extends Component {
               </DropDownItem>
             </View>
             <View style={{flexDirection: "row",justifyContent:'center', height:100}}>
-            <TouchableOpacity style={styles.guardarButton} onPress={() => {this.cancelarRutina()}}>
+            <TouchableOpacity style={styles.guardarButton} onPress={() => {this.setState({modalVisible:true})}}>
               <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
-                Cancelar
+                Borrar
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.guardarButton} onPress={() => {this.guardarRutina()}}>
@@ -622,6 +635,36 @@ class RutinaNew extends Component {
             </TouchableOpacity>
             </View>
           </ScrollView>
+          <Modal
+            animationType="fade"
+            visible={this.state.modalVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalVisible: false })}  >
+
+            <View style={styles.modal}>
+              {/* <View style={{ flexDirection: 'column' }}>
+                  <Text>Repeticiones:</Text>
+                  <Text>Series:</Text>
+                </View> */}
+              <View style={{ flexDirection: 'column', marginTop: height * 0.05}}>
+              <Text style={styles.textButton}>Esta seguro que desea borrar la rutina "{this.state.nombre}"</Text>
+              </View>
+              <View style={styles.modal2}>
+                <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderRadius: 22 }}>
+                    <View style={[styles.buttonContainer]}
+                      onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
+                      <Text style={styles.textButton}> Cancel</Text>
+                    </View>
+                </TouchableOpacity>
+                {/* <View style={{borderColor: 'red', borderRightWidth: '2'}} /> */}
+                <TouchableOpacity onPress={() => this.borrarRutina()} style={{ justifyContent: 'center', alignItems: 'center', borderLeftWidth: 2, paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                    <View style={[styles.buttonContainer]}>
+                      <Text style={styles.textButton}>Accept</Text>
+                    </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </View>
       );
     }
@@ -669,7 +712,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#3399ff',
     borderRadius: 30,
-    marginRight: 20,
+    marginRight: 25,
   },
   imageContainer: {
     width: Dimensions.get('window').width / 2 - 4,
@@ -677,9 +720,7 @@ const styles = StyleSheet.create({
     margin: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
-    borderWidth: 5,
-    borderColor: "#ebf0f7"
+    backgroundColor: 'black'
   },
   image: {
     width: Dimensions.get('window').width / 2 - 4,
@@ -782,8 +823,40 @@ const styles = StyleSheet.create({
   },
   DropDownItem: {
     alignItems: 'stretch'
-  }
+  },
+  //MODAAAAL
+  modal: {
+    height: height * 0.22,
+    width: width * 0.75,
+    position: 'absolute',
+    top: height * 0.3,
+    left: width * 0.13,
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22
+  },
+  modal2: {
+    flexDirection: 'row', borderColor: 'black', borderTopWidth: 2, width: width * 0.74, height: height * 0.08, position: 'absolute', bottom: 0
+  },
+  textButton: {
+    color: 'white',
+    fontSize: 15,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  buttonContainer: {
+    alignSelf: 'center',
+    justifyContent: 'center'
+  },
+  buttonContainer: {
+    alignSelf: 'center',
+    justifyContent: 'center'
+  },
 })
 
 
-export default withNavigation(RutinaNew);
+export default withNavigation(RutinaModificable);

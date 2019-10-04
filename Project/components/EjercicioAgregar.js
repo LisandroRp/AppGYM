@@ -48,7 +48,8 @@ class EjercicioAgregar extends Component {
       {id:7,musculo: 'Abdominales',imagen: require('./Fotos/ABS.png')},
       {id:8,musculo: 'Cardio',imagen: require('./Fotos/CARDIO.png')}],
       isLoading: false, 
-      dia: this.props.navigation.getParam('dia')
+      dia: this.props.navigation.getParam('dia'),
+      tipo: this.props.navigation.getParam('tipo')
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.obtenerEventos()
@@ -77,7 +78,7 @@ class EjercicioAgregar extends Component {
             }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity onPress={() => this.props.onPressGo(this.state.dia, item.musculo)}>
+              <TouchableOpacity onPress={() => this.props.onPressGo(this.state.dia, item.musculo,this.state.tipo)}>
                 <View style={styles.imageContainer}>
                 <Image style={styles.image} source={item.imagen} />
                 </View>
