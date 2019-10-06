@@ -3,7 +3,7 @@ import { SearchBar, Icon, ThemeConsumer } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import { AsyncStorage, Modal, TextInput } from 'react-native';
 import ApiController from '../controller/ApiController'
-import { FontAwesome } from '@expo/vector-icons';
+// import { FontAwesome } from '@expo/vector-icons';
 import {
   StyleSheet,
   Text,
@@ -230,10 +230,11 @@ class MusculoAgregar extends Component {
                         <Text style={styles.descripcion}>{item.descripcion}</Text>
                       </View>
                       <View style={styles.masita}>
-                        <FontAwesome name="plus" style={styles.plus}
+                        {/* <FontAwesome name="plus" style={styles.plus}
                           onPress={() => this.setModalVisible(true, item.id, item.nombre, item.musculo)}
                           size={44}
-                        /></View>
+                        /> */}
+                        </View>
                     </View>
                   </TouchableOpacity>
                 )
@@ -339,6 +340,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: 'center',
     justifyContent: 'center',
+    backgroundColor:'#3399ff'
   },
   plus: {
     alignItems: "center",

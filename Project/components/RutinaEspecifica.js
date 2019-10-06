@@ -15,7 +15,6 @@ import {
   ActivityIndicator
 } from 'react-native';
 import DropDownItem from 'react-native-drop-down-item';
-import { LinearGradient } from 'expo'
 import { Reducer } from 'react-native-router-flux';
 var { height, width } = Dimensions.get('window');
 

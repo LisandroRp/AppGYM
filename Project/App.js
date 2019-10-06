@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { LinearGradient } from 'expo'
-import Icon from '@expo/vector-icons/Ionicons';
+// import { LinearGradient } from 'expo'
+// import Icon from '@expo/vector-icons/Ionicons';
 import Detalle from './components/Detalle';
 import Ejercicios from './components/Ejercicios'
 import EjerciciosEspecifico from './components/EjercicioEspecifico'
@@ -25,7 +25,7 @@ import RutinaEspecifica from './components/RutinaEspecifica'
 import RutinasFavs from './components/RutinasFavs'
 import MenuDrawer from './components/MenuDrawer';
 import { AsyncStorage } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+// import { FontAwesome } from '@expo/vector-icons';
 import {
   createSwitchNavigator,
   createAppContainer,
@@ -425,10 +425,11 @@ class RutinaEspecificaMScreen extends React.Component {
     return {
       headerRight: (
         <View style={{ flexDirection: 'row' }}>
-          <FontAwesome name="edit" style={{ marginRight: 20, color: '#3399ff' }}
+          {/* <FontAwesome name="edit" style={{ marginRight: 20, color: '#3399ff' }}
             onPress={() => navigation.navigate('RutinaModificable')}
             size={22}
-          />
+          /> */}
+          <View size={30} style={{backgroundColor: 'red'}}><Text style={{backgroundColor: 'white'}} onPress={() => navigation.navigate('RutinaModificable')}>Hola</Text></View>
         </View>
       ),
       title: navigation.getParam('nombre', 'Rutina'),
@@ -717,19 +718,21 @@ const MockedViewStackNavigator = createStackNavigator(
       navigationOptions: ({ navigation }) => {
         return {
           headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
+            <View size={30} style={{backgroundColor: 'red'}}><Text style={{backgroundColor: 'white'}}>Hola</Text></View>
+            //<Icon
+            //  style={{ paddingLeft: 10, color: '#3399ff' }}
+            //  onPress={() => navigation.openDrawer()}
+            //  name="md-menu"
+            //  size={30}
+            ///>
           ),
           headerRight: (
             <View style={{ flexDirection: 'row' }}>
-              <FontAwesome name="search" style={{ marginRight: 20, color: '#3399ff' }}
+            <View size={30} style={{backgroundColor: 'red'}}><Text style={{backgroundColor: 'white'}}>Hola</Text></View>
+              {/* <FontAwesome name="search" style={{ marginRight: 20, color: '#3399ff' }}
                 onPress={() => navigation.navigate('Helado', { tipo: 'Recomendados' })}
                 size={22}
-              />
+              /> */}
             </View>
           )
         }
@@ -750,12 +753,13 @@ const EjerciciosStackNavigator = createStackNavigator(
       navigationOptions: ({ navigation }) => {
         return {
           headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
+            // <Icon
+            //   style={{ paddingLeft: 10, color: '#3399ff' }}
+            //   onPress={() => navigation.openDrawer()}
+            //   name="md-menu"
+            //   size={30}
+            // />
+            <View size={30} style={{backgroundColor: 'red'}}><Text style={{backgroundColor: 'white'}}  onPress={() => navigation.openDrawer()}>Hola</Text></View>
           )
         }
       }
@@ -819,19 +823,21 @@ const RutinasStackNavigator = createStackNavigator(
       navigationOptions: ({ navigation }) => {
         return {
           headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
+            // <Icon
+            //   style={{ paddingLeft: 10, color: '#3399ff' }}
+            //   onPress={() => navigation.openDrawer()}
+            //   name="md-menu"
+            //   size={30}
+            // />
+            <View size={30} style={{backgroundColor: 'red'}}><Text style={{backgroundColor: 'white'}} onPress={() => navigation.openDrawer()}>Hola</Text></View>
           ),
           headerRight: (
             <View style={{ flexDirection: 'row' }}>
-              <FontAwesome name="plus" style={{ marginRight: 20, color: '#3399ff' }}
+              {/* <FontAwesome name="plus" style={{ marginRight: 20, color: '#3399ff' }}
                 onPress={() => navigation.navigate('RutinaNew',{ tipo: 'nuevo' })}
                 size={22}
-              />
+              /> */}
+              <View size={30} style={{backgroundColor: 'red'}}><Text style={{backgroundColor: 'white'}}  onPress={() => navigation.navigate('RutinaNew',{ tipo: 'nuevo' })}>Hola</Text></View>
             </View>
           )
         }
@@ -856,12 +862,13 @@ const SuplementacionStackNavigator = createStackNavigator(
       navigationOptions: ({ navigation }) => {
         return {
           headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
+            // <Icon
+            //   style={{ paddingLeft: 10, color: '#3399ff' }}
+            //   onPress={() => navigation.openDrawer()}
+            //   name="md-menu"
+            //   size={30}
+            // />
+            <View size={30} style={{backgroundColor: 'red'}}><Text style={{backgroundColor: 'white'}}  onPress={() => navigation.openDrawer()}>Hola</Text></View>
           ),
         }
       }
@@ -870,38 +877,6 @@ const SuplementacionStackNavigator = createStackNavigator(
   },
   {
     initialRouteName: 'SuplementacionScreen',
-  }
-);
-const FestivalesStackNavigator = createStackNavigator(
-  {
-    FestivalesScreen: {
-      screen: FestivalesScreen,
-      navigationOptions: ({ navigation }) => {
-        return {
-          headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
-          ),
-          headerRight: (
-            <View style={{ flexDirection: 'row' }}>
-              <FontAwesome name="search" style={{ marginRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('Helado', { tipo: 'Festival' })}
-                size={22}
-              />
-            </View>
-          )
-        }
-      }
-    },
-    Helado: { screen: SearchScreen },
-    Detalle: { screen: DetalleScreen },
-  },
-  {
-    initialRouteName: 'FestivalesScreen',
   }
 );
 const PerfilTabNavigator = createBottomTabNavigator({
@@ -914,12 +889,13 @@ const PerfilTabNavigator = createBottomTabNavigator({
         headerTitle: 'Perfil',
         headerTintColor: '#3399ff',
         headerLeft: (
-          <Icon
-            style={{ paddingLeft: 10, color: '#3399ff' }}
-            onPress={() => navigation.openDrawer()}
-            name="md-menu"
-            size={30}
-          />
+          // <Icon
+          //   style={{ paddingLeft: 10, color: '#3399ff' }}
+          //   onPress={() => navigation.openDrawer()}
+          //   name="md-menu"
+          //   size={30}
+          // />
+          <View size={30} style={{backgroundColor: 'red'}}><Text style={{backgroundColor: 'white'}} onPress={() => navigation.openDrawer()}>Hola</Text></View>
         ),
         headerStyle: {
           backgroundColor: 'black',
@@ -962,13 +938,13 @@ const DrawerConfig = {
 }
 const customDrawerComponent = (props) => (
   <View style={{ flex: 1 }}>
-    <LinearGradient colors={['grey', 'black']} style={styles.profile}>
+    {/* <LinearGradient colors={['grey', 'black']} style={styles.profile}> */}
     <View style={{alignContent:'center',alignItems:'center'}}>
       <Image
         style={{ height: 100, width:200, resizeMode: 'contain', alignSelf:'center' }}
         source={require('./components/Licha-enjoy.png')}></Image>
         </View>
-    </LinearGradient>
+    {/* </LinearGradient> */}
     <ScrollView style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }}>
       <DrawerItems {...props} style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }} />
     </ScrollView>

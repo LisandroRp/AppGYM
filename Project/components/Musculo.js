@@ -16,12 +16,11 @@ import {
   ActivityIndicator,
   ScrollView
 } from 'react-native';
-//import { LinearGradient, SQLite } from 'expo'
-import * as SQLite from 'expo-sqlite'
+// import Expo,{ LinearGradient, SQLite } from 'expo'
 import Ejercicios from './Ejercicios';
  import { openDatabase } from 'react-native-sqlite-storage';
 // //Connction to access the pre-populated user_db.db
-const db = SQLite.openDatabase('AppGYM.db');
+// const db = SQLite.openDatabase('AppGYM.db');
 //Connction to access the pre-populated user_db.db
 //var db = openDatabase({ name: 'AppGYM.db', createFromLocation : 1});
 //Otro intento
@@ -67,7 +66,8 @@ class Musculo extends Component {
     //this._storeData(this.state.IdUser);
     //this.getUserData()
     //this.obtenerEventos();
-    this.obtenerEjercicios();
+    // this.obtenerEjercicios();
+    //this.Hola()
   }
   // static get database() {
   //   return async () => SQLite.openDatabase('AppGYM.db')
@@ -78,7 +78,7 @@ class Musculo extends Component {
   // }
   obtenerEjercicios(){
     db.transaction(tx => {
-      tx.executeSql('SELECT * FROM Ejercicios', [], (results) => {
+      tx.executeSql('SELECT * FROM Ejercicios', ['hola'], (tx,results) => {
         var temp = [];
         console.log(temp +'Pedro')
         for (let i = 0; i < results.rows.length; ++i) {
@@ -88,6 +88,18 @@ class Musculo extends Component {
         this.setState({
           ejercicios: temp,
         });
+      },
+      () => {console.log('fail')},
+  () => {console.log('success')}
+  );
+    });
+  }
+  
+  Hola(){
+    db.transaction(tx => {
+      tx.executeSql('DROP TABLE Suplementos',(results) => {
+        var temp = [];
+        console.log(temp +'Creo')
       },
       () => {console.log('fail')},
   () => {console.log('success')}

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { View, FlatList, StyleSheet, Text, ActivityIndicator,Image, TouchableOpacity, Modal, Dimensions,ScrollView, RefreshControl, TextInput } from 'react-native';
-import { LinearGradient } from 'expo'
+// import { LinearGradient } from 'expo'
 import ApiController from '../controller/ApiController';
 import { AsyncStorage } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
+// import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 
 var { height, width } = Dimensions.get('window');
 function createData(item) {
@@ -179,7 +179,7 @@ okDelete(){
           <TouchableOpacity onPress={() => {
                         this.borrarComentario(this.props.item.id,this.props.item.nombre);
                     }} style={styles.fab}>
-                        <AntDesign name="close" size={18} color="white" style={{marginTop:1}}/>
+                        {/* <AntDesign name="close" size={18} color="white" style={{marginTop:1}}/> */}
           </TouchableOpacity>
         </View>
 

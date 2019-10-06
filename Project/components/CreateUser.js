@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, TextInput, Text } from 'react-native';
 import ApiController from '../controller/ApiController';
 import { KeyboardAvoidingView } from 'react-native';
-import { LinearGradient } from 'expo'
+// import { LinearGradient } from 'expo'
 
 
 class Login extends Component {
@@ -35,7 +35,7 @@ class Login extends Component {
         return (
             // <LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
             <KeyboardAvoidingView behavior="padding" enabled>
-                <LinearGradient colors={['#1D71B8', '#2D2E83']} style={styles.loginContainer}>
+                {/* <LinearGradient colors={['#1D71B8', '#2D2E83']} style={styles.loginContainer}> */}
                     <View style={{ alignContent: 'center', alignItems: 'center' }}>
                         <Image
                             style={{ height: 250, width: 250, resizeMode: 'contain',paddingBottom:10 }}
@@ -88,7 +88,7 @@ class Login extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </LinearGradient>
+                {/* </LinearGradient> */}
             </KeyboardAvoidingView>
             //</LinearGradient>
         );

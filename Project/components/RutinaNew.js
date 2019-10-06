@@ -14,12 +14,11 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import { LinearGradient } from 'expo'
 import DropDownItem from 'react-native-drop-down-item';
 import { Reducer } from 'react-native-router-flux';
 import { TextInput } from 'react-native-gesture-handler';
 import { AsyncStorage } from 'react-native';
-import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
+// import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 
 var { height, width } = Dimensions.get('window');
 function createData(item) {
@@ -234,395 +233,396 @@ class RutinaNew extends Component {
       );
     } else {
       return (
-        <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
-          <ScrollView>
-          <View style={{alignItems:'center', marginVertical:height*0.03}}>
-          {/* <TouchableOpacity onPress={() => {}> */}
-          <TouchableOpacity>
-                <View style={styles.imageContainer}>
-                <Image style={styles.image}/>
-                {/* <Image style={styles.image} source={} /> */}
-                </View>
-          </TouchableOpacity>
-          </View>
-            <View style={styles.inputContainer}>
-              <TextInput style={styles.TextContainer} maxLength={15} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
-              <TouchableOpacity onPress={() => { this.borrarTodo()}} style={styles.borrarTodo}>
-                <AntDesign name="delete" size={20} color="white" />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.cuadraditos}>
-              <DropDownItem key={1} contentVisible={false}
-                header={
-                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                    <Text style={styles.detalleGenresTitles}>
-                      Dia 1
-                </Text>
-                    <TouchableOpacity onPress={() => {
-                      this.touch('1');
-                    }} style={styles.fab}>
-                      <AntDesign name="plus" size={20} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                }
-              >
-                <FlatList
-                  style={styles.contentList}
-                  columnWrapperStyle={styles.listContainer}
-                  data={this.state.rutina}
-                  initialNumToRender={50}
-                  keyExtractor={(item) => {
-                    return item.key;
-                  }}
-                  renderItem={({ item }) => {
-                    if (item.dia == 1)
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="up" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="down" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                <AntDesign name="delete" size={15} color="white" />
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </TouchableOpacity>
-                      )
-                  }} />
-              </DropDownItem>
-            </View>
-            <View style={styles.cuadraditos}>
-              <DropDownItem key={2} contentVisible={false}
-                header={
-                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                    <Text style={styles.detalleGenresTitles}>
-                      Dia 2
-                </Text>
-                    <TouchableOpacity onPress={() => {
-                      this.touch('2');
-                    }} style={styles.fab}>
-                      <AntDesign name="plus" size={20} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                }
-              >
-                <FlatList
-                  style={styles.contentList}
-                  columnWrapperStyle={styles.listContainer}
-                  data={this.state.rutina}
-                  initialNumToRender={50}
-                  keyExtractor={(item) => {
-                    return item.key;
-                  }}
-                  renderItem={({ item }) => {
-                    if (item.dia == 2)
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="up" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="down" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                <AntDesign name="delete" size={15} color="white" />
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </TouchableOpacity>
-                      )
-                  }} />
-              </DropDownItem>
-            </View>
-            <View style={styles.cuadraditos}>
-              <DropDownItem key={3} contentVisible={false}
-                header={
-                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                    <Text style={styles.detalleGenresTitles}>
-                      Dia 3
-                </Text>
-                    <TouchableOpacity onPress={() => {
-                      this.touch('3');
-                    }} style={styles.fab}>
-                      <AntDesign name="plus" size={20} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                }
-              >
-                <FlatList
-                  style={styles.contentList}
-                  columnWrapperStyle={styles.listContainer}
-                  data={this.state.rutina}
-                  initialNumToRender={50}
-                  keyExtractor={(item) => {
-                    return item.key;
-                  }}
-                  renderItem={({ item }) => {
-                    if (item.dia == 3)
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="up" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="down" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                <AntDesign name="delete" size={15} color="white" />
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </TouchableOpacity>
-                      )
-                  }} />
-              </DropDownItem>
-            </View>
-            <View style={styles.cuadraditos}>
-              <DropDownItem key={4} contentVisible={false}
-                header={
-                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                    <Text style={styles.detalleGenresTitles}>
-                      Dia 4
-                </Text>
-                    <TouchableOpacity onPress={() => {
-                      this.touch('4');
-                    }} style={styles.fab}>
-                      <AntDesign name="plus" size={20} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                }
-              >
-                <FlatList
-                  style={styles.contentList}
-                  columnWrapperStyle={styles.listContainer}
-                  data={this.state.rutina}
-                  initialNumToRender={50}
-                  keyExtractor={(item) => {
-                    return item.key;
-                  }}
-                  renderItem={({ item }) => {
-                    if (item.dia == 4)
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="up" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="down" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                <AntDesign name="delete" size={15} color="white" />
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </TouchableOpacity>
-                      )
-                  }} />
-              </DropDownItem>
-            </View>
-            <View style={styles.cuadraditos}>
-              <DropDownItem key={5} contentVisible={false}
-                header={
-                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                    <Text style={styles.detalleGenresTitles}>
-                      Dia 5
-                </Text>
-                    <TouchableOpacity onPress={() => {
-                      this.touch('5');
-                    }} style={styles.fab}>
-                      <AntDesign name="plus" size={20} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                }
-              >
-                <FlatList
-                  style={styles.contentList}
-                  columnWrapperStyle={styles.listContainer}
-                  data={this.state.rutina}
-                  initialNumToRender={50}
-                  keyExtractor={(item) => {
-                    return item.key;
-                  }}
-                  renderItem={({ item }) => {
-                    if (item.dia == 5)
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="up" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="down" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                <AntDesign name="delete" size={15} color="white" />
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </TouchableOpacity>
-                      )
-                  }} />
-              </DropDownItem>
-            </View>
-            <View style={styles.cuadraditos}>
-              <DropDownItem key={6} contentVisible={false}
-                header={
-                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                    <Text style={styles.detalleGenresTitles}>
-                      Dia 6
-                </Text>
-                    <TouchableOpacity onPress={() => {
-                      this.touch('6');
-                    }} style={styles.fab}>
-                      <AntDesign name="plus" size={20} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                }
-              >
-                <FlatList
-                  style={styles.contentList}
-                  columnWrapperStyle={styles.listContainer}
-                  data={this.state.rutina}
-                  initialNumToRender={50}
-                  keyExtractor={(item) => {
-                    return item.key;
-                  }}
-                  renderItem={({ item }) => {
-                    if (item.dia == 6)
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="up" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="down" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                <AntDesign name="delete" size={15} color="white" />
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </TouchableOpacity>
-                      )
-                  }} />
-              </DropDownItem>
-            </View>
-            <View style={styles.cuadraditos}>
-              <DropDownItem key={7} contentVisible={false}
-                header={
-                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                    <Text style={styles.detalleGenresTitles}>
-                      Dia 7
-                </Text>
-                    <TouchableOpacity onPress={() => {
-                      this.touch('7');
-                    }} style={styles.fab}>
-                      <AntDesign name="plus" size={20} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                }
-              >
-                <FlatList
-                  style={styles.contentList}
-                  columnWrapperStyle={styles.listContainer}
-                  data={this.state.rutina}
-                  initialNumToRender={50}
-                  keyExtractor={(item) => {
-                    return item.key;
-                  }}
-                  renderItem={({ item }) => {
-                    if (item.dia == 7)
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="up" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
-                                <AntDesign name="down" size={15} color="white" />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                <AntDesign name="delete" size={15} color="white" />
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </TouchableOpacity>
-                      )
-                  }} />
-              </DropDownItem>
-            </View>
-            <View style={{flexDirection: "row",justifyContent:'center', height:100}}>
-            <TouchableOpacity style={styles.guardarButton} onPress={() => {this.cancelarRutina()}}>
-              <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
-                Cancelar
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.guardarButton} onPress={() => {this.guardarRutina()}}>
-              <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
-                Guardar
-                </Text>
-            </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </View>
+        // <View style={styles.container}>
+        //   <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+        //   <ScrollView>
+        //   <View style={{alignItems:'center', marginVertical:height*0.03}}>
+        //   {/* <TouchableOpacity onPress={() => {}> */}
+        //   <TouchableOpacity>
+        //         <View style={styles.imageContainer}>
+        //         <Image style={styles.image}/>
+        //         {/* <Image style={styles.image} source={} /> */}
+        //         </View>
+        //   </TouchableOpacity>
+        //   </View>
+        //     <View style={styles.inputContainer}>
+        //       <TextInput style={styles.TextContainer} maxLength={15} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
+        //       <TouchableOpacity onPress={() => { this.borrarTodo()}} style={styles.borrarTodo}>
+        //         <AntDesign name="delete" size={20} color="white" />
+        //       </TouchableOpacity>
+        //     </View>
+        //     <View style={styles.cuadraditos}>
+        //       <DropDownItem key={1} contentVisible={false}
+        //         header={
+        //           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //             <Text style={styles.detalleGenresTitles}>
+        //               Dia 1
+        //         </Text>
+        //             <TouchableOpacity onPress={() => {
+        //               this.touch('1');
+        //             }} style={styles.fab}>
+        //               <AntDesign name="plus" size={20} color="white" />
+        //             </TouchableOpacity>
+        //           </View>
+        //         }
+        //       >
+        //         <FlatList
+        //           style={styles.contentList}
+        //           columnWrapperStyle={styles.listContainer}
+        //           data={this.state.rutina}
+        //           initialNumToRender={50}
+        //           keyExtractor={(item) => {
+        //             return item.key;
+        //           }}
+        //           renderItem={({ item }) => {
+        //             if (item.dia == 1)
+        //               return (
+        //                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
+        //                   onPress={() => this.props.onPressInfo(item.nombre)}>
+        //                   <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //                     <View style={{ flexDirection: 'column' }}>
+        //                       <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+        //                       <Text>Reps: {item.repeticiones}</Text>
+        //                       <Text>Series: {item.series}</Text>
+        //                     </View>
+        //                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        //                       <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="up" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="down" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+        //                         <AntDesign name="delete" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                     </View>
+        //                   </View>
+        //                 </TouchableOpacity>
+        //               )
+        //           }} />
+        //       </DropDownItem>
+        //     </View>
+        //     <View style={styles.cuadraditos}>
+        //       <DropDownItem key={2} contentVisible={false}
+        //         header={
+        //           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //             <Text style={styles.detalleGenresTitles}>
+        //               Dia 2
+        //         </Text>
+        //             <TouchableOpacity onPress={() => {
+        //               this.touch('2');
+        //             }} style={styles.fab}>
+        //               <AntDesign name="plus" size={20} color="white" />
+        //             </TouchableOpacity>
+        //           </View>
+        //         }
+        //       >
+        //         <FlatList
+        //           style={styles.contentList}
+        //           columnWrapperStyle={styles.listContainer}
+        //           data={this.state.rutina}
+        //           initialNumToRender={50}
+        //           keyExtractor={(item) => {
+        //             return item.key;
+        //           }}
+        //           renderItem={({ item }) => {
+        //             if (item.dia == 2)
+        //               return (
+        //                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
+        //                   onPress={() => this.props.onPressInfo(item.nombre)}>
+        //                   <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //                     <View style={{ flexDirection: 'column' }}>
+        //                       <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+        //                       <Text>Reps: {item.repeticiones}</Text>
+        //                       <Text>Series: {item.series}</Text>
+        //                     </View>
+        //                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        //                       <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="up" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="down" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+        //                         <AntDesign name="delete" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                     </View>
+        //                   </View>
+        //                 </TouchableOpacity>
+        //               )
+        //           }} />
+        //       </DropDownItem>
+        //     </View>
+        //     <View style={styles.cuadraditos}>
+        //       <DropDownItem key={3} contentVisible={false}
+        //         header={
+        //           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //             <Text style={styles.detalleGenresTitles}>
+        //               Dia 3
+        //         </Text>
+        //             <TouchableOpacity onPress={() => {
+        //               this.touch('3');
+        //             }} style={styles.fab}>
+        //               <AntDesign name="plus" size={20} color="white" />
+        //             </TouchableOpacity>
+        //           </View>
+        //         }
+        //       >
+        //         <FlatList
+        //           style={styles.contentList}
+        //           columnWrapperStyle={styles.listContainer}
+        //           data={this.state.rutina}
+        //           initialNumToRender={50}
+        //           keyExtractor={(item) => {
+        //             return item.key;
+        //           }}
+        //           renderItem={({ item }) => {
+        //             if (item.dia == 3)
+        //               return (
+        //                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
+        //                   onPress={() => this.props.onPressInfo(item.nombre)}>
+        //                   <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //                     <View style={{ flexDirection: 'column' }}>
+        //                       <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+        //                       <Text>Reps: {item.repeticiones}</Text>
+        //                       <Text>Series: {item.series}</Text>
+        //                     </View>
+        //                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        //                       <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="up" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="down" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+        //                         <AntDesign name="delete" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                     </View>
+        //                   </View>
+        //                 </TouchableOpacity>
+        //               )
+        //           }} />
+        //       </DropDownItem>
+        //     </View>
+        //     <View style={styles.cuadraditos}>
+        //       <DropDownItem key={4} contentVisible={false}
+        //         header={
+        //           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //             <Text style={styles.detalleGenresTitles}>
+        //               Dia 4
+        //         </Text>
+        //             <TouchableOpacity onPress={() => {
+        //               this.touch('4');
+        //             }} style={styles.fab}>
+        //               <AntDesign name="plus" size={20} color="white" />
+        //             </TouchableOpacity>
+        //           </View>
+        //         }
+        //       >
+        //         <FlatList
+        //           style={styles.contentList}
+        //           columnWrapperStyle={styles.listContainer}
+        //           data={this.state.rutina}
+        //           initialNumToRender={50}
+        //           keyExtractor={(item) => {
+        //             return item.key;
+        //           }}
+        //           renderItem={({ item }) => {
+        //             if (item.dia == 4)
+        //               return (
+        //                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
+        //                   onPress={() => this.props.onPressInfo(item.nombre)}>
+        //                   <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //                     <View style={{ flexDirection: 'column' }}>
+        //                       <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+        //                       <Text>Reps: {item.repeticiones}</Text>
+        //                       <Text>Series: {item.series}</Text>
+        //                     </View>
+        //                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        //                       <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="up" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="down" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+        //                         <AntDesign name="delete" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                     </View>
+        //                   </View>
+        //                 </TouchableOpacity>
+        //               )
+        //           }} />
+        //       </DropDownItem>
+        //     </View>
+        //     <View style={styles.cuadraditos}>
+        //       <DropDownItem key={5} contentVisible={false}
+        //         header={
+        //           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //             <Text style={styles.detalleGenresTitles}>
+        //               Dia 5
+        //         </Text>
+        //             <TouchableOpacity onPress={() => {
+        //               this.touch('5');
+        //             }} style={styles.fab}>
+        //               <AntDesign name="plus" size={20} color="white" />
+        //             </TouchableOpacity>
+        //           </View>
+        //         }
+        //       >
+        //         <FlatList
+        //           style={styles.contentList}
+        //           columnWrapperStyle={styles.listContainer}
+        //           data={this.state.rutina}
+        //           initialNumToRender={50}
+        //           keyExtractor={(item) => {
+        //             return item.key;
+        //           }}
+        //           renderItem={({ item }) => {
+        //             if (item.dia == 5)
+        //               return (
+        //                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
+        //                   onPress={() => this.props.onPressInfo(item.nombre)}>
+        //                   <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //                     <View style={{ flexDirection: 'column' }}>
+        //                       <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+        //                       <Text>Reps: {item.repeticiones}</Text>
+        //                       <Text>Series: {item.series}</Text>
+        //                     </View>
+        //                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        //                       <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="up" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="down" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+        //                         <AntDesign name="delete" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                     </View>
+        //                   </View>
+        //                 </TouchableOpacity>
+        //               )
+        //           }} />
+        //       </DropDownItem>
+        //     </View>
+        //     <View style={styles.cuadraditos}>
+        //       <DropDownItem key={6} contentVisible={false}
+        //         header={
+        //           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //             <Text style={styles.detalleGenresTitles}>
+        //               Dia 6
+        //         </Text>
+        //             <TouchableOpacity onPress={() => {
+        //               this.touch('6');
+        //             }} style={styles.fab}>
+        //               <AntDesign name="plus" size={20} color="white" />
+        //             </TouchableOpacity>
+        //           </View>
+        //         }
+        //       >
+        //         <FlatList
+        //           style={styles.contentList}
+        //           columnWrapperStyle={styles.listContainer}
+        //           data={this.state.rutina}
+        //           initialNumToRender={50}
+        //           keyExtractor={(item) => {
+        //             return item.key;
+        //           }}
+        //           renderItem={({ item }) => {
+        //             if (item.dia == 6)
+        //               return (
+        //                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
+        //                   onPress={() => this.props.onPressInfo(item.nombre)}>
+        //                   <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //                     <View style={{ flexDirection: 'column' }}>
+        //                       <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+        //                       <Text>Reps: {item.repeticiones}</Text>
+        //                       <Text>Series: {item.series}</Text>
+        //                     </View>
+        //                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        //                       <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="up" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="down" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+        //                         <AntDesign name="delete" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                     </View>
+        //                   </View>
+        //                 </TouchableOpacity>
+        //               )
+        //           }} />
+        //       </DropDownItem>
+        //     </View>
+        //     <View style={styles.cuadraditos}>
+        //       <DropDownItem key={7} contentVisible={false}
+        //         header={
+        //           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //             <Text style={styles.detalleGenresTitles}>
+        //               Dia 7
+        //         </Text>
+        //             <TouchableOpacity onPress={() => {
+        //               this.touch('7');
+        //             }} style={styles.fab}>
+        //               <AntDesign name="plus" size={20} color="white" />
+        //             </TouchableOpacity>
+        //           </View>
+        //         }
+        //       >
+        //         <FlatList
+        //           style={styles.contentList}
+        //           columnWrapperStyle={styles.listContainer}
+        //           data={this.state.rutina}
+        //           initialNumToRender={50}
+        //           keyExtractor={(item) => {
+        //             return item.key;
+        //           }}
+        //           renderItem={({ item }) => {
+        //             if (item.dia == 7)
+        //               return (
+        //                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
+        //                   onPress={() => this.props.onPressInfo(item.nombre)}>
+        //                   <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+        //                     <View style={{ flexDirection: 'column' }}>
+        //                       <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+        //                       <Text>Reps: {item.repeticiones}</Text>
+        //                       <Text>Series: {item.series}</Text>
+        //                     </View>
+        //                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        //                       <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="up" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+        //                         <AntDesign name="down" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                       <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+        //                         <AntDesign name="delete" size={15} color="white" />
+        //                       </TouchableOpacity>
+        //                     </View>
+        //                   </View>
+        //                 </TouchableOpacity>
+        //               )
+        //           }} />
+        //       </DropDownItem>
+        //     </View>
+        //     <View style={{flexDirection: "row",justifyContent:'center', height:100}}>
+        //     <TouchableOpacity style={styles.guardarButton} onPress={() => {this.cancelarRutina()}}>
+        //       <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
+        //         Cancelar
+        //         </Text>
+        //     </TouchableOpacity>
+        //     <TouchableOpacity style={styles.guardarButton} onPress={() => {this.guardarRutina()}}>
+        //       <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
+        //         Guardar
+        //         </Text>
+        //     </TouchableOpacity>
+        //     </View>
+        //   </ScrollView>
+        // </View>
+        <View></View>
       );
     }
   }

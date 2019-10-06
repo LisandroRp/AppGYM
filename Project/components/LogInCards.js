@@ -11,7 +11,7 @@ import {
 } from 'react-native'; 
 import ApiController from '../controller/ApiController';
 import {KeyboardAvoidingView} from 'react-native';
-import { LinearGradient } from 'expo'
+// import { LinearGradient } from 'expo'
 
 class LogInCards extends Component {
   constructor(props) {
@@ -38,7 +38,7 @@ class LogInCards extends Component {
   render() {
     return (
       <KeyboardAvoidingView style={{backgroundColor: '#9FA8DA' }} behavior="padding" enabled>
-       <LinearGradient colors={['#1D71B8', '#2D2E83']} style={styles.container}>
+       {/* <LinearGradient colors={['#1D71B8', '#2D2E83']} style={styles.container}> */}
        <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
        {/* <Image style={styles.bgImage} source={{ uri: "https://lorempixel.com/900/1400/nightlife/8/" }}/> */}
        <View style={[styles.imageContainer]}>
@@ -83,7 +83,7 @@ class LogInCards extends Component {
         </TouchableOpacity>
         </View>
       </View>
-      </LinearGradient>
+      {/* </LinearGradient> */}
       </KeyboardAvoidingView>
       
     );

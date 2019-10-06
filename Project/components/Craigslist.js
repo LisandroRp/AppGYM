@@ -16,7 +16,7 @@ import {
   RefreshControl,
   ScrollView
 } from 'react-native';
-import { LinearGradient } from 'expo'
+// import { LinearGradient } from 'expo'
 
 function createData(item) {
   return {
@@ -124,15 +124,9 @@ class Craigslist extends Component {
       );
     } else {
       return (
-        //<View style={styles.container}>
-        <LinearGradient colors={['black', 'grey']} style={styles.container}>
+        <View style={styles.container}>
+        {/* <LinearGradient colors={['black', 'grey']} style={styles.container}> */}
         <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
-        {/* <ScrollView refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.getUserData.bind(this)}
-          />
-        }> */}
         <View>
         <Image style={{width: 450,height: 350,}} source={require('./arnold-schwarzenegger-biceps_0.jpg')}/>
         </View>
@@ -172,8 +166,8 @@ class Craigslist extends Component {
               }
             }} />
         </ScrollView>
-        </LinearGradient>
-        //</View>
+        {/* </LinearGradient> */}
+        </View>
       );
     }
   }

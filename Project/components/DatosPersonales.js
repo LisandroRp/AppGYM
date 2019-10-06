@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Image, StyleSheet, ActivityIndicator, TouchableOpacity, FlatList, TextInput, Button, Text, Keyboard } from 'react-native';
-import { LinearGradient } from 'expo'
+// import { LinearGradient } from 'expo'
 import ApiController from '../controller/ApiController';
 import { AsyncStorage } from 'react-native';
 import { SearchBar } from "react-native-elements";
@@ -106,7 +106,7 @@ class DatosPersonales extends Component {
         } else {
             return (
                 <View style={[styles.detalleContainer]} >
-                <LinearGradient colors={['grey', 'black']} style={styles.profile}>
+                {/* <LinearGradient colors={['grey', 'black']} style={styles.profile}> */}
                     <View style={[styles.firstContainer]}>
                         <Image style={styles.bgImage} source={require('./Pared.jpg')} />
                         <View style={styles.CircleShapeView}>
@@ -129,7 +129,7 @@ class DatosPersonales extends Component {
                         <View style={{ flexDirection: 'row', backgroundColor: 'grey', marginTop: 18, paddingBottom: 18, paddingHorizontal: 9, marginHorizontal: 18, height: 300, borderRadius: 10, }}>
                         </View>
                     </ScrollView>
-                    </LinearGradient>
+                    {/* </LinearGradient> */}
                 </View>
             )
         }

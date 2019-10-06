@@ -16,7 +16,6 @@ import {
     RefreshControl,
     ScrollView
 } from 'react-native';
-import { LinearGradient } from 'expo'
 
 function createData(item) {
     return {
@@ -143,8 +142,7 @@ class RutinasFavs extends Component {
             );
         } else {
             return (
-                //<View style={styles.container}>
-                <LinearGradient colors={['black', 'grey']} style={styles.container}>
+                <View style={styles.container}>
                     <Image style={styles.bgImage} source={require('./Pared.jpg')} />
                     <ScrollView>
                         <FlatList
@@ -178,8 +176,7 @@ class RutinasFavs extends Component {
                                 }
                             }} />
                     </ScrollView>
-                </LinearGradient>
-                //</View>
+                </View>
             );
         }
     }
