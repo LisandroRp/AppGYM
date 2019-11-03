@@ -16,12 +16,12 @@ import {
   ActivityIndicator,
   ScrollView
 } from 'react-native';
-//import { LinearGradient, SQLite } from 'expo'
-import * as SQLite from 'expo-sqlite'
-import Ejercicios from './Ejercicios';
- import { openDatabase } from 'react-native-sqlite-storage';
+
+//import * as SQLite from 'expo-sqlite'
+//import SQLite from 'expo-sqlite'
+//import { openDatabase } from 'react-native-sqlite-storage';
 // //Connction to access the pre-populated user_db.db
-const db = SQLite.openDatabase('AppGYM.db');
+//var db = SQLite.openDatabase({name:'AppGYM.db'});
 //Connction to access the pre-populated user_db.db
 //var db = openDatabase({ name: 'AppGYM.db', createFromLocation : 1});
 //Otro intento
@@ -67,7 +67,7 @@ class Musculo extends Component {
     //this._storeData(this.state.IdUser);
     //this.getUserData()
     //this.obtenerEventos();
-    this.obtenerEjercicios();
+   // this.obtenerEjercicios();
   }
   // static get database() {
   //   return async () => SQLite.openDatabase('AppGYM.db')
