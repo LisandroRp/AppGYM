@@ -34,8 +34,8 @@ import {
   createStackNavigator,
   DrawerItems,
 } from 'react-navigation';
-import { ScrollView } from 'react-native-gesture-handler';
-import CamaraPage from './components/Camara/CamaraPage';
+//import { ScrollView } from 'react-native-gesture-handler';
+//import CamaraPage from './components/Camara/CamaraPage';
 console.disableYellowBox=true
 
 function handleSearch() {
@@ -960,38 +960,38 @@ const DrawerConfig = {
     activeTintColor: '#3399ff'
   }
 }
-const customDrawerComponent = (props) => (
-  <View style={{ flex: 1 }}>
-    <LinearGradient colors={['grey', 'black']} style={styles.profile}>
-    <View style={{alignContent:'center',alignItems:'center'}}>
-      <Image
-        style={{ height: 100, width:200, resizeMode: 'contain', alignSelf:'center' }}
-        source={require('./components/Licha-enjoy.png')}></Image>
-        </View>
-    </LinearGradient>
-    <ScrollView style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }}>
-      <DrawerItems {...props} style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }} />
-    </ScrollView>
-  </View>
-)
+// const customDrawerComponent = (props) => (
+//   <View style={{ flex: 1 }}>
+//     <LinearGradient colors={['grey', 'black']} style={styles.profile}>
+//     <View style={{alignContent:'center',alignItems:'center'}}>
+//       <Image
+//         style={{ height: 100, width:200, resizeMode: 'contain', alignSelf:'center' }}
+//         source={require('./components/Licha-enjoy.png')}></Image>
+//         </View>
+//     </LinearGradient>
+//     {/* <ScrollView style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }}> */}
+//       <DrawerItems {...props} style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }} />
+//     {/* </ScrollView> */}
+//   </View>
+// )
 const AppDrawerNavigator = createDrawerNavigator({
   //Inicio: MockedViewStackNavigator,
   Ejercicios: EjerciciosStackNavigator,
   Rutinas: RutinasStackNavigator,
   Suplementacion: SuplementacionStackNavigator,
   Perfil: PerfilStackNavigator,
-  Camara: CamaraPageScreen,
+  //Camara: CamaraPageScreen,
 },
   // DrawerConfig,
-  {
-    contentComponent: customDrawerComponent,
-    drawerBackgroundColor: 'black',
-    contentOptions: {
-      //Esto sirve para cambiar algunos colores
-      activeTintColor: 'white',
-      inactiveTintColor: '#3399ff'
-    }
-  },
+  // {
+  //   contentComponent: customDrawerComponent,
+  //   drawerBackgroundColor: 'black',
+  //   contentOptions: {
+  //     //Esto sirve para cambiar algunos colores
+  //     activeTintColor: 'white',
+  //     inactiveTintColor: '#3399ff'
+  //   }
+  // },
   //  {
   //     drawerBackgroundColor: '#ebf0f7',
   //     contentOptions: {

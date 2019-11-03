@@ -8,7 +8,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  RefreshControl,
+  TextInput,
   Dimensions,
   Alert,
   ScrollView,
@@ -17,7 +17,6 @@ import {
 import { LinearGradient } from 'expo'
 import DropDownItem from 'react-native-drop-down-item';
 import { Reducer } from 'react-native-router-flux';
-import { TextInput } from 'react-native-gesture-handler';
 import { AsyncStorage } from 'react-native';
 import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 

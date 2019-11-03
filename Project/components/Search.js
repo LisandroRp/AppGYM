@@ -9,7 +9,7 @@ import {
     FlatList,
     Keyboard,
     Alert,
-    ScrollView,
+    TextInput,
     Modal,
     ActivityIndicator,
     Dimensions
@@ -20,7 +20,6 @@ import AntDesign from 'react-native-vector-icons/MaterialIcons'
 import { List, ListItem, SearchBar } from "react-native-elements";
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { TextInput } from "react-native-gesture-handler";
 // import console = require("console");
 
 var { height, width } = Dimensions.get('window');
@@ -240,7 +239,7 @@ export default class Search extends React.Component {
                     </Animatable.View>
 
                 </View> */}
-                        <ScrollView>
+                        {/* <ScrollView> */}
                             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                 <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]}
                                     onPress={() => this.OrdenarPorPrecio(0)}>
@@ -330,7 +329,7 @@ export default class Search extends React.Component {
                                     </View>
                                 </View>
                             </Modal>
-                        </ScrollView>
+                        {/* </ScrollView> */}
                     </View>
                 );
             } else {
@@ -346,7 +345,7 @@ export default class Search extends React.Component {
                                 buttonStyle={{ paddingBottom: 22 }}
                             />
                         </View>
-                        <ScrollView>
+                        {/* <ScrollView> */}
                             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                 <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]}
                                     onPress={() => this.OrdenarPorPrecio(0)}>
@@ -387,7 +386,7 @@ export default class Search extends React.Component {
                                     )
                                 }
                                 } />
-                        </ScrollView>
+                        {/* </ScrollView> */}
                     </View>
                 );
             }

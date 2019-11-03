@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Button, Image, FlatList, ActivityIndicator, Modal, TextInput, Dimensions } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+//import { ScrollView } from 'react-native-gesture-handler';
 import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
 import DropDownItem from 'react-native-drop-down-item';
@@ -251,7 +251,7 @@ class Detalle extends Component {
             return (
                 //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
                 <View style={[styles.detalleContainer]}>
-                    <ScrollView>
+                    {/* <ScrollView> */}
                         <View style={[styles.detalleContainer]}>
                             <View style={[styles.detalleContainer]}>
                                 <View style={{ flex: 0.5, flexDirection: 'row' }}>
@@ -395,7 +395,7 @@ class Detalle extends Component {
                                 </View>
                             </View>
                         </View>
-                    </ScrollView>
+                    {/* </ScrollView> */}
 
                     <TouchableOpacity onPress={() => {
                         this.setModalVisible(true);

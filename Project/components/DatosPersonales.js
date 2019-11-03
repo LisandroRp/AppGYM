@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo'
 import ApiController from '../controller/ApiController';
 import { AsyncStorage } from 'react-native';
 import { SearchBar } from "react-native-elements";
-import { ScrollView } from 'react-native-gesture-handler';
+//import { ScrollView } from 'react-native-gesture-handler';
 
 class DatosPersonales extends Component {
 
@@ -125,10 +125,10 @@ class DatosPersonales extends Component {
                         <Text style={{ color: 'white', fontSize: 15 }}>{this.state.IdUser}</Text>
                         <Text style={{ color: 'white', fontSize: 15 }}>{this.state.email}</Text>
                     </View>
-                    <ScrollView style={{}}>
+                    {/* <ScrollView style={{}}> */}
                         <View style={{ flexDirection: 'row', backgroundColor: 'grey', marginTop: 18, paddingBottom: 18, paddingHorizontal: 9, marginHorizontal: 18, height: 300, borderRadius: 10, }}>
                         </View>
-                    </ScrollView>
+                    {/* </ScrollView> */}
                     </LinearGradient>
                 </View>
             )
