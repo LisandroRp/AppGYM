@@ -16,7 +16,7 @@ import {
     RefreshControl,
     ScrollView
 } from 'react-native';
-import { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo-linear-gradient'
 
 function createData(item) {
     return {
@@ -51,8 +51,8 @@ class RutinasFavs extends Component {
             generoEvento: [],
             refreshing: false,
         };
-        this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-        this.Star_With_Border = 'https://img.icons8.com/color/96/000000/star.png';
+        this.Star = require('./Logos/Star_Llena.png');
+        this.Star_With_Border = require('./Logos/Star_Borde.png');
         //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
         //this._storeData(this.state.IdUser);
         //this.getUserData()
@@ -169,7 +169,7 @@ class RutinasFavs extends Component {
                                                 </View>
                                                 <View style={{ alignItems: 'center', justifyContent: "center" }} >
                                                     <TouchableOpacity onPress={() => { this.setState({ isLoading: true }), this.favear(item.id) }}>
-                                                        <Image style={styles.StarImage} source={{ uri: this.Star }} />
+                                                        <Image style={styles.StarImage} source={this.Star } />
                                                     </TouchableOpacity>
                                                 </View>
                                             </View>

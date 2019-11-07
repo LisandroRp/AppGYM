@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import ApiController from '../../controller/ApiController'
 import { SearchBar, Icon } from 'react-native-elements';
-import { Camera, Permissions } from 'expo';
+import {Permissions } from 'expo';
+import {Camera} from 'expo-camera'
 import Toolbar from './toolbar.component';
 import {
   StyleSheet,

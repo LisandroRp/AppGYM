@@ -19,14 +19,15 @@ import {
 
 //import * as SQLite from 'expo-sqlite'
 //import SQLite from 'expo-sqlite'
+//import SQLite from 'expo'
+//var db = SQLite.openDatabase('./AppGYM.db');
 //import { openDatabase } from 'react-native-sqlite-storage';
 // //Connction to access the pre-populated user_db.db
-//var db = SQLite.openDatabase({name:'AppGYM.db'});
 //Connction to access the pre-populated user_db.db
 //var db = openDatabase({ name: 'AppGYM.db', createFromLocation : 1});
 //Otro intento
-// import { SQLite } from 'expo-sqlite'
 // import { BaseModel, types } from 'expo-sqlite-orm'
+//var db = openDatabase('./AppGYM.db');
 
 function createData(item) {
   return {

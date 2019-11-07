@@ -7,7 +7,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "expo": "^33.0.0",
+    "expo": "^33.0.7",
     "expo-sqlite": "^5.0.1",
     "expo-sqlite-orm": "^1.5.1",
     "native-base": "^2.13.5",

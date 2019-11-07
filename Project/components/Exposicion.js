@@ -62,13 +62,9 @@ class Exposicion extends Component {
   render() {
     if (this.state.isLoading) {
       return (
-          //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
-          //<View style={styles.container}>
           <View style={styles.container}>
               <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
           </View>
-          //</View>
-          // </LinearGradient>
       );
   } else {
     return (

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, TextInput, Text } from 'react-native';
 import ApiController from '../controller/ApiController';
 import { KeyboardAvoidingView } from 'react-native';
-import { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo-linear-gradient'
 
 
 class Login extends Component {

@@ -7,7 +7,7 @@ import DropDownItem from 'react-native-drop-down-item';
 import { Rating, AirbnbRating } from 'react-native-elements';
 import ApiController from '../controller/ApiController';
 import { AsyncStorage } from 'react-native';
-import { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo-linear-gradient'
 
 
 

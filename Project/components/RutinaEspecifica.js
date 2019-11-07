@@ -15,7 +15,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import DropDownItem from 'react-native-drop-down-item';
-import { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo-linear-gradient'
 import { Reducer } from 'react-native-router-flux';
 var { height, width } = Dimensions.get('window');
 
@@ -41,14 +41,16 @@ class RutinaEspecifica extends Component {
       nombre: this.props.navigation.getParam('nombre'),
       modalVisible: false,
       rutina: { id: 1, nombre: 'Arnold N1', imagen: require('./arnold-schwarzenegger-biceps_0.jpg'), dias: 7, fav: 1,modificable:false,
-      rutina:[{key:'50', id: 55,dia:'2', nombre: 'Press Plano', series: '4', repeticiones: '15-12-10-8' },
-      {key:'55',id: 11,dia: '1', nombre: 'espalda', series: '4', repeticiones: '5-4-3-2-1' },
-      {key:'51',id: 87,dia: '3', nombre: 'caca', series: '4', repeticiones: '5-4-3-2-1' },
-      {key:'58',id: 12,dia: '2', nombre: 'oh my god', series: '4', repeticiones: '5-4-3-2-1' }]},
+      rutina:[{key:'50', id: 55,dia:'2',musculo: 'Pecho', nombre: 'Press Plano', series: '4', repeticiones: '15-12-10-8' },
+      {key:'55',id: 11,dia: '1',musculo: 'Espalda', nombre: 'espalda', series: '4', repeticiones: '5-4-3-2-1' },
+      {key:'51',id: 87,dia: '3',musculo: 'Hombos', nombre: 'caca', series: '4', repeticiones: '5-4-3-2-1' },
+      {key:'58',id: 12,dia: '2',musculo: 'Abdominales', nombre: 'oh my god', series: '4', repeticiones: '5-4-3-2-1' }]},
       diasTotal:'',
       contador:1
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
+    this.Pecho = require('./Logos/Logo_Pecho.png');
+    this.Abs = require('./Logos/Logo_Abs.png');
     //this.obtenerEventos()
   }
   componentDidMount(){
@@ -125,7 +127,39 @@ class RutinaEspecifica extends Component {
                   }}
                   renderItem={({ item }) => {
                     if (item.dia == aux){
+                      if(item.musculo == "Pecho"){
                       return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Image style={styles.musculosLogo} source={this.Pecho} />
+                            <View style={{ flexDirection: 'column' }}>
+                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                              <Text>Reps: {item.repeticiones}</Text>
+                              <Text>Series: {item.series}</Text>
+                            </View>
+
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      }
+                      if(item.musculo == "Abdominales"){
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Image style={styles.musculosLogo} source={this.Abs} />
+                            <View style={{ flexDirection: 'column' }}>
+                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                              <Text>Reps: {item.repeticiones}</Text>
+                              <Text>Series: {item.series}</Text>
+                            </View>
+
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      }else{
+                        return (
                         <TouchableOpacity style={styles.cuadraditosDeAdentro}
                           onPress={() => this.props.onPressInfo(item.nombre)}>
                           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
@@ -138,6 +172,7 @@ class RutinaEspecifica extends Component {
                           </View>
                         </TouchableOpacity>
                       )
+                      }
                     }
                   }} />
                     </DropDownItem>
@@ -241,9 +276,10 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 15,
   },
-  StarImage: {
+  musculosLogo: {
     width: 40,
     height: 40,
+    marginRight: 10,
     resizeMode: 'cover',
   },
   detalleGenresTitles: {

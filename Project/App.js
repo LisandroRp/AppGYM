@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo-linear-gradient'
 import Icon from '@expo/vector-icons/Ionicons';
 import Detalle from './components/Detalle';
 import Ejercicios from './components/Ejercicios'

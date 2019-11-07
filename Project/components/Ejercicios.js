@@ -13,7 +13,7 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo-linear-gradient'
 import { Reducer } from 'react-native-router-flux';
 
 

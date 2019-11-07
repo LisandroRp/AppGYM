@@ -14,7 +14,7 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo-linear-gradient'
 import DropDownItem from 'react-native-drop-down-item';
 import { Reducer } from 'react-native-router-flux';
 import { TextInput } from 'react-native-gesture-handler';
