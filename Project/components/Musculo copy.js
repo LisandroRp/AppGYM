@@ -16,9 +16,19 @@ import {
   ActivityIndicator,
   ScrollView
 } from 'react-native';
-import { SQLite } from "expo-sqlite";
-var db = SQLite.openDatabase('AppGYM.db');
 
+//import * as SQLite from 'expo-sqlite'
+import { SQLite } from "expo-sqlite";
+//import SQLite from 'expo'
+var db = SQLite.openDatabase('AppGYM.db');
+//import { openDatabase } from 'react-native-sqlite-storage';
+// //Connction to access the pre-populated user_db.db
+//Connction to access the pre-populated user_db.db
+//var db = openDatabase('./AppGYM.db');
+//Otro intento
+// import { BaseModel, types } from 'expo-sqlite-orm'
+//var db = openDatabase('AppGYM.db');
+//const db = SQLite.openDatabase({name:"../assets/www/AppGYM.db"});
 function createData(item) {
   return {
     key: item._id,
@@ -55,18 +65,54 @@ class Musculo extends Component {
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
-  
+    //this._storeData(this.state.IdUser);
+    //this.getUserData()
+    //this.obtenerEventos();
+    //this.obtenerEjercicios2();
+    this.obtenerEjercicios2();
+    //this.update();
   }
-  componentWillMount(){
-    db.transaction(function (tx) {
-    tx.executeSql('SELECT * FROM `users`', [], function (tx, res) {
-      for (let i = 0; i < res.rows.length; ++i) {
-          console.log('item:', res.rows.item(i));
-      }
-  });
-});
-}
-  
+  // static get database() {
+  //   return async () => SQLite.openDatabase('AppGYM.db')
+  // }
+
+  // static get tableName() {
+  //   return 'animals'
+  // }
+  obtenerEjercicios2() {
+
+    db.transaction(tx => {
+      tx.executeSql('CREATE TABLE IF NOT EXISTS Product (prodId, prodName, prodDesc, prodImage, prodPrice)');
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+    obtenerEjercicios(){
+
+      db.transaction(tx => {
+        tx.executeSql(
+          "create table if not exists Lorenzo"
+        );
+        console.log("epico")
+      },
+        () => { console.log('success') }
+      );
+    }
+    update() {
+      db.transaction(tx => {
+        tx.executeSql(
+          'SELECT * FROM ejercicios',
+          [this.props.done ? 1 : 0],
+          (_, { rows: { _array } }) => this.setState({ ejercicios: _array }),
+          console.log(this.state.ejercicios)
+        );
+      });
+    }
+    // ListViewItemSeparator = () => {
+    //   return (
+    //     <View style={{ height: 0.2, width: '100%', backgroundColor: '#808080' }} />
+    //   );
+    // };
     _storeData = async () => {
       try {
         await AsyncStorage.setItem('IdUser', this.state.IdUser);
