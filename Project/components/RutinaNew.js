@@ -46,9 +46,17 @@ class RutinaNew extends Component {
       isLoading: false,
       rutinaVacia: [],
       ultimoDia: 0,
-      imagen:'',
+      imagen: '',
     };
-    this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
+    this.Star = require('./Logos/Star_Llena.png');
+    this.Pecho = require('./Logos/Logo_Pecho1.png');
+    this.Abs = require('./Logos/Logo_Abs.png');
+    this.Espalda = require('./Logos/Logo_Espalda.png');
+    this.Hombros = require('./Logos/Logo_Hombros.png');
+    this.Bicep = require('./Logos/Logo_Bicep.png');
+    this.Tricep = require('./Logos/Logo_Bicep.png');
+    this.Piernas= require('./Logos/Logo_Bicep.png');
+    this.Cardio = require('./Logos/Logo_Cardio.png');
     //this.obtenerEventos()
   }
   componentWillReceiveProps() {
@@ -78,17 +86,17 @@ class RutinaNew extends Component {
     this._storeData()
   }
   touch(dia) {
-    if(this.diaAnterior(dia) || dia==1){
+    if (this.diaAnterior(dia) || dia == 1) {
       this.setState({ ultimoDia: dia })
-      this.props.onPressGo(dia,'nuevo')
-    }else{
-      alert('Debe agregar ejercicios en el dia '+(dia-1)+' para poder agregar los en este dia')
+      this.props.onPressGo(dia, 'nuevo')
+    } else {
+      alert('Debe agregar ejercicios en el dia ' + (dia - 1) + ' para poder agregar los en este dia')
     }
   }
-  diaAnterior(dia){
-    i=0
-    while(i<this.state.rutina.length){
-      if(this.state.rutina[i].dia== (dia-1)){
+  diaAnterior(dia) {
+    i = 0
+    while (i < this.state.rutina.length) {
+      if (this.state.rutina[i].dia == (dia - 1)) {
         return true
       }
       i++
@@ -151,25 +159,25 @@ class RutinaNew extends Component {
     while (i < this.state.rutina.length) {
       rutinaNueva.push(this.state.rutina[i])
       if ((id == this.state.rutina[i].id && dia == this.state.rutina[i].dia) && flag != 1) {
-          aux = i
-          aux++
-          if (aux < this.state.rutina.length) {
-            while (aux != this.state.rutina.length && dia != this.state.rutina[aux].dia) {
-              rutinaNueva.push(this.state.rutina[aux])
-              aux++
-            }
-            if (aux != this.state.rutina.length) {
-              this.setState({ isLoading: true })
-              rutinaNueva.push(this.state.rutina[i])
-              rutinaNueva[i] = this.state.rutina[aux]
-              i = aux
-              flag = 1
-            }else {
-              return this.termino()
-            }
+        aux = i
+        aux++
+        if (aux < this.state.rutina.length) {
+          while (aux != this.state.rutina.length && dia != this.state.rutina[aux].dia) {
+            rutinaNueva.push(this.state.rutina[aux])
+            aux++
+          }
+          if (aux != this.state.rutina.length) {
+            this.setState({ isLoading: true })
+            rutinaNueva.push(this.state.rutina[i])
+            rutinaNueva[i] = this.state.rutina[aux]
+            i = aux
+            flag = 1
           } else {
             return this.termino()
           }
+        } else {
+          return this.termino()
+        }
       }
       i++
     }
@@ -196,32 +204,31 @@ class RutinaNew extends Component {
   }
   borrarTodo() {
     var rutinaVacia = []
-    if(this.state.rutina.length != 0)
-    {
-      this.setState({ isLoading: true }) 
+    if (this.state.rutina.length != 0) {
+      this.setState({ isLoading: true })
       this.setState({ rutina: rutinaVacia })
       this.termino()
     }
   }
-  guardarRutina(){
-    var aux=0
-    rutinaNueva={id:0,nombre: '', imagen: require('./Fotos/PECHO.png'),dias:'',fav: 1, rutina:[]}
-    for(i=0;i<this.state.rutina.length;i++){
-      if(this.state.rutina[i].dia > aux){
-        aux=this.state.rutina[i].dia
+  guardarRutina() {
+    var aux = 0
+    rutinaNueva = { id: 0, nombre: '', imagen: require('./Fotos/PECHO.png'), dias: '', fav: 1, rutina: [] }
+    for (i = 0; i < this.state.rutina.length; i++) {
+      if (this.state.rutina[i].dia > aux) {
+        aux = this.state.rutina[i].dia
       }
     }
-    rutinaNueva.id=this.nuevoId()
-    rutinaNueva.nombre= this.state.nombre
-    rutinaNueva.imagen= this.state.imagen
-    rutinaNueva.dias=aux
-    rutinaNueva.rutina=this.state.rutina
+    rutinaNueva.id = this.nuevoId()
+    rutinaNueva.nombre = this.state.nombre
+    rutinaNueva.imagen = this.state.imagen
+    rutinaNueva.dias = aux
+    rutinaNueva.rutina = this.state.rutina
     console.log(rutinaNueva)
   }
-  cancelarRutina(){
+  cancelarRutina() {
     this.props.onPressCancelar()
   }
-  nuevoId(){
+  nuevoId() {
     //buscar el ultimo id en la base de datos
   }
   render() {
@@ -237,21 +244,26 @@ class RutinaNew extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
           <ScrollView>
-          <View style={{alignItems:'center', marginVertical:height*0.03}}>
-          {/* <TouchableOpacity onPress={() => {}> */}
-          <TouchableOpacity>
+            <View style={{ alignItems: 'center', marginVertical: height * 0.03 }}>
+              {/* <TouchableOpacity onPress={() => {}> */}
+              <TouchableOpacity>
                 <View style={styles.imageContainer}>
-                <Image style={styles.image}/>
-                {/* <Image style={styles.image} source={} /> */}
+                  <Image style={styles.image} />
+                  {/* <Image style={styles.image} source={} /> */}
                 </View>
-          </TouchableOpacity>
-          </View>
+              </TouchableOpacity>
+            </View>
             <View style={styles.inputContainer}>
               <TextInput style={styles.TextContainer} maxLength={15} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
-              <TouchableOpacity onPress={() => { this.borrarTodo()}} style={styles.borrarTodo}>
+              <TouchableOpacity onPress={() => { this.borrarTodo() }} style={styles.borrarTodo}>
                 <AntDesign name="delete" size={20} color="white" />
               </TouchableOpacity>
             </View>
+
+          {/* ************************************************************************
+            ******************************DropDownn Aca*********************************
+            **************************************************************************** */}
+
             <View style={styles.cuadraditos}>
               <DropDownItem key={1} contentVisible={false}
                 header={
@@ -276,15 +288,19 @@ class RutinaNew extends Component {
                     return item.key;
                   }}
                   renderItem={({ item }) => {
-                    if (item.dia == 1)
+                    if (item.dia == 1){
+                      if (item.musculo == 'Abdominales')
                       return (
                         <TouchableOpacity style={styles.cuadraditosDeAdentro}
                           onPress={() => this.props.onPressInfo(item.nombre)}>
                           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Abs} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                               <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
@@ -300,9 +316,204 @@ class RutinaNew extends Component {
                           </View>
                         </TouchableOpacity>
                       )
+                      if (item.musculo == 'Bicep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Bicep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Cardio')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Cardio} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Espalda')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Espalda} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Hombros')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Hombros} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Pecho')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Pecho} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Piernas')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Piernas} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Tricep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Tricep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }
                   }} />
               </DropDownItem>
             </View>
+            
+            {/* ************************************************************************
+            ******************************DropDownn Aca*********************************
+            **************************************************************************** */}
+            
             <View style={styles.cuadraditos}>
               <DropDownItem key={2} contentVisible={false}
                 header={
@@ -327,15 +538,19 @@ class RutinaNew extends Component {
                     return item.key;
                   }}
                   renderItem={({ item }) => {
-                    if (item.dia == 2)
+                    if (item.dia == 2){
+                      if (item.musculo == 'Abdominales')
                       return (
                         <TouchableOpacity style={styles.cuadraditosDeAdentro}
                           onPress={() => this.props.onPressInfo(item.nombre)}>
                           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Abs} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                               <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
@@ -351,9 +566,204 @@ class RutinaNew extends Component {
                           </View>
                         </TouchableOpacity>
                       )
+                      if (item.musculo == 'Bicep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Bicep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Cardio')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Cardio} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Espalda')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Espalda} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Hombros')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Hombros} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Pecho')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Pecho} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Piernas')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Piernas} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Tricep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Tricep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }
                   }} />
               </DropDownItem>
             </View>
+            
+            {/* ************************************************************************
+            ******************************DropDownn Aca*********************************
+            **************************************************************************** */}
+            
             <View style={styles.cuadraditos}>
               <DropDownItem key={3} contentVisible={false}
                 header={
@@ -378,15 +788,19 @@ class RutinaNew extends Component {
                     return item.key;
                   }}
                   renderItem={({ item }) => {
-                    if (item.dia == 3)
+                    if (item.dia == 3){
+                      if (item.musculo == 'Abdominales')
                       return (
                         <TouchableOpacity style={styles.cuadraditosDeAdentro}
                           onPress={() => this.props.onPressInfo(item.nombre)}>
                           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Abs} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                               <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
@@ -402,9 +816,204 @@ class RutinaNew extends Component {
                           </View>
                         </TouchableOpacity>
                       )
+                      if (item.musculo == 'Bicep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Bicep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Cardio')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Cardio} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Espalda')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Espalda} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Hombros')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Hombros} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Pecho')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Pecho} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Piernas')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Piernas} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Tricep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Tricep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }
                   }} />
               </DropDownItem>
             </View>
+           
+            {/* ************************************************************************
+            ******************************DropDownn Aca*********************************
+            **************************************************************************** */}
+           
             <View style={styles.cuadraditos}>
               <DropDownItem key={4} contentVisible={false}
                 header={
@@ -429,15 +1038,19 @@ class RutinaNew extends Component {
                     return item.key;
                   }}
                   renderItem={({ item }) => {
-                    if (item.dia == 4)
+                    if (item.dia == 4){
+                      if (item.musculo == 'Abdominales')
                       return (
                         <TouchableOpacity style={styles.cuadraditosDeAdentro}
                           onPress={() => this.props.onPressInfo(item.nombre)}>
                           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Abs} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                               <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
@@ -453,9 +1066,204 @@ class RutinaNew extends Component {
                           </View>
                         </TouchableOpacity>
                       )
+                      if (item.musculo == 'Bicep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Bicep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Cardio')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Cardio} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Espalda')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Espalda} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Hombros')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Hombros} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Pecho')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Pecho} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Piernas')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Piernas} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Tricep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Tricep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }
                   }} />
               </DropDownItem>
             </View>
+           
+           {/* ************************************************************************
+            ******************************DropDownn Aca*********************************
+            **************************************************************************** */}
+           
             <View style={styles.cuadraditos}>
               <DropDownItem key={5} contentVisible={false}
                 header={
@@ -480,15 +1288,19 @@ class RutinaNew extends Component {
                     return item.key;
                   }}
                   renderItem={({ item }) => {
-                    if (item.dia == 5)
+                    if (item.dia == 5){
+                      if (item.musculo == 'Abdominales')
                       return (
                         <TouchableOpacity style={styles.cuadraditosDeAdentro}
                           onPress={() => this.props.onPressInfo(item.nombre)}>
                           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Abs} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                               <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
@@ -504,9 +1316,204 @@ class RutinaNew extends Component {
                           </View>
                         </TouchableOpacity>
                       )
+                      if (item.musculo == 'Bicep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Bicep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Cardio')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Cardio} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Espalda')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Espalda} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Hombros')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Hombros} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Pecho')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Pecho} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Piernas')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Piernas} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Tricep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Tricep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }
                   }} />
               </DropDownItem>
             </View>
+           
+            {/* ************************************************************************
+            ******************************DropDownn Aca*********************************
+            **************************************************************************** */}
+            
             <View style={styles.cuadraditos}>
               <DropDownItem key={6} contentVisible={false}
                 header={
@@ -531,15 +1538,19 @@ class RutinaNew extends Component {
                     return item.key;
                   }}
                   renderItem={({ item }) => {
-                    if (item.dia == 6)
+                    if (item.dia == 6){
+                      if (item.musculo == 'Abdominales')
                       return (
                         <TouchableOpacity style={styles.cuadraditosDeAdentro}
                           onPress={() => this.props.onPressInfo(item.nombre)}>
                           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Abs} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                               <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
@@ -555,10 +1566,205 @@ class RutinaNew extends Component {
                           </View>
                         </TouchableOpacity>
                       )
+                      if (item.musculo == 'Bicep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Bicep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Cardio')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Cardio} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Espalda')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Espalda} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Hombros')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Hombros} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Pecho')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Pecho} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Piernas')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Piernas} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Tricep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Tricep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }
                   }} />
               </DropDownItem>
             </View>
-            <View style={styles.cuadraditos}>
+            
+           {/* ************************************************************************
+            ******************************DropDownn Aca*********************************
+            **************************************************************************** */}
+
+            <View style={styles.cuadraditos}> 
               <DropDownItem key={7} contentVisible={false}
                 header={
                   <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
@@ -582,15 +1788,19 @@ class RutinaNew extends Component {
                     return item.key;
                   }}
                   renderItem={({ item }) => {
-                    if (item.dia == 7)
+                    if (item.dia == 7){
+                      if (item.musculo == 'Abdominales')
                       return (
                         <TouchableOpacity style={styles.cuadraditosDeAdentro}
                           onPress={() => this.props.onPressInfo(item.nombre)}>
                           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Abs} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                               <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
@@ -606,20 +1816,215 @@ class RutinaNew extends Component {
                           </View>
                         </TouchableOpacity>
                       )
+                      if (item.musculo == 'Bicep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Bicep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Cardio')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Cardio} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Espalda')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Espalda} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Hombros')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Hombros} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Pecho')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Pecho} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Piernas')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Piernas} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                      if (item.musculo == 'Tricep')
+                      return (
+                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                          onPress={() => this.props.onPressInfo(item.nombre)}>
+                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <Image style={styles.musculosLogo} source={this.Tricep} />
+                              <View style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                <Text>Reps: {item.repeticiones}</Text>
+                                <Text>Series: {item.series}</Text>
+                              </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="up" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <AntDesign name="down" size={15} color="white" />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <AntDesign name="delete" size={15} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  }
                   }} />
               </DropDownItem>
             </View>
-            <View style={{flexDirection: "row",justifyContent:'center', height:100}}>
-            <TouchableOpacity style={styles.guardarButton} onPress={() => {this.cancelarRutina()}}>
-              <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
-                Cancelar
+            
+          {/* ************************************************************************
+            ******************************Ya no Mas*********************************
+            **************************************************************************** */}
+
+            <View style={{ flexDirection: "row", justifyContent: 'center', height: 100 }}>
+              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.cancelarRutina() }}>
+                <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
+                  Cancelar
                 </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.guardarButton} onPress={() => {this.guardarRutina()}}>
-              <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
-                Guardar
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.guardarRutina() }}>
+                <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
+                  Guardar
                 </Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
@@ -653,7 +2058,7 @@ const styles = StyleSheet.create({
   TextContainer: {
     backgroundColor: 'grey',
     borderRadius: 10,
-    padding:10,
+    padding: 10,
     width: 300,
     height: 45,
     margin: 20,
@@ -777,12 +2182,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     width: width * 0.33,
-    marginHorizontal:22,
-    alignSelf:'center'
+    marginHorizontal: 22,
+    alignSelf: 'center'
   },
   DropDownItem: {
     alignItems: 'stretch'
-  }
+  },
+  musculosLogo: {
+    width: 40,
+    height: 40,
+    // width: width*0.05,
+    // height: height*0.05,
+    marginRight: 10,
+    resizeMode: 'cover',
+  },
 })
 
 

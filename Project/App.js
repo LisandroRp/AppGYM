@@ -49,6 +49,10 @@ class App extends Component {
 }
 export default App;
 
+
+// *****************************************************
+// **********************Log In*************************
+// *****************************************************
 class SignUpClass extends React.Component {
   constructor(props) {
     super(props)
@@ -105,68 +109,9 @@ class CreateUserScreen extends React.Component {
     this.props.navigation.navigate('SignUpClass')
   }
 }
-class MockedViewScreen extends React.Component {
-  constructor(props) {
-    super(props)
-    // this.state = {
-    //   idUser: this.props.navigation.getParam('idUser'),
-    //   idEvento: null
-    // }
-  }
-  static navigationOptions = {
-    title: 'Inicio',
-    headerStyle: {
-      backgroundColor: 'black',
-      height: 50,
-      borderBottomWidth: 0
-    },
-    headerTintColor: '#3399ff',
-  };
-  render() {
-    return (
-      <Craigslist
-        onPressGo={this.pasarConcierto.bind(this)}
-        agarrarId={this.pasarIdEvento.bind(this)}
-        agarrarIdUsuario={this.pasarUsuario.bind(this)}
-      />
-    );
-  }
-  pasarConcierto(id) {
-    this.props.navigation.navigate('Detalle', { IdEvento: id });
-  }
-  pasarIdEvento() {
-    return this.state.idEvento
-  }
-  pasarUsuario() {
-    //return this.state.idUser
-  }
-
-}
-class EjerciciosScreen extends React.Component {
-
-  static navigationOptions = {
-    title: 'Ejercicios',
-    headerStyle: {
-      backgroundColor: 'black',
-      height: 55,
-      borderBottomWidth: 0
-    },
-    headerTintColor: '#3399ff',
-  };
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <Ejercicios
-        onPressGo={this.pasarMusculo.bind(this)}
-      />
-    );
-  }
-  pasarMusculo(musculo) {
-    this.props.navigation.navigate('Musculo', { musculo: musculo });
-  }
-}
+// *****************************************************
+// *********************Musculos************************
+// *****************************************************
 class MusculoScreen extends React.Component {
 
   constructor(props) {
@@ -253,6 +198,34 @@ static navigationOptions = ({ navigation }) => {
     }
 };
 }
+// *****************************************************
+// ********************Ejercicios***********************
+// *****************************************************
+class EjerciciosScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Ejercicios',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <Ejercicios
+        onPressGo={this.pasarMusculo.bind(this)}
+      />
+    );
+  }
+  pasarMusculo(musculo) {
+    this.props.navigation.navigate('Musculo', { musculo: musculo });
+  }
+}
 class EjerciciosEspecificoScreen extends React.Component {
 
   static navigationOptions = {
@@ -313,6 +286,9 @@ static navigationOptions = ({ navigation }) => {
     this.props.navigation.navigate('MusculoAgregar', {dia:dia,musculo:musculo,tipo:tipo});
   }
 }
+// *****************************************************
+// *********************Rutinas*************************
+// *****************************************************
 class RutinasScreen extends React.Component {
   constructor(props) {
     super(props)
@@ -540,101 +516,9 @@ class RutinasFavsScreen extends React.Component {
     }
   }
 }
-class FestivalesScreen extends React.Component {
-
-  static navigationOptions = {
-    title: 'Festivals',
-    headerStyle: {
-      backgroundColor: 'white',
-      height: 45
-    },
-    headerTintColor: '#3399ff',
-  };
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <Festivales
-        onPressGo={this.pasarConcierto.bind(this)}
-      />
-    );
-  }
-  pasarConcierto(id) {
-    this.props.navigation.navigate('Detalle', { IdEvento: id });
-  }
-}
-class DetalleScreen extends React.Component {
-
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'Details',
-      headerStyle: {
-        backgroundColor: 'white',
-        height: 45
-      },
-      headerTintColor: '#3399ff',
-    }
-  }
-  constructor(props) {
-    super(props)
-    this.state = {
-      id: this.props.navigation.getParam('id'),
-      latitude: null,
-      longitude: null,
-    }
-  }
-  render() {
-    return (
-      <Detalle
-        agarrarId={this.pasarId.bind(this)}
-        onPress={this.pasarConcierto.bind(this)}
-        guardarPos={this.guardarPos.bind(this)}
-
-      />
-    );
-  }
-  pasarId() {
-    return this.state.id
-  }
-  guardarPos(lat, long) {
-    this.setState({ latitude: lat })
-    this.setState({ longitude: long })
-  }
-}
-class SearchScreen extends React.Component {
-
-  static navigationOptions = {
-    title: 'Search',
-    headerStyle: {
-      backgroundColor: 'white',
-      height: 45,
-      borderBottomWidth: 0
-    },
-    headerTintColor: '#3399ff',
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      tipo: this.props.navigation.getParam('tipo'),
-    }
-  }
-  render() {
-    return (
-      <Search
-        onPressGo={this.pasarConcierto.bind(this)}
-        agarrarTipo={this.pasarTipo.bind(this)}
-      />
-    );
-  }
-  pasarConcierto(id) {
-    this.props.navigation.navigate('Detalle', { IdEvento: id });
-  }
-  pasarTipo() {
-    return this.state.tipo
-  }
-}
+// *****************************************************
+// ******************Suplementacion*********************
+// *****************************************************
 class SuplementacionEspecificaScreen extends React.Component {
 
   static navigationOptions = {
@@ -688,6 +572,9 @@ class SuplementacionScreen extends React.Component {
     this.props.navigation.navigate('SuplementacionEspecifica', { id: id, nombre:nombre});
   }
 }
+// *****************************************************
+// **********************Camara*************************
+// *****************************************************
 class CamaraPageScreen extends React.Component {
 
   static navigationOptions = {
@@ -708,41 +595,9 @@ class CamaraPageScreen extends React.Component {
     );
   }
 }
-const MockedViewStackNavigator = createStackNavigator(
-  {
-    MockedViewScreen: {
-      screen: MockedViewScreen,
-
-
-      navigationOptions: ({ navigation }) => {
-        return {
-          headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
-          ),
-          headerRight: (
-            <View style={{ flexDirection: 'row' }}>
-              <FontAwesome name="search" style={{ marginRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('Helado', { tipo: 'Recomendados' })}
-                size={22}
-              />
-            </View>
-          )
-        }
-      }
-    },
-    Helado: { screen: SearchScreen },
-    Detalle: { screen: DetalleScreen },
-  },
-  {
-    initialRouteName: 'MockedViewScreen',
-  }
-);
-
+// *****************************************************
+// **********************Stacks*************************
+// *****************************************************
 const EjerciciosStackNavigator = createStackNavigator(
   {
     EjerciciosScreen: {
@@ -760,16 +615,6 @@ const EjerciciosStackNavigator = createStackNavigator(
         }
       }
     },
-    // Helado: { screen: SearchScreen },
-    // Detalle: { screen: DetalleScreen },
-    // Pecho: {screen: PechoScreen},
-    // Espalda: {screen: EspaldaScreen},
-    // Hombros: {screen: HombrosScreen},
-    // Bicep: {screen: BicepScreen},
-    // Tricep: {screen: TricepScreen},
-    // Piernas: {screen: PiernasScreen},
-    // Abdominales: {screen: AbdominalesScreen},
-    // Cardio: {screen: CardioScreen},
     Musculo: {screen: MusculoScreen},
     MusculoAgregar: {screen: MusculoAgregarScreen},
     EjercicioEspecifico: {screen:EjerciciosEspecificoScreen},
@@ -778,38 +623,7 @@ const EjerciciosStackNavigator = createStackNavigator(
     initialRouteName: 'EjerciciosScreen',
   }
 );
-// const EjerciciosAgregarStackNavigator = createStackNavigator(
-//   {
-//     EjerciciosScreen: {
-//       screen: EjerciciosAgregarScreen,
-//       navigationOptions: ({ navigation }) => {
-//         return {
-//           headerLeft: (
-//             <Icon
-//               style={{ paddingLeft: 10, color: '#3399ff' }}
-//               onPress={() => navigation.openDrawer()}
-//               name="md-menu"
-//               size={30}
-//             />
-//           )
-//         }
-//       }
-//     },
-//     Detalle: { screen: DetalleScreen },
-//     Pecho: {screen: PechoScreen},
-//     Espalda: {screen: EspaldaScreen},
-//     Hombros: {screen: HombrosScreen},
-//     Bicep: {screen: BicepScreen},
-//     Tricep: {screen: TricepScreen},
-//     Piernas: {screen: PiernasScreen},
-//     Abdominales: {screen: AbdominalesScreen},
-//     Cardio: {screen: CardioScreen},
-//     EjercicioEspecifico: {screen:EjerciciosEspecificoScreen},
-//   },
-//   {
-//     initialRouteName: 'EjerciciosAgregarScreen',
-//   }
-// );
+
 const RutinasStackNavigator = createStackNavigator(
   {
     RutinasScreen: {
@@ -872,38 +686,12 @@ const SuplementacionStackNavigator = createStackNavigator(
     initialRouteName: 'SuplementacionScreen',
   }
 );
-const FestivalesStackNavigator = createStackNavigator(
-  {
-    FestivalesScreen: {
-      screen: FestivalesScreen,
-      navigationOptions: ({ navigation }) => {
-        return {
-          headerLeft: (
-            <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
-              onPress={() => navigation.openDrawer()}
-              name="md-menu"
-              size={30}
-            />
-          ),
-          headerRight: (
-            <View style={{ flexDirection: 'row' }}>
-              <FontAwesome name="search" style={{ marginRight: 20, color: '#3399ff' }}
-                onPress={() => navigation.navigate('Helado', { tipo: 'Festival' })}
-                size={22}
-              />
-            </View>
-          )
-        }
-      }
-    },
-    Helado: { screen: SearchScreen },
-    Detalle: { screen: DetalleScreen },
-  },
-  {
-    initialRouteName: 'FestivalesScreen',
-  }
-);
+
+
+// *****************************************************
+// ***********************Tab***************************
+// *****************************************************
+
 const PerfilTabNavigator = createBottomTabNavigator({
   Perfil: Informacion,
   RutinasFavs: RutinasFavsScreen
@@ -943,14 +731,16 @@ const PerfilTabNavigator = createBottomTabNavigator({
     }
   });
 
-
-
-const PerfilStackNavigator = createStackNavigator({
-  PerfilTabNavigator: PerfilTabNavigator,
-  RutinaEspecificaMScreen: RutinaEspecificaMScreen,
-  RutinaEspecificaNoMScreen: RutinaEspecificaNoMScreen,
-  RutinaModificable: RutinaModificable
-});
+  const PerfilStackNavigator = createStackNavigator({
+    PerfilTabNavigator: PerfilTabNavigator,
+    RutinaEspecificaMScreen: RutinaEspecificaMScreen,
+    RutinaEspecificaNoMScreen: RutinaEspecificaNoMScreen,
+    RutinaModificable: RutinaModificableScreen,
+    EjercicioEspecifico: EjerciciosEspecificoScreen
+  });
+// *****************************************************
+// **********************Drawer*************************
+// *****************************************************
 
 const DrawerConfig = {
   contentComponent: ({ navigation }) => {
@@ -975,7 +765,6 @@ const customDrawerComponent = (props) => (
   </View>
 )
 const AppDrawerNavigator = createDrawerNavigator({
-  //Inicio: MockedViewStackNavigator,
   Ejercicios: EjerciciosStackNavigator,
   Rutinas: RutinasStackNavigator,
   Suplementacion: SuplementacionStackNavigator,
@@ -1002,10 +791,12 @@ const AppDrawerNavigator = createDrawerNavigator({
   //   }
 );
 
+// *****************************************************
+// **********************Switch*************************
+// *****************************************************
 
 const AppSwitchNavigator = createSwitchNavigator({
   SignUpClass: { screen: SignUpClass },
-  Craigslist: { screen: MockedViewScreen },
   ChangePassword: { screen: ChangePasswordScreen },
   CreateUser: { screen: CreateUserScreen },
   Drawer: { screen: AppDrawerNavigator },

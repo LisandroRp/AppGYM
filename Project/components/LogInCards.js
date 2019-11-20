@@ -12,6 +12,7 @@ import {
 import ApiController from '../controller/ApiController';
 import {KeyboardAvoidingView} from 'react-native';
 import { LinearGradient } from 'expo'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 class LogInCards extends Component {
   constructor(props) {
@@ -41,9 +42,9 @@ class LogInCards extends Component {
        <LinearGradient colors={['#1D71B8', '#2D2E83']} style={styles.container}>
        <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
        {/* <Image style={styles.bgImage} source={{ uri: "https://lorempixel.com/900/1400/nightlife/8/" }}/> */}
-       <View style={[styles.imageContainer]}>
+       <View>
                         <Image
-                            style={{height:300, width:300,resizeMode: 'contain',}}
+                            style={{height:hp("30%"), width:wp("80%"),resizeMode: 'contain',}}
                             source={require('./Licha-enjoy.png')}></Image>
                     </View>
        <View style={{paddingTop:50}}>
@@ -72,12 +73,11 @@ class LogInCards extends Component {
           <Text style={styles.loginText}>Login</Text>
         </TouchableOpacity>
 
-
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.onPressCreate()}>
+      <View style={{alignItems:'center'}}>
+        <TouchableOpacity style={styles.buttonContainerAcco} onPress={() => this.props.onPressCreate()}>
             <Text style={styles.btnText}>Create an account</Text>
         </TouchableOpacity>
         {/* <View style={{flexDirection:'center', width:100}}> */}
-        <View style={{width:100}}>
         <TouchableOpacity style={styles.buttonContainerPass} onPress={() => this.props.onPressPass()}>
             <Text style={styles.btnText}>Change password</Text>
         </TouchableOpacity>
@@ -105,8 +105,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius:30,
     borderBottomWidth: 1,
-    width:300,
-    height:45,
+    width:wp("75%"),
+    height:hp("6.2%"),
     marginBottom:20,
     flexDirection: 'row',
     alignItems:'center',
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   inputs:{
-    height:45,
+    height:hp("6.2%"),
     marginLeft:16,
     borderBottomColor: '#FFFFFF',
     flex:1,
@@ -134,33 +134,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   buttonContainer: {
-    height:45,
+    height:hp("6.2%"),
     justifyContent: 'center',
     alignItems: 'center',
     marginTop:20,
     marginBottom:5,
-    width:300,
+    width:wp("75%"),
     borderRadius:30,
+    backgroundColor:'transparent'
+  },
+  buttonContainerAcco: {
+    height:hp("5%"),
+    justifyContent: 'center',
+    alignItems: 'center',
+    width:wp("75%"),
+    borderRadius:30,
+    marginTop:10,
     backgroundColor:'transparent'
   },
   buttonContainerPass: {
-    height:20,
+    height:hp("5%"),
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom:20,
-    width:300,
+    width:wp("75%"),
     borderRadius:30,
     backgroundColor:'transparent'
   },
-  btnByRegister: {
-    height:50,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical:20,
-    width:300,
-    backgroundColor:'transparent'
-  },
+
   loginButton: {
     backgroundColor: "#00b5ec",
 
@@ -187,25 +188,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  backgroundImage: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover'
-},
   btnText:{
     color:"white",
     fontWeight:'bold',
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
   },
-  textByRegister:{
-    color:"white",
-    fontWeight:'bold',
-    textAlign:'center',
-
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: {width: 1, height: 1},
-    textShadowRadius: 100
-  }
 })
 export default LogInCards;  

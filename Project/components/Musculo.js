@@ -55,9 +55,11 @@ class Musculo extends Component {
       FlatListItems:[],
       musculo: this.props.navigation.getParam('musculo'),
       modalVisible: false,
+      
       ejercicios: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
       { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
       { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
+      
       memory: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
       { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
       { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
