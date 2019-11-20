@@ -17,6 +17,7 @@ import {
   ScrollView
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 function createData(item) {
   return {
@@ -281,35 +282,10 @@ const styles = StyleSheet.create({
     //alignSelf: 'center',
     color: "#6666ff"
   },
-  followButton: {
-    marginTop: 10,
-    height: 35,
-    width: 100,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#dcdcdc",
-  },
-  followButtonText: {
-    color: "black",
-    fontSize: 15,
-    marginTop: 4,
-  },
   StarImage: {
-    width: 40,
-    height: 40,
+    width: wp("10%"),
+    height: hp("5%"),
     resizeMode: 'cover',
-  },
-  detalleGenresTitles: {
-    fontSize: 33,
-    margin: 10,
-    marginBottom: 2.5,
-    color: '#3399ff',
-    fontWeight: 'bold'
   },
 })
 
