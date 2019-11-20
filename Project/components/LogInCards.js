@@ -11,8 +11,9 @@ import {
 } from 'react-native'; 
 import ApiController from '../controller/ApiController';
 import {KeyboardAvoidingView} from 'react-native';
-import { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo-linear-gradient'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import base from './GenerarBase'
 
 class LogInCards extends Component {
   constructor(props) {
@@ -21,6 +22,11 @@ class LogInCards extends Component {
       username: null,
       password: null,
     }
+  }
+
+  componentDidMount(){
+   // base.CrearTodo();
+   base.MiBase();
   }
 
   checkLogin() {

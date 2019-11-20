@@ -4,6 +4,9 @@
     "slug": "Project",
     "privacy": "public",
     "sdkVersion": "33.0.0",
+    "packagerOpts": {
+      "assetExts": ["db"]
+    },
     "platforms": [
       "ios",
       "android"

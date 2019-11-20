@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { SearchBar, Icon } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import { AsyncStorage } from 'react-native';
-import base from './GenerarBase';
 import ApiController from '../controller/ApiController'
 import {
   StyleSheet,
@@ -17,6 +16,18 @@ import {
   ActivityIndicator,
   ScrollView
 } from 'react-native';
+
+//import * as SQLite from 'expo-sqlite'
+//import SQLite from 'expo-sqlite'
+//import SQLite from 'expo'
+//var db = SQLite.openDatabase('./AppGYM.db');
+//import { openDatabase } from 'react-native-sqlite-storage';
+// //Connction to access the pre-populated user_db.db
+//Connction to access the pre-populated user_db.db
+//var db = openDatabase({ name: 'AppGYM.db', createFromLocation : 1});
+//Otro intento
+// import { BaseModel, types } from 'expo-sqlite-orm'
+//var db = openDatabase('./AppGYM.db');
 
 function createData(item) {
   return {
@@ -57,12 +68,40 @@ class Musculo extends Component {
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
     //this._storeData(this.state.IdUser);
-    this.obtenerEjercicios();
+    //this.getUserData()
+    //this.obtenerEventos();
+   // this.obtenerEjercicios();
   }
-  
+  // static get database() {
+  //   return async () => SQLite.openDatabase('AppGYM.db')
+  // }
+ 
+  // static get tableName() {
+  //   return 'animals'
+  // }
   obtenerEjercicios(){
-    base.AbrirTabla();
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM Ejercicios', [], (results) => {
+        var temp = [];
+        console.log(temp +'Pedro')
+        for (let i = 0; i < results.rows.length; ++i) {
+          temp.push(results.rows.item(i));
+          console.log(temp +'hola')
+        }
+        this.setState({
+          ejercicios: temp,
+        });
+      },
+      () => {console.log('fail')},
+  () => {console.log('success')}
+  );
+    });
   }
+  // ListViewItemSeparator = () => {
+  //   return (
+  //     <View style={{ height: 0.2, width: '100%', backgroundColor: '#808080' }} />
+  //   );
+  // };
   _storeData = async () => {
     try {
       await AsyncStorage.setItem('IdUser', this.state.IdUser);
