@@ -26,7 +26,9 @@ class LogInCards extends Component {
 
   componentDidMount(){
    // base.CrearTodo();
-   base.MiBase();
+   //base.MiBase();
+   //base.openFile();
+   base.AbrirTabla();
   }
 
   checkLogin() {

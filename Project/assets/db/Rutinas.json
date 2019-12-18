@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "nombre": "Arnold N1",
+        "imagen": "require('./Fotos/PECHO.png')",
+        "dias": 7,
+        "fav": 1,
+        "modificable":false 
+    },
+    {
+        "id": 2,
+        "nombre": "La Roca",
+        "imagen": "require('./Fotos/ESPALDA.png')",
+        "dias": 6,
+        "fav": 1,
+        "modificable":true 
+    }
+]

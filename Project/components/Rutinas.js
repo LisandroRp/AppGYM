@@ -18,6 +18,8 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import Rutinas2 from '../assets/db/Rutinas.json'
+import  * as FileSystem from 'expo-file-system';
 
 function createData(item) {
   return {
@@ -62,7 +64,7 @@ class Rutinas extends Component {
     //this._storeData(this.state.IdUser);
     //this.getUserData()
     //this.obtenerEventos()
-
+    //this.obtenerRutinas()
   }
   static navigationOptions = {
     headerStyle: {
@@ -70,6 +72,9 @@ class Rutinas extends Component {
       height: 50
     },
   };
+  componentDidMount(){
+    this.setState({rutinas:Rutinas2, isLoading:false})
+  }
   obtenerEventos() {
     ApiController.getEventos(this.okEventos.bind(this));
   }
@@ -130,7 +135,9 @@ class Rutinas extends Component {
       rutinas2[aux].fav = 1
     }
     this.setState({ rutinas: rutinas2 })
+    Rutinas2.setState(rutinas2)        
     this.termino()
+    
   }
   termino() {
     this.setState({ isLoading: false })
