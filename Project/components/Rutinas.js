@@ -135,7 +135,7 @@ class Rutinas extends Component {
       rutinas2[aux].fav = 1
     }
     this.setState({ rutinas: rutinas2 })
-    Rutinas2.setState(rutinas2)        
+    //Rutinas2.setState(rutinas2)        
     this.termino()
     
   }

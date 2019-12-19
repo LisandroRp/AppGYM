@@ -3,6 +3,7 @@ import { SearchBar, Icon } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import { AsyncStorage } from 'react-native';
 import base from './GenerarBase';
+import base2 from './GenerarBase2';
 import ApiController from '../controller/ApiController'
 import {
   StyleSheet,
@@ -17,6 +18,9 @@ import {
   ActivityIndicator,
   ScrollView
 } from 'react-native';
+import {Asset} from 'expo-asset'
+import { SQLite } from "expo-sqlite";
+import  * as FileSystem from 'expo-file-system';
 
 function createData(item) {
   return {
@@ -44,7 +48,6 @@ class Musculo extends Component {
       FlatListItems:[],
       musculo: this.props.navigation.getParam('musculo'),
       modalVisible: false,
-      
       ejercicios: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
       { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
       { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
@@ -52,16 +55,18 @@ class Musculo extends Component {
       memory: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
       { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
       { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
-      isLoading: false,
+      isLoading: true,
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
     //this._storeData(this.state.IdUser);
-    this.obtenerEjercicios();
+    this.cargarEjercicios();
   }
-  
-  obtenerEjercicios(){
-    base.AbrirTabla();
+  cargarEjercicios = async () => {
+    this.setState({ejercicios: await base.AbrirTabla(),isLoading:false})
+  }
+  traerEjercicios(ejercicios){
+    this.setState({ejercicios: ejercicios})
   }
   _storeData = async () => {
     try {

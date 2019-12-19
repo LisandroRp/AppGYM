@@ -50,17 +50,19 @@ class GenerarBase extends Component {
     }
 
     AbrirTabla() {
+        const ejercicios= [];  
         FileSystem.downloadAsync(
             Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-            `${FileSystem.documentDirectory}SQLite/appgym.db`
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
         );
-        let db = SQLite.openDatabase('AppGYM.db');
+        let db = SQLite.openDatabase('appgym.db');
 
-        db.transaction(      
+        db.transaction(  
             tx => {
-                tx.executeSql('SELECT * FROM `Ejercicios`', [], function (tx, res) {
+                tx.executeSql('SELECT * FROM Ejercicios', [], function (tx, res) {
                     for (let i = 0; i < res.rows.length; ++i) {
                         console.log('item:', res.rows._array[i]);
+                        ejercicios.push(res.rows._array[i]);
                     }
                 });
             },
@@ -69,35 +71,10 @@ class GenerarBase extends Component {
             },
             () => {
                 console.log("Correcto")
+                console.log(ejercicios+'hola')
+                return ejercicios;
             }
         );
-        // db.transaction(function (tx) {
-
-        //     tx.executeSql('CREATE TABLE IF NOT EXISTS Users(user_id INTEGER PRIMARY KEY NOT NULL, name VARCHAR(30))', []);
-        //     // Insert a record
-        //     tx.executeSql('INSERT INTO Users (name) VALUES (:name)', ['papa']);
-
-        //     tx.executeSql('SELECT * FROM Users', [], function (tx, res) {
-        //         for (let i = 0; i < res.rows.length; ++i) {
-        //             console.log('item:', res.rows.item(i));
-        //         }
-        //     });
-        // });
-
-
-        // let db = SQLite.openDatabase('AppGYM.db');
-        // db.transaction(function (tx) {
-        //     tx.executeSql('SELECT * FROM "Ejercicios"', [], function (tx, res) {
-        //         for (let i = 0; i < res.rows.length; ++i) {
-        //             console.log('item:', res.rows.item(i));
-        //         }
-        //     });
-        //     tx.executeSql('SELECT * FROM `ejercicios`', [], function (tx, res) {
-        //         for (let i = 0; i < res.rows.length; ++i) {
-        //             console.log('item:', res.rows.item(i));
-        //         }
-        //     });
-        // });
     }
 
     // openFile = async () => {

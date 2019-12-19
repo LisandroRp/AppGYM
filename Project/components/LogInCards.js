@@ -24,13 +24,6 @@ class LogInCards extends Component {
     }
   }
 
-  componentDidMount(){
-   // base.CrearTodo();
-   //base.MiBase();
-   //base.openFile();
-   base.AbrirTabla();
-  }
-
   checkLogin() {
     //ApiController.getUsuario(this.checkUsuario.bind(this), this.state.username)
     this.props.onPressLogin(this.state.username);
