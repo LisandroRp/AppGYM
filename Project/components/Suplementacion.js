@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ApiController from '../controller/ApiController'
 import { SearchBar, Icon } from 'react-native-elements';
+import base from './GenerarBase';
 import {
   StyleSheet,
   Text,
@@ -41,28 +42,22 @@ class Suplementacion extends Component {
       memory: [{ id: '1', nombre: 'Falopa', descripcion: 'Droguita' },
       { id: 2, nombre: 'Falopa2', descripcion: 'Droguita' },
       { id: 3, nombre: 'Falopa3', descripcion: 'Droguita' }],
-      isLoading: false,
-      refreshing: false,
+      isLoading: true,
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-    //this.obtenerEventos()
+    this.cargarSuplementos();
   }
-  obtenerEventos() {
-    ApiController.getEventos(this.okEventos.bind(this));
+  cargarSuplementos = async () => {
+    base.traerSuplementos(this.okSuplementos.bind(this))
+  }
+  okSuplementos(suplementos){
+    this.setState({
+      suplementos: suplementos,
+      memory: suplementos,
+      isLoading: false,
+    });
   }
 
-  okEventos(data) {
-    if (data != null) {
-      var i, newArray = [];
-      for (i = 0; i < data.length; i++) {
-        newArray.push(createData(data[i], i));
-      }
-      this.setState({ eventos: newArray, isLoading: false });
-
-    } else {
-      alert("Intentar de nuevo")
-    }
-  }
   componentDidMount() {
     this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
     this.keyboardWillShow = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
@@ -141,7 +136,7 @@ class Suplementacion extends Component {
                       <Image style={styles.image} source={{ uri: item.imagen }} />
                       <View style={styles.cardContent}>
                         <Text style={styles.name}>{item.nombre}</Text>
-                        <Text style={styles.descripcion}>{item.descripcion}</Text>
+                        <Text style={styles.marca}>{item.marca}</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
@@ -214,7 +209,7 @@ const styles = StyleSheet.create({
     color: "#3399ff",
     fontWeight: 'bold'
   },
-  descripcion: {
+  marca: {
     fontSize: 15,
     marginTop: 5,
     //flex: 1,

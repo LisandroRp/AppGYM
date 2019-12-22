@@ -3,7 +3,6 @@ import { SearchBar, Icon } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import { AsyncStorage } from 'react-native';
 import base from './GenerarBase';
-import base2 from './GenerarBase2';
 import ApiController from '../controller/ApiController'
 import {
   StyleSheet,
@@ -43,38 +42,35 @@ class Musculo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      //IdUser: props.navigation.getParam('IdUser'),
       searchBarFocused: false,
-      FlatListItems:[],
       musculo: this.props.navigation.getParam('musculo'),
       modalVisible: false,
-      ejercicios: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
-      { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
-      { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
+      // ejercicios: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
+      // { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
+      // { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
       
-      memory: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
-      { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
-      { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
+      // memory: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
+      // { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
+      // { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
+      memory:[],
+      ejercicios: [],
       isLoading: true,
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
-    //this._storeData(this.state.IdUser);
     this.cargarEjercicios();
   }
   cargarEjercicios = async () => {
-    this.setState({ejercicios: await base.AbrirTabla(),isLoading:false})
+    base.traerEjercicios(this.okEjercicios.bind(this))
   }
-  traerEjercicios(ejercicios){
-    this.setState({ejercicios: ejercicios})
+  okEjercicios(ejercicios){
+    this.setState({
+      ejercicios: ejercicios,
+      memory: ejercicios,
+      isLoading: false,
+    });
   }
-  _storeData = async () => {
-    try {
-      await AsyncStorage.setItem('IdUser', this.state.IdUser);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   esGenero(genero) {
     for (i = 0; i <= this.state.generoEvento.length; i++) {
       if (this.state.generoEvento[i] == genero) {

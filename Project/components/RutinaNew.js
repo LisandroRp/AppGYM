@@ -41,7 +41,6 @@ class RutinaNew extends Component {
       nombre: 'Nombre',
       modalVisible: false,
       userSelected: [],
-      //rutina: [],
       rutina: [],
       isLoading: false,
       rutinaVacia: [],
@@ -57,7 +56,6 @@ class RutinaNew extends Component {
     this.Tricep = require('./Logos/Logo_Bicep.png');
     this.Piernas= require('./Logos/Logo_Bicep.png');
     this.Cardio = require('./Logos/Logo_Cardio.png');
-    //this.obtenerEventos()
   }
   componentWillReceiveProps() {
     console.log('chauuuu')
@@ -82,7 +80,6 @@ class RutinaNew extends Component {
     }
   };
   termino() {
-    //console.log(this.state.rutina)
     this._storeData()
   }
   touch(dia) {

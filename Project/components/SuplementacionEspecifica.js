@@ -94,10 +94,14 @@ okEjercicio(data) {
         <ScrollView>
         <View style={styles.todo}>
           <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.nombre}</Text></View>
+          <Text style={styles.descripcion}>Marca: {this.state.idSumplemento}</Text>
           <Text style={styles.descripcion}>{this.state.idSumplemento}</Text>
           </View>
           <View style={styles.todo}>
-          <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Marcas</Text></View>
+          <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Beneficios</Text></View>
+        </View>
+          <View style={styles.todo}>
+          <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Uso</Text></View>
         </View>
         </ScrollView>
       </View>

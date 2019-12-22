@@ -5,6 +5,7 @@ import { SQLite } from "expo-sqlite";
 import  DocumentPicker from 'expo-document-picker';
 //import  SQLite from 'expo-sqlite';
 import  * as FileSystem from 'expo-file-system';
+import Rutinas from './Rutinas';
 //var db = SQLite.openDatabase('AppGYM.db');
 
 class GenerarBase extends Component {
@@ -28,16 +29,6 @@ class GenerarBase extends Component {
             });
         });
     }
-
-    MiBase = async () => {
-        const dbTest = SQLite.openDatabase('dummy.db');
-        try {
-            await dbTest.transaction(tx => tx.executeSql(''));
-        } catch (e) {
-            if (this.state.debugEnabled) console.log('error while executing SQL in dummy DB');
-        }
-        this.AbrirTabla()
-    }
     BorrarTabla() {
         db.transaction(function (tx) {
             // Drop the table if it exists
@@ -49,8 +40,8 @@ class GenerarBase extends Component {
         });
     }
 
-    AbrirTabla() {
-        const ejercicios= [];  
+    traerEjercicios(okEjercicios) {
+        ejercicios=[],
         FileSystem.downloadAsync(
             Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
             `${FileSystem.documentDirectory}/SQLite/appgym.db`
@@ -61,53 +52,83 @@ class GenerarBase extends Component {
             tx => {
                 tx.executeSql('SELECT * FROM Ejercicios', [], function (tx, res) {
                     for (let i = 0; i < res.rows.length; ++i) {
-                        console.log('item:', res.rows._array[i]);
                         ejercicios.push(res.rows._array[i]);
                     }
                 });
             },
             error => {
                 console.log("Error")
+                alert("Algo Salio Mal")
             },
             () => {
                 console.log("Correcto")
-                console.log(ejercicios+'hola')
-                return ejercicios;
+                db._db.close()
+                okEjercicios(ejercicios)
             }
         );
     }
+    traerRutinas(okRutinas) {
+        rutinas=[],
+        FileSystem.downloadAsync(
+            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        );
+        let db = SQLite.openDatabase('appgym.db');
 
-    // openFile = async () => {
-    //     const sqliteDirectory = `${FileSystem.documentDirectory}SQLite`;
+        db.transaction(  
+            tx => {
+                tx.executeSql('SELECT * FROM Rutinas', [], function (tx, res) {
+                    for (let i = 0; i < res.rows.length; ++i) {
+                        rutinas.push(res.rows._array[i]);
+                    }
+                });
+            },
+            error => {
+                console.log("Error")
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okRutinas(rutinas)
+            }
+        );
+    }
+    traerSuplementos(okSuplementos) {
+        suplementos=[],
+        FileSystem.downloadAsync(
+            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        );
+        let db = SQLite.openDatabase('appgym.db');
 
-    //     const { exists, isDirectory } = await FileSystem.getInfoAsync(
-    //      sqliteDirectory
-    //    );
+        db.transaction(  
+            tx => {
+                tx.executeSql('SELECT * FROM Suplementos', [], function (tx, res) {
+                    for (let i = 0; i < res.rows.length; ++i) {
+                        suplementos.push(res.rows._array[i]);
+                    }
+                });
+            },
+            error => {
+                console.log("Error")
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okSuplementos(suplementos)
+            }
+        );
+    }
+    traerEjercicioEspecifico(okEjercicios){
 
-    // if (!exists) {
-    //      await FileSystem.makeDirectoryAsync(sqliteDirectory);
-    //    }
-    //    console.log('hola')
-    //    const pathToDownloadTo = `${sqliteDirectory}/AppGYM.db`;
-    //    const result = await DocumentPicker.getDocumentAsync({copyToCacheDirectory:false});
-    // console.log(result.uri);
-    //    const copyResult = await FileSystem.copyAsync({
-    //      from: result.uri,
-    //      to: pathToDownloadTo,
-    //    });
+    }
+    traerRutinaEspecifica(okRutinas){
 
-    //    let db = SQLite.openDatabase('AppGYM.db');
-    //  //  console.log('path',pathToDownloadTo');
-    //    db.transaction(txn => {
-    //      console.log('txn',txn);
-    //      txn.executeSql('SELECT * FROM Ejercicios', [], (txn, rs) => {
-    //        console.log('executeSql');
-    //        console.log(rs.rows)
-    //      })
-    //    })
+    }
+    traerSuplementoEspecifico(okSuplementos){
 
-    //    //console.log(db);
-    //  };
-
+    }
 }
 export default new GenerarBase();

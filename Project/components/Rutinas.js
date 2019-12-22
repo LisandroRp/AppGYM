@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { SearchBar, Icon } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import { AsyncStorage } from 'react-native';
-import ApiController from '../controller/ApiController'
+import base from './GenerarBase';
 import {
   StyleSheet,
   Text,
@@ -18,17 +18,16 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import Rutinas2 from '../assets/db/Rutinas.json'
 import  * as FileSystem from 'expo-file-system';
 
 function createData(item) {
   return {
-    key: item._id,
-    idEvento: item._id,
-    imagen: item.imagen,
+    id: item.id,
     nombre: item.nombre,
-    rating: item.rating,
-    descripcion: item.descripcion,
+    imagen: item.imagen,
+    dias: item.dias,
+    fav: item.fav,
+    modificable: item.modificable,
     tipo: item.tipo,
     ubicacion: item.ubicacion,
     precioE: item.precioE,
@@ -47,58 +46,30 @@ class Rutinas extends Component {
       Status: 'none',
       modalVisible: false,
       userSelected: [],
-      rutinas: [{ id: 1, nombre: 'Arnold N1', imagen: require('./Fotos/PECHO.png'), dias: 7, fav: 1,modificable:false },
-      { id: 2, nombre: 'La Roca', imagen: require('./Fotos/ESPALDA.png'), dias: 6, fav: 1,modificable:true },
-      { "id": 3, "nombre": 'Vin Disell', "imagen": require('./Fotos/HOMBROS.png'), dias: 5, fav: 1,modificable:true },
-      { id: 4, nombre: 'Wachiturro', imagen: require('./Fotos/PIERNAS.png'), dias: 1, fav: 0,modificable:true },
-      { id: 5, nombre: 'Navy SEAL', imagen: require('./Fotos/BICEPS.png'), dias: 15, fav: 0,modificable:true },],
-      isLoading: false,
+      // rutinas: [{ id: 1, nombre: 'Arnold N1', imagen: require('./Fotos/PECHO.png'), dias: 7, fav: 1,modificable:false },
+      // { id: 2, nombre: 'La Roca', imagen: require('./Fotos/ESPALDA.png'), dias: 6, fav: 1,modificable:true },
+      // { "id": 3, "nombre": 'Vin Disell', "imagen": require('./Fotos/HOMBROS.png'), dias: 5, fav: 1,modificable:true },
+      // { id: 4, nombre: 'Wachiturro', imagen: require('./Fotos/PIERNAS.png'), dias: 1, fav: 0,modificable:true },
+      // { id: 5, nombre: 'Navy SEAL', imagen: require('./Fotos/BICEPS.png'), dias: 15, fav: 0,modificable:true },],
+      rutinas:[],
+      isLoading: true,
       generoEvento: [],
-      refreshing: false,
     };
     this.Star = require('./Logos/Star_Llena.png');
     this.Star_With_Border = require('./Logos/Star_Borde.png');
     //this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.Star_With_Border = 'https://img.icons8.com/color/96/000000/star.png';
     //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
-    //this._storeData(this.state.IdUser);
-    //this.getUserData()
-    //this.obtenerEventos()
-    //this.obtenerRutinas()
+    this.cargarRutinas();
   }
-  static navigationOptions = {
-    headerStyle: {
-      backgroundColor: 'white',
-      height: 50
-    },
-  };
-  componentDidMount(){
-    this.setState({rutinas:Rutinas2, isLoading:false})
+
+  cargarRutinas = async () => {
+    base.traerRutinas(this.okRutinas.bind(this))
   }
-  obtenerEventos() {
-    ApiController.getEventos(this.okEventos.bind(this));
+  okRutinas(rutinas){
+    this.setState({ rutinas: rutinas, isLoading: false });
   }
-  okEventos(data) {
-    if (data != null) {
-      var i, newArray = [];
-      for (i = 0; i < data.length; i++) {
-        newArray.push(createData(data[i], i));
-      }
-      this.setState({ eventos: newArray, isLoading: false });
-    } else {
-      alert("Intentar de nuevo")
-    }
-    //this._storeData(this.state.idUser);
-  }
-  getUserData() {
-    ApiController.getUsuario(this.okUserData.bind(this), this.state.IdUser);
-  }
-  okUserData(data) {
-    // this.setState({
-    //   generoEvento: data.generoEvento,
-    // })
-    this.obtenerEventos()
-  }
+  
   _storeData = async (id) => {
     try {
       await AsyncStorage.setItem('rutinaEditable', id);
@@ -113,9 +84,6 @@ class Rutinas extends Component {
       }
     }
     return false
-  }
-  clickEventListener = (item) => {
-    Alert.alert('Message', 'Item clicked. ' + JSON.stringify(item));
   }
   favear(id) {
     var i = 0
@@ -174,7 +142,7 @@ class Rutinas extends Component {
                     // <TouchableOpacity style={styles.card} onPress={() => {this.props.onPressGo(item.id, item.nombre, item.modificable),this._storeData(item.id)}}>
                     <TouchableOpacity style={styles.card} onPress={() => {this.props.onPressGo(item.id, item.nombre, item.modificable)}}>
                       <View style={{ flexDirection: "row" }} >
-                        <Image style={styles.image} source={item.imagen} />
+                        <Image style={styles.image} source={{uri: item.imagen}} />
                         <View style={styles.cardContent}>
                           <Text style={styles.name}>{item.nombre}</Text>
                           <Text style={styles.descripcion}>{item.dias} Dias</Text>
