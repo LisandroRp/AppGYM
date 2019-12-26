@@ -61,7 +61,7 @@ class Musculo extends Component {
     this.cargarEjercicios();
   }
   cargarEjercicios = async () => {
-    base.traerEjercicios(this.okEjercicios.bind(this))
+    base.traerEjercicios(await this.props.navigation.getParam('musculo'), this.okEjercicios.bind(this))
   }
   okEjercicios(ejercicios){
     this.setState({
@@ -69,6 +69,7 @@ class Musculo extends Component {
       memory: ejercicios,
       isLoading: false,
     });
+    console.log(ejercicios)
   }
 
   esGenero(genero) {

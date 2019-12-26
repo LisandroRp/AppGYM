@@ -314,7 +314,7 @@ class RutinasScreen extends React.Component {
     );
   }
   irRutina(id,nombre,modificable) {
-    if(modificable){
+    if(modificable=="true"){
     this.props.navigation.navigate('RutinaEspecificaM', { id: id ,nombre: nombre});
     }else{
       this.props.navigation.navigate('RutinaEspecificaNoM', { id: id ,nombre: nombre});
@@ -349,8 +349,8 @@ class RutinaNewScreen extends React.Component {
   agregarEjercicio(dia,tipo) {
     this.props.navigation.navigate('EjercicioAgregar',{dia:dia,tipo: tipo});
   }
-  verInfo(nombre){
-    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre});
+  verInfo(nombre,idEjercicio){
+    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre, id:idEjercicio});
   }
   cancelar(){
     this.props.navigation.navigate('RutinasScreen');
@@ -365,7 +365,7 @@ class RutinaModificableScreen extends React.Component{
   }
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Editar Rutina',
+      title: 'Editar ' + navigation.getParam('nombre'),
     headerStyle: {
       backgroundColor: 'black',
       height: 55,
@@ -386,8 +386,8 @@ class RutinaModificableScreen extends React.Component{
   agregarEjercicio(dia,tipo) {
     this.props.navigation.navigate('EjercicioAgregar',{dia:dia,tipo: tipo});
   }
-  verInfo(nombre){
-    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre});
+  verInfo(nombre,idEjercicio){
+    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre, idEjercicio:idEjercicio});
   }
   cancelar(){
     this.props.navigation.navigate('RutinasScreen');
@@ -398,11 +398,12 @@ class RutinaEspecificaMScreen extends React.Component {
     super(props)
   }
   static navigationOptions = ({ navigation}) => {
+    var nombre= navigation.getParam('nombre');
     return {
       headerRight: (
         <View style={{ flexDirection: 'row' }}>
           <FontAwesome name="edit" style={{ marginRight: 20, color: '#3399ff' }}
-            onPress={() => navigation.navigate('RutinaModificable')}
+            onPress={() => navigation.navigate('RutinaModificable', {nombre: nombre})}
             size={22}
           />
         </View>
@@ -428,8 +429,8 @@ class RutinaEspecificaMScreen extends React.Component {
   pasarConcierto(id) {
     this.props.navigation.navigate('Detalle', { IdEvento: id });
   }
-  verInfo(nombre){
-    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre});
+  verInfo(nombre, idEjercicio){
+    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre, idEjercicio:idEjercicio});
   }
   editar(id){
     this._storeData(id);
@@ -469,8 +470,8 @@ class RutinaEspecificaNoMScreen extends React.Component {
   pasarConcierto(id) {
     this.props.navigation.navigate('Detalle', { IdEvento: id });
   }
-  verInfo(nombre){
-    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre});
+  verInfo(nombre, idEjercicio){
+    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre, idEjercicio:idEjercicio});
   }
   editar(id){
     this.setState({idModificable:id})

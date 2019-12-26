@@ -5,8 +5,17 @@ import { SQLite } from "expo-sqlite";
 import  DocumentPicker from 'expo-document-picker';
 //import  SQLite from 'expo-sqlite';
 import  * as FileSystem from 'expo-file-system';
-import Rutinas from './Rutinas';
 //var db = SQLite.openDatabase('AppGYM.db');
+
+function createEjercicio(item) {
+    return {
+      id: item.id,
+      ejercicio: {},
+      dia: item.dia,
+      serie: item.series,
+      repeticiones: item.repeticiones,
+    };
+  }
 
 class GenerarBase extends Component {
 
@@ -40,7 +49,7 @@ class GenerarBase extends Component {
         });
     }
 
-    traerEjercicios(okEjercicios) {
+    traerEjercicios(musculo, okEjercicios) {
         ejercicios=[],
         FileSystem.downloadAsync(
             Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
@@ -50,7 +59,7 @@ class GenerarBase extends Component {
 
         db.transaction(  
             tx => {
-                tx.executeSql('SELECT * FROM Ejercicios', [], function (tx, res) {
+                tx.executeSql('SELECT * FROM Ejercicios where musculo = ?', [musculo], function (tx, res) {
                     for (let i = 0; i < res.rows.length; ++i) {
                         ejercicios.push(res.rows._array[i]);
                     }
@@ -121,11 +130,108 @@ class GenerarBase extends Component {
             }
         );
     }
-    traerEjercicioEspecifico(okEjercicios){
+    traerEjercicioEspecifico(ejercicio, okEjercicio){
+        var ejercicioNew
+        FileSystem.downloadAsync(
+            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        );
+        let db = SQLite.openDatabase('appgym.db');
 
+        db.transaction(  
+            tx => {
+                tx.executeSql('SELECT * FROM Ejercicios where id = ?', [ejercicio], function (tx, res) {
+                        ejercicioNew= res.rows._array;
+                });
+            },
+            error => {
+                console.log("Error")
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okEjercicio(ejercicioNew)
+            }
+        );
     }
-    traerRutinaEspecifica(okRutinas){
+    traerRutinaEspecifica(rutina, okRutinas){
+        var rutina
+        FileSystem.downloadAsync(
+            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        );
+        let db = SQLite.openDatabase('appgym.db');
 
+        db.transaction(  
+            tx => {
+                tx.executeSql('SELECT * FROM Rutinas where id = ?', [rutina], function (tx, res) {
+                        rutina = res.rows._array;
+                });
+            },
+            error => {
+                console.log("Error")
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okRutinas(rutina)
+            }
+        );
+    }
+    traerEjerciciosRutina(rutina, okEjercicios){
+        var ejercicios= []
+        FileSystem.downloadAsync(
+            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        );
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(  
+            tx => {
+                tx.executeSql('SELECT * FROM Ejercicios_Rutina where id = ?', [rutina.id], function (tx, res) {
+                    for (let i = 0; i < res.rows.length; ++i) {
+                        ejercicios.push(res.rows._array[i]);
+                    }
+                });
+            },
+            error => {
+                console.log("Error")
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                rutina.rutina=ejercicios
+                okEjercicios(rutina)
+            }
+        );
+    }
+    traerEjercicioEspecificoRutina(rutinaEjercicios,rutinaTotal, okEjercicio){
+        var ejercicio = createEjercicio(rutinaEjercicios)
+        FileSystem.downloadAsync(
+            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        );
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(  
+            tx => {
+                tx.executeSql('SELECT * FROM Ejercicios where id = ?', [rutinaEjercicios.ejercicio_id], function (tx, res) {
+                    ejercicio.ejercicio= res.rows._array;
+                });
+            },
+            error => {
+                console.log("Error")
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okEjercicio(rutinaTotal, ejercicio)
+            }
+        );
     }
     traerSuplementoEspecifico(okSuplementos){
 

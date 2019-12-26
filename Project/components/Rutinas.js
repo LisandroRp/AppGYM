@@ -20,21 +20,6 @@ import { LinearGradient } from 'expo-linear-gradient'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import  * as FileSystem from 'expo-file-system';
 
-function createData(item) {
-  return {
-    id: item.id,
-    nombre: item.nombre,
-    imagen: item.imagen,
-    dias: item.dias,
-    fav: item.fav,
-    modificable: item.modificable,
-    tipo: item.tipo,
-    ubicacion: item.ubicacion,
-    precioE: item.precioE,
-    genero: item.genero,
-  };
-}
-
 class Rutinas extends Component {
 
 
@@ -68,6 +53,7 @@ class Rutinas extends Component {
   }
   okRutinas(rutinas){
     this.setState({ rutinas: rutinas, isLoading: false });
+    console.log(rutinas)
   }
   
   _storeData = async (id) => {

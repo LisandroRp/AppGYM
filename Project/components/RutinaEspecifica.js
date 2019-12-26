@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
-import ApiController from '../controller/ApiController'
+import base from './GenerarBase';
 import {
   StyleSheet,
   Text,
@@ -21,15 +21,22 @@ var { height, width } = Dimensions.get('window');
 
 function createData(item) {
   return {
-    key: item._id,
-    idEvento: item._id,
-    imagen: item.imagen,
+    id: item.id,
     nombre: item.nombre,
-    rating: item.rating,
-    descripcion: item.descripcion,
-    tipo: item.tipo,
-    ubicacion: item.ubicacion,
-    precioE: item.precioE,
+    imagen: item.imagen,
+    dias: item.dias,
+    fav: item.fav,
+    modificable: item.modificable,
+    rutina: [],
+  };
+}
+function createEjercicio(item) {
+  return {
+    id: item.id,
+    ejercicio: {},
+    dia: item.dia,
+    serie: item.series,
+    repeticiones: item.repeticiones,
   };
 }
 
@@ -38,18 +45,25 @@ class RutinaEspecifica extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: this.props.navigation.getParam('id'),
       nombre: this.props.navigation.getParam('nombre'),
       modalVisible: false,
-      rutina: { id: 1, nombre: 'Arnold N1', imagen: require('./arnold-schwarzenegger-biceps_0.jpg'), dias: 7, fav: 1,modificable:false,
-      rutina:[{key:'50', id: 55,dia:'2',musculo: 'Pecho', nombre: 'Press Plano', series: '4', repeticiones: '15-12-10-8' },
-      {key:'55',id: 11,dia: '1',musculo: 'Abdominales', nombre: 'Abdominales', series: '4', repeticiones: '5-4-3-2-1' },
-      {key:'51',id: 87,dia: '3',musculo: 'Hombros', nombre: 'cacaHombrosa', series: '4', repeticiones: '5-4-3-2-1' },
-      {key:'58',id: 12,dia: '2',musculo: 'Tricep', nombre: 'Tricep', series: '4', repeticiones: '5-4-3-2-1' },
-      {key:'59',id: 12,dia: '4',musculo: 'Bicep', nombre: 'Bicep', series: '4', repeticiones: '5-4-3-2-1' },
-      {key:'52',id: 12,dia: '4',musculo: 'Espalda', nombre: 'Espalda', series: '4', repeticiones: '5-4-3-2-1' },
-      {key:'53',id: 12,dia: '4',musculo: 'Cardio', nombre: 'Cardio', series: '4', repeticiones: '5-4-3-2-1' }]},
-      diasTotal:'',
-      contador:1
+      isLoading: true,
+      // rutina: { id: 1, nombre: 'Arnold N1', imagen: require('./arnold-schwarzenegger-biceps_0.jpg'), dias: 7, fav: 1,modificable:false,
+      // rutina:[{key:'50', id: 55,dia:'2',musculo: 'Pecho', nombre: 'Press Plano', series: '4', repeticiones: '15-12-10-8' },
+      // {key:'55',id: 11,dia: '1',musculo: 'Abdominales', nombre: 'Abdominales', series: '4', repeticiones: '5-4-3-2-1' },
+      // {key:'51',id: 87,dia: '3',musculo: 'Hombros', nombre: 'cacaHombrosa', series: '4', repeticiones: '5-4-3-2-1' },
+      // {key:'58',id: 12,dia: '2',musculo: 'Tricep', nombre: 'Tricep', series: '4', repeticiones: '5-4-3-2-1' },
+      // {key:'59',id: 12,dia: '4',musculo: 'Bicep', nombre: 'Bicep', series: '4', repeticiones: '5-4-3-2-1' },
+      // {key:'52',id: 12,dia: '4',musculo: 'Espalda', nombre: 'Espalda', series: '4', repeticiones: '5-4-3-2-1' },
+      // {key:'53',id: 12,dia: '4',musculo: 'Cardio', nombre: 'Cardio', series: '4', repeticiones: '5-4-3-2-1' }]},
+      rutina: {
+        id: 1, nombre: 'Arnold N1', imagen: require('./arnold-schwarzenegger-biceps_0.jpg'), dias: 7, fav: 1, modificable: false,
+        rutina: []
+      },
+      diasTotal: '',
+      contador: 1,
+      ejercicios: []
     };
     this.Star = require('./Logos/Star_Llena.png');
     this.Pecho = require('./Logos/Logo_Pecho1.png');
@@ -60,31 +74,68 @@ class RutinaEspecifica extends Component {
     this.Tricep = require('./Logos/Logo_Bicep.png');
     this.Piernas = require('./Logos/Logo_Bicep.png');
     this.Cardio = require('./Logos/Logo_Cardio.png');
-    //this.obtenerEventos()
+    this.cargarRutina();
   }
-  componentDidMount(){
+
+  cargarRutina = async () => {
+    base.traerRutinaEspecifica(await this.props.navigation.getParam('id'), this.okRutinas.bind(this))
+  }
+  okRutinas(rutina) {
+    base.traerEjerciciosRutina(createData(rutina[0]), this.okEjercicios.bind(this))
+  }
+  okEjercicios(rutina) {
+    var ejercicios;
+    console.log(rutina.rutina)
+    for (i = 0; i < rutina.rutina.length; i++) {
+      base.traerEjercicioEspecificoRutina(rutina.rutina[i], rutina, this.okEjercicio.bind(this))
+    }
+  }
+  okEjercicio(rutina, ejercicio) {
+    var j = 1
+    console.log("MAGIA")
+    console.log(rutina)
+    console.log(ejercicio)
+    var result = this.state.rutina
+    for (i = 0; rutina.rutina.ejercicio_id != ejercicio.ejercicio.id; i++) {
+      j++;
+      console.log(j+'maaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaan')
+    }
+    result.rutina.push(ejercicio)
+    if (rutina.rutina.length == j) {
+      this.setState({
+        rutina: result,
+        isLoading: false
+      });
+      console.log(this.state.rutina)
+    } else {
+      this.setState({
+        rutina: result,
+      });
+    }
+  }
+  componentDidMount() {
     this.props.editable(this.state.rutina)
     this.contarDias()
   }
-  contarDias(){
-    aux=1
-    num=1
-    cant=[]
+  contarDias() {
+    aux = 1
+    num = 1
+    cant = []
     cant.push(num)
     num++
-    for(i=0;i<this.state.rutina.rutina.length;i++){
-      if(this.state.rutina.rutina[i].dia>aux){
-        aux=this.state.rutina.rutina[i].dia
+    for (i = 0; i < this.state.rutina.rutina.length; i++) {
+      if (this.state.rutina.rutina[i].dia > aux) {
+        aux = this.state.rutina.rutina[i].dia
         cant.push(num)
         num++
       }
     }
-    this.setState({diasTotal:cant})
+    this.setState({ diasTotal: cant })
   }
-  cuanto1(item){
-    this.setState({contador:item})
+  cuanto1(item) {
+    this.setState({ contador: item })
   }
-  cuanto2(){
+  cuanto2() {
     return this.state.contador
   }
   render() {
@@ -100,23 +151,23 @@ class RutinaEspecifica extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
           <ScrollView>
-          <View style={{alignItems:'center', marginVertical:height*0.03}}>
-          <TouchableOpacity onPress={() => {}}>
+            <View style={{ alignItems: 'center', marginVertical: height * 0.03 }}>
+              <TouchableOpacity onPress={() => { }}>
                 <View style={styles.imageContainer}>
-                <Image style={styles.image} source={this.state.rutina.imagen} />
+                  <Image style={styles.image} source={this.state.rutina.imagen} />
                 </View>
-          </TouchableOpacity>
-          </View>
+              </TouchableOpacity>
+            </View>
             <FlatList
               style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
               data={this.state.diasTotal}
               initialNumToRender={50}
               keyExtractor={(item) => {
-                    return item;
-                  }}
+                return item;
+              }}
               renderItem={({ item }) => {
-                aux=item
+                aux = item
                 return (
                   <View style={styles.cuadraditos}>
                     <DropDownItem key={item} contentVisible={false}
@@ -127,144 +178,144 @@ class RutinaEspecifica extends Component {
                       }
                     >
                       <FlatList
-                  style={styles.contentList}
-                  columnWrapperStyle={styles.listContainer}
-                  data={this.state.rutina.rutina}
-                  initialNumToRender={50}
-                  keyExtractor={(item) => {
-                    return item.key;
-                  }}
-                  renderItem={({ item }) => {
-                    if (item.dia == aux){
-                      if(item.musculo == "Pecho"){
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image style={styles.musculosLogo} source={this.Pecho} />
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
+                        style={styles.contentList}
+                        columnWrapperStyle={styles.listContainer}
+                        data={this.state.rutina.rutina}
+                        initialNumToRender={50}
+                        keyExtractor={(item) => {
+                          return item.key;
+                        }}
+                        renderItem={({ item }) => {
+                          if (item.dia == aux) {
+                            if (item.ejercicio[0].musculo == "Pecho") {
+                              return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  onPress={() => this.props.onPressInfo(item.ejercicio[0].nombre, item.ejercicio[0].id)}>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={styles.musculosLogo} source={this.Pecho} />
+                                    <View style={{ flexDirection: 'column' }}>
+                                      <Text style={{ fontWeight: 'bold' }}>{item.ejercicio[0].nombre}:</Text>
+                                      <Text>Reps: {item.repeticiones}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                    </View>
 
-                          </View>
-                        </TouchableOpacity>
-                      )
-                      }
-                      if(item.musculo == "Abdominales"){
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image style={styles.musculosLogo} source={this.Abs} />
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                            }
+                            if (item.musculo == "Abdominales") {
+                              return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={styles.musculosLogo} source={this.Abs} />
+                                    <View style={{ flexDirection: 'column' }}>
+                                      <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                      <Text>Reps: {item.repeticiones}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                    </View>
 
-                          </View>
-                        </TouchableOpacity>
-                      )
-                      }
-                      if(item.musculo == "Hombros"){
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image style={styles.musculosLogo} source={this.Hombros} />
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                            }
+                            if (item.musculo == "Hombros") {
+                              return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={styles.musculosLogo} source={this.Hombros} />
+                                    <View style={{ flexDirection: 'column' }}>
+                                      <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                      <Text>Reps: {item.repeticiones}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                    </View>
 
-                          </View>
-                        </TouchableOpacity>
-                      )
-                      }
-                      if(item.musculo == "Espalda"){
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image style={styles.musculosLogo} source={this.Espalda} />
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                            }
+                            if (item.musculo == "Espalda") {
+                              return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={styles.musculosLogo} source={this.Espalda} />
+                                    <View style={{ flexDirection: 'column' }}>
+                                      <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                      <Text>Reps: {item.repeticiones}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                    </View>
 
-                          </View>
-                        </TouchableOpacity>
-                      )
-                      }
-                      if(item.musculo == "Bicep"){
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image style={styles.musculosLogo} source={this.Bicep} />
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                            }
+                            if (item.musculo == "Bicep") {
+                              return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={styles.musculosLogo} source={this.Bicep} />
+                                    <View style={{ flexDirection: 'column' }}>
+                                      <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                      <Text>Reps: {item.repeticiones}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                    </View>
 
-                          </View>
-                        </TouchableOpacity>
-                      )
-                      }
-                      if(item.musculo == "Tricep"){
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image style={styles.musculosLogo} source={this.Tricep} />
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                            }
+                            if (item.musculo == "Tricep") {
+                              return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={styles.musculosLogo} source={this.Tricep} />
+                                    <View style={{ flexDirection: 'column' }}>
+                                      <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                      <Text>Reps: {item.repeticiones}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                    </View>
 
-                          </View>
-                        </TouchableOpacity>
-                      )
-                      }
-                      if(item.musculo == "Cardio"){
-                      return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image style={styles.musculosLogo} source={this.Cardio} />
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                            }
+                            if (item.musculo == "Cardio") {
+                              return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={styles.musculosLogo} source={this.Cardio} />
+                                    <View style={{ flexDirection: 'column' }}>
+                                      <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                      <Text>Reps: {item.repeticiones}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                    </View>
 
-                          </View>
-                        </TouchableOpacity>
-                      )
-                      }
-                      else{
-                        return (
-                        <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                          onPress={() => this.props.onPressInfo(item.nombre)}>
-                          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'column' }}>
-                              <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                              <Text>Reps: {item.repeticiones}</Text>
-                              <Text>Series: {item.series}</Text>
-                            </View>
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                            }
+                            else {
+                              return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'column' }}>
+                                      <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                      <Text>Reps: {item.repeticiones}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                    </View>
 
-                          </View>
-                        </TouchableOpacity>
-                      )
-                      }
-                    }
-                  }} />
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                            }
+                          }
+                        }} />
                     </DropDownItem>
                   </View>
                 )
