@@ -241,5 +241,29 @@ class GenerarBase extends Component {
     traerSuplementoEspecifico(okSuplementos){
 
     }
+    pruebaJoin(rutina,listo){
+        FileSystem.downloadAsync(
+            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        );
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(  
+            tx => {
+                tx.executeSql('SELECT * FROM Ejercicios_Rutina JOIN Ejercicios where Ejercicios_Rutina.id_ejercicio = Ejercicios.id AND Ejercicios_Rutina.id_rutina=?', [rutina.id_rutina], function (tx, res) {
+                        rutina.rutina=res.rows._array;
+                });
+            },
+            error => {
+                console.log("Error")
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                listo(rutina)
+            }
+        );
+    }
 }
 export default new GenerarBase();

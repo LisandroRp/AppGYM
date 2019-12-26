@@ -21,7 +21,7 @@ var { height, width } = Dimensions.get('window');
 
 function createData(item) {
   return {
-    id: item.id,
+    id_rutina: item.id,
     nombre: item.nombre,
     imagen: item.imagen,
     dias: item.dias,
@@ -91,9 +91,22 @@ class RutinaEspecifica extends Component {
     this.Piernas = require('./Logos/Logo_Bicep.png');
     this.Cardio = require('./Logos/Logo_Cardio.png');
     this.cargarRutina();
+    //this.Prueba()
+  }
+
+  okRutina(rutina){
+    base.pruebaJoin(createData(rutina[0]),this.listo.bind(this))
+  }
+  listo(result){
+    this.setState({rutina: result, isLoading: false})
+    console.log(this.state.rutina)
   }
 
   cargarRutina = async () => {
+    base.traerRutinaEspecifica(await this.props.navigation.getParam('id_rutina'), this.okRutina.bind(this))
+  }
+
+  cargarRutina2 = async () => {
     base.traerRutinaEspecifica(await this.props.navigation.getParam('id_rutina'), this.okRutinas.bind(this))
   }
   okRutinas(rutina) {
