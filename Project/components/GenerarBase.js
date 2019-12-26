@@ -9,7 +9,7 @@ import  * as FileSystem from 'expo-file-system';
 
 function createEjercicio(item) {
     return {
-      id: item.id,
+      id: item.id_rutina,
       ejercicio: {},
       dia: item.dia,
       serie: item.series,
@@ -190,9 +190,10 @@ class GenerarBase extends Component {
 
         db.transaction(  
             tx => {
-                tx.executeSql('SELECT * FROM Ejercicios_Rutina where id = ?', [rutina.id], function (tx, res) {
+                tx.executeSql('SELECT * FROM Ejercicios_Rutina where id_rutina = ?', [rutina.id], function (tx, res) {
                     for (let i = 0; i < res.rows.length; ++i) {
                         ejercicios.push(res.rows._array[i]);
+                        console.log(ejercicios)
                     }
                 });
             },
@@ -210,6 +211,7 @@ class GenerarBase extends Component {
     }
     traerEjercicioEspecificoRutina(rutinaEjercicios,rutinaTotal, okEjercicio){
         var ejercicio = createEjercicio(rutinaEjercicios)
+        var ejercicio2
         FileSystem.downloadAsync(
             Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
             `${FileSystem.documentDirectory}/SQLite/appgym.db`
@@ -218,8 +220,8 @@ class GenerarBase extends Component {
 
         db.transaction(  
             tx => {
-                tx.executeSql('SELECT * FROM Ejercicios where id = ?', [rutinaEjercicios.ejercicio_id], function (tx, res) {
-                    ejercicio.ejercicio= res.rows._array;
+                tx.executeSql('SELECT * FROM Ejercicios where id = ?', [rutinaEjercicios.id_ejercicio], function (tx, res) {
+                    ejercicio2= res.rows._array;
                 });
             },
             error => {
@@ -229,9 +231,12 @@ class GenerarBase extends Component {
             () => {
                 console.log("Correcto")
                 db._db.close()
-                okEjercicio(rutinaTotal, ejercicio)
+                okEjercicio(rutinaTotal, ejercicio, ejercicio2)
             }
         );
+    }
+    tirarMagia(ejercicio,rutina,okTodo){
+        okTodo(rutina, ejercicio)
     }
     traerSuplementoEspecifico(okSuplementos){
 

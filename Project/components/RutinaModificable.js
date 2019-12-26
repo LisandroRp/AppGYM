@@ -58,6 +58,7 @@ class RutinaModificable extends Component {
     this.Cardio = require('./Logos/Logo_Cardio.png');
     //this.obtenerEventos()
   }
+  
   componentWillReceiveProps() {
     console.log('chauuuu')
     this._retrieveData()

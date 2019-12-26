@@ -30,13 +30,29 @@ function createData(item) {
     rutina: [],
   };
 }
-function createEjercicio(item) {
+function createEjercicio(item, ejercicio) {
   return {
-    id: item.id,
-    ejercicio: {},
-    dia: item.dia,
-    serie: item.series,
-    repeticiones: item.repeticiones,
+    id_rutina: ejercicio.id_rutina,
+    id_ejercicio: item.id,
+    dia: ejercicio.dia,
+    repeticiones: ejercicio.repeticiones,
+    series: ejercicio.series,
+    nombre: item.nombre,
+    musculo: item.musculo,
+    descripcion: item.descripcion,
+    ejecucion: item.ejecucion,
+    imagen1: item.imagen1,
+    imagen2: item.imagen2,
+  };
+}
+function createRutina(item) {
+  return {
+    dias: item.dias,
+    fav: item.fav,
+    id_rutina: item.id,
+    imagen: item.imagen,
+    modificable: item.modificable,
+    rutina: []
   };
 }
 
@@ -45,7 +61,7 @@ class RutinaEspecifica extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.navigation.getParam('id'),
+      id: this.props.navigation.getParam('id_rutina'),
       nombre: this.props.navigation.getParam('nombre'),
       modalVisible: false,
       isLoading: true,
@@ -61,7 +77,7 @@ class RutinaEspecifica extends Component {
         id: 1, nombre: 'Arnold N1', imagen: require('./arnold-schwarzenegger-biceps_0.jpg'), dias: 7, fav: 1, modificable: false,
         rutina: []
       },
-      diasTotal: '',
+      diasTotal: [],
       contador: 1,
       ejercicios: []
     };
@@ -78,59 +94,72 @@ class RutinaEspecifica extends Component {
   }
 
   cargarRutina = async () => {
-    base.traerRutinaEspecifica(await this.props.navigation.getParam('id'), this.okRutinas.bind(this))
+    base.traerRutinaEspecifica(await this.props.navigation.getParam('id_rutina'), this.okRutinas.bind(this))
   }
   okRutinas(rutina) {
     base.traerEjerciciosRutina(createData(rutina[0]), this.okEjercicios.bind(this))
   }
   okEjercicios(rutina) {
-    var ejercicios;
-    console.log(rutina.rutina)
+    console.log("mimaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    console.log(rutina)
+    this.setState({rutina: createRutina(rutina)})
     for (i = 0; i < rutina.rutina.length; i++) {
       base.traerEjercicioEspecificoRutina(rutina.rutina[i], rutina, this.okEjercicio.bind(this))
     }
   }
-  okEjercicio(rutina, ejercicio) {
-    var j = 1
+  okEjercicio(rutina, ejercicio, ejercicio2) {
+    base.tirarMagia(createEjercicio(ejercicio2[0],ejercicio),rutina, this.okTodo.bind(this))
+  }
+  okTodo(rutina, ejercicio){
     console.log("MAGIA")
     console.log(rutina)
     console.log(ejercicio)
     var result = this.state.rutina
-    for (i = 0; rutina.rutina.ejercicio_id != ejercicio.ejercicio.id; i++) {
-      j++;
-      console.log(j+'maaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaan')
-    }
+
     result.rutina.push(ejercicio)
-    if (rutina.rutina.length == j) {
+    if (result.rutina[(result.rutina.length)-1].id_ejercicio == rutina.rutina[(rutina.rutina.length)-1].id_ejercicio) {
       this.setState({
         rutina: result,
         isLoading: false
       });
       console.log(this.state.rutina)
+      this.contarDias()
     } else {
       this.setState({
         rutina: result,
       });
     }
   }
+  
   componentDidMount() {
     this.props.editable(this.state.rutina)
-    this.contarDias()
+    //this.contarDias()
   }
+  // contarDias() {
+  //   aux = 1
+  //   num = 1
+  //   cant = []
+  //   cant.push(num)
+  //   num++
+  //   for (i = 0; i < this.state.rutina.rutina.length; i++) {
+  //     if (this.state.rutina.rutina[i].dia > aux) {
+  //       aux = this.state.rutina.rutina[i].dia
+  //       cant.push(num)
+  //       num++
+  //     }
+  //   }
+  //   this.setState({ diasTotal: cant })
+  // }
   contarDias() {
-    aux = 1
-    num = 1
-    cant = []
-    cant.push(num)
-    num++
-    for (i = 0; i < this.state.rutina.rutina.length; i++) {
-      if (this.state.rutina.rutina[i].dia > aux) {
-        aux = this.state.rutina.rutina[i].dia
-        cant.push(num)
-        num++
-      }
+    dias=this.state.rutina.dias
+    cantidad=[]
+    contador=1
+    while (dias!=0){
+      cantidad.push(contador)
+      contador++
+      dias--
     }
-    this.setState({ diasTotal: cant })
+    this.setState({ diasTotal: cantidad })
   }
   cuanto1(item) {
     this.setState({ contador: item })
@@ -149,6 +178,7 @@ class RutinaEspecifica extends Component {
     } else {
       return (
         <View style={styles.container}>
+        <Text>{this.state.rutina.dias}</Text>
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
           <ScrollView>
             <View style={{ alignItems: 'center', marginVertical: height * 0.03 }}>
@@ -187,14 +217,14 @@ class RutinaEspecifica extends Component {
                         }}
                         renderItem={({ item }) => {
                           if (item.dia == aux) {
-                            if (item.ejercicio[0].musculo == "Pecho") {
+                            if (item.musculo == "Pecho") {
                               return (
                                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                  onPress={() => this.props.onPressInfo(item.ejercicio[0].nombre, item.ejercicio[0].id)}>
+                                  onPress={() => this.props.onPressInfo(item.nombre, item.id_ejercicio)}>
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Image style={styles.musculosLogo} source={this.Pecho} />
                                     <View style={{ flexDirection: 'column' }}>
-                                      <Text style={{ fontWeight: 'bold' }}>{item.ejercicio[0].nombre}:</Text>
+                                      <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
                                       <Text>Reps: {item.repeticiones}</Text>
                                       <Text>Series: {item.series}</Text>
                                     </View>
@@ -206,7 +236,7 @@ class RutinaEspecifica extends Component {
                             if (item.musculo == "Abdominales") {
                               return (
                                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  onPress={() => this.props.onPressInfo(item.nombre, item.id_ejercicio)}>
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Image style={styles.musculosLogo} source={this.Abs} />
                                     <View style={{ flexDirection: 'column' }}>
@@ -222,7 +252,7 @@ class RutinaEspecifica extends Component {
                             if (item.musculo == "Hombros") {
                               return (
                                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  onPress={() => this.props.onPressInfo(item.nombre, item.id_ejercicio)}>
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Image style={styles.musculosLogo} source={this.Hombros} />
                                     <View style={{ flexDirection: 'column' }}>
@@ -238,7 +268,7 @@ class RutinaEspecifica extends Component {
                             if (item.musculo == "Espalda") {
                               return (
                                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  onPress={() => this.props.onPressInfo(item.nombre, item.id_ejercicio)}>
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Image style={styles.musculosLogo} source={this.Espalda} />
                                     <View style={{ flexDirection: 'column' }}>
@@ -254,7 +284,7 @@ class RutinaEspecifica extends Component {
                             if (item.musculo == "Bicep") {
                               return (
                                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  onPress={() => this.props.onPressInfo(item.nombre, item.id_ejercicio)}>
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Image style={styles.musculosLogo} source={this.Bicep} />
                                     <View style={{ flexDirection: 'column' }}>
@@ -270,7 +300,7 @@ class RutinaEspecifica extends Component {
                             if (item.musculo == "Tricep") {
                               return (
                                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  onPress={() => this.props.onPressInfo(item.nombre, item.id_ejercicio)}>
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Image style={styles.musculosLogo} source={this.Tricep} />
                                     <View style={{ flexDirection: 'column' }}>
@@ -286,7 +316,7 @@ class RutinaEspecifica extends Component {
                             if (item.musculo == "Cardio") {
                               return (
                                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  onPress={() => this.props.onPressInfo(item.nombre, item.id_ejercicio)}>
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Image style={styles.musculosLogo} source={this.Cardio} />
                                     <View style={{ flexDirection: 'column' }}>
@@ -302,7 +332,7 @@ class RutinaEspecifica extends Component {
                             else {
                               return (
                                 <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                  onPress={() => this.props.onPressInfo(item.nombre)}>
+                                  onPress={() => this.props.onPressInfo(item.nombre, item.id_ejercicio)}>
                                   <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                                     <View style={{ flexDirection: 'column' }}>
                                       <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>

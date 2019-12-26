@@ -315,9 +315,9 @@ class RutinasScreen extends React.Component {
   }
   irRutina(id,nombre,modificable) {
     if(modificable=="true"){
-    this.props.navigation.navigate('RutinaEspecificaM', { id: id ,nombre: nombre});
+    this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id ,nombre: nombre});
     }else{
-      this.props.navigation.navigate('RutinaEspecificaNoM', { id: id ,nombre: nombre});
+      this.props.navigation.navigate('RutinaEspecificaNoM', { id_rutina: id ,nombre: nombre});
     }
   }
 
@@ -399,11 +399,12 @@ class RutinaEspecificaMScreen extends React.Component {
   }
   static navigationOptions = ({ navigation}) => {
     var nombre= navigation.getParam('nombre');
+    var id_rutina = navigation.getParam('id_rutina');
     return {
       headerRight: (
         <View style={{ flexDirection: 'row' }}>
           <FontAwesome name="edit" style={{ marginRight: 20, color: '#3399ff' }}
-            onPress={() => navigation.navigate('RutinaModificable', {nombre: nombre})}
+            onPress={() => navigation.navigate('RutinaModificable', {nombre: nombre, id_rutina: id_rutina})}
             size={22}
           />
         </View>
