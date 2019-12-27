@@ -21,11 +21,11 @@ var { height, width } = Dimensions.get('window');
 
 function createData(item) {
   return {
-    id_rutina: item.id_rutina,
+    id_rutina: item.id,
     nombre: item.nombre,
     imagen: item.imagen,
     dias: item.dias,
-    favoritos: item.favoritos,
+    fav: item.fav,
     modificable: item.modificable,
     rutina: [],
   };
@@ -33,7 +33,7 @@ function createData(item) {
 function createEjercicio(item, ejercicio) {
   return {
     id_rutina: ejercicio.id_rutina,
-    id_ejercicio: item.id_ejercicio,
+    id_ejercicio: item.id,
     dia: ejercicio.dia,
     repeticiones: ejercicio.repeticiones,
     series: ejercicio.series,
@@ -49,7 +49,7 @@ function createRutina(item) {
   return {
     dias: item.dias,
     fav: item.fav,
-    id_rutina: item.id_rutina,
+    id_rutina: item.id,
     imagen: item.imagen,
     modificable: item.modificable,
     rutina: []
@@ -61,7 +61,7 @@ class RutinaEspecifica extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id_rutina: this.props.navigation.getParam('id_rutina'),
+      id: this.props.navigation.getParam('id_rutina'),
       nombre: this.props.navigation.getParam('nombre'),
       modalVisible: false,
       isLoading: true,
@@ -91,29 +91,78 @@ class RutinaEspecifica extends Component {
     this.Piernas = require('./Logos/Logo_Bicep.png');
     this.Cardio = require('./Logos/Logo_Cardio.png');
     this.cargarRutina();
+    //this.Prueba()
   }
 
-  //Trae de la base de datos la rutina
+  okRutina(rutina){
+    base.traerEjerciciosRutinaJoin(createData(rutina[0]),this.listo.bind(this))
+  }
+  listo(result){
+    this.setState({rutina: result, isLoading: false})
+    console.log(this.state.rutina)
+  }
+
   cargarRutina = async () => {
     base.traerRutinaEspecifica(await this.props.navigation.getParam('id_rutina'), this.okRutina.bind(this))
   }
 
-  //Trae de la base de datos la informacion de los ejercicios de la rutina anterior
-  okRutina(rutina){
-    base.traerEjerciciosRutinaJoin(createData(rutina[0]),this.listo.bind(this))
+  cargarRutina2 = async () => {
+    base.traerRutinaEspecifica(await this.props.navigation.getParam('id_rutina'), this.okRutinas.bind(this))
   }
+  okRutinas(rutina) {
+    base.traerEjerciciosRutina(createData(rutina[0]), this.okEjercicios.bind(this))
+  }
+  okEjercicios(rutina) {
+    console.log("mimaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    console.log(rutina)
+    this.setState({rutina: createRutina(rutina)})
+    for (i = 0; i < rutina.rutina.length; i++) {
+      base.traerEjercicioEspecificoRutina(rutina.rutina[i], rutina, this.okEjercicio.bind(this))
+    }
+  }
+  okEjercicio(rutina, ejercicio, ejercicio2) {
+    base.tirarMagia(createEjercicio(ejercicio2[0],ejercicio),rutina, this.okTodo.bind(this))
+  }
+  okTodo(rutina, ejercicio){
+    console.log("MAGIA")
+    console.log(rutina)
+    console.log(ejercicio)
+    var result = this.state.rutina
 
-  //Setea la rutina y los ejercicios traidos anteriormente
-  listo(result){
-
-    this.setState({rutina: result, isLoading: false})
-    //Guarda la rutina provisoriamente en el caso que quiera ser editada
+    result.rutina.push(ejercicio)
+    if (result.rutina[(result.rutina.length)-1].id_ejercicio == rutina.rutina[(rutina.rutina.length)-1].id_ejercicio) {
+      this.setState({
+        rutina: result,
+        isLoading: false
+      });
+      console.log(this.state.rutina)
+      this.contarDias()
+    } else {
+      this.setState({
+        rutina: result,
+      });
+    }
+  }
+  
+  componentDidMount() {
     this.props.editable(this.state.rutina)
-    //Cuenta la cantidad de dias que posee la rutina 
-    this.contarDias()
-    console.log(this.state.rutina)
+    //this.contarDias()
   }
-
+  // contarDias() {
+  //   aux = 1
+  //   num = 1
+  //   cant = []
+  //   cant.push(num)
+  //   num++
+  //   for (i = 0; i < this.state.rutina.rutina.length; i++) {
+  //     if (this.state.rutina.rutina[i].dia > aux) {
+  //       aux = this.state.rutina.rutina[i].dia
+  //       cant.push(num)
+  //       num++
+  //     }
+  //   }
+  //   this.setState({ diasTotal: cant })
+  // }
   contarDias() {
     dias=this.state.rutina.dias
     cantidad=[]
@@ -125,7 +174,12 @@ class RutinaEspecifica extends Component {
     }
     this.setState({ diasTotal: cantidad })
   }
-
+  cuanto1(item) {
+    this.setState({ contador: item })
+  }
+  cuanto2() {
+    return this.state.contador
+  }
   render() {
     if (this.state.isLoading) {
       return (
@@ -137,6 +191,7 @@ class RutinaEspecifica extends Component {
     } else {
       return (
         <View style={styles.container}>
+        <Text>{this.state.rutina.dias}</Text>
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
           <ScrollView>
             <View style={{ alignItems: 'center', marginVertical: height * 0.03 }}>

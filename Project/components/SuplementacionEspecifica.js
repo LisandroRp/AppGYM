@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ApiController from '../controller/ApiController'
 import { withNavigation } from 'react-navigation';
+import base from './GenerarBase';
 import {
   StyleSheet,
   Text,
@@ -36,37 +37,21 @@ class SuplementacionEspecifica extends Component {
     super(props);
     this.state = {
       modalVisible: false,
-      detalle: {
-        "nombre": 'AcDc',
-        "descripcion": "Re copada la banduli de rock",
-        "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGkzHiLqaw3MedLtDd7EPKBlqhPW1IJE9jRFC1je3lLo79mDQ-",
-        "genero": "Rock",
-        rating: 3,
-        votos: [],
-        personas: 0,
-        "duracion": "165",
-        precioE: 10,
-        'precios': [],
-        'tipo': 'Concierto',
-        'latitude': null,
-        'longitude': null,
-    },
-      idSumplemento: this.props.navigation.getParam('id'),
+      detalle: {},
+      idSumplemento: this.props.navigation.getParam('id_suplemento'),
       nombre: this.props.navigation.getParam('nombre'),
-      isLoading: false,
+      isLoading: true,
       refreshing: false,
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
+    this.cargarSuplemento();
   }
-  componentDidMount() {
-    //this.cargarEjercicio();
-}
+  cargarSuplemento = async () => {
+    base.traerSuplementoEspecifico(await this.props.navigation.getParam('id_suplemento'), this.okSuplemento.bind(this));
+  }
 
-cargarEjercicio() {
-  ApiController.getDetalle(this.okEjercicio.bind(this), this.state.idEjercicio);
-}
 
-okEjercicio(data) {
+okSuplemento(data) {
   if (data != null) {
       this.setState({
           detalle: data[0],
@@ -94,14 +79,16 @@ okEjercicio(data) {
         <ScrollView>
         <View style={styles.todo}>
           <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.nombre}</Text></View>
-          <Text style={styles.descripcion}>Marca: {this.state.idSumplemento}</Text>
-          <Text style={styles.descripcion}>{this.state.idSumplemento}</Text>
+          <Text style={styles.descripcion}>Marca: {this.state.detalle.marca}</Text>
+          <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
           </View>
           <View style={styles.todo}>
           <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Beneficios</Text></View>
+          <Text style={styles.descripcion}>{this.state.detalle.beneficios}</Text>
         </View>
           <View style={styles.todo}>
           <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Uso</Text></View>
+          <Text style={styles.descripcion}>{this.state.detalle.uso}</Text>
         </View>
         </ScrollView>
       </View>

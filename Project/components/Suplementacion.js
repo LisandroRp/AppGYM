@@ -36,12 +36,7 @@ class Suplementacion extends Component {
     this.state = {
       searchBarFocused: false,
       modalVisible: false,
-      suplementos: [{ id: '1', nombre: 'Falopa', descripcion: 'Droguita' },
-      { id: 2, nombre: 'Falopa2', descripcion: 'Droguita' },
-      { id: 3, nombre: 'Falopa3', descripcion: 'Droguita' }],
-      memory: [{ id: '1', nombre: 'Falopa', descripcion: 'Droguita' },
-      { id: 2, nombre: 'Falopa2', descripcion: 'Droguita' },
-      { id: 3, nombre: 'Falopa3', descripcion: 'Droguita' }],
+      suplementos: [],
       isLoading: true,
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
@@ -127,11 +122,11 @@ class Suplementacion extends Component {
               data={this.state.suplementos}
               initialNumToRender={50}
               keyExtractor= {(item) => {
-                return item.id;
+                return item.id_suplemento;
               }}
               renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id, item.nombre)}>
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre)}>
                     <View style={{ flexDirection: "row" }} >
                       <Image style={styles.image} source={{ uri: item.imagen }} />
                       <View style={styles.cardContent}>

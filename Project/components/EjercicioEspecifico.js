@@ -37,7 +37,7 @@ class EjercicioEspecifico extends Component {
     super(props);
     this.state = {
       detalle: {
-        id: this.props.navigation.getParam('idEjercicio'),
+        id: this.props.navigation.getParam('id_ejercicio'),
         nombre: this.props.navigation.getParam('nombreEjercicio'),
         musculo: '',
         descripcion: '',
@@ -51,7 +51,7 @@ class EjercicioEspecifico extends Component {
   }
 
   cargarEjercicio = async () => {
-    base.traerEjercicioEspecifico(await this.props.navigation.getParam('idEjercicio'), this.okEjercicio.bind(this));
+    base.traerEjercicioEspecifico(await this.props.navigation.getParam('id_ejercicio'), this.okEjercicio.bind(this));
   }
 
   okEjercicio(data) {

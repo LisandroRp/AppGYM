@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { SearchBar, Icon, ThemeConsumer } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import { AsyncStorage, Modal, TextInput } from 'react-native';
-import ApiController from '../controller/ApiController'
+import base from './GenerarBase';
 import { FontAwesome } from '@expo/vector-icons';
 import {
   StyleSheet,
@@ -18,22 +18,20 @@ import {
   ScrollView
 } from 'react-native';
 //import { LinearGradient, SQLite } from 'expo'
-import Ejercicios from './Ejercicios';
-import { openDatabase } from 'react-native-sqlite-storage';
-import RutinaNew from './RutinaNew';
-// //Connction to access the pre-populated user_db.db
-//const db = SQLite.openDatabase('AppGYM.db');
-//Connction to access the pre-populated user_db.db
-//var db = openDatabase({ name: 'AppGYM.db', createFromLocation : 1});
-//Otro intento
-// import { SQLite } from 'expo-sqlite'
-// import { BaseModel, types } from 'expo-sqlite-orm'
-
 var { height, width } = Dimensions.get('window');
+
 function createData(item) {
   return {
-    id: item.id,
-    nombreEjercicio: item.no
+    key: item._id,
+    idEvento: item._id,
+    imagen: item.imagen,
+    nombre: item.nombre,
+    rating: item.rating,
+    descripcion: item.descripcion,
+    tipo: item.tipo,
+    ubicacion: item.ubicacion,
+    precioE: item.precioE,
+    genero: item.genero,
   };
 }
 
@@ -50,12 +48,8 @@ class MusculoAgregar extends Component {
       dia: this.props.navigation.getParam('dia'),
       tipo: this.props.navigation.getParam('tipo'),
       modalVisible: false,
-      ejercicios: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
-      { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
-      { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
-      memory: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
-      { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
-      { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
+      memory: [],
+      ejercicios: [],
       isLoading: false,
       modalVisible: false,
       idEjercicio: 0,
@@ -68,41 +62,24 @@ class MusculoAgregar extends Component {
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
-    //this._storeData(this.state.IdUser);
-    //this.getUserData()
-    //this.obtenerEventos();
-    //this.obtenerEjercicios();
+    this.cargarEjercicios();
   }
-  // static get database() {
-  //   return async () => SQLite.openDatabase('AppGYM.db')
-  // }
 
-  // static get tableName() {
-  //   return 'animals'
-  // }
-  // obtenerEjercicios(){
-  //   db.transaction(tx => {
-  //     tx.executeSql('SELECT * FROM Ejercicios', [], (tx, results) => {
-  //       var temp = [];
-  //       console.log(temp +'Pedro')
-  //       for (let i = 0; i < results.rows.length; ++i) {
-  //         temp.push(results.rows.item(i));
-  //         console.log(temp +'hola')
-  //       }
-  //       this.setState({
-  //         ejercicios: temp,
-  //       });
-  //     },
-  //     () => {console.log('fail')},
-  // () => {console.log('success')}
-  // );
-  //   });
-  // }
-  // ListViewItemSeparator = () => {
-  //   return (
-  //     <View style={{ height: 0.2, width: '100%', backgroundColor: '#808080' }} />
-  //   );
-  // };
+  //Trae los ejercicios especificios del musculo seleccionado en la screen anterior
+  cargarEjercicios = async () => {
+    base.traerEjercicios(await this.props.navigation.getParam('musculo'), this.okEjercicios.bind(this))
+  }
+
+  //Setea los ejercicios y renderiza la screen
+  okEjercicios(ejercicios){
+    this.setState({
+      ejercicios: ejercicios,
+      memory: ejercicios,
+      isLoading: false,
+    });
+    console.log(ejercicios)
+  }
+ 
   esGenero(genero) {
     for (i = 0; i <= this.state.generoEvento.length; i++) {
       if (this.state.generoEvento[i] == genero) {
@@ -265,7 +242,6 @@ class MusculoAgregar extends Component {
                       <Text style={styles.textButton}> Cancel</Text>
                     </View>
                 </TouchableOpacity>
-                {/* <View style={{borderColor: 'red', borderRightWidth: '2'}} /> */}
                 <TouchableOpacity onPress={() => this.guardarEjercicio()} style={{ justifyContent: 'center', alignItems: 'center', borderLeftWidth: 2, paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
                     <View style={[styles.buttonContainer]}>
                       <Text style={styles.textButton}>Accept</Text>

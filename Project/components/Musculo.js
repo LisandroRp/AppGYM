@@ -38,20 +38,12 @@ function createData(item) {
 
 class Musculo extends Component {
 
-
   constructor(props) {
     super(props);
     this.state = {
       searchBarFocused: false,
       musculo: this.props.navigation.getParam('musculo'),
       modalVisible: false,
-      // ejercicios: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
-      // { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
-      // { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
-      
-      // memory: [{ id: 1, musculo: 'Pecho', nombre: 'Press de Banca Plano', descripcion: '', ejecucion: '' },
-      // { id: 2, musculo: 'Pecho', nombre: 'Pechovich Inclinado' },
-      // { id: 3, musculo: 'Espalda', nombre: 'Trasnucovich' }],
       memory:[],
       ejercicios: [],
       isLoading: true,
@@ -60,9 +52,13 @@ class Musculo extends Component {
     //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
     this.cargarEjercicios();
   }
+
+  //Trae los ejercicios especificios del musculo seleccionado en la screen anterior
   cargarEjercicios = async () => {
     base.traerEjercicios(await this.props.navigation.getParam('musculo'), this.okEjercicios.bind(this))
   }
+
+  //Setea los ejercicios y renderiza la screen
   okEjercicios(ejercicios){
     this.setState({
       ejercicios: ejercicios,
@@ -104,7 +100,7 @@ class Musculo extends Component {
       let ejercicioLowercase = (
         ejercicio.nombre +
         ' ' +
-        ejercicio.id +
+        ejercicio.id_ejercicio +
         ' ' +
         ejercicio.genero +
         ' ' +
@@ -150,12 +146,12 @@ class Musculo extends Component {
             data={this.state.ejercicios}
             initialNumToRender={50}
             keyExtractor={(item) => {
-              return item.id;
+              return item.id_ejercicio;
             }}
             renderItem={({ item }) => {
               if (this.state.musculo == item.musculo)
                 return (
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id, item.nombre, item.descripcion)}>
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion)}>
                     <View style={{ flexDirection: "row" }} >
                       <Image style={styles.image} source={{ uri: item.imagen }} />
                       <View style={styles.cardContent}>

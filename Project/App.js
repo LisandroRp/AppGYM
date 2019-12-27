@@ -139,8 +139,8 @@ static navigationOptions = ({ navigation }) => {
       />
     );
   }
-  pasarEjercicio(idEjercicio,nombre,descripcion) {
-    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio, nombreEjercicio:nombre, descripcionEjercicio: descripcion });
+  pasarEjercicio(id_ejercicio,nombre,descripcion) {
+    this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio, nombreEjercicio:nombre, descripcionEjercicio: descripcion });
   }
   agarrarMusculo(){
     return this.state.musculo
@@ -292,10 +292,6 @@ static navigationOptions = ({ navigation }) => {
 class RutinasScreen extends React.Component {
   constructor(props) {
     super(props)
-    // this.state = {
-    //   idUser: this.props.navigation.getParam('idUser'),
-    //   idEvento: null
-    // }
   }
   static navigationOptions = {
     title: 'Rutinas',
@@ -313,11 +309,12 @@ class RutinasScreen extends React.Component {
       />
     );
   }
-  irRutina(id,nombre,modificable) {
-    if(modificable=="true"){
-    this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id ,nombre: nombre});
+  irRutina(id_rutina,nombre,modificable) {
+    console.log(modificable);
+    if(modificable){
+    this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina ,nombre: nombre});
     }else{
-      this.props.navigation.navigate('RutinaEspecificaNoM', { id_rutina: id ,nombre: nombre});
+      this.props.navigation.navigate('RutinaEspecificaNoM', { id_rutina: id_rutina ,nombre: nombre});
     }
   }
 
@@ -421,24 +418,20 @@ class RutinaEspecificaMScreen extends React.Component {
   render() {
     return (
       <RutinaEspecifica
-        onPressGo={this.pasarConcierto.bind(this)}
         editable={this.editar.bind(this)}
         onPressInfo={this.verInfo.bind(this)}
       />
     );
   }
-  pasarConcierto(id) {
-    this.props.navigation.navigate('Detalle', { IdEvento: id });
-  }
   verInfo(nombre, idEjercicio){
     this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre, idEjercicio:idEjercicio});
   }
-  editar(id){
-    this._storeData(id);
+  editar(id_rutina){
+    this._storeData(id_rutina);
   }
-  _storeData = async (id) => {
+  _storeData = async (id_rutina) => {
     try {
-        await AsyncStorage.setItem('rutinaEditable', JSON.stringify(id));
+        await AsyncStorage.setItem('rutinaEditable', JSON.stringify(id_rutina));
     } catch (error) {
         console.log(error);
     }
@@ -494,15 +487,6 @@ class RutinasFavsScreen extends React.Component {
     headerTintColor: '#3399ff',
   }
   }
-//   static navigationOptions = {
-//       title: 'Mis Rutinas',
-//     headerStyle: {
-//       backgroundColor: 'black',
-//       height: 55,
-//       borderBottomWidth: 0
-//     },
-//     headerTintColor: '#3399ff',
-// }
   render() {
     return (
       <RutinasFavs
@@ -510,11 +494,11 @@ class RutinasFavsScreen extends React.Component {
       />
     );
   }
-  irRutina(id,nombre,modificable) {
+  irRutina(id_rutina,nombre,modificable) {
     if(modificable){
-    this.props.navigation.navigate('RutinaEspecificaMScreen', { id: id ,nombre: nombre});
+    this.props.navigation.navigate('RutinaEspecificaMScreen', { id_rutina: id_rutina ,nombre: nombre});
     }else{
-      this.props.navigation.navigate('RutinaEspecificaNoMScreen', { id: id ,nombre: nombre});
+      this.props.navigation.navigate('RutinaEspecificaNoMScreen', { id_rutina: id_rutina ,nombre: nombre});
     }
   }
 }
@@ -532,21 +516,11 @@ class SuplementacionEspecificaScreen extends React.Component {
     },
     headerTintColor: '#3399ff',
   };
-  constructor(props) {
-    super(props)
-    this.state = {
-      idEjercicio: props.navigation.getParam('idEjercicio')
-    }
-  }
   render() {
     return (
       <SuplementacionEspecifica
-        onPressGo={this.pasarEjercicio.bind(this)}
       />
     );
-  }
-  pasarEjercicio(idEjercicio) {
-    this.props.navigation.navigate(' SuplementacionEspecifica', { idEjercicio: idEjercicio });
   }
 }
 class SuplementacionScreen extends React.Component {
@@ -570,8 +544,8 @@ class SuplementacionScreen extends React.Component {
       />
     );
   }
-  pasarSuplemento(id, nombre) {
-    this.props.navigation.navigate('SuplementacionEspecifica', { id: id, nombre:nombre});
+  pasarSuplemento(id_suplemento, nombre) {
+    this.props.navigation.navigate('SuplementacionEspecifica', { id_suplemento: id_suplemento, nombre:nombre});
   }
 }
 // *****************************************************

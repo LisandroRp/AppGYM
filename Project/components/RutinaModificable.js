@@ -81,8 +81,11 @@ class RutinaModificable extends Component {
   }
   _retrieveData = async () => {
     try {
+      console.log('holaaaaaaaaa')
       const value = await AsyncStorage.getItem('rutina');
+      
       if (value !== null) {
+        console.log(value)
         if (this.yaEsta(JSON.parse(value)[0])) {
           this.setState({ isLoading: true })
           this.state.rutina.push(JSON.parse(value)[0])

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { SearchBar, Icon } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
-import { AsyncStorage } from 'react-native';
-import ApiController from '../controller/ApiController'
+import base from './GenerarBase';
 import {
     StyleSheet,
     Text,
@@ -37,92 +36,39 @@ class RutinasFavs extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            //IdUser: props.navigation.getParam('IdUser'),
-            searchStatus: 'none',
-            Status: 'none',
-            modalVisible: false,
-            userSelected: [],
-            rutinas: [{ id: 1, nombre: 'Arnold N1', imagen: require('./Fotos/PECHO.png'), dias: 7, fav: 1, modificable: false },
-            { id: 2, nombre: 'La Roca', imagen: require('./Fotos/ESPALDA.png'), dias: 6, fav: 1, modificable: true },
-            { "id": 3, "nombre": 'Vin Disell', "imagen": require('./Fotos/HOMBROS.png'), dias: 5, fav: 1, modificable: true },
-            { id: 4, nombre: 'Wachiturro', imagen: require('./Fotos/PIERNAS.png'), dias: 1, fav: 0, modificable: true },
-            { id: 5, nombre: 'Navy SEAL', imagen: require('./Fotos/BICEPS.png'), dias: 15, fav: 0, modificable: true },],
-            isLoading: false,
-            generoEvento: [],
-            refreshing: false,
+            rutinas: [],
+            isLoading: true,
         };
         this.Star = require('./Logos/Star_Llena.png');
         this.Star_With_Border = require('./Logos/Star_Borde.png');
         //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
-        //this._storeData(this.state.IdUser);
-        //this.getUserData()
-        //this.obtenerEventos()
+        this.cargarRutinasFavoritas();
+    }
+  
+    cargarRutinasFavoritas = async () => {
+      base.traerRutinasFavoritas(this.okRutinas.bind(this))
+    }
+    okRutinas(rutinas){
+      this.setState({ rutinas: rutinas, isLoading: false });
+      console.log(rutinas)
+    }
 
-    }
-    static navigationOptions = {
-        headerStyle: {
-            backgroundColor: 'white',
-            height: 50
-        },
-    };
-    obtenerEventos() {
-        ApiController.getEventos(this.okEventos.bind(this));
-    }
-    okEventos(data) {
-        if (data != null) {
-            var i, newArray = [];
-            for (i = 0; i < data.length; i++) {
-                newArray.push(createData(data[i], i));
-            }
-            this.setState({ eventos: newArray, isLoading: false });
-        } else {
-            alert("Intentar de nuevo")
-        }
-        //this._storeData(this.state.idUser);
-    }
-    getUserData() {
-        ApiController.getUsuario(this.okUserData.bind(this), this.state.IdUser);
-    }
-    okUserData(data) {
-        // this.setState({
-        //   generoEvento: data.generoEvento,
-        // })
-        this.obtenerEventos()
-    }
-    _storeData = async () => {
-        try {
-            await AsyncStorage.setItem('IdUser', this.state.IdUser);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    esGenero(genero) {
-        for (i = 0; i <= this.state.generoEvento.length; i++) {
-            if (this.state.generoEvento[i] == genero) {
-                return true
-            }
-        }
-        return false
-    }
-    clickEventListener = (item) => {
-        Alert.alert('Message', 'Item clicked. ' + JSON.stringify(item));
-    }
-    favear(id) {
+    favear(id_rutina) {
         var i = 0
         aux = 0
         rutinas2 = []
         while (i < this.state.rutinas.length) {
-            if (this.state.rutinas[i].id == id) {
+            if (this.state.rutinas[i].id_rutina == id_rutina) {
                 aux = i
                 console.log(aux)
             }
             rutinas2.push(this.state.rutinas[i])
             i++
         }
-        if (rutinas2[aux].fav == 1) {
-            rutinas2[aux].fav = 0
+        if (rutinas2[aux].favoritos == 1) {
+            rutinas2[aux].favoritos = 0
         } else {
-            rutinas2[aux].fav = 1
+            rutinas2[aux].favoritos = 1
         }
         this.setState({ rutinas: rutinas2 })
         this.termino()
@@ -153,12 +99,12 @@ class RutinasFavs extends Component {
                             data={this.state.rutinas}
                             initialNumToRender={50}
                             keyExtractor={(item) => {
-                                return item.id;
+                                return item.id_rutina;
                             }}
                             renderItem={({ item }) => {
-                                if (item.fav == 1) {
+                                if (item.favoritos == 1) {
                                     return (
-                                        <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id, item.nombre, item.modificable)}>
+                                        <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre, item.modificable)}>
                                             <View style={{ flexDirection: "row" }} >
                                                 <Image style={styles.image} source={item.imagen} />
                                                 <View style={styles.cardContent}>
@@ -168,7 +114,7 @@ class RutinasFavs extends Component {
                         <Text style={{ fontSize: 11 }}>Entrada General: {item.precioE}$</Text> */}
                                                 </View>
                                                 <View style={{ alignItems: 'center', justifyContent: "center" }} >
-                                                    <TouchableOpacity onPress={() => { this.setState({ isLoading: true }), this.favear(item.id) }}>
+                                                    <TouchableOpacity onPress={() => { this.setState({ isLoading: true }), this.favear(item.id_rutina) }}>
                                                         <Image style={styles.StarImage} source={this.Star } />
                                                     </TouchableOpacity>
                                                 </View>

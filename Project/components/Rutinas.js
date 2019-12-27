@@ -26,7 +26,6 @@ class Rutinas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      //IdUser: props.navigation.getParam('IdUser'),
       searchStatus: 'none',
       Status: 'none',
       modalVisible: false,
@@ -56,9 +55,9 @@ class Rutinas extends Component {
     console.log(rutinas)
   }
   
-  _storeData = async (id) => {
+  _storeData = async (id_rutina) => {
     try {
-      await AsyncStorage.setItem('rutinaEditable', id);
+      await AsyncStorage.setItem('rutinaEditable', id_rutina);
     } catch (error) {
       console.log(error);
     }
@@ -71,25 +70,24 @@ class Rutinas extends Component {
     }
     return false
   }
-  favear(id) {
+  favear(id_rutina) {
     var i = 0
     aux = 0
     rutinas2 = []
     while (i < this.state.rutinas.length) {
-      if (this.state.rutinas[i].id == id) {
+      if (this.state.rutinas[i].id_rutina == id_rutina) {
         aux = i
         console.log(aux)
       }
       rutinas2.push(this.state.rutinas[i])
       i++
     }
-    if (rutinas2[aux].fav == 1) {
-      rutinas2[aux].fav = 0
+    if (rutinas2[aux].favoritos == 1) {
+      rutinas2[aux].favoritos = 0
     } else {
-      rutinas2[aux].fav = 1
+      rutinas2[aux].favoritos = 1
     }
-    this.setState({ rutinas: rutinas2 })
-    //Rutinas2.setState(rutinas2)        
+    this.setState({ rutinas: rutinas2 })   
     this.termino()
     
   }
@@ -123,10 +121,10 @@ class Rutinas extends Component {
                 return item.nombre;
               }}
               renderItem={({ item }) => {
-                if (item.fav == 1) {
+                if (item.favoritos == 1) {
                   return (
                     // <TouchableOpacity style={styles.card} onPress={() => {this.props.onPressGo(item.id, item.nombre, item.modificable),this._storeData(item.id)}}>
-                    <TouchableOpacity style={styles.card} onPress={() => {this.props.onPressGo(item.id, item.nombre, item.modificable)}}>
+                    <TouchableOpacity style={styles.card} onPress={() => {this.props.onPressGo(item.id_rutina, item.nombre, item.modificable)}}>
                       <View style={{ flexDirection: "row" }} >
                         <Image style={styles.image} source={{uri: item.imagen}} />
                         <View style={styles.cardContent}>
@@ -136,7 +134,7 @@ class Rutinas extends Component {
                         <Text style={{ fontSize: 11 }}>Entrada General: {item.precioE}$</Text> */}
                         </View>
                         <View style={{ alignItems: 'center', justifyContent: "center" }} >
-                          <TouchableOpacity onPress={() =>{ this.setState({ isLoading: true }), this.favear(item.id)}}>
+                          <TouchableOpacity onPress={() =>{ this.setState({ isLoading: true }), this.favear(item.id_rutina)}}>
                             <Image style={styles.StarImage} source={ this.Star } />
                           </TouchableOpacity>
                         </View>
@@ -146,7 +144,7 @@ class Rutinas extends Component {
                 }
                 else {
                   return (
-                    <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id, item.nombre)}>
+                    <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre,item.modificable)}>
                       <View style={{ flexDirection: "row" }} >
                         <Image style={styles.image} source={item.imagen} />
                         <View style={styles.cardContent}>
@@ -156,7 +154,7 @@ class Rutinas extends Component {
                         <Text style={{ fontSize: 11 }}>Entrada General: {item.precioE}$</Text> */}
                         </View>
                         <View style={{ alignItems: 'center', justifyContent: "center" }} >
-                          <TouchableOpacity onPress={() => { this.setState({ isLoading: true }), this.favear(item.id)}}>
+                          <TouchableOpacity onPress={() => { this.setState({ isLoading: true }), this.favear(item.id_rutina)}}>
                             <Image style={styles.StarImage} source={this.Star_With_Border } />
                           </TouchableOpacity>
                         </View>
