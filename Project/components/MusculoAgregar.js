@@ -52,13 +52,13 @@ class MusculoAgregar extends Component {
       ejercicios: [],
       isLoading: false,
       modalVisible: false,
-      idEjercicio: 0,
+      id_ejercicio: 0,
       nombreEjercicio: '',
       musculoEjercicio: '',
       series: '',
       repeticiones: '',
       rutinaNueva: [],
-      ejercicioNuevo: [{ id: 0, nombre: '', repeticiones: '', series: '' }]
+      ejercicioNuevo: [{ id_ejercicio: 0, nombre: '', repeticiones: '', series: '' }]
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
@@ -111,8 +111,8 @@ class MusculoAgregar extends Component {
   };
   cargarEjercicio() {
     terminada = {
-      key: this.state.dia +'.'+ this.state.idEjercicio,
-      id: this.state.idEjercicio,
+      key: this.state.dia +'.'+ this.state.id_ejercicio,
+      id_ejercicio: this.state.id_ejercicio,
       musculo: this.state.musculoEjercicio,
       nombre: this.state.nombreEjercicio,
       repeticiones: this.state.repeticiones,
@@ -122,8 +122,8 @@ class MusculoAgregar extends Component {
     this.state.rutinaNueva.push(terminada)
     this.props.onPressSave(this.state.rutinaNueva,this.state.tipo)
   }
-  setModalVisible(visible, id, nombre, musculo) {
-    this.setState({ modalVisible: visible, nombreEjercicio: nombre, idEjercicio: id, musculoEjercicio: musculo });
+  setModalVisible(visible, id_ejercicio, nombre, musculo) {
+    this.setState({ modalVisible: visible, nombreEjercicio: nombre, idEjercicio: id_ejercicio, musculoEjercicio: musculo });
   }
   componentDidMount() {
     this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
@@ -148,7 +148,7 @@ class MusculoAgregar extends Component {
       let ejercicioLowercase = (
         ejercicio.nombre +
         ' ' +
-        ejercicio.id +
+        ejercicio.id_ejercicio +
         ' ' +
         ejercicio.genero +
         ' ' +
@@ -194,12 +194,12 @@ class MusculoAgregar extends Component {
             data={this.state.ejercicios}
             initialNumToRender={50}
             keyExtractor={(item) => {
-              return item.id;
+              return item.id_ejercicio;
             }}
             renderItem={({ item }) => {
               if (this.state.musculo == item.musculo)
                 return (
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id, item.nombre, item.descripcion, this.state.dia)}>
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion, this.state.dia)}>
                     <View style={{ flexDirection: "row" }} >
                       <Image style={styles.image} source={{ uri: item.imagen }} />
                       <View style={styles.cardContent}>
@@ -208,7 +208,7 @@ class MusculoAgregar extends Component {
                       </View>
                       <View style={styles.masita}>
                         <FontAwesome name="plus" style={styles.plus}
-                          onPress={() => this.setModalVisible(true, item.id, item.nombre, item.musculo)}
+                          onPress={() => this.setModalVisible(true, item.id_ejercicio, item.nombre, item.musculo)}
                           size={44}
                         /></View>
                     </View>

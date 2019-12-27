@@ -125,7 +125,7 @@ class RutinaModificable extends Component {
   }
   yaEsta(data) {
     for (i = 0; i < this.state.rutina.length; i++) {
-      if (this.state.rutina[i].id == data.id) {
+      if (this.state.rutina[i].id_ejercicio == data.id_ejercicio) {
         if (this.state.rutina[i].dia == data.dia)
           return false
       }
@@ -142,7 +142,7 @@ class RutinaModificable extends Component {
       console.log(error);
     }
   };
-  subir(dia, id) {
+  subir(dia, id_ejercicio) {
     var aux
     var rutinaNueva = []
     var i = 0
@@ -152,7 +152,7 @@ class RutinaModificable extends Component {
       rutinaNueva.push(this.state.rutina[i])
       if (dia == this.state.rutina[i].dia && flag != 1) {
         fallador++
-        if (id == this.state.rutina[i].id) {
+        if (id_ejercicio == this.state.rutina[i].id_ejercicio) {
           if (fallador != 1) {
             this.setState({ isLoading: true })
             rutinaNueva[i] = this.state.rutina[aux]
@@ -171,14 +171,14 @@ class RutinaModificable extends Component {
     this.termino()
   }
 
-  bajar(dia, id) {
+  bajar(dia, id_ejercicio) {
     var aux
     var rutinaNueva = []
     var i = 0
     var flag = 0
     while (i < this.state.rutina.length) {
       rutinaNueva.push(this.state.rutina[i])
-      if ((id == this.state.rutina[i].id && dia == this.state.rutina[i].dia) && flag != 1) {
+      if ((id_ejercicio == this.state.rutina[i].id_ejercicio && dia == this.state.rutina[i].dia) && flag != 1) {
         aux = i
         aux++
         if (aux < this.state.rutina.length) {
@@ -204,11 +204,11 @@ class RutinaModificable extends Component {
     this.setState({ rutina: rutinaNueva })
     this.termino()
   }
-  borrar(dia, id) {
+  borrar(dia, id_ejercicio) {
     var rutinaNueva = []
     var i = 0
     while (i < this.state.rutina.length) {
-      if (id == this.state.rutina[i].id && dia == this.state.rutina[i].dia) {
+      if (id_ejercicio == this.state.rutina[i].id_ejercicio && dia == this.state.rutina[i].dia) {
         i++
       }
       if (i < this.state.rutina.length) {
@@ -232,13 +232,13 @@ class RutinaModificable extends Component {
   }
   guardarRutina() {
     var aux = 0
-    rutinaNueva = { id: 0, nombre: '', imagen: require('./Fotos/PECHO.png'), dias: '', fav: 1, rutina: [] }
+    rutinaNueva = { id_ejercicio: 0, nombre: '', imagen: require('./Fotos/PECHO.png'), dias: '', fav: 1, rutina: [] }
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].dia > aux) {
         aux = this.state.rutina[i].dia
       }
     }
-    rutinaNueva.id = this.nuevoId()
+    rutinaNueva.id_ejercicio = this.nuevoId()
     rutinaNueva.nombre = this.state.nombre
     rutinaNueva.imagen = this.state.imagen
     rutinaNueva.dias = aux
@@ -320,13 +320,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -347,13 +347,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -374,13 +374,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -401,13 +401,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -428,13 +428,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -455,13 +455,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -482,13 +482,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -509,13 +509,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -570,13 +570,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -597,13 +597,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -624,13 +624,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -651,13 +651,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -678,13 +678,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -705,13 +705,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -732,13 +732,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -759,13 +759,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -820,13 +820,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -847,13 +847,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -874,13 +874,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -901,13 +901,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -928,13 +928,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -955,13 +955,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -982,13 +982,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1009,13 +1009,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1070,13 +1070,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1097,13 +1097,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1124,13 +1124,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1151,13 +1151,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1178,13 +1178,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1205,13 +1205,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1232,13 +1232,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1259,13 +1259,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1320,13 +1320,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1347,13 +1347,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1374,13 +1374,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1401,13 +1401,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1428,13 +1428,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1455,13 +1455,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1482,13 +1482,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1509,13 +1509,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1570,13 +1570,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1597,13 +1597,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1624,13 +1624,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1651,13 +1651,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1678,13 +1678,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1705,13 +1705,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1732,13 +1732,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1759,13 +1759,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1820,13 +1820,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1847,13 +1847,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1874,13 +1874,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1901,13 +1901,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1928,13 +1928,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1955,13 +1955,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -1982,13 +1982,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
@@ -2009,13 +2009,13 @@ class RutinaModificable extends Component {
                                 </View>
                               </View>
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="up" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
                                   <AntDesign name="delete" size={15} color="white" />
                                 </TouchableOpacity>
                               </View>
