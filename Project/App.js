@@ -6,23 +6,23 @@ import Detalle from './components/Detalle';
 import Ejercicios from './components/Ejercicios'
 import EjerciciosEspecifico from './components/EjercicioEspecifico'
 import EjercicioAgregar from './components/EjercicioAgregar'
+import EjerciciosFavs from './components/EjerciciosFavs'
 import ChangePassword from './components/ChangePassword'
 import CreateUser from './components/CreateUser'
 import Informacion from './components/DatosPersonales';
-import MisRutinas from './components/Comentarios';
-import Craigslist from './components/Craigslist'
 import LogInCards from './components/LogInCards'
-import Festivales from './components/Festivales';
-import Search from './components/Search';
 import Musculo from './components/Musculo'
 import MusculoAgregar from './components/MusculoAgregar'
 import Suplementacion from './components/Suplementacion'
 import SuplementacionEspecifica from './components/SuplementacionEspecifica'
+import SuplementacionFavs from './components/SuplementacionFavs'
 import Rutinas from './components/Rutinas';
 import RutinaNew from './components/RutinaNew'
+import RutinasTipos from './components/RutinasTipos'
 import RutinaModificable from './components/RutinaModificable'
 import RutinaEspecifica from './components/RutinaEspecifica'
 import RutinasFavs from './components/RutinasFavs'
+import Favoritos from './components/Favoritos'
 import MenuDrawer from './components/MenuDrawer';
 import { AsyncStorage } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
@@ -240,7 +240,7 @@ class EjerciciosEspecificoScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      idEjercicio: props.navigation.getParam('idEjercicio')
+      idEjercicio: props.navigation.getParam('id_ejercicio')
     }
   }
   render() {
@@ -292,6 +292,7 @@ static navigationOptions = ({ navigation }) => {
 class RutinasScreen extends React.Component {
   constructor(props) {
     super(props)
+    {update: "update"}
   }
   static navigationOptions = {
     title: 'Rutinas',
@@ -305,6 +306,32 @@ class RutinasScreen extends React.Component {
   render() {
     return (
       <Rutinas
+        onPressGoRutinas={this.irRutina.bind(this)}
+      />
+    );
+  }
+  irRutina(tipo_rutina) {
+    this.props.navigation.navigate('RutinasTipos', { tipo_rutina: tipo_rutina});
+  }
+
+}
+class RutinasTiposScreen extends React.Component {
+  constructor(props) {
+    super(props)
+    {update: "update"}
+  }
+  static navigationOptions = {
+    title: 'Rutinas',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  render() {
+    return (
+      <RutinasTipos
         onPressGo={this.irRutina.bind(this)}
       />
     );
@@ -346,48 +373,14 @@ class RutinaNewScreen extends React.Component {
   agregarEjercicio(dia,tipo) {
     this.props.navigation.navigate('EjercicioAgregar',{dia:dia,tipo: tipo});
   }
-  verInfo(nombre,idEjercicio){
-    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre, id:idEjercicio});
+  verInfo(id_ejercicio){
+    this.props.navigation.navigate('EjercicioEspecifico',{id_ejercicio: id_ejercicio});
   }
   cancelar(){
     this.props.navigation.navigate('RutinasScreen');
   }
   pasarUsuario() {
     //return this.state.idUser
-  }
-}
-class RutinaModificableScreen extends React.Component{
-  constructor(props) {
-    super(props);
-  }
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'Editar ' + navigation.getParam('nombre'),
-    headerStyle: {
-      backgroundColor: 'black',
-      height: 55,
-      borderBottomWidth: 0
-    },
-    headerTintColor: '#3399ff',
-  };
-}
-  render() {
-    return (
-      <RutinaModificable
-      onPressGo={this.agregarEjercicio.bind(this)}
-      onPressInfo={this.verInfo.bind(this)}
-      onPressCancelar={this.cancelar.bind(this)}
-      />
-    );
-  }
-  agregarEjercicio(dia,tipo) {
-    this.props.navigation.navigate('EjercicioAgregar',{dia:dia,tipo: tipo});
-  }
-  verInfo(nombre,idEjercicio){
-    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre, idEjercicio:idEjercicio});
-  }
-  cancelar(){
-    this.props.navigation.navigate('RutinasScreen');
   }
 }
 class RutinaEspecificaMScreen extends React.Component {
@@ -401,7 +394,7 @@ class RutinaEspecificaMScreen extends React.Component {
       headerRight: (
         <View style={{ flexDirection: 'row' }}>
           <FontAwesome name="edit" style={{ marginRight: 20, color: '#3399ff' }}
-            onPress={() => navigation.navigate('RutinaModificable', {nombre: nombre, id_rutina: id_rutina})}
+            onPress={() => navigation.navigate('RutinaModificable', {nombre_rutina: nombre, id_rutina: id_rutina})}
             size={22}
           />
         </View>
@@ -423,8 +416,8 @@ class RutinaEspecificaMScreen extends React.Component {
       />
     );
   }
-  verInfo(nombre, idEjercicio){
-    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre, idEjercicio:idEjercicio});
+  verInfo(id_ejercicio){
+    this.props.navigation.navigate('EjercicioEspecifico',{id_ejercicio:id_ejercicio});
   }
   editar(id_rutina){
     this._storeData(id_rutina);
@@ -464,42 +457,45 @@ class RutinaEspecificaNoMScreen extends React.Component {
   pasarConcierto(id) {
     this.props.navigation.navigate('Detalle', { IdEvento: id });
   }
-  verInfo(nombre, idEjercicio){
-    this.props.navigation.navigate('EjercicioEspecifico',{nombreEjercicio:nombre, idEjercicio:idEjercicio});
+  verInfo(id_ejercicio){
+    this.props.navigation.navigate('EjercicioEspecifico',{id_ejercicio: id_ejercicio});
   }
   editar(id){
     this.setState({idModificable:id})
   }
 }
-class RutinasFavsScreen extends React.Component {
+class RutinaModificableScreen extends React.Component{
   constructor(props) {
-    super(props)
+    super(props);
   }
-  static navigationOptions= ({ navigation }) => {
+  static navigationOptions = ({ navigation }) => {
     return {
-    },{
-    title: 'Mis Rutinas',
+      title: 'Editar ' + navigation.getParam('nombre_rutina'),
     headerStyle: {
       backgroundColor: 'black',
       height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
-  }
-  }
+  };
+}
   render() {
     return (
-      <RutinasFavs
-        onPressGo={this.irRutina.bind(this)}
+      <RutinaModificable
+      onPressGo={this.agregarEjercicio.bind(this)}
+      onPressInfo={this.verInfo.bind(this)}
+      onPressCancelar={this.cancelar.bind(this)}
       />
     );
   }
-  irRutina(id_rutina,nombre,modificable) {
-    if(modificable){
-    this.props.navigation.navigate('RutinaEspecificaMScreen', { id_rutina: id_rutina ,nombre: nombre});
-    }else{
-      this.props.navigation.navigate('RutinaEspecificaNoMScreen', { id_rutina: id_rutina ,nombre: nombre});
-    }
+  agregarEjercicio(dia,tipo) {
+    this.props.navigation.navigate('EjercicioAgregar',{dia:dia,tipo: tipo});
+  }
+  verInfo(id_ejercicio){
+    this.props.navigation.navigate('EjercicioEspecifico',{id_ejercicio: id_ejercicio});
+  }
+  cancelar(){
+    this.props.navigation.navigate('RutinasScreen',{update: "dale"});
   }
 }
 // *****************************************************
@@ -572,6 +568,123 @@ class CamaraPageScreen extends React.Component {
   }
 }
 // *****************************************************
+// ********************Favoritos************************
+// *****************************************************
+class FavoritosScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Favoritos',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <Favoritos
+        onPressGoRutinas={this.pasarRutinas.bind(this)}
+        onPressGoSuplementos={this.pasarSuplementos.bind(this)}
+        onPressGoEjercicios={this.pasarEjercicios.bind(this)}
+      />
+    );
+  }
+  pasarRutinas() {
+    this.props.navigation.navigate('RutinasFavs');
+  }
+  pasarSuplementos() {
+    this.props.navigation.navigate('SuplementacionFavs');
+  }
+  pasarEjercicios() {
+    this.props.navigation.navigate('EjerciciosFavs');
+  }
+}
+class EjerciciosFavsScreen extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  static navigationOptions= ({ navigation }) => {
+    return {
+    },{
+    title: 'Ejercicios Favoritos',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  }
+  }
+  render() {
+    return (
+      <EjerciciosFavs
+        onPressGo={this.pasarMusculo.bind(this)}
+      />
+    );
+  }
+  pasarMusculo(musculo) {
+    this.props.navigation.navigate('Musculo', { musculo: musculo });
+  }
+}
+class RutinasFavsScreen extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  static navigationOptions= ({ navigation }) => {
+    return {
+    },{
+    title: 'Mis Rutinas',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  }
+  }
+  render() {
+    return (
+      <RutinasFavs
+        onPressGo={this.irRutina.bind(this)}
+      />
+    );
+  }
+  irRutina(id_rutina,nombre,modificable) {
+    if(modificable){
+    this.props.navigation.navigate('RutinaEspecificaMScreen', { id_rutina: id_rutina ,nombre: nombre});
+    }else{
+      this.props.navigation.navigate('RutinaEspecificaNoMScreen', { id_rutina: id_rutina ,nombre: nombre});
+    }
+  }
+}
+class SuplementacionFavsScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Suplementacion',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <SuplementacionFavs
+        onPressGo={this.pasarSuplemento.bind(this)}
+      />
+    );
+  }
+  pasarSuplemento(id_suplemento, nombre) {
+    this.props.navigation.navigate('SuplementacionEspecifica', { id_suplemento: id_suplemento, nombre:nombre});
+  }
+}
+// *****************************************************
 // **********************Stacks*************************
 // *****************************************************
 const EjerciciosStackNavigator = createStackNavigator(
@@ -627,6 +740,7 @@ const RutinasStackNavigator = createStackNavigator(
         }
       }
     },
+    RutinasTipos: { screen: RutinasTiposScreen},
     RutinaEspecificaM: { screen: RutinaEspecificaMScreen },
     RutinaEspecificaNoM: { screen: RutinaEspecificaNoMScreen },
     RutinaModificable: {screen: RutinaModificableScreen},
@@ -670,7 +784,7 @@ const SuplementacionStackNavigator = createStackNavigator(
 
 const PerfilTabNavigator = createBottomTabNavigator({
   Perfil: Informacion,
-  RutinasFavs: RutinasFavsScreen
+  FavoritosScreen: FavoritosScreen
 }, {
     navigationOptions: ({ navigation }) => {
       const { routeName } = navigation.state.routes[navigation.state.index]
@@ -709,11 +823,15 @@ const PerfilTabNavigator = createBottomTabNavigator({
 
   const PerfilStackNavigator = createStackNavigator({
     PerfilTabNavigator: PerfilTabNavigator,
+    RutinasFavs: RutinasFavsScreen,
+    EjerciciosFavs: EjerciciosFavsScreen,
+    SuplementacionFavs: SuplementacionFavsScreen,
     RutinaEspecificaMScreen: RutinaEspecificaMScreen,
     RutinaEspecificaNoMScreen: RutinaEspecificaNoMScreen,
     RutinaModificable: RutinaModificableScreen,
     EjercicioEspecifico: EjerciciosEspecificoScreen
   });
+
 // *****************************************************
 // **********************Drawer*************************
 // *****************************************************

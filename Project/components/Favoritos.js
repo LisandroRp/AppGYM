@@ -30,7 +30,7 @@ function createData(item) {
   };
 }
 
-class Rutinas extends Component {
+class Favoritos extends Component {
 
   constructor(props) {
     super(props);
@@ -55,16 +55,17 @@ class Rutinas extends Component {
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
 
                   <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas()}>
-                      <Text style={styles.name}>Todas</Text>
+                      <Text style={styles.name}>Rutinas</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas()}>
-                        <Text style={styles.name}>Fuerza</Text>
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoSuplementos()}>
+                        <Text style={styles.name}>Suplementacio</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas()}>
-                        <Text style={styles.name}>Propias</Text>
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoEjercicios()}>
+                        <Text style={styles.name}>Ejercicios</Text>
                   </TouchableOpacity>
+                  
         </View>
       );
     }
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 10,
     width: 180,
-    flexDirection: "column",
+    flexDirection: "column"
   },
   image: {
     width: 90,
@@ -168,4 +169,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Rutinas;
+export default Favoritos;

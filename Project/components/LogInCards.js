@@ -24,8 +24,11 @@ class LogInCards extends Component {
     }
   }
 
+  componentDidMount(){
+    base.abrirBase();
+  }
+
   checkLogin() {
-    //ApiController.getUsuario(this.checkUsuario.bind(this), this.state.username)
     this.props.onPressLogin(this.state.username);
   }
 

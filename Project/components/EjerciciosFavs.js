@@ -16,6 +16,7 @@ import {
     ScrollView
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
+import Ejercicios from './Ejercicios';
 
 function createData(item) {
     return {
@@ -32,61 +33,56 @@ function createData(item) {
     };
 }
 
-class RutinasFavs extends Component {
+class EjerciciosFavs extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            rutinas: [],
+            ejercicios: [],
             isLoading: true,
         };
         this.Star = require('./Logos/Star_Llena.png');
         this.Star_With_Border = require('./Logos/Star_Borde.png');
         //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
-        this.cargarRutinasFavoritas();
+        this.cargarEjerciciosFavoritas();
     }
   
-    cargarRutinasFavoritas = async () => {
-      base.traerRutinasFavoritas(this.okRutinas.bind(this))
+    cargarEjerciciosFavoritas = async () => {
+      base.traerEjerciciosFavoritos(this.okEjercicios.bind(this))
     }
-    okRutinas(rutinas){
-      this.setState({ rutinas: rutinas, isLoading: false });
-      console.log(rutinas)
+    okEjercicios(ejercicios){
+      this.setState({ ejercicios: ejercicios, isLoading: false });
     }
 
     favear(id_rutina) {
         var i = 0
-        var fav
         aux = 0
         rutinas2 = []
         while (i < this.state.rutinas.length) {
-          if (this.state.rutinas[i].id_rutina == id_rutina) {
-            aux = i
-            console.log(this.state.rutinas[aux].favoritos)
-          }
-          rutinas2.push(this.state.rutinas[i])
-          i++
+            if (this.state.rutinas[i].id_rutina == id_rutina) {
+                aux = i
+                console.log(aux)
+            }
+            rutinas2.push(this.state.rutinas[i])
+            i++
         }
-        if (rutinas2[aux].favoritos) {
-          rutinas2[aux].favoritos = 0
-          fav= 0
+        if (rutinas2[aux].favoritos == 1) {
+            rutinas2[aux].favoritos = 0
         } else {
-          rutinas2[aux].favoritos = 1
-          fav= 1
+            rutinas2[aux].favoritos = 1
         }
-        //this.setState({ rutinas: rutinas2 })   
-        base.cargarRutinasFavorito(id_rutina, fav, this.okFavorito.bind(this))  
-      }
-    
-      okFavorito() {
-        this.cargarRutinasFavoritas()
-        //this.setState({ isLoading: false })
-      }
+        this.setState({ rutinas: rutinas2 })
+        this.termino()
+    }
+    termino() {
+        this.setState({ isLoading: false })
+    }
     render() {
         if (this.state.isLoading) {
             return (
                 //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
                 //<View style={styles.container}>
                 <View style={styles.container}>
+                <Image style={styles.bgImage} source={require('./Pared.jpg')} />
                     <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
                 </View>
                 //</View>
@@ -119,7 +115,7 @@ class RutinasFavs extends Component {
                         <Text style={{ fontSize: 11 }}>Entrada General: {item.precioE}$</Text> */}
                                                 </View>
                                                 <View style={{ alignItems: 'center', justifyContent: "center" }} >
-                                                    <TouchableOpacity onPress={() => {this.favear(item.id_rutina) }}>
+                                                    <TouchableOpacity onPress={() => { this.setState({ isLoading: true }), this.favear(item.id_rutina) }}>
                                                         <Image style={styles.StarImage} source={this.Star } />
                                                     </TouchableOpacity>
                                                 </View>
@@ -238,4 +234,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default withNavigation(RutinasFavs);
+export default withNavigation(EjerciciosFavs);

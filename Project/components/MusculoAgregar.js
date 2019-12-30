@@ -43,7 +43,6 @@ class MusculoAgregar extends Component {
     this.state = {
       //IdUser: props.navigation.getParam('IdUser'),
       searchBarFocused: false,
-      FlatListItems: [],
       musculo: this.props.navigation.getParam('musculo'),
       dia: this.props.navigation.getParam('dia'),
       tipo: this.props.navigation.getParam('tipo'),
@@ -79,15 +78,6 @@ class MusculoAgregar extends Component {
     });
     console.log(ejercicios)
   }
- 
-  esGenero(genero) {
-    for (i = 0; i <= this.state.generoEvento.length; i++) {
-      if (this.state.generoEvento[i] == genero) {
-        return true
-      }
-    }
-    return false
-  }
   guardarEjercicio() {
     this.setState({ modalVisible: false})
     this._retrieveData();
@@ -111,7 +101,6 @@ class MusculoAgregar extends Component {
   };
   cargarEjercicio() {
     terminada = {
-      key: this.state.dia +'.'+ this.state.id_ejercicio,
       id_ejercicio: this.state.id_ejercicio,
       musculo: this.state.musculoEjercicio,
       nombre: this.state.nombreEjercicio,
@@ -119,11 +108,14 @@ class MusculoAgregar extends Component {
       series: this.state.series,
       dia: this.state.dia
     }
+    console.log(terminada)
     this.state.rutinaNueva.push(terminada)
     this.props.onPressSave(this.state.rutinaNueva,this.state.tipo)
   }
   setModalVisible(visible, id_ejercicio, nombre, musculo) {
-    this.setState({ modalVisible: visible, nombreEjercicio: nombre, idEjercicio: id_ejercicio, musculoEjercicio: musculo });
+    console.log("manmaaaaaaaaaaaaaaaa")
+    this.setState({ modalVisible: visible, nombreEjercicio: nombre, id_ejercicio: id_ejercicio, musculoEjercicio: musculo });
+    console.log(this.state.id_ejercicio)
   }
   componentDidMount() {
     this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
