@@ -13,8 +13,7 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient'
-import { Reducer } from 'react-native-router-flux';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { withNavigation } from 'react-navigation';
 
 
@@ -104,15 +103,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     padding:2,
   },
-  cardContent: {
-    marginLeft: 20,
-    marginTop: 10,
-    width:180,
-    flexDirection: "column"
-  },
   imageContainer: {
     width: Dimensions.get('window').width /2 -4,
-    height: 200,
+    height: hp("28"),
+    // height: 200,
     margin:1,
     justifyContent: 'center',
     alignItems:'center',
@@ -120,7 +114,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: Dimensions.get('window').width /2 -4,
-    height: 200,
+    height: hp("28"),
   },
   bgImage:{
     flex: 1,
@@ -131,64 +125,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 20,
-    backgroundColor: "white",
-    padding: 10,
-    flexDirection: 'row',
-    borderRadius: 30,
-  },
-
-  name: {
-    paddingTop:12,
-    fontSize: 18,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#3399ff",
-    fontWeight: 'bold'
-  },
-  count: {
-    fontSize: 14,
-    paddingBottom:11,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#6666ff"
-  },
-
-  followButton: {
-    marginTop: 10,
-    height: 35,
-    width: 100,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#dcdcdc",
-  },
- followButtonText: {
-    color: "black",
-    marginTop:4,
-    fontSize: 15,
-  },
-  StarImage: {
-    width: 40,
-    height: 40,
-    resizeMode: 'cover',
-},
 })
 
 export default withNavigation(EjercicioAgregar);

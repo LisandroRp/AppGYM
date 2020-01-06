@@ -74,7 +74,7 @@ class RutinasFavs extends Component {
           fav= 1
         }
         //this.setState({ rutinas: rutinas2 })   
-        base.cargarRutinasFavorito(id_rutina, fav, this.okFavorito.bind(this))  
+        base.favoritearRutina(id_rutina, fav, this.okFavorito.bind(this))  
       }
     
       okFavorito() {

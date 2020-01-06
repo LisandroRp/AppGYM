@@ -59,8 +59,14 @@ class MusculoAgregar extends Component {
       rutinaNueva: [],
       ejercicioNuevo: [{ id_ejercicio: 0, nombre: '', repeticiones: '', series: '' }]
     };
-    this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-    //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
+    this.Pecho= require('./Fotos/PECHO.png')
+    this.Espalda= require('./Fotos/ESPALDA.png')
+    this.Hombros= require('./Fotos/HOMBROS.png')
+    this.Piernas= require('./Fotos/PIERNAS.png')
+    this.Bicep= require('./Fotos/BICEPS.png')
+    this.Triceps= require('./Fotos/TRICEPS.png')
+    this.Abs= require('./Fotos/ABS.png')
+    this.Cardio= require('./Fotos/CARDIO.png')
     this.cargarEjercicios();
   }
 
@@ -70,7 +76,7 @@ class MusculoAgregar extends Component {
   }
 
   //Setea los ejercicios y renderiza la screen
-  okEjercicios(ejercicios){
+  okEjercicios(ejercicios) {
     this.setState({
       ejercicios: ejercicios,
       memory: ejercicios,
@@ -79,7 +85,7 @@ class MusculoAgregar extends Component {
     console.log(ejercicios)
   }
   guardarEjercicio() {
-    this.setState({ modalVisible: false})
+    this.setState({ modalVisible: false })
     this._retrieveData();
   }
   _retrieveData = async () => {
@@ -110,7 +116,7 @@ class MusculoAgregar extends Component {
     }
     console.log(terminada)
     this.state.rutinaNueva.push(terminada)
-    this.props.onPressSave(this.state.rutinaNueva,this.state.tipo)
+    this.props.onPressSave(this.state.rutinaNueva, this.state.tipo)
   }
   setModalVisible(visible, id_ejercicio, nombre, musculo) {
     console.log("manmaaaaaaaaaaaaaaaa")
@@ -155,6 +161,33 @@ class MusculoAgregar extends Component {
     this.setState({ value })
   };
 
+  queMusculo(musculo) {
+    if (musculo == "Abdominales") {
+      return this.Abs
+    }
+    if (musculo == "Bicep") {
+      return this.Bicep
+    }
+    if (musculo == "Cardio") {
+      return this.Cardio
+    }
+    if (musculo == "Espalda") {
+      return this.Espalda
+    }
+    if (musculo == "Hombros") {
+      return this.Hombros
+    }
+    if (musculo == "Pecho") {
+      return this.Pecho
+    }
+    if (musculo == "Piernas") {
+      return this.Piernas
+    }
+    if (musculo == "Tricep") {
+      return this.Tricep
+    }
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -189,23 +222,21 @@ class MusculoAgregar extends Component {
               return item.id_ejercicio;
             }}
             renderItem={({ item }) => {
-              if (this.state.musculo == item.musculo)
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion, this.state.dia)}>
-                    <View style={{ flexDirection: "row" }} >
-                      <Image style={styles.image} source={{ uri: item.imagen }} />
-                      <View style={styles.cardContent}>
-                        <Text style={styles.name}>{item.nombre}</Text>
-                        <Text style={styles.descripcion}>{item.descripcion}</Text>
-                      </View>
-                      <View style={styles.masita}>
-                        <FontAwesome name="plus" style={styles.plus}
-                          onPress={() => this.setModalVisible(true, item.id_ejercicio, item.nombre, item.musculo)}
-                          size={44}
-                        /></View>
+              return (
+                <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion)}>
+                  <View style={{ flexDirection: "row" }} >
+                    <Image style={styles.image} source={this.queMusculo(item.musculo)} />
+                    <View style={styles.cardContent}>
+                      <Text style={styles.name}>{item.nombre}</Text>
                     </View>
-                  </TouchableOpacity>
-                )
+                    <View style={styles.masita}>
+                      <FontAwesome name="plus" style={styles.plus}
+                        onPress={() => this.setModalVisible(true, item.id_ejercicio, item.nombre, item.musculo)}
+                        size={44}
+                      /></View>
+                  </View>
+                </TouchableOpacity>
+              )
             }
             } />
           <Modal
@@ -229,15 +260,15 @@ class MusculoAgregar extends Component {
               </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderRadius: 22 }}>
-                    <View style={[styles.buttonContainer]}
-                      onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
-                      <Text style={styles.textButton}> Cancel</Text>
-                    </View>
+                  <View style={[styles.buttonContainer]}
+                    onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
+                    <Text style={styles.textButton}> Cancel</Text>
+                  </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.guardarEjercicio()} style={{ justifyContent: 'center', alignItems: 'center', borderLeftWidth: 2, paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
-                    <View style={[styles.buttonContainer]}>
-                      <Text style={styles.textButton}>Accept</Text>
-                    </View>
+                  <View style={[styles.buttonContainer]}>
+                    <Text style={styles.textButton}>Accept</Text>
+                  </View>
 
                 </TouchableOpacity>
               </View>
@@ -354,12 +385,6 @@ const styles = StyleSheet.create({
     //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
-  },
-  descripcion: {
-    fontSize: 15,
-    marginTop: 5,
-    //flex: 1,
-    color: "white",
   },
   count: {
     fontSize: 14,

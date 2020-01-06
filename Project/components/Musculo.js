@@ -17,9 +17,7 @@ import {
   ActivityIndicator,
   ScrollView
 } from 'react-native';
-import {Asset} from 'expo-asset'
-import { SQLite } from "expo-sqlite";
-import  * as FileSystem from 'expo-file-system';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 function createData(item) {
   return {
@@ -48,8 +46,16 @@ class Musculo extends Component {
       ejercicios: [],
       isLoading: true,
     };
-    this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-    //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
+    this.Pecho= require('./Fotos/PECHO.png')
+    this.Espalda= require('./Fotos/ESPALDA.png')
+    this.Hombros= require('./Fotos/HOMBROS.png')
+    this.Piernas= require('./Fotos/PIERNAS.png')
+    this.Bicep= require('./Fotos/BICEPS.png')
+    this.Triceps= require('./Fotos/TRICEPS.png')
+    this.Abs= require('./Fotos/ABS.png')
+    this.Cardio= require('./Fotos/CARDIO.png')
+    this.Star = require('./Logos/Star_Llena.png');
+    this.Star_With_Border = require('./Logos/Star_Borde.png');
     this.cargarEjercicios();
   }
 
@@ -115,6 +121,69 @@ class Musculo extends Component {
     this.setState({ value })
   };
 
+  favear(id_ejercicio) {
+    var i = 0
+    var fav
+    aux = 0
+    ejercicios2 = []
+    while (i < this.state.ejercicios.length) {
+      if (this.state.ejercicios[i].id_ejercicio == id_ejercicio) {
+        aux = i
+        console.log(this.state.ejercicios[aux].favoritos)
+      }
+      ejercicios2.push(this.state.ejercicios[i])
+      i++
+    }
+    if (ejercicios2[aux].favoritos) {
+      ejercicios2[aux].favoritos = 0
+      fav= 0
+    } else {
+      ejercicios2[aux].favoritos = 1
+      fav= 1
+    }
+    base.favoritearEjercicio(id_ejercicio, fav, this.okFavorito.bind(this))  
+  }
+
+  okFavorito() {
+    this.cargarEjercicios()
+  }
+
+  favoritos(favoritos){
+    if(favoritos){
+      return this.Star
+    }
+    else{
+      return this.Star_With_Border
+    }
+  }
+
+  queMusculo(musculo) {
+    if (musculo == "Abdominales") {
+      return this.Abs
+    }
+    if (musculo == "Bicep") {
+      return this.Bicep
+    }
+    if (musculo == "Cardio") {
+      return this.Cardio
+    }
+    if (musculo == "Espalda") {
+      return this.Espalda
+    }
+    if (musculo == "Hombros") {
+      return this.Hombros
+    }
+    if (musculo == "Pecho") {
+      return this.Pecho
+    }
+    if (musculo == "Piernas") {
+      return this.Piernas
+    }
+    if (musculo == "Tricep") {
+      return this.Tricep
+    }
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -149,14 +218,18 @@ class Musculo extends Component {
               return item.id_ejercicio;
             }}
             renderItem={({ item }) => {
-              if (this.state.musculo == item.musculo)
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion)}>
                     <View style={{ flexDirection: "row" }} >
-                      <Image style={styles.image} source={{ uri: item.imagen }} />
+                      <Image style={styles.image} source={this.queMusculo(item.musculo)} />
                       <View style={styles.cardContent}>
                         <Text style={styles.name}>{item.nombre}</Text>
-                        <Text style={styles.descripcion}>{item.descripcion}</Text>
+                        {/* <Text style={styles.descripcion}>{item.descripcion}</Text> */}
+                      </View>
+                      <View style={styles.ViewEstrella} >
+                        <TouchableOpacity onPress={() => { this.favear(item.id_ejercicio) }}>
+                          <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
+                        </TouchableOpacity>
                       </View>
                     </View>
                   </TouchableOpacity>
@@ -189,13 +262,18 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     marginLeft: 20,
-    marginTop: 10,
-    width: 180,
-    flexDirection: "column"
+    //marginTop: 10,
+    paddingRight: 5,
+    
+    width: wp("40"),
+    justifyContent: 'center',
+    backgroundColor: "red"
   },
   image: {
-    width: 90,
-    height: 90,
+    //width: 90,
+    width: wp("20"),
+    //height: 90,
+    height: hp("11"),
     borderWidth: 2,
     borderColor: "#ebf0f7",
     margin: 5,
@@ -218,21 +296,16 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     padding: 10,
     flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center"
   },
 
   name: {
-    paddingTop: 12,
     fontSize: 22,
     //flex: 1,
     //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
-  },
-  descripcion: {
-    fontSize: 15,
-    marginTop: 5,
-    //flex: 1,
-    color: "white",
   },
   count: {
     fontSize: 14,
@@ -241,29 +314,16 @@ const styles = StyleSheet.create({
     //alignSelf: 'center',
     color: "#6666ff"
   },
-  followButton: {
-    marginTop: 10,
-    height: 35,
-    width: 100,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#dcdcdc",
-  },
-  followButtonText: {
-    color: "black",
-    fontSize: 15,
-    marginTop: 4,
-  },
   StarImage: {
-    width: 40,
-    height: 40,
+    width: wp("10%"),
+    height: hp("5%"),
     resizeMode: 'cover',
   },
+  ViewEstrella: {
+    alignItems: 'center',
+    justifyContent: "center",
+    paddingHorizontal: wp("5")
+  }
 })
 
 export default withNavigation(Musculo);

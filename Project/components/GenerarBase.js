@@ -20,6 +20,11 @@ function createEjercicio(item) {
 class GenerarBase extends Component {
 
     abrirBase() {
+
+        // FileSystem.downloadAsync(
+        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        // );
         var rutinas = []
         let db = SQLite.openDatabase('appgym.db');
         db.transaction(
@@ -54,7 +59,7 @@ class GenerarBase extends Component {
     // *****************************************************
 
     //Trae todos los ejercicios en la screen musculo y musculoAgregar
-    traerEjercicios(id_musculo, okEjercicios) {
+    traerEjercicios(musculo, okEjercicios) {
         ejercicios = []
         // FileSystem.downloadAsync(
         //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
@@ -64,7 +69,7 @@ class GenerarBase extends Component {
 
         db.transaction(
             tx => {
-                tx.executeSql('SELECT * FROM Ejercicios where musculo = ?', [id_musculo], function (tx, res) {
+                tx.executeSql('SELECT * FROM Ejercicios where musculo = ?', [musculo], function (tx, res) {
                     for (let i = 0; i < res.rows.length; ++i) {
                         ejercicios.push(res.rows._array[i]);
                     }
@@ -133,6 +138,30 @@ class GenerarBase extends Component {
             }
         );
     }
+    //Favoritear un Ejercicio
+    favoritearEjercicio(id_ejercicio, fav, okFavorito) {
+
+        // FileSystem.downloadAsync(
+        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        // );
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(
+            tx => {
+                tx.executeSql('UPDATE Ejercicios set favoritos = ? where id_ejercicio = ?', [fav, id_ejercicio])
+            },
+            error => {
+                console.log("Error")
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okFavorito()
+            }
+        );
+    }
 
     // *****************************************************
     // ***********************Rutinas***********************
@@ -193,7 +222,7 @@ class GenerarBase extends Component {
         );
     }
     //La agrega o la saca de Favoritos a la rutina seleccionada
-    cargarRutinasFavorito(id_rutina, fav, okFavorito) {
+    favoritearRutina(id_rutina, fav, okFavorito) {
 
         // FileSystem.downloadAsync(
         //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
@@ -300,10 +329,36 @@ class GenerarBase extends Component {
             }
         );
     }
+    //Favoritear un suplemento
+    favoritearSuplemento(id_suplemento, fav, okFavorito) {
+
+        // FileSystem.downloadAsync(
+        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        // );
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(
+            tx => {
+                tx.executeSql('UPDATE Suplementos set favoritos = ? where id_suplemento = ?', [fav, id_suplemento])
+            },
+            error => {
+                console.log("Error")
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okFavorito()
+            }
+        );
+    }
 
     // *****************************************************
     // ********************Favoritos************************
     // *****************************************************
+
+    //Trae todos los ejercicios que esten en favoritos en la screen EjerciciosFavs
     traerEjerciciosFavoritos(okEjercicios) {
         ejercicios = []
         // FileSystem.downloadAsync(
@@ -331,6 +386,7 @@ class GenerarBase extends Component {
             }
         );
     }
+    //Trae todos los suplementos que esten en favoritos en la screen SumplementosFavs
     traerSuplementosFavoritas(okSuplementos) {
         suplementos = []
         // FileSystem.downloadAsync(
@@ -358,7 +414,7 @@ class GenerarBase extends Component {
             }
         );
     }
-    //Trae todos las rutinas que esten en favoritos en la screen rutinas
+    //Trae todos las rutinas que esten en favoritos en la screen RutinasFavs
     traerRutinasFavoritas(okRutinas) {
         rutinas = []
         // FileSystem.downloadAsync(

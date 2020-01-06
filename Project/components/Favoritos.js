@@ -59,7 +59,7 @@ class Favoritos extends Component {
                   </TouchableOpacity>
 
                   <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoSuplementos()}>
-                        <Text style={styles.name}>Suplementacio</Text>
+                        <Text style={styles.name}>Suplementacion</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoEjercicios()}>
@@ -87,24 +87,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  contentList: {
-    flex: 1,
-  },
-  cardContent: {
-    marginLeft: 20,
-    marginTop: 10,
-    width: 180,
-    flexDirection: "column"
-  },
-  image: {
-    width: 90,
-    height: 90,
-    borderWidth: 2,
-    borderColor: "#ebf0f7",
-    margin: 5,
-    marginRight: 5,
-  },
-
   card: {
     shadowColor: '#00000021',
     shadowOffset: {
@@ -116,7 +98,9 @@ const styles = StyleSheet.create({
     elevation: 12,
     height: hp("29.5"),
     backgroundColor: "black",
-    padding: 10,
+    //padding: 10,
+    paddingHorizontal: wp("2"),
+    paddingVertical: hp("1"),
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
@@ -130,43 +114,7 @@ const styles = StyleSheet.create({
     color: "#3399ff",
     fontWeight: 'bold'
   },
-  marca: {
-    fontSize: 15,
-    marginTop: 5,
-    //flex: 1,
-    color: "white",
-  },
-  count: {
-    fontSize: 14,
-    paddingBottom: 11,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#6666ff"
-  },
 
-  followButton: {
-    marginTop: 10,
-    height: 35,
-    width: 100,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#dcdcdc",
-  },
-  followButtonText: {
-    color: "black",
-    fontSize: 15,
-    marginTop: 4,
-  },
-  StarImage: {
-    width: 40,
-    height: 40,
-    resizeMode: 'cover',
-  },
 })
 
 export default Favoritos;

@@ -39,7 +39,8 @@ class Suplementacion extends Component {
       suplementos: [],
       isLoading: true,
     };
-    this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
+    this.Star = require('./Logos/Star_Llena.png');
+    this.Star_With_Border = require('./Logos/Star_Borde.png');
     this.cargarSuplementos();
   }
   cargarSuplementos = async () => {
@@ -51,6 +52,7 @@ class Suplementacion extends Component {
       memory: suplementos,
       isLoading: false,
     });
+    console.log(suplementos)
   }
 
   componentDidMount() {
@@ -90,6 +92,43 @@ class Suplementacion extends Component {
     this.setState({ suplementos: filterDeSuplementos });
     this.setState({ value })
   };
+
+  favear(id_suplemento) {
+    var i = 0
+    var fav
+    aux = 0
+    suplementos2 = []
+    while (i < this.state.suplementos.length) {
+      if (this.state.suplementos[i].id_suplemento == id_suplemento) {
+        aux = i
+        console.log(this.state.suplementos[aux].favoritos)
+      }
+      suplementos2.push(this.state.suplementos[i])
+      i++
+    }
+    if (suplementos2[aux].favoritos) {
+      suplementos2[aux].favoritos = 0
+      fav= 0
+    } else {
+      suplementos2[aux].favoritos = 1
+      fav= 1
+    }
+    base.favoritearSuplemento(id_suplemento, fav, this.okFavorito.bind(this))  
+  }
+
+  okFavorito() {
+    this.cargarSuplementos()
+  }
+
+  favoritos(favoritos){
+    if(favoritos){
+      return this.Star
+    }
+    else{
+      return this.Star_With_Border
+    }
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -132,6 +171,11 @@ class Suplementacion extends Component {
                       <View style={styles.cardContent}>
                         <Text style={styles.name}>{item.nombre}</Text>
                         <Text style={styles.marca}>{item.marca}</Text>
+                      </View>
+                      <View style={{ alignItems: 'center', justifyContent: "center" }} >
+                        <TouchableOpacity onPress={() => { this.favear(item.id_suplemento) }}>
+                          <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
+                        </TouchableOpacity>
                       </View>
                     </View>
                   </TouchableOpacity>

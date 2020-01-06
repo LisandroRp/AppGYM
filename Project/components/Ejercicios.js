@@ -102,12 +102,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     padding:2,
   },
-  cardContent: {
-    marginLeft: 20,
-    marginTop: 10,
-    width:180,
-    flexDirection: "column"
-  },
   imageContainer: {
     width: Dimensions.get('window').width /2 -4,
     height: hp("28"),

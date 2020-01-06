@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
 import Icon from '@expo/vector-icons/Ionicons';
-import Detalle from './components/Detalle';
 import Ejercicios from './components/Ejercicios'
 import EjerciciosEspecifico from './components/EjercicioEspecifico'
 import EjercicioAgregar from './components/EjercicioAgregar'
@@ -36,6 +35,7 @@ import {
 } from 'react-navigation';
 import { ScrollView } from 'react-native-gesture-handler';
 import CamaraPage from './components/Camara/CamaraPage';
+import MusculoFavs from './components/MusculoFavs';
 console.disableYellowBox=true
 
 function handleSearch() {
@@ -176,8 +176,8 @@ static navigationOptions = ({ navigation }) => {
       />
     );
   }
-  pasarEjercicio(idEjercicio,nombre,descripcion) {
-    this.props.navigation.navigate('EjercicioEspecifico', { idEjercicio: idEjercicio, nombreEjercicio:nombre, descripcionEjercicio: descripcion });
+  pasarEjercicio(id_ejercicio,nombre,descripcion) {
+    this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio, nombreEjercicio:nombre, descripcionEjercicio: descripcion });
   }
   guardarRutina(rutina,tipo){
     this._storeData(rutina);
@@ -599,10 +599,36 @@ class FavoritosScreen extends React.Component {
     this.props.navigation.navigate('SuplementacionFavs');
   }
   pasarEjercicios() {
-    this.props.navigation.navigate('EjerciciosFavs');
+    //this.props.navigation.navigate('EjerciciosFavs');
+    this.props.navigation.navigate('MusculoFavs');
   }
 }
 class EjerciciosFavsScreen extends React.Component {
+
+  static navigationOptions = {
+    title: 'Ejercicios',
+    headerStyle: {
+      backgroundColor: 'black',
+      height: 55,
+      borderBottomWidth: 0
+    },
+    headerTintColor: '#3399ff',
+  };
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <Ejercicios
+        onPressGo={this.pasarMusculo.bind(this)}
+      />
+    );
+  }
+  pasarMusculo(musculo) {
+    this.props.navigation.navigate('MusculoFavs', { musculo: musculo });
+  }
+}
+class MusculoFavsScreen extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -620,13 +646,13 @@ class EjerciciosFavsScreen extends React.Component {
   }
   render() {
     return (
-      <EjerciciosFavs
+      <MusculoFavs
         onPressGo={this.pasarMusculo.bind(this)}
       />
     );
   }
-  pasarMusculo(musculo) {
-    this.props.navigation.navigate('Musculo', { musculo: musculo });
+  pasarMusculo(id_ejercicio, nombre, descripcion) {
+    this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio, nombreEjercicio:nombre, descripcionEjercicio: descripcion });
   }
 }
 class RutinasFavsScreen extends React.Component {
@@ -824,8 +850,10 @@ const PerfilTabNavigator = createBottomTabNavigator({
   const PerfilStackNavigator = createStackNavigator({
     PerfilTabNavigator: PerfilTabNavigator,
     RutinasFavs: RutinasFavsScreen,
+    MusculoFavs: MusculoFavsScreen,
     EjerciciosFavs: EjerciciosFavsScreen,
     SuplementacionFavs: SuplementacionFavsScreen,
+    SuplementacionEspecifica: SuplementacionEspecificaScreen,
     RutinaEspecificaMScreen: RutinaEspecificaMScreen,
     RutinaEspecificaNoMScreen: RutinaEspecificaNoMScreen,
     RutinaModificable: RutinaModificableScreen,
