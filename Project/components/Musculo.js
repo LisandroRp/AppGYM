@@ -204,8 +204,8 @@ class Musculo extends Component {
               value={this.state.value}
               inputContainerStyle={{ backgroundColor: 'grey' }}
               placeholderTextColor='black'
-              containerStyle={{ backgroundColor: 'black', height: 50, paddingBottom: 22 }}
-              buttonStyle={{ marginBottom: 30 }}
+              containerStyle={{ backgroundColor: 'black'}}
+              buttonStyle={{}}
               searchIcon={{ color: 'black' }}
             />
           </View>

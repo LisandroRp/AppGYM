@@ -19,7 +19,9 @@ import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
 import { AsyncStorage, Modal } from 'react-native';
 import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 var { height, width } = Dimensions.get('window');
+
 
 function createData(item) {
   return {
@@ -45,7 +47,7 @@ class RutinaModificable extends Component {
       rutinaVacia: [],
       ultimoDia: 0,
       imagen: '',
-      diasTotal: [1,2,3,4,5,6,7],
+      diasTotal: [1, 2, 3, 4, 5, 6, 7],
       id_rutina: ''
     };
     this.Star = require('./Logos/Star_Llena.png');
@@ -59,7 +61,7 @@ class RutinaModificable extends Component {
     this.Cardio = require('./Logos/Logo_Cardio.png');
     //this.obtenerEventos()
   }
-  
+
   componentWillReceiveProps() {
     console.log('chauuuu')
     this._retrieveData()
@@ -73,7 +75,7 @@ class RutinaModificable extends Component {
       rutinaNueva2 = []
       if (value !== null) {
         rutinaNueva2 = JSON.parse(value)
-        this.setState({ rutina: rutinaNueva2.rutina, nombre: rutinaNueva2.nombre })
+        this.setState({ rutina: rutinaNueva2.rutina})
       }
       this.termino()
     } catch (error) {
@@ -84,7 +86,7 @@ class RutinaModificable extends Component {
     try {
       console.log('holaaaaaaaaa')
       const value = await AsyncStorage.getItem('rutina');
-      
+
       if (value !== null) {
         console.log(value)
         if (this.yaEsta(JSON.parse(value)[0])) {
@@ -251,7 +253,7 @@ class RutinaModificable extends Component {
     this.setModalVisible(!this.state.modalVisible)
     base.borrarRutina(id_rutina, this.okRutinaBorrada.bind(this))
   }
-  okRutinaBorrada(){
+  okRutinaBorrada() {
     this.props.onPressCancelar()
   }
   nuevoId() {
@@ -303,7 +305,7 @@ class RutinaModificable extends Component {
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
           <ScrollView>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.TextContainer} maxLength={15} placeholder= {this.props.navigation.getParam("nombre_rutina")} placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
+              <TextInput style={styles.TextContainer} maxLength={15} placeholder={this.props.navigation.getParam("nombre_rutina")} placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
               <TouchableOpacity onPress={() => { this.borrarTodo() }} style={styles.borrarTodo}>
                 <AntDesign name="delete" size={20} color="white" />
               </TouchableOpacity>
@@ -323,61 +325,61 @@ class RutinaModificable extends Component {
               renderItem={({ item }) => {
                 aux = item
                 return (
-            <View style={styles.cuadraditos}>
-              <DropDownItem key={1} contentVisible={false}
-                header={
-                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                    <Text style={styles.detalleGenresTitles}>
-                    Día {item}
-                </Text>
-                    <TouchableOpacity onPress={() => {
-                      this.touch(item);
-                    }} style={styles.fab}>
-                      <AntDesign name="plus" size={20} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                }
-              >
-                <FlatList
-                  style={styles.contentList}
-                  columnWrapperStyle={styles.listContainer}
-                  data={this.state.rutina}
-                  initialNumToRender={50}
-                  keyExtractor={(item) => {
-                    return item.id_ejercicio;
-                  }}
-                  renderItem={({ item }) => {
-                    if (item.dia == aux) {
-                        return (
-                          <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                            onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
-                            <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Image style={styles.musculosLogo} source={this.queMusculo(item.musculo)} />
-                                <View style={{ flexDirection: 'column' }}>
-                                  <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
-                                  <Text>Reps: {item.repeticiones}</Text>
-                                  <Text>Series: {item.series}</Text>
-                                </View>
-                              </View>
-                              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                  <AntDesign name="up" size={15} color="white" />
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                  <AntDesign name="down" size={15} color="white" />
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                  <AntDesign name="delete" size={15} color="white" />
-                                </TouchableOpacity>
-                              </View>
-                            </View>
+                  <View style={styles.cuadraditos}>
+                    <DropDownItem key={1} contentVisible={false}
+                      header={
+                        <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                          <Text style={styles.detalleGenresTitles}>
+                            Día {item}
+                          </Text>
+                          <TouchableOpacity onPress={() => {
+                            this.touch(item);
+                          }} style={styles.fab}>
+                            <AntDesign name="plus" size={20} color="white" />
                           </TouchableOpacity>
-                        )
-                    }
-                  }} />
-              </DropDownItem>
-            </View>
+                        </View>
+                      }
+                    >
+                      <FlatList
+                        style={styles.contentList}
+                        columnWrapperStyle={styles.listContainer}
+                        data={this.state.rutina}
+                        initialNumToRender={50}
+                        keyExtractor={(item) => {
+                          return item.id_ejercicio;
+                        }}
+                        renderItem={({ item }) => {
+                          if (item.dia == aux) {
+                            return (
+                              <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={styles.musculosLogo} source={this.queMusculo(item.musculo)} />
+                                    <View style={{ flexDirection: 'column' }}>
+                                      <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                      <Text>Reps: {item.repeticiones}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                    </View>
+                                  </View>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                      <AntDesign name="up" size={15} color="white" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                      <AntDesign name="down" size={15} color="white" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                      <AntDesign name="delete" size={15} color="white" />
+                                    </TouchableOpacity>
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            )
+                          }
+                        }} />
+                    </DropDownItem>
+                  </View>
                 )
               }} />
             {/* ************************************************************************
@@ -440,13 +442,8 @@ const styles = StyleSheet.create({
     backgroundColor: "grey"
   },
   contentList: {
-    marginBottom: 5, marginTop: 5
-  },
-  cardContent: {
-    marginLeft: 20,
-    marginTop: 10,
-    width: 180,
-    flexDirection: "column"
+    marginBottom: 5,
+    marginTop: 5
   },
   inputContainer: {
     flexDirection: 'row',
@@ -458,8 +455,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     borderRadius: 10,
     padding: 10,
-    width: 300,
-    height: 45,
+   // width: 300,
+    //height: 45,
+    width: wp("70"),
+    height: hp("5.5"),
     margin: 20,
     flexDirection: 'row',
     alignItems: 'center',
@@ -467,31 +466,32 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   borrarTodo: {
-    width: 44,
-    height: 44,
+    //width: 44,
+    //height: 44,
+    height: hp("6"),
+    width: wp("10.5"),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#3399ff',
     borderRadius: 30,
     marginRight: 25,
   },
-  imageContainer: {
-    width: Dimensions.get('window').width / 2 - 4,
-    height: 200,
-    margin: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black'
-  },
-  image: {
-    width: Dimensions.get('window').width / 2 - 4,
-    height: 200,
-  },
   cuadraditos: {
-    backgroundColor: 'black', marginBottom: 5, marginTop: 5, marginHorizontal: 10, paddingBottom: 10, alignItems: 'center'
+    backgroundColor: 'black',
+    marginBottom: 5,
+    marginTop: 5,
+    marginHorizontal: 10,
+    paddingBottom: 10,
+    alignItems: 'center'
   },
   cuadraditosDeAdentro: {
-    backgroundColor: 'grey', marginVertical: 5, marginTop: 2, paddingVertical: 10, paddingLeft: 10, alignSelf: 'stretch', width: Dimensions.get('window').width * 0.88
+    backgroundColor: 'grey',
+    marginVertical: 5,
+    marginTop: 2,
+    paddingVertical: 10,
+    paddingLeft: 10,
+    alignSelf: 'stretch',
+    width: Dimensions.get('window').width * 0.88
   },
   bgImage: {
     flex: 1,
@@ -516,37 +516,6 @@ const styles = StyleSheet.create({
     color: "#3399ff",
     fontWeight: 'bold'
   },
-  count: {
-    fontSize: 14,
-    paddingBottom: 11,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#6666ff"
-  },
-
-  followButton: {
-    marginTop: 10,
-    height: 35,
-    width: 100,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#dcdcdc",
-  },
-  followButtonText: {
-    color: "black",
-    marginTop: 4,
-    fontSize: 15,
-  },
-  StarImage: {
-    width: 40,
-    height: 40,
-    resizeMode: 'cover',
-  },
   detalleGenresTitles: {
     fontSize: 33,
     margin: 10,
@@ -555,18 +524,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   fab: {
-    width: 33,
-    height: 33,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#3399ff',
-    borderRadius: 30,
-    marginRight: 10,
-    marginTop: 10,
-  },
-  fab2: {
-    width: 20,
-    height: 20,
+    //width: 33,
+    //height: 33,
+    width: wp("9"),
+    height: hp("5"),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#3399ff',
@@ -600,7 +561,13 @@ const styles = StyleSheet.create({
     borderRadius: 22
   },
   modal2: {
-    flexDirection: 'row', borderColor: 'black', borderTopWidth: 2, width: width * 0.74, height: height * 0.08, position: 'absolute', bottom: 0
+    flexDirection: 'row',
+    borderColor: 'black',
+    borderTopWidth: 2,
+    width: width * 0.74,
+    height: height * 0.08,
+    position: 'absolute',
+    bottom: 0
   },
   textButton: {
     color: 'white',
@@ -613,16 +580,18 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center'
   },
-  buttonContainer: {
-    alignSelf: 'center',
-    justifyContent: 'center'
-  },
-  musculosLogo: {
+  musculosLogo2: {
     width: 40,
     height: 40,
     // width: width*0.05,
     // height: height*0.05,
     marginRight: 10,
+    resizeMode: 'cover',
+  },
+  musculosLogo: {
+    width: wp("10.5"),
+    height: hp("6"),
+    marginRight: 12,
     resizeMode: 'cover',
   },
 })

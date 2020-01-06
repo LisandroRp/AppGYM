@@ -15,8 +15,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import DropDownItem from 'react-native-drop-down-item';
-import { LinearGradient } from 'expo-linear-gradient'
-import { Reducer } from 'react-native-router-flux';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 var { height, width } = Dimensions.get('window');
 
 function createData(item) {
@@ -235,12 +234,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "grey"
   },
-  cardContent: {
-    marginLeft: 20,
-    marginTop: 10,
-    width: 180,
-    flexDirection: "column"
-  },
+
   imageContainer: {
     height: height * 0.28,
     width: width * 0.51,
@@ -284,47 +278,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 30,
   },
-
-  name: {
-    paddingTop: 12,
-    fontSize: 18,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#3399ff",
-    fontWeight: 'bold'
-  },
-  count: {
-    fontSize: 14,
-    paddingBottom: 11,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#6666ff"
-  },
-
-  followButton: {
-    marginTop: 10,
-    height: 35,
-    width: 100,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#dcdcdc",
-  },
-  followButtonText: {
-    color: "black",
-    marginTop: 4,
-    fontSize: 15,
-  },
   musculosLogo: {
-    width: 40,
-    height: 40,
-    // width: width*0.05,
-    // height: height*0.05,
-    marginRight: 10,
+    //width: 40,
+    //height: 40,
+    width: wp("10.5"),
+    height: hp("6"),
+    marginRight: 12,
     resizeMode: 'cover',
   },
   detalleGenresTitles: {

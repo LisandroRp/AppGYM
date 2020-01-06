@@ -924,7 +924,8 @@ const AppSwitchNavigator = createSwitchNavigator({
   Drawer: { screen: AppDrawerNavigator },
 });
 
-const AppContainer = createAppContainer(AppSwitchNavigator);
+//const AppContainer = createAppContainer(AppSwitchNavigator);
+const AppContainer = createAppContainer(AppDrawerNavigator);
 
 const styles = StyleSheet.create({
   container: {

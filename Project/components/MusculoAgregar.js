@@ -17,7 +17,7 @@ import {
   ActivityIndicator,
   ScrollView
 } from 'react-native';
-//import { LinearGradient, SQLite } from 'expo'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 var { height, width } = Dimensions.get('window');
 
 function createData(item) {
@@ -208,8 +208,9 @@ class MusculoAgregar extends Component {
               value={this.state.value}
               inputContainerStyle={{ backgroundColor: 'grey' }}
               placeholderTextColor='black'
-              containerStyle={{ backgroundColor: 'black', height: 50, paddingBottom: 22 }}
-              buttonStyle={{ marginBottom: 30 }}
+              containerStyle={{ backgroundColor: 'black'}}
+              //containerStyle={{ backgroundColor: 'black', height: 50, paddingBottom: 22 }}
+              buttonStyle={{}}
               searchIcon={{ color: 'black' }}
             />
           </View>
@@ -296,34 +297,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'white'
   },
-  CircleShapeView: {
-    width: 35,
-    height: 35,
-    borderRadius: 35 / 2,
-    backgroundColor: '#6666ff',
-    marginTop: 15,
-    alignItems: 'center',
-    alignContent: 'center'
-  },
   textButton: {
     color: '#3399ff',
     fontSize: 15,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'
-  },
-  SubmitButtonStyle: {
-    width: 100,
-    height: 50,
-    marginTop: 5,
-    paddingTop: 5,
-    paddingBottom: 5,
-    marginLeft: 20,
-    marginRight: 20,
-    backgroundColor: '#373737',
-    borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: '#fff'
   },
   bgImage: {
     flex: 1,
@@ -343,21 +322,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: 'center',
     alignSelf: 'center',
+    paddingHorizontal: wp("5"),
     color: 'white',
   },
   cardContent: {
     marginLeft: 20,
-    marginTop: 10,
-    width: 180,
-    flexDirection: "column"
+    //marginTop: 10,
+    paddingRight: 5,
+    
+    width: wp("40"),
+    justifyContent: 'center',
+    backgroundColor: "red"
   },
   image: {
-    width: 90,
-    height: 90,
-    borderWidth: 2,
-    borderColor: "#ebf0f7",
-    margin: 5,
-    marginRight: 5,
+        //width: 90,
+        width: wp("20"),
+        //height: 90,
+        height: hp("11"),
+        borderWidth: 2,
+        borderColor: "#ebf0f7",
+        margin: 5,
+        marginRight: 5,
   },
 
   card: {
@@ -386,36 +371,6 @@ const styles = StyleSheet.create({
     color: "#3399ff",
     fontWeight: 'bold'
   },
-  count: {
-    fontSize: 14,
-    paddingBottom: 11,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#6666ff"
-  },
-  followButton: {
-    marginTop: 10,
-    height: 35,
-    width: 100,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#dcdcdc",
-  },
-  followButtonText: {
-    color: "black",
-    fontSize: 15,
-    marginTop: 4,
-  },
-  StarImage: {
-    width: 40,
-    height: 40,
-    resizeMode: 'cover',
-  },
   modal: {
     height: height * 0.25,
     width: width * 0.75,
@@ -443,38 +398,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'center',
   },
-  CircleShapeView: {
-    width: 35,
-    height: 35,
-    borderRadius: 35 / 2,
-    backgroundColor: '#6666ff',
-    marginTop: 15,
-    alignItems: 'center',
-    alignContent: 'center'
-  },
-  textButton: {
-    color: 'white',
-    fontSize: 15,
-    alignSelf: 'center',
-    textAlign: 'center',
-    fontWeight: 'bold'
-  },
+
   buttonContainer: {
     alignSelf: 'center',
     justifyContent: 'center'
-  },
-  SubmitButtonStyle: {
-    width: 100,
-    height: 50,
-    marginTop: 5,
-    paddingTop: 5,
-    paddingBottom: 5,
-    marginLeft: 20,
-    marginRight: 20,
-    backgroundColor: '#373737',
-    borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: '#fff'
   },
   containerInput: {
     backgroundColor: 'white',
