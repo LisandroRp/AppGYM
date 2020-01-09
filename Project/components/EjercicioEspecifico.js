@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ApiController from '../controller/ApiController'
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import {
@@ -108,21 +107,21 @@ const styles = StyleSheet.create({
     //margin: 20,
     marginHorizontal: wp("4"),
     marginVertical: hp("2"),
-    paddingHorizontal: wp("2"),
-    paddingVertical: hp("1"),
+   // paddingHorizontal: wp("2"),
+  //  paddingVertical: hp("1"),
     //padding: 10,
-    borderRadius: 20
+    //borderRadius: 20
   },
   backgroundTitulo: {
     backgroundColor: 'black',
     alignItems: 'center',
     //margin: 10,
-    marginHorizontal: wp("2"),
-    marginVertical: hp("1"),
+   // marginHorizontal: wp("2"),
+   // marginVertical: hp("1"),
     //padding: 10,
     paddingHorizontal: wp("2"),
     paddingVertical: hp("1"),
-    borderRadius: 20
+    //borderRadius: 20
   },
   titulo: {
     fontSize: 33,
@@ -132,8 +131,8 @@ const styles = StyleSheet.create({
   descripcion: {
     color: 'white',
     //margin: 10,
-    marginHorizontal: wp("2"),
-    marginVertical: hp("1"),
+    marginHorizontal: wp("5"),
+    marginVertical: hp("2"),
     fontSize: 15,
   },
 

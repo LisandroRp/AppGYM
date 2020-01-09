@@ -8,16 +8,15 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  RefreshControl,
   Dimensions,
-  Alert,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  Modal,
+  AsyncStorage
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
 import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
-import { AsyncStorage, Modal } from 'react-native';
 import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 var { height, width } = Dimensions.get('window');
@@ -386,7 +385,7 @@ class RutinaModificable extends Component {
             ******************************Ya no Mas*********************************
             **************************************************************************** */}
 
-            <View style={{ flexDirection: "row", justifyContent: 'center', height: 100 }}>
+            <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
               <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalVisible: true }) }}>
                 <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
                   Borrar
@@ -411,7 +410,7 @@ class RutinaModificable extends Component {
                   <Text>Series:</Text>
                 </View> */}
               <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                <Text style={styles.textButton}>Esta seguro que desea borrar la rutina "{this.state.nombre}"</Text>
+                <Text style={styles.textButton}>Esta seguro que desea borrar la rutina "{this.props.navigation.getParam("nombre_rutina")}"</Text>
               </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderRadius: 22 }}>
@@ -546,6 +545,12 @@ const styles = StyleSheet.create({
   DropDownItem: {
     alignItems: 'stretch'
   },
+  musculosLogo: {
+    width: wp("10.5"),
+    height: hp("6"),
+    marginRight: 12,
+    resizeMode: 'cover',
+  },
   //MODAAAAL
   modal: {
     height: height * 0.22,
@@ -586,12 +591,6 @@ const styles = StyleSheet.create({
     // width: width*0.05,
     // height: height*0.05,
     marginRight: 10,
-    resizeMode: 'cover',
-  },
-  musculosLogo: {
-    width: wp("10.5"),
-    height: hp("6"),
-    marginRight: 12,
     resizeMode: 'cover',
   },
 })

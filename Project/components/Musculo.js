@@ -224,7 +224,6 @@ class Musculo extends Component {
                       <Image style={styles.image} source={this.queMusculo(item.musculo)} />
                       <View style={styles.cardContent}>
                         <Text style={styles.name}>{item.nombre}</Text>
-                        {/* <Text style={styles.descripcion}>{item.descripcion}</Text> */}
                       </View>
                       <View style={styles.ViewEstrella} >
                         <TouchableOpacity onPress={() => { this.favear(item.id_ejercicio) }}>
@@ -264,7 +263,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     //marginTop: 10,
     paddingRight: 5,
-    
     width: wp("40"),
     justifyContent: 'center',
     backgroundColor: "red"
@@ -296,8 +294,8 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     padding: 10,
     flexDirection: 'row',
-    alignItems: "center",
-    justifyContent: "center"
+    // alignItems: "center",
+    // justifyContent: "center"
   },
 
   name: {
@@ -306,13 +304,6 @@ const styles = StyleSheet.create({
     //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
-  },
-  count: {
-    fontSize: 14,
-    paddingBottom: 11,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#6666ff"
   },
   StarImage: {
     width: wp("10%"),

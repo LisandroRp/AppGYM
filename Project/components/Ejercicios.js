@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ApiController from '../controller/ApiController'
+import base from './GenerarBase';
 import {
   StyleSheet,
   Text,
@@ -14,8 +14,6 @@ import {
   ActivityIndicator
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { LinearGradient } from 'expo-linear-gradient'
-import { Reducer } from 'react-native-router-flux';
 
 
 function createData(item) {
@@ -50,7 +48,7 @@ class Ejercicios extends Component {
       isLoading: false, 
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-    //this.obtenerEventos()
+    base.abrirBase();
   }
 
   render() {

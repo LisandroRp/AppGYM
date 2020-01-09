@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import ApiController from '../controller/ApiController'
-import { SearchBar, Icon } from 'react-native-elements';
+import { SearchBar} from 'react-native-elements';
 import base from './GenerarBase';
 import {
   StyleSheet,
@@ -9,11 +8,11 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  RefreshControl,
   Keyboard,
   ScrollView,
   ActivityIndicator
 } from 'react-native';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 function createData(item) {
   return {
@@ -172,7 +171,7 @@ class Suplementacion extends Component {
                         <Text style={styles.name}>{item.nombre}</Text>
                         <Text style={styles.marca}>{item.marca}</Text>
                       </View>
-                      <View style={{ alignItems: 'center', justifyContent: "center" }} >
+                      <View style={styles.ViewEstrella} >
                         <TouchableOpacity onPress={() => { this.favear(item.id_suplemento) }}>
                           <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
                         </TouchableOpacity>
@@ -195,6 +194,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "black"
   },
+  contentList: {
+    flex: 1,
+  },
   bgImage: {
     flex: 1,
     resizeMode,
@@ -204,18 +206,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  contentList: {
-    flex: 1,
-  },
   cardContent: {
     marginLeft: 20,
-    marginTop: 10,
-    width: 180,
-    flexDirection: "column"
+    //marginTop: 10,
+    paddingRight: 5,
+    width: wp("40"),
+    justifyContent: 'center',
   },
   image: {
-    width: 90,
-    height: 90,
+    //width: 90,
+    width: wp("20"),
+    //height: 90,
+    height: hp("11"),
     borderWidth: 2,
     borderColor: "#ebf0f7",
     margin: 5,
@@ -254,37 +256,16 @@ const styles = StyleSheet.create({
     //flex: 1,
     color: "white",
   },
-  count: {
-    fontSize: 14,
-    paddingBottom: 11,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#6666ff"
-  },
-
-  followButton: {
-    marginTop: 10,
-    height: 35,
-    width: 100,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#dcdcdc",
-  },
-  followButtonText: {
-    color: "black",
-    fontSize: 15,
-    marginTop: 4,
-  },
   StarImage: {
-    width: 40,
-    height: 40,
+    width: wp("10%"),
+    height: hp("5%"),
     resizeMode: 'cover',
   },
+  ViewEstrella: {
+    alignItems: 'center',
+    justifyContent: "center",
+    paddingHorizontal: wp("5")
+  }
 })
 
 export default Suplementacion;

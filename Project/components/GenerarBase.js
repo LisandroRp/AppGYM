@@ -21,10 +21,10 @@ class GenerarBase extends Component {
 
     abrirBase() {
 
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+        FileSystem.downloadAsync(
+            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        );
         var rutinas = []
         let db = SQLite.openDatabase('appgym.db');
         db.transaction(
@@ -36,20 +36,17 @@ class GenerarBase extends Component {
                 });
             },
             error => {
-                console.log("Error")
-                alert("Algo Salio Mal")
+                FileSystem.downloadAsync(
+                    Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+                    `${FileSystem.documentDirectory}/SQLite/appgym.db`
+                );
+                let db2 = SQLite.openDatabase('appgym.db');
+                console.log("Cargo Base")
+                db2._db.close()
             },
             () => {
                 console.log("Correcto")
-                //console.log(rutinas)
-                db._db.close()
-                if (rutinas.length == 0) {
-                    console.log("caca")
-                    FileSystem.downloadAsync(
-                        Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-                        `${FileSystem.documentDirectory}/SQLite/appgym.db`
-                    );
-                }
+                db._db.close();
             }
         );
 
@@ -257,6 +254,25 @@ class GenerarBase extends Component {
         db.transaction(
             tx => {
                 tx.executeSql('DELETE FROM  Rutinas where id_rutina = ?', [id_rutina])
+            },
+            error => {
+                console.log("Error")
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okRutinaBorrada()
+            }
+        );
+    }
+    //Guarda la rutina en la base de datos (no terminado)
+    crearRutina(rutinaNueva){
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(
+            tx => {
+                tx.executeSql("INSERT INTO Rutinas (id_rutina, nombre, imagen, dias, favoritos, modificable) VALUES (0, 'pita', NULL, 5, 1, 1)")
             },
             error => {
                 console.log("Error")

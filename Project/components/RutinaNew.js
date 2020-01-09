@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import base from './GenerarBase';
 import { withNavigation } from 'react-navigation';
-import ApiController from '../controller/ApiController'
 import {
   StyleSheet,
   Text,
@@ -8,18 +8,16 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  RefreshControl,
   Dimensions,
-  Alert,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  Modal,
+  AsyncStorage
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient'
 import DropDownItem from 'react-native-drop-down-item';
-import { Reducer } from 'react-native-router-flux';
 import { TextInput } from 'react-native-gesture-handler';
-import { AsyncStorage } from 'react-native';
-import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
+import {AntDesign} from '@expo/vector-icons';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 var { height, width } = Dimensions.get('window');
 
@@ -62,8 +60,8 @@ class RutinaNew extends Component {
           this.state.rutina.push(JSON.parse(value)[0])
           this.termino()
         } else {
-          this._storeData()
           alert('Este ejercicio ya esta en el dia seleccionado')
+          this._storeData()
         }
       }
     } catch (error) {
@@ -199,8 +197,9 @@ class RutinaNew extends Component {
     }
   }
   guardarRutina() {
+    this.setState({modalVisible: false})
     var aux = 0
-    rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/PECHO.png'), dias: '', fav: 1, rutina: [] }
+    rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/PECHO.png'), dias: '', favoritos: 1, rutina: [] }
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].dia > aux) {
         aux = this.state.rutina[i].dia
@@ -212,6 +211,7 @@ class RutinaNew extends Component {
     rutinaNueva.dias = aux
     rutinaNueva.rutina = this.state.rutina
     console.log(rutinaNueva)
+    base.crearRutina(rutinaNueva);
   }
   cancelarRutina() {
     this.props.onPressCancelar()
@@ -349,19 +349,49 @@ class RutinaNew extends Component {
             ******************************Ya no Mas*********************************
             **************************************************************************** */}
 
-            <View style={{ flexDirection: "row", justifyContent: 'center', height: 100 }}>
+            <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
               <TouchableOpacity style={styles.guardarButton} onPress={() => { this.cancelarRutina() }}>
                 <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
                   Cancelar
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.guardarRutina() }}>
+              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({modalVisible: true}) }}>
                 <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
                   Guardar
                 </Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
+          <Modal
+            animationType="fade"
+            visible={this.state.modalVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalVisible: false })}  >
+
+            <View style={styles.modal}>
+              {/* <View style={{ flexDirection: 'column' }}>
+                  <Text>Repeticiones:</Text>
+                  <Text>Series:</Text>
+                </View> */}
+              <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
+                <Text style={styles.textButton}>Desea crear la rutina "{this.state.nombre}"</Text>
+              </View>
+              <View style={styles.modal2}>
+                <TouchableOpacity onPress={() => { this.setState({modalVisible: false}) }} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderRadius: 22 }}>
+                  <View style={[styles.buttonContainer]}
+                    onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
+                    <Text style={styles.textButton}> Cancel</Text>
+                  </View>
+                </TouchableOpacity>
+                {/* <View style={{borderColor: 'red', borderRightWidth: '2'}} /> */}
+                <TouchableOpacity onPress={() => this.guardarRutina()} style={{ justifyContent: 'center', alignItems: 'center', borderLeftWidth: 2, paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                  <View style={[styles.buttonContainer]}>
+                    <Text style={styles.textButton}>Crear</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </View>
       );
     }
@@ -377,12 +407,6 @@ const styles = StyleSheet.create({
   contentList: {
     marginBottom: 5, marginTop: 5
   },
-  cardContent: {
-    marginLeft: 20,
-    marginTop: 10,
-    width: 180,
-    flexDirection: "column"
-  },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -393,8 +417,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     borderRadius: 10,
     padding: 10,
-    width: 300,
-    height: 45,
+   // width: 300,
+    //height: 45,
+    width: wp("70"),
+    height: hp("5.5"),
     margin: 20,
     flexDirection: 'row',
     alignItems: 'center',
@@ -402,33 +428,48 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   borrarTodo: {
-    width: 44,
-    height: 44,
+    //width: 44,
+    //height: 44,
+    height: hp("6"),
+    width: wp("10.5"),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#3399ff',
     borderRadius: 30,
-    marginRight: 20,
+    marginRight: 25,
   },
   imageContainer: {
-    width: Dimensions.get('window').width / 2 - 4,
-    height: 200,
+    height: height * 0.28,
+    width: width * 0.51,
     margin: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'black',
-    borderWidth: 5,
+    borderWidth: 4,
     borderColor: "#ebf0f7"
   },
   image: {
-    width: Dimensions.get('window').width / 2 - 4,
-    height: 200,
+    height: height * 0.28,
+    width: width * 0.51,
+    borderWidth: 4,
+    borderColor: "#ebf0f7"
   },
   cuadraditos: {
-    backgroundColor: 'black', marginBottom: 5, marginTop: 5, marginHorizontal: 10, paddingBottom: 10, alignItems: 'center'
+    backgroundColor: 'black',
+    marginBottom: 5,
+    marginTop: 5,
+    marginHorizontal: 10,
+    paddingBottom: 10,
+    alignItems: 'center'
   },
   cuadraditosDeAdentro: {
-    backgroundColor: 'grey', marginVertical: 5, marginTop: 2, paddingVertical: 10, paddingLeft: 10, alignSelf: 'stretch', width: Dimensions.get('window').width * 0.88
+    backgroundColor: 'grey',
+    marginVertical: 5,
+    marginTop: 2,
+    paddingVertical: 10,
+    paddingLeft: 10,
+    alignSelf: 'stretch',
+    width: Dimensions.get('window').width * 0.88
   },
   bgImage: {
     flex: 1,
@@ -453,37 +494,7 @@ const styles = StyleSheet.create({
     color: "#3399ff",
     fontWeight: 'bold'
   },
-  count: {
-    fontSize: 14,
-    paddingBottom: 11,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#6666ff"
-  },
-
-  followButton: {
-    marginTop: 10,
-    height: 35,
-    width: 100,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#dcdcdc",
-  },
-  followButtonText: {
-    color: "black",
-    marginTop: 4,
-    fontSize: 15,
-  },
-  StarImage: {
-    width: 40,
-    height: 40,
-    resizeMode: 'cover',
-  },
+ 
   detalleGenresTitles: {
     fontSize: 33,
     margin: 10,
@@ -492,18 +503,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   fab: {
-    width: 33,
-    height: 33,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#3399ff',
-    borderRadius: 30,
-    marginRight: 10,
-    marginTop: 10,
-  },
-  fab2: {
-    width: 20,
-    height: 20,
+    //width: 33,
+    //height: 33,
+    width: wp("9"),
+    height: hp("5"),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#3399ff',
@@ -523,6 +526,48 @@ const styles = StyleSheet.create({
     alignItems: 'stretch'
   },
   musculosLogo: {
+    width: wp("10.5"),
+    //width: 40,
+    height: hp("6"),
+    //height: 40,
+    marginRight: 12,
+    resizeMode: 'cover',
+  },
+  //MODAAAAL
+  modal: {
+    height: height * 0.22,
+    width: width * 0.75,
+    position: 'absolute',
+    top: height * 0.3,
+    left: width * 0.13,
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22
+  },
+  modal2: {
+    flexDirection: 'row',
+    borderColor: 'black',
+    borderTopWidth: 2,
+    width: width * 0.74,
+    height: height * 0.08,
+    position: 'absolute',
+    bottom: 0
+  },
+  textButton: {
+    color: 'white',
+    fontSize: 15,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  buttonContainer: {
+    alignSelf: 'center',
+    justifyContent: 'center'
+  },
+  musculosLogo2: {
     width: 40,
     height: 40,
     // width: width*0.05,

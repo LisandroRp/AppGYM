@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { SearchBar, Icon } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
-import { AsyncStorage } from 'react-native';
 import base from './GenerarBase';
 import {
   StyleSheet,
@@ -10,15 +8,12 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  Dimensions,
-  Alert,
   ActivityIndicator,
-  RefreshControl,
-  ScrollView
+  ScrollView,
+  AsyncStorage
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import  * as FileSystem from 'expo-file-system';
 
 class RutinasTipos extends Component {
 
@@ -139,11 +134,9 @@ class RutinasTipos extends Component {
                         <Image style={styles.image} source={item.imagen} />
                         <View style={styles.cardContent}>
                           <Text style={styles.name}>{item.nombre}</Text>
-                          <Text style={styles.descripcion}>{item.dias} Dias</Text>
-                          {/* <Text style={styles.count}>{item.ubicacion}</Text>
-                        <Text style={{ fontSize: 11 }}>Entrada General: {item.precioE}$</Text> */}
+                          <Text style={styles.dias}>{item.dias} Dias</Text>
                         </View>
-                        <View style={{ alignItems: 'center', justifyContent: "center" }} >
+                        <View style={styles.ViewEstrella} >
                           <TouchableOpacity onPress={() => {this.favear(item.id_rutina)}}>
                             <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
                           </TouchableOpacity>
@@ -180,15 +173,20 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     marginLeft: 20,
-    marginTop: 10,
-    width: 180,
-    flexDirection: "column"
+    //marginTop: 10,
+    paddingRight: 5,
+    width: wp("40"),
+    justifyContent: 'center',
   },
   image: {
-    width: 90,
-    height: 90,
+    //width: 90,
+    width: wp("20"),
+    //height: 90,
+    height: hp("11"),
     borderWidth: 2,
-    borderColor: "#ebf0f7"
+    borderColor: "#ebf0f7",
+    margin: 5,
+    marginRight: 5,
   },
 
   card: {
@@ -210,14 +208,13 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    paddingTop: 12,
-    fontSize: 18,
-    flex: 1,
+    fontSize: 22,
+    //flex: 1,
     //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
-  descripcion: {
+  dias: {
     fontSize: 15,
     marginTop: 5,
     //flex: 1,
@@ -235,6 +232,11 @@ const styles = StyleSheet.create({
     height: hp("5%"),
     resizeMode: 'cover',
   },
+  ViewEstrella: {
+    alignItems: 'center',
+    justifyContent: "center",
+    paddingHorizontal: wp("5")
+  }
 })
 
 export default withNavigation(RutinasTipos);

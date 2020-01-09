@@ -7,15 +7,10 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,
-  FlatList,
-  RefreshControl,
-  Dimensions,
-  Alert,
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import { Reducer } from 'react-native-router-flux';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 function createData(item) {
   return {
@@ -112,29 +107,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  contentList: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding:2,
-  },
-  cardContent: {
-    marginLeft: 20,
-    marginTop: 10,
-    width:180,
-    flexDirection: "column"
-  },
   todo:{
     backgroundColor: 'grey',
-    margin: 20,
-    padding: 10,
+    //margin: 20,
+    marginHorizontal: wp("4"),
+    marginVertical: hp("2"),
+    paddingHorizontal: wp("2"),
+    paddingVertical: hp("1"),
+    //padding: 10,
     borderRadius: 20
   },
   backgroundTitulo:{
     backgroundColor: 'black',
     alignItems: 'center',
-    margin: 10,
-    padding: 10,
+    //margin: 10,
+    marginHorizontal: wp("2"),
+    marginVertical: hp("1"),
+    //padding: 10,
+    paddingHorizontal: wp("2"),
+    paddingVertical: hp("1"),
     borderRadius: 20
   },
   titulo:{
@@ -144,80 +135,11 @@ const styles = StyleSheet.create({
   },
   descripcion:{
     color: 'white',
-    margin:10,
+    //margin: 10,
+    marginHorizontal: wp("2"),
+    marginVertical: hp("1"),
     fontSize: 15,
   },
-  imageContainer: {
-    width: Dimensions.get('window').width /2 -6,
-    height: 200,
-    margin:2,
-    justifyContent: 'center',
-    alignItems:'center',
-    backgroundColor: 'red'
-  },
-  image: {
-    width: Dimensions.get('window').width /2 -6,
-    height: 200,
-  },
-
-  card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 20,
-    backgroundColor: "white",
-    padding: 10,
-    flexDirection: 'row',
-    borderRadius: 30,
-  },
-
-  name: {
-    paddingTop:12,
-    fontSize: 18,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#3399ff",
-    fontWeight: 'bold'
-  },
-  count: {
-    fontSize: 14,
-    paddingBottom:11,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#6666ff"
-  },
-
-  followButton: {
-    marginTop: 10,
-    height: 35,
-    width: 100,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#dcdcdc",
-  },
- followButtonText: {
-    color: "black",
-    marginTop:4,
-    fontSize: 15,
-  },
-  StarImage: {
-    width: 40,
-    height: 40,
-    resizeMode: 'cover',
-},
 })
 
 export default withNavigation(SuplementacionEspecifica);

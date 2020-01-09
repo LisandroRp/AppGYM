@@ -16,7 +16,7 @@ import {
     ScrollView
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
-import Ejercicios from './Ejercicios';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 function createData(item) {
     return {
@@ -158,11 +158,8 @@ class MusculoFavs extends Component {
                                                 <Image style={styles.image} source={this.queMusculo(item.musculo)} />
                                                 <View style={styles.cardContent}>
                                                     <Text style={styles.name}>{item.nombre}</Text>
-                                                    <Text style={styles.descripcion}>{item.dias} Dias</Text>
-                                                    {/* <Text style={styles.count}>{item.ubicacion}</Text>
-                        <Text style={{ fontSize: 11 }}>Entrada General: {item.precioE}$</Text> */}
                                                 </View>
-                                                <View style={{ alignItems: 'center', justifyContent: "center" }} >
+                                                <View style={styles.ViewEstrella} >
                                                     <TouchableOpacity onPress={() => this.favear(item.id_ejercicio)}>
                                                         <Image style={styles.StarImage} source={this.Star} />
                                                     </TouchableOpacity>
@@ -200,15 +197,20 @@ const styles = StyleSheet.create({
     },
     cardContent: {
         marginLeft: 20,
-        marginTop: 10,
-        width: 180,
-        flexDirection: "column"
+        //marginTop: 10,
+        paddingRight: 5,
+        width: wp("40"),
+        justifyContent: 'center'
     },
     image: {
-        width: 90,
-        height: 90,
-        borderWidth: 2,
-        borderColor: "#ebf0f7"
+    //width: 90,
+    width: wp("20"),
+    //height: 90,
+    height: hp("11"),
+    borderWidth: 2,
+    borderColor: "#ebf0f7",
+    margin: 5,
+    marginRight: 5,
     },
 
     card: {
@@ -230,56 +232,22 @@ const styles = StyleSheet.create({
     },
 
     name: {
-        paddingTop: 12,
-        fontSize: 18,
-        flex: 1,
+        fontSize: 22,
+        //flex: 1,
         //alignSelf: 'center',
         color: "#3399ff",
         fontWeight: 'bold'
     },
-    descripcion: {
-        fontSize: 15,
-        marginTop: 5,
-        //flex: 1,
-        color: "white",
-    },
-    count: {
-        fontSize: 14,
-        paddingBottom: 11,
-        flex: 1,
-        //alignSelf: 'center',
-        color: "#6666ff"
-    },
-    followButton: {
-        marginTop: 10,
-        height: 35,
-        width: 100,
-        padding: 10,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 30,
-        backgroundColor: "white",
-        borderWidth: 1,
-        borderColor: "#dcdcdc",
-    },
-    followButtonText: {
-        color: "black",
-        fontSize: 15,
-        marginTop: 4,
-    },
     StarImage: {
-        width: 40,
-        height: 40,
+        width: wp("10%"),
+        height: hp("5%"),
         resizeMode: 'cover',
     },
-    detalleGenresTitles: {
-        fontSize: 33,
-        margin: 10,
-        marginBottom: 2.5,
-        color: '#3399ff',
-        fontWeight: 'bold'
-    },
+    ViewEstrella: {
+        alignItems: 'center',
+        justifyContent: "center",
+        paddingHorizontal: wp("5")
+      }
 })
 
 export default withNavigation(MusculoFavs);
