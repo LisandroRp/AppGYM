@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   textButton: {
-    color: '#3399ff',
+    color: 'white',
     fontSize: 15,
     alignSelf: 'center',
     textAlign: 'center',

@@ -91,7 +91,6 @@ class RutinaEspecifica extends Component {
     this.Cardio = require('./Logos/Logo_Cardio.png');
     this.cargarRutina();
   }
-
   //Trae de la base de datos la rutina
   cargarRutina = async () => {
     base.traerRutinaEspecifica(await this.props.navigation.getParam('id_rutina'), this.okRutina.bind(this))

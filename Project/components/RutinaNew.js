@@ -208,10 +208,19 @@ class RutinaNew extends Component {
     rutinaNueva.id_rutina = this.nuevoId()
     rutinaNueva.nombre = this.state.nombre
     rutinaNueva.imagen = this.state.imagen
-    rutinaNueva.dias = aux
+    rutinaNueva.dias = aux.toString()
     rutinaNueva.rutina = this.state.rutina
     console.log(rutinaNueva)
-    base.crearRutina(rutinaNueva);
+    base.crearRutina(rutinaNueva, this.okRutinaCreada.bind(this));
+  }
+  okRutinaCreada(rutinaNueva) {
+    base.conseguirIdRutinaParaGuardar(rutinaNueva, this.okIdRutina.bind(this))
+  }
+  okIdRutina(rutinaNueva){
+    base.crearEjerciciosRutina(rutinaNueva, this.okEjerciciosRutinaCreados.bind(this))
+  }
+  okEjerciciosRutinaCreados(){
+    this.props.onPressCancelar()
   }
   cancelarRutina() {
     this.props.onPressCancelar()

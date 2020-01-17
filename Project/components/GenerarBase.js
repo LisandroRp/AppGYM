@@ -20,12 +20,13 @@ function createEjercicio(item) {
 class GenerarBase extends Component {
 
     abrirBase() {
-
-        FileSystem.downloadAsync(
-            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-            `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        );
         var rutinas = []
+
+        // FileSystem.downloadAsync(
+        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        // );
+        
         let db = SQLite.openDatabase('appgym.db');
         db.transaction(
             tx => {
@@ -50,6 +51,27 @@ class GenerarBase extends Component {
             }
         );
 
+    }
+    ejerciciosRutina(listo){
+        var rutinas = []
+        let db = SQLite.openDatabase('appgym.db');
+        db.transaction(
+            tx => {
+                tx.executeSql('SELECT * FROM Ejercicios_Rutina', [], function (tx, res) {
+                    for (let i = 0; i < res.rows.length; ++i) {
+                        rutinas.push(res.rows._array[i]);
+                    }
+                });
+            },
+            error => {
+                console.log(error)
+            },
+            () => {
+                console.log("Correcto")
+                listo(rutinas)
+                db._db.close();
+            }
+        );
     }
     // *****************************************************
     // ********************Ejercicios***********************
@@ -135,6 +157,31 @@ class GenerarBase extends Component {
             }
         );
     }
+    hola(rutina, listo) {
+
+        // FileSystem.downloadAsync(
+        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        // );
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(
+            tx => {
+                tx.executeSql('SELECT * FROM Ejercicios_Rutina JOIN Ejercicios JOIN Rutinas where Ejercicios_Rutina.id_ejercicio = Ejercicios.id_ejercicio AND Ejercicios_Rutina.id_rutina = Rutinas.id_rutina', [], function (tx, res) {
+                    console.log(res.rows._array)
+                });
+            },
+            error => {
+                console.log("Error")
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                listo(rutina)
+            }
+        );
+    }
     //Favoritear un Ejercicio
     favoritearEjercicio(id_ejercicio, fav, okFavorito) {
 
@@ -182,7 +229,7 @@ class GenerarBase extends Component {
                 });
             },
             error => {
-                console.log("Error")
+                console.log(error)
                 alert("Algo Salio Mal")
             },
             () => {
@@ -245,18 +292,15 @@ class GenerarBase extends Component {
     //Borra a la rutina Seleccionada
     borrarRutina(id_rutina, okRutinaBorrada) {
 
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
-        let db = SQLite.openDatabase('appgym.db');
+        const db = SQLite.openDatabase('appgym.db');
+        db.exec([{ sql: 'PRAGMA foreign_keys = ON;', args: [] }], false, () => console.log('Foreign keys turned on')); 
 
         db.transaction(
             tx => {
                 tx.executeSql('DELETE FROM  Rutinas where id_rutina = ?', [id_rutina])
             },
             error => {
-                console.log("Error")
+                console.log(error)
                 alert("Algo Salio Mal")
             },
             () => {
@@ -267,21 +311,101 @@ class GenerarBase extends Component {
         );
     }
     //Guarda la rutina en la base de datos (no terminado)
-    crearRutina(rutinaNueva){
+    crearRutina(rutinaNueva, okRutinaCreada){
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
             tx => {
-                tx.executeSql("INSERT INTO Rutinas (id_rutina, nombre, imagen, dias, favoritos, modificable) VALUES (0, 'pita', NULL, 5, 1, 1)")
+                tx.executeSql("INSERT INTO Rutinas (nombre, imagen, dias, favoritos, modificable) VALUES ( ?, ?, ?, 1, 1)", [rutinaNueva.nombre, rutinaNueva.imagen, rutinaNueva.dias])
             },
             error => {
-                console.log("Error")
+                console.log(error)
                 alert("Algo Salio Mal")
             },
             () => {
                 console.log("Correcto")
                 db._db.close()
-                okRutinaBorrada()
+                okRutinaCreada(rutinaNueva)
+            }
+        );
+    }
+    conseguirIdRutinaParaGuardar(rutinaNueva, okIdRutina){
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(
+            tx => {
+                tx.executeSql('SELECT id_rutina FROM Rutinas where Rutinas.nombre = ? ', [rutinaNueva.nombre], function (tx, res) {
+                    rutinaNueva.id_rutina = res.rows._array[0].id_rutina
+                    console.log("nombre"+ rutinaNueva.nombre)
+                    console.log(res.rows._array[0].id_rutina)
+                });
+            },
+            error => {
+                console.log(error)
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                console.log("magiaaaaa" + rutinaNueva.id_rutina)
+                db._db.close()
+                okIdRutina(rutinaNueva)
+            }
+        );
+    }
+    conseguirIdRutinaParaBorrar(nombre, borrarRutina){
+        let db = SQLite.openDatabase('appgym.db');
+        id_rutina=''
+        db.transaction(
+            tx => {
+                tx.executeSql('SELECT id_rutina FROM Rutinas where Rutinas.nombre = ? ', [nombre], function (tx, res) {
+                    id_rutina = res.rows._array[0].id_rutina
+                });
+            },
+            error => {
+                console.log(error)
+                alert("Algo Salio Mal")
+            },
+            () => {
+                db._db.close()
+                borrarRutina(id_rutina)
+            }
+        );
+    }
+    crearEjerciciosRutina(rutinaNueva, okEjerciciosRutinaCreados){
+        let db = SQLite.openDatabase('appgym.db');
+        db.transaction(
+            tx => {
+                for(i=0; i<rutinaNueva.rutina.length;i++){
+                    tx.executeSql("INSERT INTO Ejercicios_Rutina (id_rutina, id_ejercicio, dia, series, repeticiones) VALUES ( ?, ?, ?, ?, ?)", [rutinaNueva.id_rutina, rutinaNueva.rutina[i].id_ejercicio, rutinaNueva.rutina[i].dia, rutinaNueva.rutina[i].series, rutinaNueva.rutina[i].repeticiones])
+                    console.log(rutinaNueva.id_rutina, rutinaNueva.rutina[i].id_ejercicio, rutinaNueva.rutina[i].dia, rutinaNueva.rutina[i].series, rutinaNueva.rutina[i].repeticiones)
+                }
+            },
+            error => {
+                console.log(error)
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Creados Ejercicios Rutina")
+                db._db.close()
+                okEjerciciosRutinaCreados()
+            }
+        );
+    }
+    borrarEjerciciosRutina(id_rutina, rutinaNueva, seBorraronEjercicios){
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(
+            tx => {
+                tx.executeSql('DELETE FROM  Ejercicios_Rutina where id_rutina = ?', [id_rutina])
+            },
+            error => {
+                console.log(error)
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                seBorraronEjercicios(rutinaNueva)
             }
         );
     }

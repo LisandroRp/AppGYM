@@ -485,6 +485,7 @@ class RutinaModificableScreen extends React.Component{
       onPressGo={this.agregarEjercicio.bind(this)}
       onPressInfo={this.verInfo.bind(this)}
       onPressCancelar={this.cancelar.bind(this)}
+      onPressActualizar={this.actualizada.bind(this)}
       />
     );
   }
@@ -496,6 +497,9 @@ class RutinaModificableScreen extends React.Component{
   }
   cancelar(){
     this.props.navigation.navigate('RutinasScreen',{update: "dale"});
+  }
+  actualizada(id_rutina, nombre){
+    this.props.navigation.navigate('RutinasScreen', { id_rutina: id_rutina ,nombre: nombre});
   }
 }
 // *****************************************************

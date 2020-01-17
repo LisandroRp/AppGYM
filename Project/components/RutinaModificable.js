@@ -17,7 +17,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient'
 import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
-import { Entypo, AntDesign, FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 var { height, width } = Dimensions.get('window');
 
@@ -39,7 +39,7 @@ class RutinaModificable extends Component {
     super(props);
     this.state = {
       isLoading: true,
-      nombre: '',
+      nombre: this.props.navigation.getParam("nombre_rutina"),
       modalVisible: false,
       userSelected: [],
       rutina: [],
@@ -234,19 +234,30 @@ class RutinaModificable extends Component {
     }
   }
   guardarRutina() {
+    this.setState({modalVisible: false})
     var aux = 0
-    rutinaNueva = { id_ejercicio: 0, nombre: '', imagen: require('./Fotos/PECHO.png'), dias: '', fav: 1, rutina: [] }
+    rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/PECHO.png'), dias: '', favoritos: 1, rutina: [] }
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].dia > aux) {
         aux = this.state.rutina[i].dia
       }
     }
-    rutinaNueva.id_ejercicio = this.nuevoId()
+    rutinaNueva.id_rutina = this.nuevoId()
     rutinaNueva.nombre = this.state.nombre
     rutinaNueva.imagen = this.state.imagen
-    rutinaNueva.dias = aux
+    rutinaNueva.dias = aux.toString()
     rutinaNueva.rutina = this.state.rutina
     console.log(rutinaNueva)
+    base.borrarEjerciciosRutina(this.props.navigation.getParam("id_rutina"), rutinaNueva,  this.seBorraronEjercicios.bind(this));
+  }
+  seBorraronEjercicios(rutinaNueva){
+    base.conseguirIdRutinaParaGuardar(rutinaNueva, this.okIdRutina.bind(this))
+  }
+  okIdRutina(rutinaNueva) {
+    base.crearEjerciciosRutina(rutinaNueva,this.okEjerciciosRutinaCreados.bind(this))
+  }
+  okEjerciciosRutinaCreados(){
+    this.props.onPressActualizar(this.props.navigation.getParam("id_rutina"), this.props.navigation.getParam("nombre_rutina"))
   }
   borrarRutina(id_rutina) {
     this.setModalVisible(!this.state.modalVisible)
@@ -415,20 +426,20 @@ class RutinaModificable extends Component {
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderRadius: 22 }}>
                   <View style={[styles.buttonContainer]}
-                    onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
-                    <Text style={styles.textButton}> Cancel</Text>
+                    onPress={() => { this.setModalVisible(!this.state.modalVisible)}}>
+                    <Text style={styles.textButton}> Cancelar </Text>
                   </View>
                 </TouchableOpacity>
                 {/* <View style={{borderColor: 'red', borderRightWidth: '2'}} /> */}
-                <TouchableOpacity onPress={() => this.borrarRutina(this.state.rutina.id_rutina)} style={{ justifyContent: 'center', alignItems: 'center', borderLeftWidth: 2, paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                <TouchableOpacity onPress={() => { base.conseguirIdRutinaParaBorrar(this.state.nombre, this.borrarRutina.bind(this)) }} style={{ justifyContent: 'center', width: wp("2"),  alignItems: 'center', borderLeftWidth: 2, paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
                   <View style={[styles.buttonContainer]}>
-                    <Text style={styles.textButton}>Accept</Text>
+                    <Text style={styles.textButton}>Aceptar</Text>
                   </View>
                 </TouchableOpacity>
               </View>
             </View>
           </Modal>
-        </View >
+        </View>
       );
     }
   }
