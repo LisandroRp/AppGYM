@@ -18,6 +18,7 @@ import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
 import {AntDesign} from '@expo/vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 var { height, width } = Dimensions.get('window');
 
@@ -34,7 +35,8 @@ class RutinaNew extends Component {
       rutinaVacia: [],
       ultimoDia: 0,
       imagen: '',
-      diasTotal: [1,2,3,4,5,6,7]
+      diasTotal: [1,2,3,4,5,6,7],
+      showAlert: false
     };
     this.Star = require('./Logos/Star_Llena.png');
     this.Pecho = require('./Logos/Logo_Pecho1.png');
@@ -47,7 +49,6 @@ class RutinaNew extends Component {
     this.Cardio = require('./Logos/Logo_Cardio.png');
   }
   componentWillReceiveProps() {
-    console.log('chauuuu')
     this._retrieveData()
   }
 
@@ -60,8 +61,8 @@ class RutinaNew extends Component {
           this.state.rutina.push(JSON.parse(value)[0])
           this.termino()
         } else {
-          alert('Este ejercicio ya esta en el dia seleccionado')
           this._storeData()
+          this.setState({showAlert: true})
         }
       }
     } catch (error) {
@@ -94,6 +95,7 @@ class RutinaNew extends Component {
       if (this.state.rutina[i].id_ejercicio == data.id_ejercicio) {
         if (this.state.rutina[i].dia == data.dia)
           return false
+          alert('Este ejercicio ya esta en el dia seleccionado')
       }
     }
     return true
@@ -108,6 +110,7 @@ class RutinaNew extends Component {
       console.log(error);
     }
   };
+
   subir(dia, id_ejercicio) {
     var aux
     var rutinaNueva = []
@@ -329,7 +332,7 @@ class RutinaNew extends Component {
                               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Image style={styles.musculosLogo} source={this.queMusculo(item.musculo)} />
                                 <View style={{ flexDirection: 'column' }}>
-                                  <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                  <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
                                   <Text>Reps: {item.repeticiones}</Text>
                                   <Text>Series: {item.series}</Text>
                                 </View>
@@ -342,7 +345,7 @@ class RutinaNew extends Component {
                                   <AntDesign name="down" size={15} color="white" />
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                  <AntDesign name="delete" size={15} color="white" />
+                                  <AntDesign name="delete" size={17} color="white" />
                                 </TouchableOpacity>
                               </View>
                             </View>
@@ -386,21 +389,32 @@ class RutinaNew extends Component {
                 <Text style={styles.textButton}>Desea crear la rutina "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setState({modalVisible: false}) }} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderRadius: 22 }}>
-                  <View style={[styles.buttonContainer]}
-                    onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
-                    <Text style={styles.textButton}> Cancel</Text>
-                  </View>
+              
+                <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                  <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
-                {/* <View style={{borderColor: 'red', borderRightWidth: '2'}} /> */}
-                <TouchableOpacity onPress={() => this.guardarRutina()} style={{ justifyContent: 'center', alignItems: 'center', borderLeftWidth: 2, paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
-                  <View style={[styles.buttonContainer]}>
-                    <Text style={styles.textButton}>Crear</Text>
-                  </View>
+
+                <TouchableOpacity onPress={() => this.guardarEjercicio()} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                  <Text style={styles.textButton}>Aceptar</Text>
                 </TouchableOpacity>
+
               </View>
             </View>
           </Modal>
+          <AwesomeAlert
+          show={this.state.showAlert}
+          showProgress={false}
+          title="Error"
+          message="Este ejercicio ya esta en el dia seleccionado!"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="Aceptar"
+          confirmButtonColor="#DD6B55"
+          onConfirmPressed={() => {
+            this.setState({showAlert: false})
+          }}
+        />
         </View>
       );
     }

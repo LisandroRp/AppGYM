@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
    // marginVertical: hp("1"),
     //padding: 10,
     paddingHorizontal: wp("2"),
-    paddingVertical: hp("1"),
+    paddingVertical: hp("2"),
     //borderRadius: 20
   },
   titulo: {

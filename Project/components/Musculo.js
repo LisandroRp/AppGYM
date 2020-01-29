@@ -265,7 +265,6 @@ const styles = StyleSheet.create({
     paddingRight: 5,
     width: wp("40"),
     justifyContent: 'center',
-    backgroundColor: "red"
   },
   image: {
     //width: 90,
@@ -294,8 +293,6 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     padding: 10,
     flexDirection: 'row',
-    // alignItems: "center",
-    // justifyContent: "center"
   },
 
   name: {

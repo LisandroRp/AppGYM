@@ -82,7 +82,6 @@ class MusculoAgregar extends Component {
       memory: ejercicios,
       isLoading: false,
     });
-    console.log(ejercicios)
   }
   guardarEjercicio() {
     this.setState({ modalVisible: false })
@@ -114,14 +113,12 @@ class MusculoAgregar extends Component {
       series: this.state.series,
       dia: this.state.dia
     }
-    console.log(terminada)
+    //console.log(terminada)
     this.state.rutinaNueva.push(terminada)
     this.props.onPressSave(this.state.rutinaNueva, this.state.tipo)
   }
   setModalVisible(visible, id_ejercicio, nombre, musculo) {
-    console.log("manmaaaaaaaaaaaaaaaa")
     this.setState({ modalVisible: visible, nombreEjercicio: nombre, id_ejercicio: id_ejercicio, musculoEjercicio: musculo });
-    console.log(this.state.id_ejercicio)
   }
   componentDidMount() {
     this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
@@ -260,16 +257,11 @@ class MusculoAgregar extends Component {
                 </View>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderRadius: 22 }}>
-                  <View style={[styles.buttonContainer]}
-                    onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
-                    <Text style={styles.textButton}> Cancel</Text>
-                  </View>
+                <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                  <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.guardarEjercicio()} style={{ justifyContent: 'center', alignItems: 'center', borderLeftWidth: 2, paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
-                  <View style={[styles.buttonContainer]}>
-                    <Text style={styles.textButton}>Accept</Text>
-                  </View>
+                <TouchableOpacity onPress={() => this.guardarEjercicio()} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                  <Text style={styles.textButton}>Aceptar</Text>
 
                 </TouchableOpacity>
               </View>
@@ -302,7 +294,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     alignSelf: 'center',
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   bgImage: {
     flex: 1,
@@ -329,10 +321,8 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     //marginTop: 10,
     paddingRight: 5,
-    
     width: wp("40"),
     justifyContent: 'center',
-    backgroundColor: "red"
   },
   image: {
         //width: 90,
@@ -364,7 +354,6 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    paddingTop: 12,
     fontSize: 22,
     //flex: 1,
     //alignSelf: 'center',
@@ -385,7 +374,14 @@ const styles = StyleSheet.create({
     borderRadius: 22
   },
   modal2: {
-    flexDirection: 'row', borderColor: 'black', borderTopWidth: 2, width: width * 0.74, height: height * 0.08, position: 'absolute', bottom: 0
+    flexDirection: 'row',
+    borderColor: 'black',
+    borderTopWidth: 2,
+    width: width * 0.74,
+    height: height * 0.08,
+    position: 'absolute',
+    bottom: 0,
+    justifyContent: "center"
   },
   modalText: {
     fontSize: 20,

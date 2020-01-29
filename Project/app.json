@@ -11,6 +11,12 @@
       "ios",
       "android"
     ],
+    "ios": {
+      "bundleIdentifier": "AppGym.com"
+    },
+    "android": {
+      "package": "AppGym.com"
+    },
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

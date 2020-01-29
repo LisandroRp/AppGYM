@@ -367,7 +367,7 @@ class RutinaModificable extends Component {
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Image style={styles.musculosLogo} source={this.queMusculo(item.musculo)} />
                                     <View style={{ flexDirection: 'column' }}>
-                                      <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                      <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
                                       <Text>Reps: {item.repeticiones}</Text>
                                       <Text>Series: {item.series}</Text>
                                     </View>
@@ -380,7 +380,7 @@ class RutinaModificable extends Component {
                                       <AntDesign name="down" size={15} color="white" />
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                      <AntDesign name="delete" size={15} color="white" />
+                                      <AntDesign name="delete" size={17} color="white" />
                                     </TouchableOpacity>
                                   </View>
                                 </View>
@@ -424,17 +424,14 @@ class RutinaModificable extends Component {
                 <Text style={styles.textButton}>Esta seguro que desea borrar la rutina "{this.props.navigation.getParam("nombre_rutina")}"</Text>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderRadius: 22 }}>
-                  <View style={[styles.buttonContainer]}
-                    onPress={() => { this.setModalVisible(!this.state.modalVisible)}}>
-                    <Text style={styles.textButton}> Cancelar </Text>
-                  </View>
+
+                <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                  <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
-                {/* <View style={{borderColor: 'red', borderRightWidth: '2'}} /> */}
-                <TouchableOpacity onPress={() => { base.conseguirIdRutinaParaBorrar(this.state.nombre, this.borrarRutina.bind(this)) }} style={{ justifyContent: 'center', width: wp("2"),  alignItems: 'center', borderLeftWidth: 2, paddingHorizontal: width * 0.12, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
-                  <View style={[styles.buttonContainer]}>
-                    <Text style={styles.textButton}>Aceptar</Text>
-                  </View>
+                
+                <TouchableOpacity onPress={() => base.conseguirIdRutinaParaBorrar(this.state.nombre, this.borrarRutina.bind(this))} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                  <Text style={styles.textButton}>Aceptar</Text>
+
                 </TouchableOpacity>
               </View>
             </View>

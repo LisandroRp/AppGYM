@@ -206,7 +206,7 @@ class RutinaEspecifica extends Component {
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Image style={styles.musculosLogo} source={this.queMusculo(item.musculo)} />
                                     <View style={{ flexDirection: 'column' }}>
-                                      <Text style={{ fontWeight: 'bold' }}>{item.nombre}:</Text>
+                                      <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
                                       <Text>Reps: {item.repeticiones}</Text>
                                       <Text>Series: {item.series}</Text>
                                     </View>
