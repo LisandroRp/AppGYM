@@ -64,14 +64,6 @@ class RutinaEspecifica extends Component {
       nombre: this.props.navigation.getParam('nombre'),
       modalVisible: false,
       isLoading: true,
-      // rutina: { id: 1, nombre: 'Arnold N1', imagen: require('./arnold-schwarzenegger-biceps_0.jpg'), dias: 7, fav: 1,modificable:false,
-      // rutina:[{key:'50', id: 55,dia:'2',musculo: 'Pecho', nombre: 'Press Plano', series: '4', repeticiones: '15-12-10-8' },
-      // {key:'55',id: 11,dia: '1',musculo: 'Abdominales', nombre: 'Abdominales', series: '4', repeticiones: '5-4-3-2-1' },
-      // {key:'51',id: 87,dia: '3',musculo: 'Hombros', nombre: 'cacaHombrosa', series: '4', repeticiones: '5-4-3-2-1' },
-      // {key:'58',id: 12,dia: '2',musculo: 'Tricep', nombre: 'Tricep', series: '4', repeticiones: '5-4-3-2-1' },
-      // {key:'59',id: 12,dia: '4',musculo: 'Bicep', nombre: 'Bicep', series: '4', repeticiones: '5-4-3-2-1' },
-      // {key:'52',id: 12,dia: '4',musculo: 'Espalda', nombre: 'Espalda', series: '4', repeticiones: '5-4-3-2-1' },
-      // {key:'53',id: 12,dia: '4',musculo: 'Cardio', nombre: 'Cardio', series: '4', repeticiones: '5-4-3-2-1' }]},
       rutina: {
         id: 1, nombre: 'Arnold N1', imagen: require('./arnold-schwarzenegger-biceps_0.jpg'), dias: 7, fav: 1, modificable: false,
         rutina: []

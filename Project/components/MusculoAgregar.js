@@ -13,11 +13,14 @@ import {
   FlatList,
   Keyboard,
   Dimensions,
-  Alert,
   ActivityIndicator,
-  ScrollView
+  Picker,
+  Item
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import RNPickerSelect from 'react-native-picker-select';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { Reducer } from 'react-native-router-flux';
+
 var { height, width } = Dimensions.get('window');
 
 function createData(item) {
@@ -59,14 +62,14 @@ class MusculoAgregar extends Component {
       rutinaNueva: [],
       ejercicioNuevo: [{ id_ejercicio: 0, nombre: '', repeticiones: '', series: '' }]
     };
-    this.Pecho= require('./Fotos/PECHO.png')
-    this.Espalda= require('./Fotos/ESPALDA.png')
-    this.Hombros= require('./Fotos/HOMBROS.png')
-    this.Piernas= require('./Fotos/PIERNAS.png')
-    this.Bicep= require('./Fotos/BICEPS.png')
-    this.Triceps= require('./Fotos/TRICEPS.png')
-    this.Abs= require('./Fotos/ABS.png')
-    this.Cardio= require('./Fotos/CARDIO.png')
+    this.Pecho = require('./Fotos/PECHO.png')
+    this.Espalda = require('./Fotos/ESPALDA.png')
+    this.Hombros = require('./Fotos/HOMBROS.png')
+    this.Piernas = require('./Fotos/PIERNAS.png')
+    this.Bicep = require('./Fotos/BICEPS.png')
+    this.Triceps = require('./Fotos/TRICEPS.png')
+    this.Abs = require('./Fotos/ABS.png')
+    this.Cardio = require('./Fotos/CARDIO.png')
     this.cargarEjercicios();
   }
 
@@ -205,7 +208,7 @@ class MusculoAgregar extends Component {
               value={this.state.value}
               inputContainerStyle={{ backgroundColor: 'grey' }}
               placeholderTextColor='black'
-              containerStyle={{ backgroundColor: 'black'}}
+              containerStyle={{ backgroundColor: 'black' }}
               //containerStyle={{ backgroundColor: 'black', height: 50, paddingBottom: 22 }}
               buttonStyle={{}}
               searchIcon={{ color: 'black' }}
@@ -250,17 +253,55 @@ class MusculoAgregar extends Component {
                 </View> */}
               <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: height * 0.03 }}>
                 <View style={styles.containerInput}>
-                  <TextInput placeholder='Series' style={styles.textInput} multiline={true} autoFocus={true} maxLength={1} onChangeText={(text) => this.setState({ series: text })} value={this.state.series}></TextInput>
+                  {/* <TextInput placeholder='Series' style={styles.textInput} multiline={true} autoFocus={true} maxLength={1} onChangeText={(text) => this.setState({ series: text })} value={this.state.series}></TextInput> */}
+                  {/* <Picker
+        style={styles.picker}
+        mode="dropdown"
+        itemStyle={styles.itemStyle}>
+            <Item label="Basse" value="LOW" />
+            <Item label="Normale" value="MEDIAN" />
+    </Picker> */}
+<View style={{alignSelf: "center", justifyContent: "center", paddingTop: hp("0.5")}}>
+    <RNPickerSelect
+                    placeholder={{
+                        label: 'Series',
+                        value: '0',
+                    }}
+                    style={{inputAndroid:{
+                        fontSize: 20,
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                        paddingHorizontal: 10,
+                        paddingVertical: 8,
+                        placeholderColor: '#ababa',
+                        borderWidth: 0.5,
+                        color: '#ababa',
+                      }}}
+                    onValueChange={(value) => this.setState({ series: value })}
+                    items={[
+                      { label: '1', value: '1' },
+                      { label: '2', value: '2' },
+                      { label: '3', value: '3' },
+                      { label: '4', value: '4' },
+                      { label: '5', value: '5' },
+                      { label: '6', value: '6' },
+                      { label: '7', value: '7' },
+                      { label: '8', value: '8' },
+                      { label: '9', value: '9' },
+                      { label: '10', value: '10' },
+                    ]}
+                  />
+                  </View>
                 </View>
                 <View style={styles.containerInput}>
                   <TextInput placeholder='Repeticiones' style={styles.textInput} multiline={true} autoFocus={true} maxLength={15} onChangeText={(text) => this.setState({ repeticiones: text })} value={this.state.repeticiones}></TextInput>
                 </View>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.guardarEjercicio()} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                <TouchableOpacity onPress={() => this.guardarEjercicio()} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
                   <Text style={styles.textButton}>Aceptar</Text>
 
                 </TouchableOpacity>
@@ -325,14 +366,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
-        //width: 90,
-        width: wp("20"),
-        //height: 90,
-        height: hp("11"),
-        borderWidth: 2,
-        borderColor: "#ebf0f7",
-        margin: 5,
-        marginRight: 5,
+    //width: 90,
+    width: wp("20"),
+    //height: 90,
+    height: hp("11"),
+    borderWidth: 2,
+    borderColor: "#ebf0f7",
+    margin: 5,
+    marginRight: 5,
   },
 
   card: {
@@ -405,7 +446,23 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     height: height * 0.04,
     width: width * 0.5
-  }
+  },
+  PikerInput: {
+    color: '#3399ff',
+    fontSize: 200,
+    alignSelf: 'center',
+    backgroundColor: 'white'
+  },
+  itemStyle: {
+    fontSize: 15,
+    height: 75,
+    color: 'black',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+picker: {
+    width: 100
+  },
 })
 
 export default withNavigation(MusculoAgregar);

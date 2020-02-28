@@ -64,7 +64,8 @@ class TrainingScreen extends React.Component {
     )
   }
   goPass() {
-    this.props.navigation.navigate('Ejercicios');
+    // this.props.navigation.navigate('Ejercicios');
+    this.props.navigation.navigate('EjercicioAgregar');
   }
 }
 class SignUpClass extends React.Component {
