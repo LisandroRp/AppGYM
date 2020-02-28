@@ -23,6 +23,8 @@ import RutinaEspecifica from './components/RutinaEspecifica'
 import RutinasFavs from './components/RutinasFavs'
 import Favoritos from './components/Favoritos'
 import MenuDrawer from './components/MenuDrawer';
+import Training from './components/Training';
+import base from './components/GenerarBase';
 import { AsyncStorage } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import {
@@ -44,7 +46,7 @@ function handleSearch() {
 
 class App extends Component {
   render() {
-    return <AppContainer />;
+      return <AppContainer />
   }
 }
 export default App;
@@ -53,6 +55,18 @@ export default App;
 // *****************************************************
 // **********************Log In*************************
 // *****************************************************
+class TrainingScreen extends React.Component {
+  render() {
+    return (
+      <Training
+         onPressPass={this.goPass.bind(this)}
+      />
+    )
+  }
+  goPass() {
+    this.props.navigation.navigate('Ejercicios');
+  }
+}
 class SignUpClass extends React.Component {
   constructor(props) {
     super(props)
@@ -922,14 +936,15 @@ const AppDrawerNavigator = createDrawerNavigator({
 // *****************************************************
 
 const AppSwitchNavigator = createSwitchNavigator({
-  SignUpClass: { screen: SignUpClass },
-  ChangePassword: { screen: ChangePasswordScreen },
-  CreateUser: { screen: CreateUserScreen },
+  Training: { screen: TrainingScreen},
+  // SignUpClass: { screen: SignUpClass },
+  // ChangePassword: { screen: ChangePasswordScreen },
+  // CreateUser: { screen: CreateUserScreen },
   Drawer: { screen: AppDrawerNavigator },
 });
 
-//const AppContainer = createAppContainer(AppSwitchNavigator);
-const AppContainer = createAppContainer(AppDrawerNavigator);
+const AppContainer = createAppContainer(AppSwitchNavigator);
+//const AppContainer = createAppContainer(AppDrawerNavigator);
 
 const styles = StyleSheet.create({
   container: {

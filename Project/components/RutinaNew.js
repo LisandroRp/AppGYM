@@ -202,7 +202,7 @@ class RutinaNew extends Component {
   guardarRutina() {
     this.setState({modalVisible: false})
     var aux = 0
-    rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/PECHO.png'), dias: '', favoritos: 1, rutina: [] }
+    rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/PECHO.png'), dias: '', favoritos: 1, rutina: [], tipo: "Propia" }
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].dia > aux) {
         aux = this.state.rutina[i].dia
@@ -390,11 +390,11 @@ class RutinaNew extends Component {
               </View>
               <View style={styles.modal2}>
               
-                <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                <TouchableOpacity onPress={() => { this.setState({modalVisible: false}) }} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => this.guardarEjercicio()} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                <TouchableOpacity onPress={() => this.guardarRutina()} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
                   <Text style={styles.textButton}>Aceptar</Text>
                 </TouchableOpacity>
 

@@ -19,13 +19,14 @@ function createEjercicio(item) {
 
 class GenerarBase extends Component {
 
-    abrirBase() {
+    abrirBase(existeBase) {
         var rutinas = []
+        var existe
 
-        FileSystem.downloadAsync(
-            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-            `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        );
+        // FileSystem.downloadAsync(
+        //     Asset.fromModule(require('../assets/db/Vacia.db')).uri,
+        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        // );
         
         let db = SQLite.openDatabase('appgym.db');
         db.transaction(
@@ -37,20 +38,40 @@ class GenerarBase extends Component {
                 });
             },
             error => {
-                FileSystem.downloadAsync(
-                    Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-                    `${FileSystem.documentDirectory}/SQLite/appgym.db`
-                );
-                let db2 = SQLite.openDatabase('appgym.db');
-                console.log("Cargo Base")
-                db2._db.close()
+                console.log(error)
+                db._db.close();
+               existeBase(existe=false)
             },
             () => {
                 console.log("Correcto")
                 db._db.close();
+               existeBase(existe=true)
             }
         );
 
+    }
+    crearBase(okBase){
+        let db;
+        FileSystem.downloadAsync(
+            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        ).then(db = SQLite.openDatabase('appgym.db'))
+        db.transaction(
+            tx => {
+                tx.executeSql('SELECT * FROM Rutinas', [], function (tx, res) {
+                });
+            },
+            error => {
+                console.log("error")
+                db._db.close();
+                okBase("error");
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close();
+                okBase("correcto");
+            }
+        );
     }
     ejerciciosRutina(listo){
         var rutinas = []
@@ -96,6 +117,7 @@ class GenerarBase extends Component {
             },
             error => {
                 console.log("Error")
+                console.log(error)
                 alert("Algo Salio Mal")
             },
             () => {
@@ -212,7 +234,7 @@ class GenerarBase extends Component {
     // *****************************************************
 
     //Trae todos las rutinas en la screen rutinas
-    traerRutinas(okRutinas) {
+    traerRutinas(tipo_rutina, okRutinas) {
         rutinas = []
         // FileSystem.downloadAsync(
         //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
@@ -222,7 +244,7 @@ class GenerarBase extends Component {
 
         db.transaction(
             tx => {
-                tx.executeSql('SELECT * FROM Rutinas', [], function (tx, res) {
+                tx.executeSql('SELECT * FROM Rutinas where tipo= ?', [tipo_rutina], function (tx, res) {
                     for (let i = 0; i < res.rows.length; ++i) {
                         rutinas.push(res.rows._array[i]);
                     }
@@ -316,7 +338,7 @@ class GenerarBase extends Component {
 
         db.transaction(
             tx => {
-                tx.executeSql("INSERT INTO Rutinas (nombre, imagen, dias, favoritos, modificable) VALUES ( ?, ?, ?, 1, 1)", [rutinaNueva.nombre, rutinaNueva.imagen, rutinaNueva.dias])
+                tx.executeSql("INSERT INTO Rutinas (nombre, imagen, dias, favoritos, modificable, tipo) VALUES ( ?, ?, ?, 1, 1, ?)", [rutinaNueva.nombre, rutinaNueva.imagen, rutinaNueva.dias, rutinaNueva.tipo])
             },
             error => {
                 console.log(error)

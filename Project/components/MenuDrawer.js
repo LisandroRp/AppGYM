@@ -27,7 +27,6 @@ export default class MenuDrawer extends React.Component {
           <View style={styles.profile}>
             <View style={styles.imgView}>
             <TouchableOpacity style={styles.name} onPress={() => this.props.navigation.navigate('Perfil')}>
-              <Image style={styles.img} source={require('./FACHA.png')} ></Image>
               </TouchableOpacity>
             </View>
             <View style={styles.profileText}>

@@ -8,6 +8,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { withNavigation } from 'react-navigation';
 
 function createData(item) {
   return {
@@ -51,11 +52,11 @@ class Rutinas extends Component {
                       <Text style={styles.name}>Musculacion</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas("Aeróbico")}>
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas("Aerobico")}>
                         <Text style={styles.name}>Aeróbico</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas("Propias")}>
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas("Propia")}>
                         <Text style={styles.name}>Propias</Text>
                   </TouchableOpacity>
         </View>
@@ -105,4 +106,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Rutinas;
+export default  withNavigation(Rutinas);

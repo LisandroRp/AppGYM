@@ -49,7 +49,7 @@ class RutinasTipos extends Component {
   }
 
   cargarRutinas = async () => {
-    base.traerRutinas(this.okRutinas.bind(this))
+    base.traerRutinas(await this.props.navigation.getParam('tipo_rutina'), this.okRutinas.bind(this))
   }
   okRutinas(rutinas){
     this.setState({ rutinas: rutinas, isLoading: false });

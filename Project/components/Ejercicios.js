@@ -48,12 +48,8 @@ class Ejercicios extends Component {
       isLoading: false, 
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-    base.abrirBase();
     //base.ejerciciosRutina(this.listo.bind(this))
   }
- listo(rutina){
-   console.log(rutina)
- }
   render() {
     if (this.state.isLoading) {
       return (
