@@ -56,7 +56,7 @@ class Rutinas extends Component {
                         <Text style={styles.name}>Aeróbico</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas("Propia")}>
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas("Propias")}>
                         <Text style={styles.name}>Propias</Text>
                   </TouchableOpacity>
         </View>

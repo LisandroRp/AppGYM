@@ -10,7 +10,7 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 function createData(item) {
   return {
@@ -46,50 +46,87 @@ class SuplementacionEspecifica extends Component {
   }
 
 
-okSuplemento(data) {
-  if (data != null) {
+  okSuplemento(data) {
+    if (data != null) {
       this.setState({
-          detalle: data[0],
-          isLoading: false
+        detalle: data[0],
+        isLoading: false
       });
-  } else {
+    } else {
       alert("Intentar de nuevo")
+    }
   }
-}
   obtenerEventos() {
     ApiController.getEventos(this.okEventos.bind(this));
   }
   render() {
     if (this.state.isLoading) {
       return (
-          <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
-              <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
-          </View>
+        <View style={styles.container}>
+          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
+        </View>
       );
-  } else {
-    return (
-      <View style={styles.container}>
-      <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
-        <ScrollView>
-        <View style={styles.todo}>
-          <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.nombre}</Text></View>
-          <Text style={styles.descripcion}>Marca: {this.state.detalle.marca}</Text>
-          <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
-          </View>
-          <View style={styles.todo}>
-          <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Beneficios</Text></View>
-          <Text style={styles.descripcion}>{this.state.detalle.beneficios}</Text>
+    } else {
+      return (
+        <View style={styles.container}>
+          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <ScrollView>
+            <View style={styles.todo}>
+              <DropDownItem contentVisible={false}
+                header={
+                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.nombre}</Text></View>
+                }
+              >
+
+                <Text style={styles.descripcion}>Marca: {this.state.detalle.marca}</Text>
+                <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
+              </DropDownItem>
+            </View>
+
+            <View style={styles.todo}>
+              <DropDownItem contentVisible={false}
+                header={
+                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Beneficios</Text></View>
+                }
+              >
+
+
+                <Text style={styles.descripcion}>{this.state.detalle.beneficios}</Text>
+              </DropDownItem>
+            </View>
+
+            <View style={styles.todo}>
+              <DropDownItem contentVisible={false}
+                header={
+                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Uso</Text></View>
+                }
+              >
+
+
+                <Text style={styles.descripcion}>{this.state.detalle.uso}</Text>
+              </DropDownItem>
+            </View>
+
+
+            {/* <View style={styles.todo}>
+              <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.nombre}</Text></View>
+              <Text style={styles.descripcion}>Marca: {this.state.detalle.marca}</Text>
+              <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
+            </View>
+            <View style={styles.todo}>
+              <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Beneficios</Text></View>
+              <Text style={styles.descripcion}>{this.state.detalle.beneficios}</Text>
+            </View>
+            <View style={styles.todo}>
+              <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Uso</Text></View>
+              <Text style={styles.descripcion}>{this.state.detalle.uso}</Text>
+            </View> */}
+          </ScrollView>
         </View>
-          <View style={styles.todo}>
-          <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Uso</Text></View>
-          <Text style={styles.descripcion}>{this.state.detalle.uso}</Text>
-        </View>
-        </ScrollView>
-      </View>
-    );
+      );
+    }
   }
-}
 }
 const resizeMode = 'center';
 const styles = StyleSheet.create({
@@ -98,7 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "black"
   },
-  bgImage:{
+  bgImage: {
     flex: 1,
     resizeMode,
     position: 'absolute',
@@ -107,7 +144,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  todo:{
+  todo: {
     backgroundColor: 'grey',
     //margin: 20,
     marginHorizontal: wp("4"),
@@ -117,7 +154,7 @@ const styles = StyleSheet.create({
     //padding: 10,
     borderRadius: 20
   },
-  backgroundTitulo:{
+  backgroundTitulo: {
     backgroundColor: 'black',
     alignItems: 'center',
     //margin: 10,
@@ -128,12 +165,12 @@ const styles = StyleSheet.create({
     paddingVertical: hp("1"),
     borderRadius: 20
   },
-  titulo:{
+  titulo: {
     fontSize: 33,
     fontWeight: 'bold',
     color: '#3399ff'
   },
-  descripcion:{
+  descripcion: {
     color: 'white',
     //margin: 10,
     marginHorizontal: wp("2"),

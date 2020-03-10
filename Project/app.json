@@ -2,7 +2,7 @@
   "expo": {
     "name": "Gualter React",
     "slug": "Project",
-    "privacy": "public",
+    "privacy": "unlisted",
     "sdkVersion": "33.0.0",
     "packagerOpts": {
       "assetExts": ["db"]
@@ -12,7 +12,8 @@
       "android"
     ],
     "ios": {
-      "bundleIdentifier": "AppGym.com"
+      "bundleIdentifier": "AppGym.com",
+      "supportsTablet": true
     },
     "android": {
       "package": "AppGym.com"
@@ -30,9 +31,6 @@
     },
     "assetBundlePatterns": [
       "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    }
+    ]
   }
 }

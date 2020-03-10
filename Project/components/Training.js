@@ -7,9 +7,12 @@ import {
     Dimensions,
     TouchableOpacity,
     ActivityIndicator,
+    StatusBar
 } from 'react-native';
 import Swiper from "react-native-web-swiper";
 import base from './GenerarBase';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { Right } from "native-base";
 
 var { height, width } = Dimensions.get('window');
 
@@ -21,7 +24,7 @@ export default class Training extends React.Component {
         };
     }
     componentDidMount() {
-        base.abrirBase(this.existeBase.bind(this));
+       base.abrirBase(this.existeBase.bind(this));
     }
     existeBase = async (existe) => {
         if (existe == false) {
@@ -44,17 +47,22 @@ export default class Training extends React.Component {
                 </View>
             );
         } else {
-            return (
+            return (               
                 <View style={styles.container}>
+                <StatusBar backgroundColor="#3399ff" barStyle="light-content" />
+                <Image style={styles.bgImage} source={require('./Pared.jpg')} />
                     <Swiper>
                         <View style={[styles.slideContainer, styles.slide1]}>
-                            <Text>Slide 1</Text>
+                        <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+                            <Text style={styles.headerText}>Slide 1</Text>
                         </View>
                         <View style={[styles.slideContainer, styles.slide2]}>
-                            <Text>Slide 2</Text>
+                        <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+                            <Text style={styles.headerText}>Slide 2</Text>
                         </View>
                         <View style={[styles.slideContainer, styles.slide3]}>
-                            <Text>Slide 3</Text>
+                        <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+                            <Text style={styles.headerText}>Slide 3</Text>
                             <TouchableOpacity style={styles.guardarButton} onPress={() => { this.props.onPressPass()}}>
                                 <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
                                     Terminar
@@ -62,15 +70,48 @@ export default class Training extends React.Component {
                             </TouchableOpacity>
                         </View>
                     </Swiper>
+                    {/* <View style={styles.header}>
+                    <TouchableOpacity style={styles.headerContent} onPress={() => {this.props.onPressPass()}}>
+                            <Text style={styles.headerText}>Saltar</Text>
+                    </TouchableOpacity>
+                    </View> */}
                 </View>
             )
         }
     }
 }
+const resizeMode = 'center';
 const styles = StyleSheet.create({
     container: {
         flex: 1
     },
+    header: {
+        position: "absolute",
+        backgroundColor: "black",
+        top: 0,
+        height: hp(9),
+        width: "100%",
+        flexDirection: "row-reverse"
+    },
+    headerContent: {
+        justifyContent: "center",
+        marginRight: wp(5)
+    },
+    headerText: {
+        fontSize: 18,
+        //flex: 1,
+        alignSelf: 'center',
+        color: "#3399ff",
+    },
+    bgImage: {
+        flex: 1,
+        resizeMode,
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        resizeMode: 'cover'
+      },
     slideContainer: {
         flex: 1,
         alignItems: "center",
@@ -84,5 +125,5 @@ const styles = StyleSheet.create({
     },
     slide3: {
         backgroundColor: "rgba(200,20,20,0.3)"
-    },
+    }
 });

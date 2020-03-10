@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import base from './GenerarBase';
 import {
   StyleSheet,
-  Text,
+  StatusBar,
   View,
   Image,
   TouchableOpacity,
@@ -61,6 +61,7 @@ class Ejercicios extends Component {
   } else {
     return (
       <View style={styles.container}>
+      <StatusBar backgroundColor="#3399ff" barStyle="light-content" />
       <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
       <ScrollView>
         <FlatList

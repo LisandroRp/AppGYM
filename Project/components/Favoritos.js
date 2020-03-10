@@ -8,10 +8,7 @@ import {
   View,
   Image,
   TouchableOpacity,
-  FlatList,
-  RefreshControl,
-  Keyboard,
-  ScrollView,
+  TouchableHighlight,
   ActivityIndicator
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -54,15 +51,15 @@ class Favoritos extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
 
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas()}>
+                  <TouchableOpacity style={styles.card} nextFocusForward={true} onPress={() => this.props.onPressGoRutinas()}>
                       <Text style={styles.name}>Rutinas</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoSuplementos()}>
+                  <TouchableOpacity style={styles.card} nextFocusForward={true} onPress={() => this.props.onPressGoSuplementos()}>
                         <Text style={styles.name}>Suplementacion</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoEjercicios()}>
+                  <TouchableOpacity style={styles.card} nextFocusForward={true} onPress={() => this.props.onPressGoEjercicios()}>
                         <Text style={styles.name}>Ejercicios</Text>
                   </TouchableOpacity>
                   

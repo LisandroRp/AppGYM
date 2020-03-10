@@ -243,8 +243,7 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    paddingTop: 12,
-    fontSize: 22,
+    fontSize: 20,
     //flex: 1,
     //alignSelf: 'center',
     color: "#3399ff",
@@ -252,9 +251,7 @@ const styles = StyleSheet.create({
   },
   marca: {
     fontSize: 15,
-    marginTop: 5,
-    //flex: 1,
-    color: "white",
+    color: "#6666ff"
   },
   StarImage: {
     width: wp("10%"),

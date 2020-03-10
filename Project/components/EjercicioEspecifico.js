@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
+import gifs from './Gifs/Gifs'
 import {
   StyleSheet,
   Text,
   View,
   Image,
-  TouchableOpacity,
-  FlatList,
-  RefreshControl,
+  PixelRatio,
   Dimensions,
   Alert,
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import DropDownItem from 'react-native-drop-down-item';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+var { height, width } = Dimensions.get('window');
 
 function createData(item) {
   return {
@@ -41,7 +42,10 @@ class EjercicioEspecifico extends Component {
         musculo: '',
         descripcion: '',
         ejecucion: '',
+        imagen1:'',
+        imagen2:''
       },
+      imagen:'',
       modalVisible: false,
       isLoading: true,
     };
@@ -54,10 +58,17 @@ class EjercicioEspecifico extends Component {
   }
 
   okEjercicio(data) {
-      this.setState({
-        detalle: data[0],
-        isLoading: false
-      });
+    this.setState({
+      detalle: data[0],
+      isLoading: false,
+      imagen: data[0].imagen1
+    });
+    console.log(data[0].imagen1)
+    console.log(data[0].imagen2)
+    console.log(this.state.detalle.imagen1)
+  }
+  traerImagen(imagen){
+    return imagen
   }
   render() {
     if (this.state.isLoading) {
@@ -71,15 +82,38 @@ class EjercicioEspecifico extends Component {
       return (
         <View style={styles.container}>
           <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <View style={styles.backgroundTituloPrincipal}><Text style={styles.tituloPrincipal}>{this.state.detalle.nombre}</Text></View>
           <ScrollView>
+                <View style={styles.imageContainer}>
+                  <Image style={styles.image} source={gifs.EncontrarGifs(this.state.detalle.nombre)} />
+                </View>
             <View style={styles.todo}>
+              <DropDownItem contentVisible={false}
+                header={
+                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Descripcion</Text></View>
+                }
+              >
+                <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
+              </DropDownItem>
+            </View>
+            <View style={styles.todo}>
+              <DropDownItem contentVisible={false}
+                header={
+                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Ejecucion</Text></View>
+                }
+              >
+
+                <Text style={styles.descripcion}>{this.state.detalle.ejecucion}</Text>
+              </DropDownItem>
+            </View>
+            {/* <View style={styles.todo}>
               <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.detalle.nombre}</Text></View>
               <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
             </View>
             <View style={styles.todo}>
               <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Ejecucion</Text></View>
               <Text style={styles.descripcion}>{this.state.detalle.ejecucion}</Text>
-            </View>
+            </View> */}
           </ScrollView>
         </View>
       );
@@ -107,24 +141,41 @@ const styles = StyleSheet.create({
     //margin: 20,
     marginHorizontal: wp("4"),
     marginVertical: hp("2"),
-   // paddingHorizontal: wp("2"),
-  //  paddingVertical: hp("1"),
+    opacity: 2,
+    // paddingHorizontal: wp("2"),
+    //  paddingVertical: hp("1"),
     //padding: 10,
+    //borderRadius: 20
+  },
+  backgroundTituloPrincipal:{
+    backgroundColor: 'black',
+    alignItems: 'center',
+    //margin: 10,
+    // marginHorizontal: wp("2"),
+    // marginVertical: hp("1"),
+    //padding: 10,
+    paddingHorizontal: wp("2"),
+    paddingVertical: hp("2"),
     //borderRadius: 20
   },
   backgroundTitulo: {
     backgroundColor: 'black',
     alignItems: 'center',
     //margin: 10,
-   // marginHorizontal: wp("2"),
-   // marginVertical: hp("1"),
+    // marginHorizontal: wp("2"),
+    // marginVertical: hp("1"),
     //padding: 10,
     paddingHorizontal: wp("2"),
     paddingVertical: hp("2"),
     //borderRadius: 20
   },
-  titulo: {
+  tituloPrincipal: {
     fontSize: 33,
+    fontWeight: 'bold',
+    color: '#3399ff'
+  },
+  titulo: {
+    fontSize: 30,
     fontWeight: 'bold',
     color: '#3399ff'
   },
@@ -133,9 +184,23 @@ const styles = StyleSheet.create({
     //margin: 10,
     marginHorizontal: wp("5"),
     marginVertical: hp("2"),
-    fontSize: 15,
+    fontSize: 20,
+    shadowOpacity: 5.0,
   },
-
+  imageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: hp(4),
+    marginBottom: hp(1)
+  },
+  image: {
+    height: height * 0.50,
+    width: width * 0.70,
+    //height: 300,
+    //width: 215,
+    borderWidth: 4,
+    borderColor: "#3399ff"
+  },
 })
 
 export default withNavigation(EjercicioEspecifico);

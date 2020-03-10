@@ -23,10 +23,10 @@ class GenerarBase extends Component {
         var rutinas = []
         var existe
 
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/Vacia.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+        FileSystem.downloadAsync(
+            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        );
         
         let db = SQLite.openDatabase('appgym.db');
         db.transaction(

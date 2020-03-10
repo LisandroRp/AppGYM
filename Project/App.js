@@ -65,6 +65,7 @@ class TrainingScreen extends React.Component {
   }
   goPass() {
     this.props.navigation.navigate('Ejercicios');
+    //this.props.navigation.navigate('SuplementacionEspecifica');
   }
 }
 class SignUpClass extends React.Component {
@@ -280,7 +281,7 @@ class EjercicioAgregarScreen extends React.Component {
 }
 static navigationOptions = ({ navigation }) => {
   return {
-    title: navigation.getParam('musculo', 'Musculo'),
+    title: 'Musculos',
   headerStyle: {
     backgroundColor: 'black',
     height: 55,
@@ -334,14 +335,16 @@ class RutinasTiposScreen extends React.Component {
     super(props)
     {update: "update"}
   }
-  static navigationOptions = {
-    title: 'Rutinas',
+  static navigationOptions = ({ navigation }) => {
+    return{
+    title: navigation.getParam('tipo_rutina', 'Rutinas'),
     headerStyle: {
       backgroundColor: 'black',
       height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
+  }
   };
   render() {
     return (
@@ -820,6 +823,37 @@ const SuplementacionStackNavigator = createStackNavigator(
     initialRouteName: 'SuplementacionScreen',
   }
 );
+const FavoritosStackNavigator = createStackNavigator(
+  {
+    FavoritosScreen: {
+      screen: FavoritosScreen,
+      navigationOptions: ({ navigation }) => {
+        return {
+          headerLeft: (
+            <Icon
+              style={{ paddingLeft: 10, color: '#3399ff' }}
+              onPress={() => navigation.openDrawer()}
+              name="md-menu"
+              size={30}
+            />
+          ),
+        }
+      }
+    },
+    RutinasFavs: RutinasFavsScreen,
+    MusculoFavs: MusculoFavsScreen,
+    EjerciciosFavs: EjerciciosFavsScreen,
+    SuplementacionFavs: SuplementacionFavsScreen,
+    SuplementacionEspecifica: SuplementacionEspecificaScreen,
+    RutinaEspecificaMScreen: RutinaEspecificaMScreen,
+    RutinaEspecificaNoMScreen: RutinaEspecificaNoMScreen,
+    RutinaModificable: RutinaModificableScreen,
+    EjercicioEspecifico: EjerciciosEspecificoScreen
+  },
+  {
+    initialRouteName: 'FavoritosScreen',
+  }
+);
 
 
 // *****************************************************
@@ -908,8 +942,9 @@ const AppDrawerNavigator = createDrawerNavigator({
   Ejercicios: EjerciciosStackNavigator,
   Rutinas: RutinasStackNavigator,
   Suplementacion: SuplementacionStackNavigator,
+  Favoritos: FavoritosStackNavigator,
   Perfil: PerfilStackNavigator,
-  Camara: CamaraPageScreen,
+  //Camara: CamaraPageScreen,
 },
   // DrawerConfig,
   {

@@ -50,13 +50,13 @@ class RutinaModificable extends Component {
       id_rutina: ''
     };
     this.Star = require('./Logos/Star_Llena.png');
-    this.Pecho = require('./Logos/Logo_Pecho1.png');
+    this.Pecho = require('./Logos/Logo_Pecho.png');
     this.Abs = require('./Logos/Logo_Abs.png');
     this.Espalda = require('./Logos/Logo_Espalda.png');
     this.Hombros = require('./Logos/Logo_Hombros.png');
     this.Bicep = require('./Logos/Logo_Bicep.png');
     this.Tricep = require('./Logos/Logo_Bicep.png');
-    this.Piernas = require('./Logos/Logo_Bicep.png');
+    this.Piernas = require('./Logos/Logo_Piernas.png');
     this.Cardio = require('./Logos/Logo_Cardio.png');
     //this.obtenerEventos()
   }
@@ -366,10 +366,10 @@ class RutinaModificable extends Component {
                                 <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Image style={styles.musculosLogo} source={this.queMusculo(item.musculo)} />
-                                    <View style={{ flexDirection: 'column' }}>
+                                    <View style={{ flexDirection: 'column', width: wp("33")}}>
                                       <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                      <Text>Reps: {item.repeticiones}</Text>
                                       <Text>Series: {item.series}</Text>
+                                      <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
                                     </View>
                                   </View>
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>

@@ -71,7 +71,6 @@ class Musculo extends Component {
       memory: ejercicios,
       isLoading: false,
     });
-    console.log(ejercicios)
   }
 
   esGenero(genero) {
@@ -110,7 +109,9 @@ class Musculo extends Component {
         ' ' +
         ejercicio.genero +
         ' ' +
-        ejercicio.tipo
+        ejercicio.tipo +
+        ' ' +
+        ejercicio.elemento
       ).toLowerCase();
 
       let searchTermLowercase = value.toLowerCase();
@@ -129,7 +130,6 @@ class Musculo extends Component {
     while (i < this.state.ejercicios.length) {
       if (this.state.ejercicios[i].id_ejercicio == id_ejercicio) {
         aux = i
-        console.log(this.state.ejercicios[aux].favoritos)
       }
       ejercicios2.push(this.state.ejercicios[i])
       i++
@@ -215,7 +215,7 @@ class Musculo extends Component {
             data={this.state.ejercicios}
             initialNumToRender={50}
             keyExtractor={(item) => {
-              return item.id_ejercicio;
+              return item.id_ejercicio.toString();
             }}
             renderItem={({ item }) => {
                 return (
@@ -224,6 +224,7 @@ class Musculo extends Component {
                       <Image style={styles.image} source={this.queMusculo(item.musculo)} />
                       <View style={styles.cardContent}>
                         <Text style={styles.name}>{item.nombre}</Text>
+                        <Text style={styles.elemento}>{item.elemento}</Text>
                       </View>
                       <View style={styles.ViewEstrella} >
                         <TouchableOpacity onPress={() => { this.favear(item.id_ejercicio) }}>
@@ -296,12 +297,18 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    fontSize: 22,
+    fontSize: 20,
     //flex: 1,
     //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
+
+  elemento: {
+    fontSize: 15,
+    color: "#6666ff"
+  },
+
   StarImage: {
     width: wp("10%"),
     height: hp("5%"),
