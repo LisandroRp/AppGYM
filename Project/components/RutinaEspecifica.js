@@ -280,12 +280,13 @@ const styles = StyleSheet.create({
   detalleGenresTitles: {
     fontSize: 33,
     margin: 10,
-    marginBottom: 2.5,
+    //marginBottom: 2.5,
+    alignSelf:"center",
     color: '#3399ff',
     fontWeight: 'bold'
   },
   cuadraditos: {
-    backgroundColor: 'black', marginBottom: 5, marginTop: 5, marginHorizontal: 10, paddingBottom: 10
+    backgroundColor: 'black', marginBottom: 5, marginTop: 5, marginHorizontal: 10, //paddingBottom: 10
   },
   cuadraditosDeAdentro: {
     backgroundColor: 'grey', marginVertical: 5, marginTop: 2, paddingVertical: 10, paddingLeft: 10, alignSelf: 'stretch', width: Dimensions.get('window').width * 0.88

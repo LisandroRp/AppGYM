@@ -368,10 +368,10 @@ class MusculoAgregar extends Component {
                 } />
                 
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({repeticiones: []})}} style={{ width: width * 0.37, height: height * 0.0776, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderBottomLeftRadius: 22 }}>
+                <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({repeticiones: []})}} style={styles.modalButtonCancelar}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.guardarEjercicio()} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                <TouchableOpacity onPress={() => this.guardarEjercicio()} style={styles.modalButtonAceptar}>
                   <Text style={styles.textButton}>Aceptar</Text>
 
                 </TouchableOpacity>
@@ -566,6 +566,24 @@ const styles = StyleSheet.create({
   picker: {
     width: 100
   },
+  modalButtonCancelar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'grey',
+    borderRadius: 22 
+  },
+  modalButtonAceptar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center', 
+    textAlign: "center", 
+    borderLeftWidth: 2, 
+    backgroundColor: 'grey', 
+    borderBottomRightRadius: 22 
+  }
 })
 
 export default withNavigation(MusculoAgregar);

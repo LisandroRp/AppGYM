@@ -943,7 +943,7 @@ const AppDrawerNavigator = createDrawerNavigator({
   Rutinas: RutinasStackNavigator,
   Suplementacion: SuplementacionStackNavigator,
   Favoritos: FavoritosStackNavigator,
-  Perfil: PerfilStackNavigator,
+  //Perfil: PerfilStackNavigator,
   //Camara: CamaraPageScreen,
 },
   // DrawerConfig,

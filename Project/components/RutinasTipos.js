@@ -228,14 +228,14 @@ const styles = StyleSheet.create({
     color: "#6666ff"
   },
   StarImage: {
-    width: wp("10%"),
-    height: hp("5%"),
-    resizeMode: 'cover',
+    width: hp(5.5),
+    height: hp(5.5),
+    //resizeMode: 'cover',
   },
   ViewEstrella: {
     alignItems: 'center',
     justifyContent: "center",
-    paddingHorizontal: wp("5")
+    paddingHorizontal: wp("5"),
   }
 })
 

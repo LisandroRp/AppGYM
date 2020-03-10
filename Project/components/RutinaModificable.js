@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
   TextContainer: {
     backgroundColor: 'grey',
     borderRadius: 10,
-    padding: 10,
+    paddingLeft: 10,
    // width: 300,
     //height: 45,
     width: wp("70"),
@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
     //width: 44,
     //height: 44,
     height: hp("6"),
-    width: wp("10.5"),
+    width: hp("6"),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#3399ff',
@@ -488,7 +488,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 5,
     marginHorizontal: 10,
-    paddingBottom: 10,
+    //paddingBottom: 10,
     alignItems: 'center'
   },
   cuadraditosDeAdentro: {
@@ -526,21 +526,21 @@ const styles = StyleSheet.create({
   detalleGenresTitles: {
     fontSize: 33,
     margin: 10,
-    marginBottom: 2.5,
+    //marginBottom: 2.5,
+    alignSelf:"center",
     color: '#3399ff',
     fontWeight: 'bold'
   },
   fab: {
     //width: 33,
     //height: 33,
-    width: wp("9"),
+    width: hp("5"),
     height: hp("5"),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#3399ff',
     borderRadius: 30,
     marginRight: 10,
-    marginTop: 10,
   },
   guardarButton: {
     backgroundColor: 'grey',

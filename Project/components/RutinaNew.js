@@ -390,11 +390,11 @@ class RutinaNew extends Component {
               </View>
               <View style={styles.modal2}>
               
-                <TouchableOpacity onPress={() => { this.setState({modalVisible: false}) }} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                <TouchableOpacity onPress={() => { this.setState({modalVisible: false}) }} style={styles.modalButtonCancelar}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => this.guardarRutina()} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                <TouchableOpacity onPress={() => this.guardarRutina()} style={styles.modalButtonAceptar}>
                   <Text style={styles.textButton}>Aceptar</Text>
                 </TouchableOpacity>
 
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
   TextContainer: {
     backgroundColor: 'grey',
     borderRadius: 10,
-    padding: 10,
+    paddingLeft: 10,
    // width: 300,
     //height: 45,
     width: wp("70"),
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 5,
     marginHorizontal: 10,
-    paddingBottom: 10,
+    //paddingBottom: 10,
     alignItems: 'center'
   },
   cuadraditosDeAdentro: {
@@ -521,21 +521,21 @@ const styles = StyleSheet.create({
   detalleGenresTitles: {
     fontSize: 33,
     margin: 10,
-    marginBottom: 2.5,
+    //marginBottom: 2.5,
+    alignSelf: "center",
     color: '#3399ff',
     fontWeight: 'bold'
   },
   fab: {
     //width: 33,
     //height: 33,
-    width: wp("9"),
+    width: hp("5"),
     height: hp("5"),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#3399ff',
     borderRadius: 30,
     marginRight: 10,
-    marginTop: 10,
   },
   guardarButton: {
     backgroundColor: 'grey',
@@ -598,6 +598,24 @@ const styles = StyleSheet.create({
     marginRight: 10,
     resizeMode: 'cover',
   },
+  modalButtonCancelar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'grey',
+    borderRadius: 22 
+  },
+  modalButtonAceptar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center', 
+    textAlign: "center", 
+    borderLeftWidth: 2, 
+    backgroundColor: 'grey', 
+    borderBottomRightRadius: 22 
+  }
 })
 
 

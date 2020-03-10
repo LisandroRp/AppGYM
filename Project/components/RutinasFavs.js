@@ -201,9 +201,9 @@ const styles = StyleSheet.create({
         color: "white",
     },
     StarImage: {
-        width: wp("10%"),
-        height: hp("5%"),
-        resizeMode: 'cover',
+        width: hp(5.5),
+        height: hp(5.5),
+    //resizeMode: 'cover',
     },
     ViewEstrella: {
         alignItems: 'center',
