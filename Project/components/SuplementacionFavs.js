@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import base from './GenerarBase';
+import ExportadorFondo from './Fotos/ExportadorFondo'
 import {
   StyleSheet,
   Text,
@@ -8,24 +9,14 @@ import {
   TouchableOpacity,
   FlatList,
   Keyboard,
-  ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions,
+  Modal
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import ExportadorLogos from './Fotos/ExportadorLogos';
 
-function createData(item) {
-  return {
-    key: item._id,
-    idEvento: item._id,
-    imagen: item.imagen,
-    nombre: item.nombre,
-    rating: item.rating,
-    descripcion: item.descripcion,
-    tipo: item.tipo,
-    ubicacion: item.ubicacion,
-    precioE: item.precioE,
-  };
-}
+var { height, width } = Dimensions.get('window');
 
 class SuplementacionFavs extends Component {
 
@@ -36,15 +27,15 @@ class SuplementacionFavs extends Component {
       modalVisible: false,
       suplementos: [],
       isLoading: true,
+      id_suplemento: '',
+      nombre: ""
     };
-    this.Star = require('./Logos/Star_Llena.png');
-    this.Star_With_Border = require('./Logos/Star_Borde.png');
     this.cargarSuplementosFavoritos();
   }
   cargarSuplementosFavoritos = async () => {
     base.traerSuplementosFavoritas(this.okSuplementos.bind(this))
   }
-  okSuplementos(suplementos){
+  okSuplementos(suplementos) {
     this.setState({
       suplementos: suplementos,
       memory: suplementos,
@@ -90,6 +81,9 @@ class SuplementacionFavs extends Component {
     this.setState({ value })
   };
 
+  modalVisible(id, nombre) {
+    this.setState({id_suplemento: id, nombre: nombre, modalVisible: true })
+  }
   favear(id_suplemento) {
     var i = 0
     var fav
@@ -98,31 +92,31 @@ class SuplementacionFavs extends Component {
     while (i < this.state.suplementos.length) {
       if (this.state.suplementos[i].id_suplemento == id_suplemento) {
         aux = i
-        console.log(this.state.suplementos[aux].favoritos)
       }
       suplementos2.push(this.state.suplementos[i])
       i++
     }
     if (suplementos2[aux].favoritos) {
       suplementos2[aux].favoritos = 0
-      fav= 0
+      fav = 0
     } else {
       suplementos2[aux].favoritos = 1
-      fav= 1
+      fav = 1
     }
-    base.favoritearSuplemento(id_suplemento, fav, this.okFavorito.bind(this))  
+    this.setState({modalVisible: false})
+    base.favoritearSuplemento(id_suplemento, fav, this.okFavorito.bind(this))
   }
 
   okFavorito() {
     this.cargarSuplementosFavoritos()
   }
 
-  favoritos(favoritos){
-    if(favoritos){
-      return this.Star
+  favoritos(favoritos) {
+    if (favoritos) {
+      return ExportadorLogos.traerEstrella(true)
     }
-    else{
-      return this.Star_With_Border
+    else {
+      return ExportadorLogos.traerEstrella(false)
     }
   }
 
@@ -130,21 +124,20 @@ class SuplementacionFavs extends Component {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
-          <ScrollView>
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
             <FlatList
               style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
               data={this.state.suplementos}
               initialNumToRender={50}
-              keyExtractor= {(item) => {
+              keyExtractor={(item) => {
                 return item.id_suplemento;
               }}
               renderItem={({ item }) => {
@@ -157,7 +150,7 @@ class SuplementacionFavs extends Component {
                         <Text style={styles.marca}>{item.marca}</Text>
                       </View>
                       <View style={styles.ViewEstrella} >
-                        <TouchableOpacity onPress={() => { this.favear(item.id_suplemento) }}>
+                        <TouchableOpacity onPress={() => { this.modalVisible(item.id_suplemento, item.nombre) }}>
                           <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
                         </TouchableOpacity>
                       </View>
@@ -166,7 +159,30 @@ class SuplementacionFavs extends Component {
                 )
               }
               } />
-          </ScrollView>
+            <Modal
+              animationType="fade"
+              visible={this.state.modalVisible}
+              transparent={true}
+              onRequestClose={() => this.setState({ modalVisible: false })}  >
+
+              <View style={styles.modal}>
+
+                <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: width * 0.05 }}>
+                  <Text style={styles.textButton}>Desea sacar el suplemento "{this.state.nombre}" de su lista de favoritos</Text>
+                </View>
+                <View style={styles.modal2}>
+
+                  <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
+                    <Text style={styles.textButton}>Cancelar</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => this.favear(this.state.id_suplemento)} style={styles.modalButtonAceptar}>
+                    <Text style={styles.textButton}>Aceptar</Text>
+                  </TouchableOpacity>
+
+                </View>
+              </View>
+            </Modal>
         </View>
       );
     }
@@ -249,7 +265,57 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: "center",
     paddingHorizontal: wp("5")
-  }
+  },
+//MODAAAAL
+modal: {
+  height: height * 0.22,
+  width: width * 0.75,
+  position: 'absolute',
+  top: height * 0.3,
+  left: width * 0.13,
+  borderColor: 'black',
+  borderWidth: 2,
+  backgroundColor: 'grey',
+  shadowColor: 'black',
+  shadowOpacity: 5.0,
+  borderRadius: 22,
+  opacity: .95
+},
+modal2: {
+  flexDirection: 'row',
+  borderColor: 'black',
+  borderTopWidth: 2,
+  width: width * 0.74,
+  height: height * 0.08,
+  position: 'absolute',
+  bottom: 0,
+  opacity: .95
+},
+textButton: {
+  color: 'white',
+  fontSize: 15,
+  alignSelf: 'center',
+  textAlign: 'center',
+  fontWeight: 'bold'
+},
+modalButtonCancelar: {
+  width: width * 0.37,
+  height: height * 0.0775,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'grey',
+  borderRadius: 22
+},
+modalButtonAceptar: {
+  width: width * 0.37,
+  height: height * 0.0775,
+  justifyContent: 'center',
+  alignItems: 'center',
+  textAlign: "center",
+  borderLeftWidth: 2,
+  backgroundColor: 'grey',
+  borderBottomRightRadius: 22
+}
 })
 
 export default SuplementacionFavs;

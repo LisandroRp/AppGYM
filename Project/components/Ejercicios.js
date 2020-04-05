@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import base from './GenerarBase';
+import ExportadorFondo from './Fotos/ExportadorFondo'
 import {
   StyleSheet,
   StatusBar,
@@ -37,14 +38,14 @@ class Ejercicios extends Component {
     this.state = {
       modalVisible: false,
       userSelected: [],
-      musculos: [{id:1,musculo: 'Pecho', imagen: require('./Fotos/PECHO.png')},
-      {id:2,musculo: 'Espalda', imagen: require('./Fotos/ESPALDA.png')},
-      {"id":3,"musculo": 'Hombros',"imagen": require('./Fotos/HOMBROS.png')},
-      {id:4,musculo: 'Piernas',imagen: require('./Fotos/PIERNAS.png')},
-      {id:5,musculo: 'Biceps',imagen: require('./Fotos/BICEPS.png')},
-      {id:6,musculo: 'Triceps',imagen: require('./Fotos/TRICEPS.png')},
-      {id:7,musculo: 'Abdominales',imagen: require('./Fotos/ABS.png')},
-      {id:8,musculo: 'Cardio',imagen: require('./Fotos/CARDIO.png')}],
+      musculos: [{id:1,musculo: 'Pecho', imagen: require('./Fotos/Ejercicios/PECHO.png')},
+      {id:2,musculo: 'Espalda', imagen: require('./Fotos/Ejercicios/ESPALDA.png')},
+      {id:3,"musculo": 'Hombros',"imagen": require('./Fotos/Ejercicios/HOMBROS.png')},
+      {id:4,musculo: 'Piernas',imagen: require('./Fotos/Ejercicios/PIERNAS.png')},
+      {id:5,musculo: 'Biceps',imagen: require('./Fotos/Ejercicios/BICEPS.png')},
+      {id:6,musculo: 'Triceps',imagen: require('./Fotos/Ejercicios/TRICEPS.png')},
+      {id:7,musculo: 'Abdominales',imagen: require('./Fotos/Ejercicios/ABS.png')},
+      {id:8,musculo: 'Cardio',imagen: require('./Fotos/Ejercicios/CARDIO.png')}],
       isLoading: false, 
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
@@ -54,7 +55,7 @@ class Ejercicios extends Component {
     if (this.state.isLoading) {
       return (
           <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()}/>
               <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
           </View>
       );
@@ -62,7 +63,7 @@ class Ejercicios extends Component {
     return (
       <View style={styles.container}>
       <StatusBar backgroundColor="#3399ff" barStyle="light-content" />
-      <Image style={styles.bgImage} source={require('./Pared.jpg')}/>
+      <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()}/>
       <ScrollView>
         <FlatList
           style={styles.contentList}
@@ -75,9 +76,7 @@ class Ejercicios extends Component {
           renderItem={({ item }) => {
             return (
               <TouchableOpacity onPress={() => this.props.onPressGo(item.musculo)}>
-                <View style={styles.imageContainer}>
                 <Image style={styles.image} source={item.imagen} />
-                </View>
               </TouchableOpacity>
             )
           }} />
@@ -99,20 +98,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     padding:2,
-  },
-  imageContainer: {
-    width: Dimensions.get('window').width /2 -4,
-    height: hp("28"),
-    // height: 200,
-    margin:1,
-    justifyContent: 'center',
-    alignItems:'center',
-    backgroundColor: 'black'
+    alignSelf: 'center'
   },
   image: {
-    width: Dimensions.get('window').width /2 -4,
-    height: hp("28"),
-    // height: 200,
+    width: wp(49),
+    height: hp(28),
+    margin: 1,
+    borderWidth: 1.5,
+    borderColor: 'black'
   },
   bgImage:{
     flex: 1,

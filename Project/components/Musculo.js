@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { SearchBar, Icon } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
-import { AsyncStorage } from 'react-native';
 import base from './GenerarBase';
-import ApiController from '../controller/ApiController'
+import ExportadorEjercicios from './Fotos/ExportadorEjercicios';
+import ExportadorFondo from './Fotos/ExportadorFondo';
+import ExportadorLogos from './Fotos/ExportadorLogos';
 import {
   StyleSheet,
   Text,
@@ -46,16 +47,7 @@ class Musculo extends Component {
       ejercicios: [],
       isLoading: true,
     };
-    this.Pecho= require('./Fotos/PECHO.png')
-    this.Espalda= require('./Fotos/ESPALDA.png')
-    this.Hombros= require('./Fotos/HOMBROS.png')
-    this.Piernas= require('./Fotos/PIERNAS.png')
-    this.Bicep= require('./Fotos/BICEPS.png')
-    this.Triceps= require('./Fotos/TRICEPS.png')
-    this.Abs= require('./Fotos/ABS.png')
-    this.Cardio= require('./Fotos/CARDIO.png')
-    this.Star = require('./Logos/Star_Llena.png');
-    this.Star_With_Border = require('./Logos/Star_Borde.png');
+    
     this.cargarEjercicios();
   }
 
@@ -150,37 +142,10 @@ class Musculo extends Component {
 
   favoritos(favoritos){
     if(favoritos){
-      return this.Star
+      return ExportadorLogos.traerEstrella(true)
     }
     else{
-      return this.Star_With_Border
-    }
-  }
-
-  queMusculo(musculo) {
-    if (musculo == "Abdominales") {
-      return this.Abs
-    }
-    if (musculo == "Bicep") {
-      return this.Bicep
-    }
-    if (musculo == "Cardio") {
-      return this.Cardio
-    }
-    if (musculo == "Espalda") {
-      return this.Espalda
-    }
-    if (musculo == "Hombros") {
-      return this.Hombros
-    }
-    if (musculo == "Pecho") {
-      return this.Pecho
-    }
-    if (musculo == "Piernas") {
-      return this.Piernas
-    }
-    if (musculo == "Tricep") {
-      return this.Tricep
+      return ExportadorLogos.traerEstrella(false)
     }
   }
 
@@ -188,14 +153,14 @@ class Musculo extends Component {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <View>
             <SearchBar
               placeholder="Search..."
@@ -221,7 +186,8 @@ class Musculo extends Component {
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion)}>
                     <View style={{ flexDirection: "row" }} >
-                      <Image style={styles.image} source={this.queMusculo(item.musculo)} />
+                      {/* <Image style={styles.image} source={this.queMusculo(item.musculo)} /> */}
+                      <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.musculo)} />
                       <View style={styles.cardContent}>
                         <Text style={styles.name}>{item.nombre}</Text>
                         <Text style={styles.elemento}>{item.elemento}</Text>
@@ -276,6 +242,7 @@ const styles = StyleSheet.create({
     borderColor: "#ebf0f7",
     margin: 5,
     marginRight: 5,
+    alignSelf: "center"
   },
 
   card: {
@@ -305,8 +272,10 @@ const styles = StyleSheet.create({
   },
 
   elemento: {
+    marginTop:1,
     fontSize: 15,
-    color: "#6666ff"
+    // color: "#6666ff"
+    color: "white"
   },
 
   StarImage: {

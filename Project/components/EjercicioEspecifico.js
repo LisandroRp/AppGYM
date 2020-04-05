@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
-import gifs from './Gifs/Gifs'
+import ExportadorGifs from './Fotos/ExportadorGifs'
+import ExportadorFondo from './Fotos/ExportadorFondo'
 import {
   StyleSheet,
   Text,
@@ -42,8 +43,7 @@ class EjercicioEspecifico extends Component {
         musculo: '',
         descripcion: '',
         ejecucion: '',
-        imagen1:'',
-        imagen2:''
+        imagen:'',
       },
       imagen:'',
       modalVisible: false,
@@ -61,11 +61,8 @@ class EjercicioEspecifico extends Component {
     this.setState({
       detalle: data[0],
       isLoading: false,
-      imagen: data[0].imagen1
+      imagen: data[0].imagen
     });
-    console.log(data[0].imagen1)
-    console.log(data[0].imagen2)
-    console.log(this.state.detalle.imagen1)
   }
   traerImagen(imagen){
     return imagen
@@ -74,19 +71,17 @@ class EjercicioEspecifico extends Component {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
       );
     } else {
+      if(ExportadorGifs.EncontrarGifs(this.state.detalle.id_ejercicio) != 'nada'){
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
-          <View style={styles.backgroundTituloPrincipal}><Text style={styles.tituloPrincipal}>{this.state.detalle.nombre}</Text></View>
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
-                <View style={styles.imageContainer}>
-                  <Image style={styles.image} source={gifs.EncontrarGifs(this.state.detalle.nombre)} />
-                </View>
+                  <Image style={styles.image} source={ExportadorGifs.EncontrarGifs(this.state.detalle.id_ejercicio)} />
             <View style={styles.todo}>
               <DropDownItem contentVisible={false}
                 header={
@@ -117,8 +112,44 @@ class EjercicioEspecifico extends Component {
           </ScrollView>
         </View>
       );
-    }
+    }else{
+    return (
+      <View style={styles.container}>
+        <Image style={styles.bgImage} source={ExportarFondo.traerFondo()} />
+        <ScrollView>
+          <View style={styles.todo}>
+            <DropDownItem contentVisible={false}
+              header={
+                <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Descripcion</Text></View>
+              }
+            >
+              <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
+            </DropDownItem>
+          </View>
+          <View style={styles.todo}>
+            <DropDownItem contentVisible={false}
+              header={
+                <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Ejecucion</Text></View>
+              }
+            >
+
+              <Text style={styles.descripcion}>{this.state.detalle.ejecucion}</Text>
+            </DropDownItem>
+          </View>
+          {/* <View style={styles.todo}>
+            <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.detalle.nombre}</Text></View>
+            <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
+          </View>
+          <View style={styles.todo}>
+            <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Ejecucion</Text></View>
+            <Text style={styles.descripcion}>{this.state.detalle.ejecucion}</Text>
+          </View> */}
+        </ScrollView>
+      </View>
+    );
   }
+  }
+}
 }
 const resizeMode = 'center';
 const styles = StyleSheet.create({
@@ -180,12 +211,12 @@ const styles = StyleSheet.create({
     color: '#3399ff'
   },
   descripcion: {
-    color: 'white',
+    color: 'black',
     //margin: 10,
     marginHorizontal: wp("5"),
     marginVertical: hp("2"),
-    fontSize: 20,
-    shadowOpacity: 5.0,
+    fontSize: 18,
+    //shadowOpacity: 5.0,
   },
   imageContainer: {
     justifyContent: 'center',
@@ -195,11 +226,9 @@ const styles = StyleSheet.create({
   },
   image: {
     height: height * 0.50,
-    width: width * 0.70,
+    width: width,
     //height: 300,
     //width: 215,
-    borderWidth: 4,
-    borderColor: "#3399ff"
   },
 })
 

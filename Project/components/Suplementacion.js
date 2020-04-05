@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { SearchBar} from 'react-native-elements';
 import base from './GenerarBase';
+import ExportadorFondo from './Fotos/ExportadorFondo'
 import {
   StyleSheet,
   Text,
@@ -13,6 +14,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import ExportadorLogos from './Fotos/ExportadorLogos';
 
 function createData(item) {
   return {
@@ -38,8 +40,6 @@ class Suplementacion extends Component {
       suplementos: [],
       isLoading: true,
     };
-    this.Star = require('./Logos/Star_Llena.png');
-    this.Star_With_Border = require('./Logos/Star_Borde.png');
     this.cargarSuplementos();
   }
   cargarSuplementos = async () => {
@@ -51,7 +51,6 @@ class Suplementacion extends Component {
       memory: suplementos,
       isLoading: false,
     });
-    console.log(suplementos)
   }
 
   componentDidMount() {
@@ -100,7 +99,6 @@ class Suplementacion extends Component {
     while (i < this.state.suplementos.length) {
       if (this.state.suplementos[i].id_suplemento == id_suplemento) {
         aux = i
-        console.log(this.state.suplementos[aux].favoritos)
       }
       suplementos2.push(this.state.suplementos[i])
       i++
@@ -121,10 +119,10 @@ class Suplementacion extends Component {
 
   favoritos(favoritos){
     if(favoritos){
-      return this.Star
+      return ExportadorLogos.traerEstrella(true)
     }
     else{
-      return this.Star_With_Border
+      return ExportadorLogos.traerEstrella(false)
     }
   }
 
@@ -132,14 +130,14 @@ class Suplementacion extends Component {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <View>
             <SearchBar
               placeholder="Search..."
@@ -222,6 +220,7 @@ const styles = StyleSheet.create({
     borderColor: "#ebf0f7",
     margin: 5,
     marginRight: 5,
+    alignSelf: "center"
   },
 
   card: {
@@ -251,7 +250,8 @@ const styles = StyleSheet.create({
   },
   marca: {
     fontSize: 15,
-    color: "#6666ff"
+    // color: "#6666ff"
+    color: "white"
   },
   StarImage: {
     width: hp(5.5),

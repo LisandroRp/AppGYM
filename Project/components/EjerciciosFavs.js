@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { SearchBar, Icon } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
+import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorLogos from './Fotos/ExportadorLogos'
 import {
     StyleSheet,
     Text,
@@ -16,7 +17,6 @@ import {
     ScrollView
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
-import Ejercicios from './Ejercicios';
 
 function createData(item) {
     return {
@@ -40,9 +40,6 @@ class EjerciciosFavs extends Component {
             ejercicios: [],
             isLoading: true,
         };
-        this.Star = require('./Logos/Star_Llena.png');
-        this.Star_With_Border = require('./Logos/Star_Borde.png');
-        //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
         this.cargarEjerciciosFavoritas();
     }
   
@@ -51,7 +48,6 @@ class EjerciciosFavs extends Component {
     }
     okEjercicios(ejercicios){
       this.setState({ ejercicios: ejercicios, isLoading: false });
-      console.log(ejercicios)
     }
 
     favear(id_ejercicio) {
@@ -62,7 +58,6 @@ class EjerciciosFavs extends Component {
         while (i < this.state.ejercicios.length) {
           if (this.state.ejercicios[i].id_ejercicio == id_ejercicio) {
             aux = i
-            console.log(this.state.ejercicios[aux].favoritos)
           }
           ejercicios2.push(this.state.ejercicios[i])
           i++
@@ -83,10 +78,10 @@ class EjerciciosFavs extends Component {
     
       favoritos(favoritos){
         if(favoritos){
-          return this.Star
+          return ExportadorLogos.traerEstrella(true)
         }
         else{
-          return this.Star_With_Border
+          return ExportadorLogos.traerEstrella(false)
         }
       }
     
@@ -96,7 +91,7 @@ class EjerciciosFavs extends Component {
                 //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
                 //<View style={styles.container}>
                 <View style={styles.container}>
-                <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+                <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                     <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
                 </View>
                 //</View>
@@ -106,7 +101,7 @@ class EjerciciosFavs extends Component {
             return (
                 //<View style={styles.container}>
                 <LinearGradient colors={['black', 'grey']} style={styles.container}>
-                    <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+                    <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                     <ScrollView>
                         <FlatList
                             style={styles.contentList}
@@ -114,7 +109,7 @@ class EjerciciosFavs extends Component {
                             data={this.state.ejercicios}
                             initialNumToRender={50}
                             keyExtractor={(item) => {
-                                return item.id_rutina;
+                                return item.id_ejercicio;
                             }}
                             renderItem={({ item }) => {
                                 if (item.favoritos) {
@@ -124,7 +119,7 @@ class EjerciciosFavs extends Component {
                                                 <Image style={styles.image} source={item.imagen} />
                                                 <View style={styles.cardContent}>
                                                     <Text style={styles.name}>{item.nombre}</Text>
-                                                    <Text style={styles.descripcion}>{item.dias} Dias</Text>
+                                                    <Text style={styles.elemento}>{item.elemento}</Text>
                                                     {/* <Text style={styles.count}>{item.ubicacion}</Text>
                         <Text style={{ fontSize: 11 }}>Entrada General: {item.precioE}$</Text> */}
                                                 </View>
@@ -203,6 +198,12 @@ const styles = StyleSheet.create({
         color: "#3399ff",
         fontWeight: 'bold'
     },
+
+  elemento: {
+    fontSize: 15,
+    // color: "#6666ff"
+    color: "white"
+  },
     descripcion: {
         fontSize: 15,
         marginTop: 5,

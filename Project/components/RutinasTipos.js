@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
+import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorLogos from './Fotos/ExportadorLogos'
+import ExportadorMenus from './Fotos/ExportadorMenus'
 import {
   StyleSheet,
   Text,
@@ -25,42 +28,33 @@ class RutinasTipos extends Component {
       Status: 'none',
       modalVisible: false,
       userSelected: [],
-      // rutinas: [{ id: 1, nombre: 'Arnold N1', imagen: require('./Fotos/PECHO.png'), dias: 7, fav: 1,modificable:false },
-      // { id: 2, nombre: 'La Roca', imagen: require('./Fotos/ESPALDA.png'), dias: 6, fav: 1,modificable:true },
-      // { "id": 3, "nombre": 'Vin Disell', "imagen": require('./Fotos/HOMBROS.png'), dias: 5, fav: 1,modificable:true },
-      // { id: 4, nombre: 'Wachiturro', imagen: require('./Fotos/PIERNAS.png'), dias: 1, fav: 0,modificable:true },
-      // { id: 5, nombre: 'Navy SEAL', imagen: require('./Fotos/BICEPS.png'), dias: 15, fav: 0,modificable:true },],
       rutinas:[],
       isLoading: true,
       generoEvento: [],
     };
-    this.Star = require('./Logos/Star_Llena.png');
-    this.Star_With_Border = require('./Logos/Star_Borde.png');
-    //this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-    //this.Star_With_Border = 'https://img.icons8.com/color/96/000000/star.png';
-    //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
     this.cargarRutinas();
   }
 
   componentWillReceiveProps() {
-    console.log('chauuuu')
     this.setState({isLoading:true})
     this.cargarRutinas()
   }
 
   cargarRutinas = async () => {
-    base.traerRutinas(await this.props.navigation.getParam('tipo_rutina'), this.okRutinas.bind(this))
+    if(await this.props.navigation.getParam('tipo_rutina') != "Propias"){
+        base.traerRutinas(await this.props.navigation.getParam('tipo_rutina'), this.okRutinas.bind(this))
+    }else{
+        base.traerRutinasPropias(this.okRutinas.bind(this))
+    }
   }
   okRutinas(rutinas){
     this.setState({ rutinas: rutinas, isLoading: false });
-    console.log(rutinas)
   }
   
   _storeData = async (id_rutina) => {
     try {
       await AsyncStorage.setItem('rutinaEditable', id_rutina);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -72,7 +66,6 @@ class RutinasTipos extends Component {
     while (i < this.state.rutinas.length) {
       if (this.state.rutinas[i].id_rutina == id_rutina) {
         aux = i
-        console.log(this.state.rutinas[aux].favoritos)
       }
       rutinas2.push(this.state.rutinas[i])
       i++
@@ -95,29 +88,26 @@ class RutinasTipos extends Component {
 
   favoritos(favoritos){
     if(favoritos){
-      return this.Star
+      return ExportadorLogos.traerEstrella(true)
     }
     else{
-      return this.Star_With_Border
+      return ExportadorLogos.traerEstrella(false)
     }
   }
 
   render() {
     if (this.state.isLoading) {
       return (
-        //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
-        //<View style={styles.container}>
         <View style={styles.container}>
+        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
-        //</View>
-        // </LinearGradient>
       );
     } else {
       return (
         //<View style={styles.container}>
         <LinearGradient colors={['black', 'grey']} style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
             <FlatList
               style={styles.contentList}
@@ -131,7 +121,7 @@ class RutinasTipos extends Component {
                   return (
                     <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre,item.modificable)}>
                       <View style={{ flexDirection: "row" }} >
-                        <Image style={styles.image} source={item.imagen} />
+                        <Image style={styles.image} source={ExportadorMenus.Musculacion()} />
                         <View style={styles.cardContent}>
                           <Text style={styles.name}>{item.nombre}</Text>
                           <Text style={styles.dias}>{item.dias} Dias</Text>
@@ -187,6 +177,7 @@ const styles = StyleSheet.create({
     borderColor: "#ebf0f7",
     margin: 5,
     marginRight: 5,
+    alignSelf: "center"
   },
 
   card: {

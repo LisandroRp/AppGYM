@@ -1,4 +1,6 @@
 import React from "react";
+import base from './GenerarBase';
+import ExportadorFondo from './Fotos/ExportadorFondo'
 import {
     StyleSheet,
     Text,
@@ -10,9 +12,7 @@ import {
     StatusBar
 } from 'react-native';
 import Swiper from "react-native-web-swiper";
-import base from './GenerarBase';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { Right } from "native-base";
 
 var { height, width } = Dimensions.get('window');
 
@@ -42,26 +42,27 @@ export default class Training extends React.Component {
         if (this.state.isLoading) {
             return (
                 <View style={styles.container}>
-                    <Image style={styles.bgImage} source={require('./Pared.jpg')} />
-                    <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
+                    <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                    <ActivityIndicator size="large" color="#3399ff"style={{ flex: 2 }}></ActivityIndicator>
                 </View>
             );
         } else {
             return (               
                 <View style={styles.container}>
                 <StatusBar backgroundColor="#3399ff" barStyle="light-content" />
-                <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+                <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+
                     <Swiper>
                         <View style={[styles.slideContainer, styles.slide1]}>
-                        <Image style={styles.bgImage} source={require('./Pared.jpg')} />
-                            <Text style={styles.headerText}>Slide 1</Text>
+                        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                        <Image style={styles.Logo} source={require('../assets/Logo_Solo.png')} />
                         </View>
                         <View style={[styles.slideContainer, styles.slide2]}>
-                        <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+                        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                             <Text style={styles.headerText}>Slide 2</Text>
                         </View>
                         <View style={[styles.slideContainer, styles.slide3]}>
-                        <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+                        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                             <Text style={styles.headerText}>Slide 3</Text>
                             <TouchableOpacity style={styles.guardarButton} onPress={() => { this.props.onPressPass()}}>
                                 <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
@@ -83,7 +84,8 @@ export default class Training extends React.Component {
 const resizeMode = 'center';
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: "grey"
     },
     header: {
         position: "absolute",
@@ -116,6 +118,10 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center"
+    },
+    Logo: {
+        height: hp(50),
+        width: wp(50)
     },
     slide1: {
         backgroundColor: "rgba(20,20,200,0.3)"

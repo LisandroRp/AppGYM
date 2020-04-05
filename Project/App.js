@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, Dimensions, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
 import Icon from '@expo/vector-icons/Ionicons';
 import Ejercicios from './components/Ejercicios'
 import EjerciciosEspecifico from './components/EjercicioEspecifico'
 import EjercicioAgregar from './components/EjercicioAgregar'
 import EjerciciosFavs from './components/EjerciciosFavs'
-import ChangePassword from './components/ChangePassword'
-import CreateUser from './components/CreateUser'
-import Informacion from './components/DatosPersonales';
-import LogInCards from './components/LogInCards'
 import Musculo from './components/Musculo'
 import MusculoAgregar from './components/MusculoAgregar'
 import Suplementacion from './components/Suplementacion'
@@ -40,9 +36,9 @@ import CamaraPage from './components/Camara/CamaraPage';
 import MusculoFavs from './components/MusculoFavs';
 console.disableYellowBox=true
 
-function handleSearch() {
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+var { height, width } = Dimensions.get('window');
 
-}
 
 class App extends Component {
   render() {
@@ -68,62 +64,7 @@ class TrainingScreen extends React.Component {
     //this.props.navigation.navigate('SuplementacionEspecifica');
   }
 }
-class SignUpClass extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <LogInCards
-        onPressLogin={this.checkLogin.bind(this)}
-        onPressPass={this.goPass.bind(this)}
-        onPressCreate={this.goCreate.bind(this)}
-      />
-    )
-  }
-  checkLogin(IdUser) {
-    //this.props.navigation.navigate('MockedViewScreen', { IdUser: IdUser });
-    this.props.navigation.navigate('Ejercicios');
-  }
 
-  goPass() {
-    this.props.navigation.navigate('ChangePassword');
-  }
-
-  goCreate() {
-    this.props.navigation.navigate('CreateUser');
-  }
-}
-class ChangePasswordScreen extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <ChangePassword
-        onPress={this.checkPassword.bind(this)}
-      />
-    );
-  }
-  checkPassword() {
-    this.props.navigation.navigate('SignUpClass')
-  }
-}
-class CreateUserScreen extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <CreateUser
-        onPress={this.checkPassword.bind(this)}
-      />
-    );
-  }
-  checkPassword() {
-    this.props.navigation.navigate('SignUpClass')
-  }
-}
 // *****************************************************
 // *********************Musculos************************
 // *****************************************************
@@ -243,14 +184,16 @@ class EjerciciosScreen extends React.Component {
 }
 class EjerciciosEspecificoScreen extends React.Component {
 
-  static navigationOptions = {
-    title: 'Detalles',
+  static navigationOptions = ({ navigation }) => {
+    return{
+    title: navigation.getParam('nombreEjercicio', 'Detalles'),
     headerStyle: {
       backgroundColor: 'black',
       height: 55,
       borderBottomWidth: 0
     },
     headerTintColor: '#3399ff',
+  }
   };
   constructor(props) {
     super(props)
@@ -354,7 +297,6 @@ class RutinasTiposScreen extends React.Component {
     );
   }
   irRutina(id_rutina,nombre,modificable) {
-    console.log(modificable);
     if(modificable){
     this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina ,nombre: nombre});
     }else{
@@ -433,8 +375,8 @@ class RutinaEspecificaMScreen extends React.Component {
       />
     );
   }
-  verInfo(id_ejercicio){
-    this.props.navigation.navigate('EjercicioEspecifico',{id_ejercicio:id_ejercicio});
+  verInfo(id_ejercicio, nombreEjercicio){
+    this.props.navigation.navigate('EjercicioEspecifico',{id_ejercicio:id_ejercicio, nombreEjercicio: nombreEjercicio});
   }
   editar(id_rutina){
     this._storeData(id_rutina);
@@ -443,7 +385,6 @@ class RutinaEspecificaMScreen extends React.Component {
     try {
         await AsyncStorage.setItem('rutinaEditable', JSON.stringify(id_rutina));
     } catch (error) {
-        console.log(error);
     }
   }
 }
@@ -861,7 +802,7 @@ const FavoritosStackNavigator = createStackNavigator(
 // *****************************************************
 
 const PerfilTabNavigator = createBottomTabNavigator({
-  Perfil: Informacion,
+  //Perfil: Informacion,
   FavoritosScreen: FavoritosScreen
 }, {
     navigationOptions: ({ navigation }) => {
@@ -927,11 +868,10 @@ const DrawerConfig = {
 const customDrawerComponent = (props) => (
   <View style={{ flex: 1 }}>
     <LinearGradient colors={['grey', 'black']} style={styles.profile}>
-    <View style={{alignContent:'center',alignItems:'center'}}>
+    <Image style={styles.bgImage} source={require('./assets/Pared_Fondo_Drawer.jpg')} />
       <Image
-        style={{ height: 100, width:200, resizeMode: 'contain', alignSelf:'center' }}
-        source={require('./components/Licha-enjoy.png')}></Image>
-        </View>
+        style={{  width: width * 0.64, resizeMode: 'contain', alignSelf:'center' }}
+        source={require('./assets/Logo_Drawer.png')}></Image>
     </LinearGradient>
     <ScrollView style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }}>
       <DrawerItems {...props} style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }} />
@@ -950,11 +890,12 @@ const AppDrawerNavigator = createDrawerNavigator({
   {
     contentComponent: customDrawerComponent,
     drawerBackgroundColor: 'black',
+    //drawerWidth: width * 0.56,
     contentOptions: {
       //Esto sirve para cambiar algunos colores
       activeTintColor: 'white',
-      inactiveTintColor: '#3399ff'
-    }
+      inactiveTintColor: '#3399ff',
+    },
   },
   //  {
   //     drawerBackgroundColor: '#ebf0f7',
@@ -981,6 +922,7 @@ const AppSwitchNavigator = createSwitchNavigator({
 const AppContainer = createAppContainer(AppSwitchNavigator);
 //const AppContainer = createAppContainer(AppDrawerNavigator);
 
+const resizeMode = 'center';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -994,12 +936,13 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   profile: {
-    alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: 50,
     paddingBottom: 50,
     borderBottomWidth: 0,
     borderBottomColor: '#3399ff',
     backgroundColor: '#3399ff',
+    height: hp(22),
   },
   imgView: {
     flex: 1,
@@ -1017,4 +960,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center'
   },
+  bgImage: {
+    position: 'absolute',
+    height: hp(22),
+    width: '100%',
+    justifyContent: 'center',
+  }
 });

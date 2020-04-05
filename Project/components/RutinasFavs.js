@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
+import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorLogos from './Fotos/ExportadorLogos'
 import {
     StyleSheet,
     Text,
@@ -9,10 +11,14 @@ import {
     TouchableOpacity,
     FlatList,
     ActivityIndicator,
-    ScrollView
+    ScrollView,
+    Dimensions,
+    Modal
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
+var { height, width } = Dimensions.get('window');
 
 function createData(item) {
     return {
@@ -35,19 +41,22 @@ class RutinasFavs extends Component {
         this.state = {
             rutinas: [],
             isLoading: true,
+            modalVisible: false,
+            id_ruitna: '',
+            nombre: ""
         };
-        this.Star = require('./Logos/Star_Llena.png');
-        this.Star_With_Border = require('./Logos/Star_Borde.png');
-        //this.Star = 'https://img.icons8.com/color/96/000000/christmas-star.png';
         this.cargarRutinasFavoritas();
     }
-  
+
     cargarRutinasFavoritas = async () => {
-      base.traerRutinasFavoritas(this.okRutinas.bind(this))
+        base.traerRutinasFavoritas(this.okRutinas.bind(this))
     }
-    okRutinas(rutinas){
-      this.setState({ rutinas: rutinas, isLoading: false });
-      console.log(rutinas)
+    okRutinas(rutinas) {
+        this.setState({ rutinas: rutinas, isLoading: false });
+    }
+
+    modalVisible(id, nombre) {
+        this.setState({ id_rutina: id, nombre: nombre, modalVisible: true })
     }
 
     favear(id_rutina) {
@@ -56,44 +65,39 @@ class RutinasFavs extends Component {
         aux = 0
         rutinas2 = []
         while (i < this.state.rutinas.length) {
-          if (this.state.rutinas[i].id_rutina == id_rutina) {
-            aux = i
-            console.log(this.state.rutinas[aux].favoritos)
-          }
-          rutinas2.push(this.state.rutinas[i])
-          i++
+            if (this.state.rutinas[i].id_rutina == id_rutina) {
+                aux = i
+            }
+            rutinas2.push(this.state.rutinas[i])
+            i++
         }
         if (rutinas2[aux].favoritos) {
-          rutinas2[aux].favoritos = 0
-          fav= 0
+            rutinas2[aux].favoritos = 0
+            fav = 0
         } else {
-          rutinas2[aux].favoritos = 1
-          fav= 1
+            rutinas2[aux].favoritos = 1
+            fav = 1
         }
-        //this.setState({ rutinas: rutinas2 })   
-        base.favoritearRutina(id_rutina, fav, this.okFavorito.bind(this))  
-      }
-    
-      okFavorito() {
+        this.setState({ modalVisible: false })
+        base.favoritearRutina(id_rutina, fav, this.okFavorito.bind(this))
+    }
+
+    okFavorito() {
         this.cargarRutinasFavoritas()
         //this.setState({ isLoading: false })
-      }
+    }
     render() {
         if (this.state.isLoading) {
             return (
-                //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
-                //<View style={styles.container}>
                 <View style={styles.container}>
+                    <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                     <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
                 </View>
-                //</View>
-                // </LinearGradient>
             );
         } else {
             return (
-                //<View style={styles.container}>
                 <LinearGradient colors={['black', 'grey']} style={styles.container}>
-                    <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+                    <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                     <ScrollView>
                         <FlatList
                             style={styles.contentList}
@@ -114,8 +118,8 @@ class RutinasFavs extends Component {
                                                     <Text style={styles.dias}>{item.dias} Dias</Text>
                                                 </View>
                                                 <View style={styles.ViewEstrella} >
-                                                    <TouchableOpacity onPress={() => {this.favear(item.id_rutina) }}>
-                                                        <Image style={styles.StarImage} source={this.Star } />
+                                                    <TouchableOpacity onPress={() => { this.modalVisible(item.id_rutina, item.nombre) }}>
+                                                        <Image style={styles.StarImage} source={ExportadorLogos.traerEstrella(true)} />
                                                     </TouchableOpacity>
                                                 </View>
                                             </View>
@@ -124,8 +128,31 @@ class RutinasFavs extends Component {
                                 }
                             }} />
                     </ScrollView>
+                    <Modal
+                        animationType="fade"
+                        visible={this.state.modalVisible}
+                        transparent={true}
+                        onRequestClose={() => this.setState({ modalVisible: false })}  >
+
+                        <View style={styles.modal}>
+
+                            <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: width * 0.05}}>
+                                <Text style={styles.textButton}>Desea sacar la rutina "{this.state.nombre}" de su lista de favoritos</Text>
+                            </View>
+                            <View style={styles.modal2}>
+
+                                <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
+                                    <Text style={styles.textButton}>Cancelar</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={() => this.favear(this.state.id_rutina)} style={styles.modalButtonAceptar}>
+                                    <Text style={styles.textButton}>Aceptar</Text>
+                                </TouchableOpacity>
+
+                            </View>
+                        </View>
+                    </Modal>
                 </LinearGradient>
-                //</View>
             );
         }
     }
@@ -157,26 +184,26 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     image: {
-    //width: 90,
-    width: wp("20"),
-    //height: 90,
-    height: hp("11"),
-    borderWidth: 2,
-    borderColor: "#ebf0f7",
-    margin: 5,
-    marginRight: 5,
+        //width: 90,
+        width: wp("20"),
+        //height: 90,
+        height: hp("11"),
+        borderWidth: 2,
+        borderColor: "#ebf0f7",
+        margin: 5,
+        marginRight: 5,
     },
 
     card: {
         shadowColor: '#00000021',
         shadowOffset: {
-          width: 0,
-          height: 6,
+            width: 0,
+            height: 6,
         },
         shadowOpacity: 0.37,
         shadowRadius: 7.49,
         elevation: 12,
-    
+
         marginLeft: 20,
         marginRight: 20,
         marginTop: 20,
@@ -203,13 +230,63 @@ const styles = StyleSheet.create({
     StarImage: {
         width: hp(5.5),
         height: hp(5.5),
-    //resizeMode: 'cover',
+        //resizeMode: 'cover',
     },
     ViewEstrella: {
         alignItems: 'center',
         justifyContent: "center",
         paddingHorizontal: wp("5")
-      }
+    },
+      //MODAAAAL
+modal: {
+        height: height * 0.22,
+        width: width * 0.75,
+        position: 'absolute',
+        top: height * 0.3,
+        left: width * 0.13,
+        borderColor: 'black',
+        borderWidth: 2,
+        backgroundColor: 'grey',
+        shadowColor: 'black',
+        shadowOpacity: 5.0,
+        borderRadius: 22,
+        opacity: .95
+    },
+    modal2: {
+        flexDirection: 'row',
+        borderColor: 'black',
+        borderTopWidth: 2,
+        width: width * 0.74,
+        height: height * 0.08,
+        position: 'absolute',
+        bottom: 0,
+        opacity: .95
+    },
+    textButton: {
+        color: 'white',
+        fontSize: 15,
+        alignSelf: 'center',
+        textAlign: 'center',
+        fontWeight: 'bold'
+    },
+    modalButtonCancelar: {
+        width: width * 0.37,
+        height: height * 0.0775,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'grey',
+        borderRadius: 22
+    },
+    modalButtonAceptar: {
+        width: width * 0.37,
+        height: height * 0.0775,
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: "center",
+        borderLeftWidth: 2,
+        backgroundColor: 'grey',
+        borderBottomRightRadius: 22
+    }
 })
 
 export default withNavigation(RutinasFavs);

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
+import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorLogos from './Fotos/ExportadorLogos';
 import {
   StyleSheet,
   Text,
@@ -14,7 +16,6 @@ import {
   Modal,
   AsyncStorage
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient'
 import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
@@ -40,7 +41,8 @@ class RutinaModificable extends Component {
     this.state = {
       isLoading: true,
       nombre: this.props.navigation.getParam("nombre_rutina"),
-      modalVisible: false,
+      modalGuardarVisible: false,
+      modalBorrarTodoVisible: false,
       userSelected: [],
       rutina: [],
       rutinaVacia: [],
@@ -49,20 +51,9 @@ class RutinaModificable extends Component {
       diasTotal: [1, 2, 3, 4, 5, 6, 7],
       id_rutina: ''
     };
-    this.Star = require('./Logos/Star_Llena.png');
-    this.Pecho = require('./Logos/Logo_Pecho.png');
-    this.Abs = require('./Logos/Logo_Abs.png');
-    this.Espalda = require('./Logos/Logo_Espalda.png');
-    this.Hombros = require('./Logos/Logo_Hombros.png');
-    this.Bicep = require('./Logos/Logo_Bicep.png');
-    this.Tricep = require('./Logos/Logo_Bicep.png');
-    this.Piernas = require('./Logos/Logo_Piernas.png');
-    this.Cardio = require('./Logos/Logo_Cardio.png');
-    //this.obtenerEventos()
   }
 
   componentWillReceiveProps() {
-    console.log('chauuuu')
     this._retrieveData()
   }
   componentWillMount() {
@@ -83,7 +74,6 @@ class RutinaModificable extends Component {
   }
   _retrieveData = async () => {
     try {
-      console.log('holaaaaaaaaa')
       const value = await AsyncStorage.getItem('rutina');
 
       if (value !== null) {
@@ -94,7 +84,6 @@ class RutinaModificable extends Component {
           this.termino()
         } else {
           this._storeData()
-          console.log('Este ejercicio ya esta en el dia seleccionado')
           alert('Este ejercicio ya esta en el dia seleccionado')
         }
       } else {
@@ -105,7 +94,6 @@ class RutinaModificable extends Component {
     }
   };
   termino() {
-    //console.log(this.state.rutina)
     this._storeData()
   }
   touch(dia) {
@@ -228,15 +216,15 @@ class RutinaModificable extends Component {
   borrarTodo() {
     var rutinaVacia = []
     if (this.state.rutina.length != 0) {
-      this.setState({ isLoading: true })
+      this.setState({ isLoading: true, modalBorrarTodoVisible: false })
       this.setState({ rutina: rutinaVacia })
       this.termino()
     }
   }
   guardarRutina() {
-    this.setState({modalVisible: false})
+    this.setState({modalGuardarVisible: false})
     var aux = 0
-    rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/PECHO.png'), dias: '', favoritos: 1, rutina: [] }
+    rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/Ejercicios/PECHO.png'), dias: '', favoritos: 1, rutina: [] }
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].dia > aux) {
         aux = this.state.rutina[i].dia
@@ -247,7 +235,6 @@ class RutinaModificable extends Component {
     rutinaNueva.imagen = this.state.imagen
     rutinaNueva.dias = aux.toString()
     rutinaNueva.rutina = this.state.rutina
-    console.log(rutinaNueva)
     base.borrarEjerciciosRutina(this.props.navigation.getParam("id_rutina"), rutinaNueva,  this.seBorraronEjercicios.bind(this));
   }
   seBorraronEjercicios(rutinaNueva){
@@ -260,7 +247,7 @@ class RutinaModificable extends Component {
     this.props.onPressActualizar(this.props.navigation.getParam("id_rutina"), this.props.navigation.getParam("nombre_rutina"))
   }
   borrarRutina(id_rutina) {
-    this.setModalVisible(!this.state.modalVisible)
+    this.setModalGuardarVisible(!this.state.modalGuardarVisible)
     base.borrarRutina(id_rutina, this.okRutinaBorrada.bind(this))
   }
   okRutinaBorrada() {
@@ -269,40 +256,15 @@ class RutinaModificable extends Component {
   nuevoId() {
     //buscar el ultimo id en la base de datos
   }
-  setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
+  setModalGuardarVisible(visible) {
+    this.setState({ modalGuardarVisible: visible });
   }
-  queMusculo(musculo) {
-    if (musculo == "Abdominales") {
-      return this.Abs
-    }
-    if (musculo == "Bicep") {
-      return this.Bicep
-    }
-    if (musculo == "Cardio") {
-      return this.Cardio
-    }
-    if (musculo == "Espalda") {
-      return this.Espalda
-    }
-    if (musculo == "Hombros") {
-      return this.Hombros
-    }
-    if (musculo == "Pecho") {
-      return this.Pecho
-    }
-    if (musculo == "Piernas") {
-      return this.Piernas
-    }
-    if (musculo == "Tricep") {
-      return this.Tricep
-    }
-  }
+
   render() {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
           <AntDesign name="up" size={1} color="white" />
           <AntDesign name="down" size={1} color="white" />
@@ -312,11 +274,11 @@ class RutinaModificable extends Component {
     } else {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
             <View style={styles.inputContainer}>
               <TextInput style={styles.TextContainer} maxLength={15} placeholder={this.props.navigation.getParam("nombre_rutina")} placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
-              <TouchableOpacity onPress={() => { this.borrarTodo() }} style={styles.borrarTodo}>
+              <TouchableOpacity onPress={() => { this.setState({modalBorrarTodoVisible: true}) }} style={styles.borrarTodo}>
                 <AntDesign name="delete" size={20} color="white" />
               </TouchableOpacity>
             </View>
@@ -365,7 +327,7 @@ class RutinaModificable extends Component {
                                 onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
                                 <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Image style={styles.musculosLogo} source={this.queMusculo(item.musculo)} />
+                                    <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                     <View style={{ flexDirection: 'column', width: wp("33")}}>
                                       <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
                                       <Text>Series: {item.series}</Text>
@@ -397,7 +359,7 @@ class RutinaModificable extends Component {
             **************************************************************************** */}
 
             <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
-              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalVisible: true }) }}>
+              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalGuardarVisible: true }) }}>
                 <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
                   Borrar
                 </Text>
@@ -411,9 +373,9 @@ class RutinaModificable extends Component {
           </ScrollView>
           <Modal
             animationType="fade"
-            visible={this.state.modalVisible}
+            visible={this.state.modalGuardarVisible}
             transparent={true}
-            onRequestClose={() => this.setState({ modalVisible: false })}  >
+            onRequestClose={() => this.setState({ modalGuardarVisible: false })}  >
 
             <View style={styles.modal}>
               {/* <View style={{ flexDirection: 'column' }}>
@@ -425,12 +387,34 @@ class RutinaModificable extends Component {
               </View>
               <View style={styles.modal2}>
 
-                <TouchableOpacity onPress={() => { this.setModalVisible(!this.state.modalVisible); }} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                <TouchableOpacity onPress={() => { this.setModalGuardarVisible(!this.state.modalGuardarVisible); }} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
                 
                 <TouchableOpacity onPress={() => base.conseguirIdRutinaParaBorrar(this.state.nombre, this.borrarRutina.bind(this))} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
                   <Text style={styles.textButton}>Aceptar</Text>
+
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+          <Modal
+            animationType="fade"
+            visible={this.state.modalBorrarTodoVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalBorrarTodoVisible: false })}  >
+            <View style={styles.modal}>
+              <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
+                <Text style={styles.textButton}>Esta seguro que desea borrar todos los ejercicios de la rutina "{this.props.navigation.getParam("nombre_rutina")}"</Text>
+              </View>
+              <View style={styles.modal2}>
+
+                <TouchableOpacity onPress={() => { this.setState({modalBorrarTodoVisible: false})}} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                  <Text style={styles.textButton}>Cancelar</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity onPress={() => this.borrarTodo()} style={{width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                  <Text style={styles.textButton}>Borrar</Text>
 
                 </TouchableOpacity>
               </View>
@@ -571,7 +555,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     shadowColor: 'black',
     shadowOpacity: 5.0,
-    borderRadius: 22
+    borderRadius: 22,
+    opacity: .95
   },
   modal2: {
     flexDirection: 'row',
@@ -580,7 +565,8 @@ const styles = StyleSheet.create({
     width: width * 0.74,
     height: height * 0.08,
     position: 'absolute',
-    bottom: 0
+    bottom: 0,
+    opacity: .95
   },
   textButton: {
     color: 'white',

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import ExportadorMenus from './Fotos/ExportadorMenus'
+import ExportadorFondo from './Fotos/ExportadorFondo'
 import {
   StyleSheet,
   Text,
@@ -7,7 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { withNavigation } from 'react-navigation';
 
 function createData(item) {
@@ -39,26 +41,31 @@ class Rutinas extends Component {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
 
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas("Musculacion")}>
-                      <Text style={styles.name}>Musculacion</Text>
-                  </TouchableOpacity>
+          <View style={styles.contentList}>
 
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas("Aerobico")}>
-                        <Text style={styles.name}>Aeróbico</Text>
-                  </TouchableOpacity>
+            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas("Musculacion")}>
+              <Image style={styles.image} source={ExportadorMenus.Musculacion()} />
+            </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGoRutinas("Propias")}>
-                        <Text style={styles.name}>Propias</Text>
-                  </TouchableOpacity>
+            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas("Aeróbico")}>
+              <Image style={styles.image} source={ExportadorMenus.Aerobico()} />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas("Propias")}>
+              <Image style={styles.image} source={ExportadorMenus.Propias()} />
+            </TouchableOpacity>
+
+          </View>
+
         </View>
       );
     }
@@ -71,6 +78,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "black"
   },
+  contentList: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 2,
+  },
   bgImage: {
     flex: 1,
     resizeMode,
@@ -80,22 +93,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-    height: hp("29.5"),
-    backgroundColor: "black",
-    padding: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 2,
-    borderColor: "white"
+  imageContainer: {
+    height: hp(28.6),
+    width: wp(99),
+    margin: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black'
+  },
+  image: {
+    width: wp(98.5),
+    height: hp(28.1),
   },
   name: {
     fontSize: 22,
@@ -106,4 +114,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default  withNavigation(Rutinas);
+export default withNavigation(Rutinas);

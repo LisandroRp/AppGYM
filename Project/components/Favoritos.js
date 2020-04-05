@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import ApiController from '../controller/ApiController'
-import { SearchBar, Icon } from 'react-native-elements';
-import base from './GenerarBase';
+import ExportadorMenus from './Fotos/ExportadorMenus'
+import ExportadorFondo from './Fotos/ExportadorFondo'
 import {
   StyleSheet,
   Text,
@@ -42,26 +41,30 @@ class Favoritos extends Component {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
 
-                  <TouchableOpacity style={styles.card} nextFocusForward={true} onPress={() => this.props.onPressGoRutinas()}>
-                      <Text style={styles.name}>Rutinas</Text>
-                  </TouchableOpacity>
+          <View style={styles.contentList}>
 
-                  <TouchableOpacity style={styles.card} nextFocusForward={true} onPress={() => this.props.onPressGoSuplementos()}>
-                        <Text style={styles.name}>Suplementacion</Text>
-                  </TouchableOpacity>
+            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas()}>
+              <Image style={styles.image} source={ExportadorMenus.Rutinas()} />
+            </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.card} nextFocusForward={true} onPress={() => this.props.onPressGoEjercicios()}>
-                        <Text style={styles.name}>Ejercicios</Text>
-                  </TouchableOpacity>
+            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoEjercicios()}>
+              <Image style={styles.image} source={ExportadorMenus.Ejercicios()} />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoSuplementos()}>
+              <Image style={styles.image} source={ExportadorMenus.Suplementacion()} />
+            </TouchableOpacity>
+
+          </View>
                   
         </View>
       );
@@ -75,6 +78,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "black"
   },
+  contentList: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 2,
+  },
   bgImage: {
     flex: 1,
     resizeMode,
@@ -84,24 +93,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-    height: hp("29.5"),
-    backgroundColor: "black",
-    //padding: 10,
-    paddingHorizontal: wp("2"),
-    paddingVertical: hp("1"),
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 2,
-    borderColor: "white"
+  imageContainer: {
+    width: wp(99),
+    height: hp(28.6),
+    margin: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black'
+  },
+  image: {
+    width: wp(98.5),
+    height: hp(28.1),
   },
 
   name: {

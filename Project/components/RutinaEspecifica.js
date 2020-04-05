@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
+import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorLogos from './Fotos/ExportadorLogos'
 import {
   StyleSheet,
   Text,
@@ -72,15 +74,6 @@ class RutinaEspecifica extends Component {
       contador: 1,
       ejercicios: []
     };
-    this.Star = require('./Logos/Star_Llena.png');
-    this.Pecho = require('./Logos/Logo_Pecho.png');
-    this.Abs = require('./Logos/Logo_Abs.png');
-    this.Espalda = require('./Logos/Logo_Espalda.png');
-    this.Hombros = require('./Logos/Logo_Hombros.png');
-    this.Bicep = require('./Logos/Logo_Bicep.png');
-    this.Tricep = require('./Logos/Logo_Bicep.png');
-    this.Piernas = require('./Logos/Logo_Piernas.png');
-    this.Cardio = require('./Logos/Logo_Cardio.png');
     this.cargarRutina();
   }
   //Trae de la base de datos la rutina
@@ -100,7 +93,6 @@ class RutinaEspecifica extends Component {
     this.props.editable(this.state.rutina)
     //Cuenta la cantidad de dias que posee la rutina 
     this.contarDias()
-    console.log(this.state.rutina)
   }
 
   contarDias() {
@@ -114,54 +106,20 @@ class RutinaEspecifica extends Component {
     }
     this.setState({ diasTotal: cantidad, isLoading: false })
   }
-
-  queMusculo(musculo) {
-    if (musculo == "Abdominales") {
-      return this.Abs
-    }
-    if (musculo == "Bicep") {
-      return this.Bicep
-    }
-    if (musculo == "Cardio") {
-      return this.Cardio
-    }
-    if (musculo == "Espalda") {
-      return this.Espalda
-    }
-    if (musculo == "Hombros") {
-      return this.Hombros
-    }
-    if (musculo == "Pecho") {
-      return this.Pecho
-    }
-    if (musculo == "Piernas") {
-      return this.Piernas
-    }
-    if (musculo == "Tricep") {
-      return this.Tricep
-    }
-  }
-
+  
   render() {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
-            <View style={{ alignItems: 'center', marginVertical: height * 0.03 }}>
-              <TouchableOpacity onPress={() => { }}>
-                <View style={styles.imageContainer}>
-                  <Image style={styles.image} source={this.state.rutina.imagen} />
-                </View>
-              </TouchableOpacity>
-            </View>
             <FlatList
               style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
@@ -193,10 +151,10 @@ class RutinaEspecifica extends Component {
                           if (item.dia == aux) {
                             return (
                               <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
                                 <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Image style={styles.musculosLogo} source={this.queMusculo(item.musculo)} />
+                                    <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                     <View style={{ flexDirection: 'column', width: wp("60") }}>
                                       <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
                                       <Text>Series: {item.series}</Text>

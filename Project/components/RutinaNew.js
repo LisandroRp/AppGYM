@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import base from './GenerarBase';
+import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorLogos from './Fotos/ExportadorLogos';
 import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
@@ -16,9 +18,11 @@ import {
 } from 'react-native';
 import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
-import {AntDesign} from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AwesomeAlert from 'react-native-awesome-alerts';
+
 
 var { height, width } = Dimensions.get('window');
 
@@ -28,25 +32,18 @@ class RutinaNew extends Component {
     super(props);
     this.state = {
       nombre: '',
-      modalVisible: false,
+      tipo: '',
+      modalGuardarVisible: false,
+      modalBorrarTodoVisible: false,
       userSelected: [],
       rutina: [],
       isLoading: false,
       rutinaVacia: [],
       ultimoDia: 0,
       imagen: '',
-      diasTotal: [1,2,3,4,5,6,7],
+      diasTotal: [1, 2, 3, 4, 5, 6, 7],
       showAlert: false
     };
-    this.Star = require('./Logos/Star_Llena.png');
-    this.Pecho = require('./Logos/Logo_Pecho.png');
-    this.Abs = require('./Logos/Logo_Abs.png');
-    this.Espalda = require('./Logos/Logo_Espalda.png');
-    this.Hombros = require('./Logos/Logo_Hombros.png');
-    this.Bicep = require('./Logos/Logo_Bicep.png');
-    this.Tricep = require('./Logos/Logo_Bicep.png');
-    this.Piernas = require('./Logos/Logo_Piernas.png');
-    this.Cardio = require('./Logos/Logo_Cardio.png');
   }
   componentWillReceiveProps() {
     this._retrieveData()
@@ -62,7 +59,7 @@ class RutinaNew extends Component {
           this.termino()
         } else {
           this._storeData()
-          this.setState({showAlert: true})
+          this.setState({ showAlert: true })
         }
       }
     } catch (error) {
@@ -95,7 +92,7 @@ class RutinaNew extends Component {
       if (this.state.rutina[i].id_ejercicio == data.id_ejercicio) {
         if (this.state.rutina[i].dia == data.dia)
           return false
-          alert('Este ejercicio ya esta en el dia seleccionado')
+        alert('Este ejercicio ya esta en el dia seleccionado')
       }
     }
     return true
@@ -194,95 +191,115 @@ class RutinaNew extends Component {
   borrarTodo() {
     var rutinaVacia = []
     if (this.state.rutina.length != 0) {
-      this.setState({ isLoading: true })
+      this.setState({ isLoading: true, modalBorrarTodoVisible: false })
       this.setState({ rutina: rutinaVacia })
       this.termino()
     }
   }
   guardarRutina() {
-    this.setState({modalVisible: false})
+    this.setState({ modalGuardarVisible: false })
     var aux = 0
-    rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/PECHO.png'), dias: '', favoritos: 1, rutina: [], tipo: "Propias" }
+    rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/Ejercicios/PECHO.png'), dias: '', favoritos: 1, rutina: [], tipo: this.state.tipo }
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].dia > aux) {
         aux = this.state.rutina[i].dia
       }
     }
-    rutinaNueva.id_rutina = this.nuevoId()
     rutinaNueva.nombre = this.state.nombre
     rutinaNueva.imagen = this.state.imagen
     rutinaNueva.dias = aux.toString()
     rutinaNueva.rutina = this.state.rutina
-    console.log(rutinaNueva)
     base.crearRutina(rutinaNueva, this.okRutinaCreada.bind(this));
   }
   okRutinaCreada(rutinaNueva) {
     base.conseguirIdRutinaParaGuardar(rutinaNueva, this.okIdRutina.bind(this))
   }
-  okIdRutina(rutinaNueva){
+  okIdRutina(rutinaNueva) {
     base.crearEjerciciosRutina(rutinaNueva, this.okEjerciciosRutinaCreados.bind(this))
   }
-  okEjerciciosRutinaCreados(){
+  okEjerciciosRutinaCreados() {
     this.props.onPressCancelar()
   }
   cancelarRutina() {
     this.props.onPressCancelar()
   }
-  nuevoId() {
-    //buscar el ultimo id en la base de datos
+  botonGuardar() {
+    if(this.state.tipo == ''){
+      alert("Debes seleccionar un tipo de rutina")
+      return
+    }
+    if(this.state.nombre == ''){
+      alert("Debes escribir el nombre de la rutina")
+      return
+    }
+    if(this.state.rutina.length == 0){
+      alert("Debes agregar almenos un ejercicio a la rutina")
+      return
+    }
+    this.setState({ modalGuardarVisible: true }) 
   }
-  queMusculo(musculo) {
-    if (musculo == "Abdominales") {
-      return this.Abs
-    }
-    if (musculo == "Bicep") {
-      return this.Bicep
-    }
-    if (musculo == "Cardio") {
-      return this.Cardio
-    }
-    if (musculo == "Espalda") {
-      return this.Espalda
-    }
-    if (musculo == "Hombros") {
-      return this.Hombros
-    }
-    if (musculo == "Pecho") {
-      return this.Pecho
-    }
-    if (musculo == "Piernas") {
-      return this.Piernas
-    }
-    if (musculo == "Tricep") {
-      return this.Tricep
-    }
-  }
+
   render() {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
-            <View style={{ alignItems: 'center', marginVertical: height * 0.03 }}>
-              {/* <TouchableOpacity onPress={() => {}> */}
-              <TouchableOpacity>
-                <View style={styles.imageContainer}>
-                  <Image style={styles.image} />
-                  {/* <Image style={styles.image} source={} /> */}
-                </View>
-              </TouchableOpacity>
-            </View>
             <View style={styles.inputContainer}>
+            <View style={styles.inputContainerInside}>
               <TextInput style={styles.TextContainer} maxLength={15} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
-              <TouchableOpacity onPress={() => { this.borrarTodo() }} style={styles.borrarTodo}>
-                <AntDesign name="delete" size={20} color="white" />
+            <RNPickerSelect
+              placeholder={{
+                label: 'Tipo de Rutina',
+                value: '0',
+              }}
+              placeholderTextColor="black"
+              style={{
+                inputIOS: {
+                  backgroundColor: 'grey',
+                  borderRadius: 10,
+                  paddingLeft: 10,
+                  marginLeft: 20,
+                  marginBottom: 20,
+                  width: wp("70"),
+                  height: hp("5.5"),
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 15,
+                  color: "black",
+                },
+                inputAndroid: {
+                  backgroundColor: 'grey',
+                  borderRadius: 10,
+                  paddingLeft: 10,
+                  marginLeft: 20,
+                  marginBottom: 20,
+                  width: wp("70"),
+                  height: hp("5.5"),
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 15,
+                  color: "black",
+                }
+              }}
+              onValueChange={(value) => this.setState({ tipo: value })}
+              items={[
+                { label: 'Musculacion', value: 'Musculacion'},
+                { label: 'Aeróbico', value: 'Aeróbico' },
+              ]}
+            />
+            </View>
+              <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: true }) }} style={styles.borrarTodo}>
+                <AntDesign name="delete" size={25} color="white" />
               </TouchableOpacity>
             </View>
 
@@ -300,61 +317,61 @@ class RutinaNew extends Component {
               renderItem={({ item }) => {
                 aux = item
                 return (
-            <View style={styles.cuadraditos}>
-              <DropDownItem key={1} contentVisible={false}
-                header={
-                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                    <Text style={styles.detalleGenresTitles}>
-                    Día {item}
-                </Text>
-                    <TouchableOpacity onPress={() => {
-                      this.touch(item);
-                    }} style={styles.fab}>
-                      <AntDesign name="plus" size={20} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                }
-              >
-                <FlatList
-                  style={styles.contentList}
-                  columnWrapperStyle={styles.listContainer}
-                  data={this.state.rutina}
-                  initialNumToRender={50}
-                  keyExtractor={(item) => {
-                    return item.id_ejercicio;
-                  }}
-                  renderItem={({ item }) => {
-                    if (item.dia == aux) {
-                        return (
-                          <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                            onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
-                            <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Image style={styles.musculosLogo} source={this.queMusculo(item.musculo)} />
-                                <View style={{ flexDirection: 'column', width: wp("33")}}>
-                                  <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                  <Text>Series: {item.series}</Text>
-                                  <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
-                                </View>
-                              </View>
-                              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                  <AntDesign name="up" size={15} color="white" />
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                  <AntDesign name="down" size={15} color="white" />
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                  <AntDesign name="delete" size={17} color="white" />
-                                </TouchableOpacity>
-                              </View>
-                            </View>
+                  <View style={styles.cuadraditos}>
+                    <DropDownItem key={1} contentVisible={false}
+                      header={
+                        <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                          <Text style={styles.detalleGenresTitles}>
+                            Día {item}
+                          </Text>
+                          <TouchableOpacity onPress={() => {
+                            this.touch(item);
+                          }} style={styles.fab}>
+                            <AntDesign name="plus" size={20} color="white" />
                           </TouchableOpacity>
-                        )
-                    }
-                  }} />
-              </DropDownItem>
-            </View>
+                        </View>
+                      }
+                    >
+                      <FlatList
+                        style={styles.contentList}
+                        columnWrapperStyle={styles.listContainer}
+                        data={this.state.rutina}
+                        initialNumToRender={50}
+                        keyExtractor={(item) => {
+                          return item.id_ejercicio;
+                        }}
+                        renderItem={({ item }) => {
+                          if (item.dia == aux) {
+                            return (
+                              <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                    <View style={{ flexDirection: 'column', width: wp("33") }}>
+                                      <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                      <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                    </View>
+                                  </View>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                      <AntDesign name="up" size={15} color="white" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                      <AntDesign name="down" size={15} color="white" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                      <AntDesign name="delete" size={17} color="white" />
+                                    </TouchableOpacity>
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            )
+                          }
+                        }} />
+                    </DropDownItem>
+                  </View>
                 )
               }} />
             {/* ************************************************************************
@@ -367,18 +384,22 @@ class RutinaNew extends Component {
                   Cancelar
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({modalVisible: true}) }}>
+              <TouchableOpacity style={styles.guardarButton} onPress={() => {this.botonGuardar()}}>
                 <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
                   Guardar
                 </Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
+
+          {/* ************************************************************************
+            ******************************   Modal   *********************************
+            **************************************************************************** */}
           <Modal
             animationType="fade"
-            visible={this.state.modalVisible}
+            visible={this.state.modalGuardarVisible}
             transparent={true}
-            onRequestClose={() => this.setState({ modalVisible: false })}  >
+            onRequestClose={() => this.setState({ modalGuardarVisible: false })}  >
 
             <View style={styles.modal}>
               {/* <View style={{ flexDirection: 'column' }}>
@@ -389,8 +410,8 @@ class RutinaNew extends Component {
                 <Text style={styles.textButton}>Desea crear la rutina "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
-              
-                <TouchableOpacity onPress={() => { this.setState({modalVisible: false}) }} style={styles.modalButtonCancelar}>
+
+                <TouchableOpacity onPress={() => { this.setState({ modalGuardarVisible: false }) }} style={styles.modalButtonCancelar}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
 
@@ -401,20 +422,43 @@ class RutinaNew extends Component {
               </View>
             </View>
           </Modal>
+
+          <Modal
+            animationType="fade"
+            visible={this.state.modalBorrarTodoVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalBorrarTodoVisible: false })}  >
+            <View style={styles.modal}>
+              <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
+                <Text style={styles.textButton}>Esta seguro que desea borrar todos los ejercicios de la rutina "{this.state.nombre}"</Text>
+              </View>
+              <View style={styles.modal2}>
+
+                <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: false }) }} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                  <Text style={styles.textButton}>Cancelar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => this.borrarTodo()} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                  <Text style={styles.textButton}>Borrar</Text>
+
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
           <AwesomeAlert
-          show={this.state.showAlert}
-          showProgress={false}
-          title="Error"
-          message="Este ejercicio ya esta en el dia seleccionado!"
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showConfirmButton={true}
-          confirmText="Aceptar"
-          confirmButtonColor="#DD6B55"
-          onConfirmPressed={() => {
-            this.setState({showAlert: false})
-          }}
-        />
+            show={this.state.showAlert}
+            showProgress={false}
+            title="Error"
+            message="Este ejercicio ya esta en el dia seleccionado!"
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Aceptar"
+            confirmButtonColor="#DD6B55"
+            onConfirmPressed={() => {
+              this.setState({ showAlert: false })
+            }}
+          />
         </View>
       );
     }
@@ -436,11 +480,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     justifyContent: "space-between"
   },
+  inputContainerInside: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   TextContainer: {
     backgroundColor: 'grey',
     borderRadius: 10,
     paddingLeft: 10,
-   // width: 300,
+    // width: 300,
     //height: 45,
     width: wp("70"),
     height: hp("5.5"),
@@ -453,8 +501,8 @@ const styles = StyleSheet.create({
   borrarTodo: {
     //width: 44,
     //height: 44,
-    height: hp("6"),
-    width: wp("10.5"),
+    height: hp("8"),
+    width: hp("8"),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#3399ff',
@@ -517,7 +565,7 @@ const styles = StyleSheet.create({
     color: "#3399ff",
     fontWeight: 'bold'
   },
- 
+
   detalleGenresTitles: {
     fontSize: 33,
     margin: 10,
@@ -543,7 +591,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: width * 0.33,
     marginHorizontal: 22,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    opacity: .95
   },
   DropDownItem: {
     alignItems: 'stretch'
@@ -568,7 +617,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     shadowColor: 'black',
     shadowOpacity: 5.0,
-    borderRadius: 22
+    borderRadius: 22,
+    opacity: .95
   },
   modal2: {
     flexDirection: 'row',
@@ -577,7 +627,8 @@ const styles = StyleSheet.create({
     width: width * 0.74,
     height: height * 0.08,
     position: 'absolute',
-    bottom: 0
+    bottom: 0,
+    opacity: .95
   },
   textButton: {
     color: 'white',
@@ -586,35 +637,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold'
   },
-  buttonContainer: {
-    alignSelf: 'center',
-    justifyContent: 'center'
-  },
-  musculosLogo2: {
-    width: 40,
-    height: 40,
-    // width: width*0.05,
-    // height: height*0.05,
-    marginRight: 10,
-    resizeMode: 'cover',
-  },
   modalButtonCancelar: {
     width: width * 0.37,
     height: height * 0.0775,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'grey',
-    borderRadius: 22 
+    borderRadius: 22
   },
   modalButtonAceptar: {
     width: width * 0.37,
     height: height * 0.0775,
     justifyContent: 'center',
-    alignItems: 'center', 
-    textAlign: "center", 
-    borderLeftWidth: 2, 
-    backgroundColor: 'grey', 
-    borderBottomRightRadius: 22 
+    alignItems: 'center',
+    textAlign: "center",
+    borderLeftWidth: 2,
+    backgroundColor: 'grey',
+    borderBottomRightRadius: 22
   }
 })
 

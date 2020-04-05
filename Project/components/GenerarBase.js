@@ -23,10 +23,10 @@ class GenerarBase extends Component {
         var rutinas = []
         var existe
 
-        FileSystem.downloadAsync(
-            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-            `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        );
+        // FileSystem.downloadAsync(
+        //     Asset.fromModule(require('../assets/db/Vacia.db')).uri,
+        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        // );
         
         let db = SQLite.openDatabase('appgym.db');
         db.transaction(
@@ -127,6 +127,34 @@ class GenerarBase extends Component {
             }
         );
     }
+        //Traer los ejercicios favoritos de un musculo seleccionado
+        traerEjerciciosMusculoFavs(musculo, listo) {
+            ejercicios = []
+            // FileSystem.downloadAsync(
+            //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
+            // );
+            let db = SQLite.openDatabase('appgym.db');
+    
+            db.transaction(
+                tx => {
+                    tx.executeSql('SELECT * FROM Ejercicios  where Ejercicios.musculo = ? AND Ejercicios.favoritos = 1', [musculo], function (tx, res) {
+                        for (let i = 0; i < res.rows.length; ++i) {
+                            ejercicios.push(res.rows._array[i]);
+                        }
+                    });
+                },
+                error => {
+                    console.log(error)
+                    alert("Algo Salio Mal")
+                },
+                () => {
+                    console.log("Correcto")
+                    db._db.close()
+                    listo(ejercicios)
+                }
+            );
+        }
     //Trae el ejercicio seleccionado en la screen anterior a la screen ejercicioEspecifico
     traerEjercicioEspecifico(id_ejercicio, okEjercicio) {
         var ejercicioNew
@@ -190,7 +218,6 @@ class GenerarBase extends Component {
         db.transaction(
             tx => {
                 tx.executeSql('SELECT * FROM Ejercicios_Rutina JOIN Ejercicios JOIN Rutinas where Ejercicios_Rutina.id_ejercicio = Ejercicios.id_ejercicio AND Ejercicios_Rutina.id_rutina = Rutinas.id_rutina', [], function (tx, res) {
-                    console.log(res.rows._array)
                 });
             },
             error => {
@@ -228,7 +255,6 @@ class GenerarBase extends Component {
             }
         );
     }
-
     // *****************************************************
     // ***********************Rutinas***********************
     // *****************************************************
@@ -245,6 +271,33 @@ class GenerarBase extends Component {
         db.transaction(
             tx => {
                 tx.executeSql('SELECT * FROM Rutinas where tipo= ?', [tipo_rutina], function (tx, res) {
+                    for (let i = 0; i < res.rows.length; ++i) {
+                        rutinas.push(res.rows._array[i]);
+                    }
+                });
+            },
+            error => {
+                console.log(error)
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okRutinas(rutinas)
+            }
+        );
+    }
+    traerRutinasPropias(okRutinas) {
+        rutinas = []
+        // FileSystem.downloadAsync(
+        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        // );
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(
+            tx => {
+                tx.executeSql('SELECT * FROM Rutinas where propia = ? ', ["1"], function (tx, res) {
                     for (let i = 0; i < res.rows.length; ++i) {
                         rutinas.push(res.rows._array[i]);
                     }
@@ -338,7 +391,7 @@ class GenerarBase extends Component {
 
         db.transaction(
             tx => {
-                tx.executeSql("INSERT INTO Rutinas (nombre, imagen, dias, favoritos, modificable, tipo) VALUES ( ?, ?, ?, 1, 1, ?)", [rutinaNueva.nombre, rutinaNueva.imagen, rutinaNueva.dias, rutinaNueva.tipo])
+                tx.executeSql("INSERT INTO Rutinas (nombre, imagen, dias, favoritos, modificable, tipo, propia) VALUES ( ?, ?, ?, 1, 1, ?, 1)", [rutinaNueva.nombre, rutinaNueva.imagen, rutinaNueva.dias, rutinaNueva.tipo])
             },
             error => {
                 console.log(error)
@@ -358,8 +411,6 @@ class GenerarBase extends Component {
             tx => {
                 tx.executeSql('SELECT id_rutina FROM Rutinas where Rutinas.nombre = ? ', [rutinaNueva.nombre], function (tx, res) {
                     rutinaNueva.id_rutina = res.rows._array[0].id_rutina
-                    console.log("nombre"+ rutinaNueva.nombre)
-                    console.log(res.rows._array[0].id_rutina)
                 });
             },
             error => {
@@ -368,7 +419,6 @@ class GenerarBase extends Component {
             },
             () => {
                 console.log("Correcto")
-                console.log("magiaaaaa" + rutinaNueva.id_rutina)
                 db._db.close()
                 okIdRutina(rutinaNueva)
             }
@@ -399,7 +449,6 @@ class GenerarBase extends Component {
             tx => {
                 for(i=0; i<rutinaNueva.rutina.length;i++){
                     tx.executeSql("INSERT INTO Ejercicios_Rutina (id_rutina, id_ejercicio, dia, series, repeticiones) VALUES ( ?, ?, ?, ?, ?)", [rutinaNueva.id_rutina, rutinaNueva.rutina[i].id_ejercicio, rutinaNueva.rutina[i].dia, rutinaNueva.rutina[i].series, rutinaNueva.rutina[i].repeticiones])
-                    console.log(rutinaNueva.id_rutina, rutinaNueva.rutina[i].id_ejercicio, rutinaNueva.rutina[i].dia, rutinaNueva.rutina[i].series, rutinaNueva.rutina[i].repeticiones)
                 }
             },
             error => {
@@ -626,7 +675,6 @@ class GenerarBase extends Component {
                 tx.executeSql('SELECT * FROM Ejercicios_Rutina where id_rutina = ?', [rutina.id_rutina], function (tx, res) {
                     for (let i = 0; i < res.rows.length; ++i) {
                         ejercicios.push(res.rows._array[i]);
-                        console.log(ejercicios)
                     }
                 });
             },

@@ -3,6 +3,9 @@ import { SearchBar, Icon, ThemeConsumer } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import { AsyncStorage, Modal, TextInput } from 'react-native';
 import base from './GenerarBase';
+import ExportadorEjercicios from './Fotos/ExportadorEjercicios';
+import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorLogos from './Fotos/ExportadorLogos'
 import { FontAwesome } from '@expo/vector-icons';
 import {
   StyleSheet,
@@ -14,12 +17,10 @@ import {
   Keyboard,
   Dimensions,
   ActivityIndicator,
-  Picker,
-  Item
+  ScrollView
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { Reducer } from 'react-native-router-flux';
 
 var { height, width } = Dimensions.get('window');
 
@@ -50,6 +51,7 @@ class MusculoAgregar extends Component {
       tipo: this.props.navigation.getParam('tipo'),
       modalRepeticionesVisible: false,
       modalSeriesVisible: false,
+      favoritos: null,
       memory: [],
       ejercicios: [],
       isLoading: false,
@@ -58,58 +60,70 @@ class MusculoAgregar extends Component {
       musculoEjercicio: '',
       series: '0',
       repeticiones: [],
-      contadorRepeticiones:[],
+      contadorRepeticiones: [],
       rutinaNueva: [],
       ejercicioNuevo: [{ id_ejercicio: 0, nombre: '', repeticiones: '', series: '' }],
       modalRepeticionesHeigh: 0.25,
-      contador:0,
-      contador2:0
+      contador: 0,
+      contador2: 0
     };
     var { height, width } = Dimensions.get('window');
-    this.Pecho = require('./Fotos/PECHO.png')
-    this.Espalda = require('./Fotos/ESPALDA.png')
-    this.Hombros = require('./Fotos/HOMBROS.png')
-    this.Piernas = require('./Fotos/PIERNAS.png')
-    this.Bicep = require('./Fotos/BICEPS.png')
-    this.Triceps = require('./Fotos/TRICEPS.png')
-    this.Abs = require('./Fotos/ABS.png')
-    this.Cardio = require('./Fotos/CARDIO.png')
     this.cargarEjercicios();
   }
 
   //Trae los ejercicios especificios del musculo seleccionado en la screen anterior
   cargarEjercicios = async () => {
-    base.traerEjercicios(await this.props.navigation.getParam('musculo'), this.okEjercicios.bind(this))
+    if(this.state.favoritos == false || this.state.favoritos == null){
+      base.traerEjercicios(await this.props.navigation.getParam('musculo'), this.okEjercicios.bind(this))
+    }
+    else{
+      base.traerEjerciciosMusculoFavs(this.state.musculo, this.okEjerciciosFavs.bind(this))
+    }
   }
-
   //Setea los ejercicios y renderiza la screen
   okEjercicios(ejercicios) {
     this.setState({
+      favoritos: true,
       ejercicios: ejercicios,
       memory: ejercicios,
-      isLoading: false,
+      isLoading: false
     });
   }
-  guardarEjercicio(){
-    i=0;
-    if(this.state.repeticiones.length!=0){
-      while(i<this.state.repeticiones.length){
-        if(this.state.repeticiones[i]==undefined || this.state.repeticiones[i]==""){
-          alert("Debe completar todos los casilleros")
-          return 
-        }
-      i++
+  okEjerciciosFavs(ejercicios) {
+    this.setState({
+      favoritos: false,
+      ejercicios: ejercicios,
+      memory: ejercicios,
+      isLoading: false
+    });
+  }
+  queEstrella() {
+    if(this.state.favoritos == false){
+      return ExportadorLogos.traerEstrella(true)
+    }else{
+      return ExportadorLogos.traerEstrella(false)
     }
-    this.setState({ modalRepeticionesVisible: false })
-    this._retrieveData(this.repeticionesString());
-  }else{
-    alert("Debe completar todos los casilleros")
   }
+  guardarEjercicio() {
+    i = 0;
+    if (this.state.repeticiones.length != 0) {
+      while (i < this.state.repeticiones.length) {
+        if (this.state.repeticiones[i] == undefined || this.state.repeticiones[i] == "") {
+          alert("Debe completar todos los casilleros")
+          return
+        }
+        i++
+      }
+      this.setState({ modalRepeticionesVisible: false })
+      this._retrieveData(this.repeticionesString());
+    } else {
+      alert("Debe completar todos los casilleros")
+    }
   }
-  repeticionesString(){
-    repeticiones=this.state.repeticiones[0]
-    for(i=1; i<this.state.repeticiones.length; i++){
-      repeticiones=repeticiones + " - " + this.state.repeticiones[i] 
+  repeticionesString() {
+    repeticiones = this.state.repeticiones[0]
+    for (i = 1; i < this.state.repeticiones.length; i++) {
+      repeticiones = repeticiones + " - " + this.state.repeticiones[i]
     }
     return repeticiones
   }
@@ -140,39 +154,38 @@ class MusculoAgregar extends Component {
       series: this.state.series,
       dia: this.state.dia
     }
-    //console.log(terminada)
     this.state.rutinaNueva.push(terminada)
     this.props.onPressSave(this.state.rutinaNueva, this.state.tipo)
   }
   setModalSeriesVisible(visible, id_ejercicio, nombre, musculo) {
     this.setState({ modalSeriesVisible: visible, modalRepeticionesVisible: !visible, nombreEjercicio: nombre, id_ejercicio: id_ejercicio, musculoEjercicio: musculo });
   }
-  setModalRepeticionesHeigh(visible){
-    if(parseInt(this.state.series) == 0){
+  setModalRepeticionesHeigh(visible) {
+    if (parseInt(this.state.series) == 0) {
       alert("Debe ingresar una cantidad de series")
     }
-    else{
-      if (parseInt(this.state.series) < 5){
-        this.setState({modalRepeticionesHeigh: 0.25})
+    else {
+      if (parseInt(this.state.series) < 5) {
+        this.setState({ modalRepeticionesHeigh: 0.25 })
         this.setModalRepeticionesVisible(visible)
-      }else{
-        this.setState({modalRepeticionesHeigh: 0.33})
+      } else {
+        this.setState({ modalRepeticionesHeigh: 0.33 })
         this.setModalRepeticionesVisible(visible)
       }
-    }  
+    }
   }
-  setModalRepeticionesVisible(visible){
-      contadorRepeticiones = []
-      contadorRepeticiones.length = parseInt(this.state.series)
-      for(i=0;i<parseInt(this.state.series);i++){
-        contadorRepeticiones[i]=(i+1)
-      }
-      this.setState({modalSeriesVisible: !visible, modalRepeticionesVisible: visible, contadorRepeticiones: contadorRepeticiones})
+  setModalRepeticionesVisible(visible) {
+    contadorRepeticiones = []
+    contadorRepeticiones.length = parseInt(this.state.series)
+    for (i = 0; i < parseInt(this.state.series); i++) {
+      contadorRepeticiones[i] = (i + 1)
+    }
+    this.setState({ modalSeriesVisible: !visible, modalRepeticionesVisible: visible, contadorRepeticiones: contadorRepeticiones })
   }
-  guardarRepeticiones(repeticion, cantidad){
-    repeticiones=this.state.repeticiones,
-    repeticiones[repeticion-1]= cantidad
-    this.setState({repeticiones: repeticiones})
+  guardarRepeticiones(repeticion, cantidad) {
+    repeticiones = this.state.repeticiones,
+      repeticiones[repeticion - 1] = cantidad
+    this.setState({ repeticiones: repeticiones })
   }
   componentDidMount() {
     this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
@@ -197,11 +210,9 @@ class MusculoAgregar extends Component {
       let ejercicioLowercase = (
         ejercicio.nombre +
         ' ' +
-        ejercicio.id_ejercicio +
+        ejercicio.elemento +
         ' ' +
-        ejercicio.genero +
-        ' ' +
-        ejercicio.tipo
+        ejercicio.musculo
       ).toLowerCase();
 
       let searchTermLowercase = value.toLowerCase();
@@ -212,45 +223,18 @@ class MusculoAgregar extends Component {
     this.setState({ value })
   };
 
-  queMusculo(musculo) {
-    if (musculo == "Abdominales") {
-      return this.Abs
-    }
-    if (musculo == "Bicep") {
-      return this.Bicep
-    }
-    if (musculo == "Cardio") {
-      return this.Cardio
-    }
-    if (musculo == "Espalda") {
-      return this.Espalda
-    }
-    if (musculo == "Hombros") {
-      return this.Hombros
-    }
-    if (musculo == "Pecho") {
-      return this.Pecho
-    }
-    if (musculo == "Piernas") {
-      return this.Piernas
-    }
-    if (musculo == "Tricep") {
-      return this.Tricep
-    }
-  }
-
   render() {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
-          <Image style={styles.bgImage} source={require('./Pared.jpg')} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <View>
             <SearchBar
               placeholder="Search..."
@@ -265,39 +249,45 @@ class MusculoAgregar extends Component {
               searchIcon={{ color: 'black' }}
             />
           </View>
-          <FlatList
-            style={styles.contentList}
-            data={this.state.ejercicios}
-            initialNumToRender={50}
-            keyExtractor={(item) => {
-              return item.id_ejercicio;
-            }}
-            renderItem={({ item }) => {
-              return (
-                <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion)}>
-                  <View style={{ flexDirection: "row" }} >
-                    <Image style={styles.image} source={this.queMusculo(item.musculo)} />
-                    <View style={styles.cardContent}>
-                      <Text style={styles.name}>{item.nombre}</Text>
+          <ScrollView>
+            <TouchableOpacity onPress={() => {this.cargarEjercicios()}} style={styles.favoritos}>
+              <Image style={styles.StarImage} source={this.queEstrella()} />
+            </TouchableOpacity>
+            <FlatList
+              style={styles.contentList}
+              data={this.state.ejercicios}
+              initialNumToRender={50}
+              keyExtractor={(item) => {
+                return item.id_ejercicio;
+              }}
+              renderItem={({ item }) => {
+                return (
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion)}>
+                    <View style={{ flexDirection: "row" }} >
+                      <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.musculo)} />
+                      <View style={styles.cardContent}>
+                        <Text style={styles.name}>{item.nombre}</Text>
+                        <Text style={styles.elemento}>{item.elemento}</Text>
+                      </View>
+                      <View style={styles.masita}>
+                        <FontAwesome name="plus" style={styles.plus}
+                          onPress={() => this.setModalSeriesVisible(true, item.id_ejercicio, item.nombre, item.musculo)}
+                          size={44}
+                        /></View>
                     </View>
-                    <View style={styles.masita}>
-                      <FontAwesome name="plus" style={styles.plus}
-                        onPress={() => this.setModalSeriesVisible(true, item.id_ejercicio, item.nombre, item.musculo)}
-                        size={44}
-                      /></View>
-                  </View>
-                </TouchableOpacity>
-              )
-            }
-            } />
+                  </TouchableOpacity>
+                )
+              }
+              } />
+          </ScrollView>
           <Modal
             animationType="fade"
             visible={this.state.modalSeriesVisible}
             transparent={true}
             onRequestClose={() => this.setState({ modalVisible: false })}  >
             <View style={styles.modalSeries}>
-              <View style={{ flexDirection: 'column', alignItems: 'center'}}>
-              <Text style={styles.modalText}>Selecione el orden y la cantidad de sus repeticiones</Text>
+              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <Text style={styles.modalText}>Selecione el orden y la cantidad de sus repeticiones</Text>
                 <View style={styles.containerInputSeries}>
                   {/* <TextInput placeholder='Series' style={styles.textInput} multiline={true} autoFocus={true} maxLength={1} onChangeText={(text) => this.setState({ series: text })} value={this.state.series}></TextInput> */}
                   <View style={{ alignSelf: "center", justifyContent: "center", paddingTop: hp("0.5") }}>
@@ -332,7 +322,7 @@ class MusculoAgregar extends Component {
                 </View>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setState({modalSeriesVisible: false}); }} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                <TouchableOpacity onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.setModalRepeticionesHeigh(true)} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
@@ -348,34 +338,34 @@ class MusculoAgregar extends Component {
             transparent={true}
             onRequestClose={() => this.setState({ modalVisible: false })}  >
 
-            <View style={[{height: height * this.state.modalRepeticionesHeigh}, styles.modalReps ]}>
-            <Text style={styles.modalText}>Selecione el orden y la cantidad de sus repeticiones</Text>
-            <FlatList
-            scrollEnabled = {false}
-            contentContainerStyle={styles.contentList2}
-            data={this.state.contadorRepeticiones}
-            initialNumToRender={10}
-            keyExtractor={(item) => {
-              return item;
-            }}
+            <View style={[{ height: height * this.state.modalRepeticionesHeigh }, styles.modalReps]}>
+              <Text style={styles.modalText}>Selecione el orden y la cantidad de sus repeticiones</Text>
+              <FlatList
+                scrollEnabled={false}
+                contentContainerStyle={styles.contentList2}
+                data={this.state.contadorRepeticiones}
+                initialNumToRender={10}
+                keyExtractor={(item) => {
+                  return item;
+                }}
                 renderItem={({ item }) => {
                   return (
-                      <View style={styles.containerInputReps}>
-                        <TextInput keyboardType={'numeric'} placeholder='Reps.' style={styles.textInput} multiline={true} autoFocus={true} maxLength={2} onChangeText={(text) => this.guardarRepeticiones(item, text)} value={this.state.repeticiones[item]}></TextInput>
-                      </View>
+                    <View style={styles.containerInputReps}>
+                      <TextInput keyboardType={'numeric'} placeholder='Reps.' style={styles.textInput} multiline={true} autoFocus={true} maxLength={2} onChangeText={(text) => this.guardarRepeticiones(item, text)} value={this.state.repeticiones[item]}></TextInput>
+                    </View>
                   )
                 }
                 } />
-                
+
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({repeticiones: []})}} style={styles.modalButtonCancelar}>
+                <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({ repeticiones: [] }) }} style={styles.modalButtonCancelar}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.guardarEjercicio()} style={styles.modalButtonAceptar}>
                   <Text style={styles.textButton}>Aceptar</Text>
 
                 </TouchableOpacity>
-                </View>
+              </View>
             </View>
           </Modal>
         </View>
@@ -448,6 +438,7 @@ const styles = StyleSheet.create({
     borderColor: "#ebf0f7",
     margin: 5,
     marginRight: 5,
+    alignSelf: "center"
   },
 
   card: {
@@ -572,18 +563,41 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'grey',
-    borderRadius: 22 
+    borderRadius: 22
   },
   modalButtonAceptar: {
     width: width * 0.37,
     height: height * 0.0775,
     justifyContent: 'center',
-    alignItems: 'center', 
-    textAlign: "center", 
-    borderLeftWidth: 2, 
-    backgroundColor: 'grey', 
-    borderBottomRightRadius: 22 
-  }
+    alignItems: 'center',
+    textAlign: "center",
+    borderLeftWidth: 2,
+    backgroundColor: 'grey',
+    borderBottomRightRadius: 22
+  },
+  favoritos: {
+    //width: 44,
+    //height: 44,
+    height: hp("6"),
+    width: hp("6"),
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3399ff',
+    borderRadius: 30,
+    marginTop: 10
+  },
+  StarImage: {
+    width: hp(4),
+    height: hp(4),
+    //resizeMode: 'cover',
+  },
+  elemento: {
+    marginTop:1,
+    fontSize: 15,
+    // color: "#6666ff"
+    color: "white"
+},
 })
 
 export default withNavigation(MusculoAgregar);
