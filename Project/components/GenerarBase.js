@@ -7,26 +7,16 @@ import DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 //var db = SQLite.openDatabase('AppGYM.db');
 
-function createEjercicio(item) {
-    return {
-        id: item.id_rutina,
-        ejercicio: {},
-        dia: item.dia,
-        serie: item.series,
-        repeticiones: item.repeticiones,
-    };
-}
-
 class GenerarBase extends Component {
 
     abrirBase(existeBase) {
         var rutinas = []
         var existe
 
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/Vacia.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+        FileSystem.downloadAsync(
+            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
+            `${FileSystem.documentDirectory}/SQLite/appgym.db`
+        );
         
         let db = SQLite.openDatabase('appgym.db');
         db.transaction(
@@ -73,6 +63,9 @@ class GenerarBase extends Component {
             }
         );
     }
+    crearPlan(Objetivo, Experiencia, Altura, Peso, okPlan){
+
+    }
     ejerciciosRutina(listo){
         var rutinas = []
         let db = SQLite.openDatabase('appgym.db');
@@ -101,10 +94,7 @@ class GenerarBase extends Component {
     //Trae todos los ejercicios en la screen musculo y musculoAgregar
     traerEjercicios(musculo, okEjercicios) {
         ejercicios = []
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -127,13 +117,10 @@ class GenerarBase extends Component {
             }
         );
     }
-        //Traer los ejercicios favoritos de un musculo seleccionado
-        traerEjerciciosMusculoFavs(musculo, listo) {
+    //Traer los ejercicios favoritos de un musculo seleccionado
+    traerEjerciciosMusculoFavs(musculo, listo) {
             ejercicios = []
-            // FileSystem.downloadAsync(
-            //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-            //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-            // );
+
             let db = SQLite.openDatabase('appgym.db');
     
             db.transaction(
@@ -154,14 +141,11 @@ class GenerarBase extends Component {
                     listo(ejercicios)
                 }
             );
-        }
+    }
     //Trae el ejercicio seleccionado en la screen anterior a la screen ejercicioEspecifico
     traerEjercicioEspecifico(id_ejercicio, okEjercicio) {
         var ejercicioNew
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -184,15 +168,11 @@ class GenerarBase extends Component {
     //Trae los ejercicios con su informacion, de la rutina seleccionada en la screen rutinaEspecifica. (JOIN)
     traerEjerciciosRutinaJoin(rutina, listo) {
 
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
             tx => {
-                tx.executeSql('SELECT * FROM Ejercicios_Rutina JOIN Ejercicios where Ejercicios_Rutina.id_ejercicio = Ejercicios.id_ejercicio AND Ejercicios_Rutina.id_rutina=?', [rutina.id_rutina], function (tx, res) {
+                tx.executeSql('SELECT * FROM Ejercicios_Rutina JOIN Ejercicios where Ejercicios_Rutina.id_ejercicio = Ejercicios.id_ejercicio AND Ejercicios_Rutina.id_rutina=? ORDER BY dia, posicion', [rutina.id_rutina], function (tx, res) {
                     rutina.rutina = res.rows._array;
                 });
             },
@@ -209,10 +189,6 @@ class GenerarBase extends Component {
     }
     hola(rutina, listo) {
 
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -234,10 +210,6 @@ class GenerarBase extends Component {
     //Favoritear un Ejercicio
     favoritearEjercicio(id_ejercicio, fav, okFavorito) {
 
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -255,6 +227,42 @@ class GenerarBase extends Component {
             }
         );
     }
+    crearEjercicio(nombre, descripcion, ejecucion, elemento, musculo, okEjercicioCreado){
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(
+            tx => {
+                tx.executeSql("INSERT INTO Ejercicios (nombre, musculo, descripcion, ejecucion, elemento, favoritos, modificable) VALUES ( ?, ?, ?, ?, ?, 1, 1)", [nombre, musculo, descripcion, ejecucion, elemento])
+            },
+            error => {
+                console.log(error)
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okEjercicioCreado()
+            }
+        );
+    }
+    actualizarEjercicio(nombre, descripcion, ejecucion, elemento, musculo, id_ejercicio, okEjercicioActualizado){
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(
+            tx => {
+                tx.executeSql('UPDATE Ejercicios SET nombre = ?, descripcion = ?, ejecucion = ?, elemento = ?, musculo = ?  WHERE id_ejercicio = ? ', [nombre, descripcion, ejecucion, elemento, musculo, id_ejercicio])
+            },
+            error => {
+                alert("Algo Salio Mal")
+                console.log(error)
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okEjercicioActualizado()
+            }
+        );
+    }
     // *****************************************************
     // ***********************Rutinas***********************
     // *****************************************************
@@ -262,10 +270,7 @@ class GenerarBase extends Component {
     //Trae todos las rutinas en la screen rutinas
     traerRutinas(tipo_rutina, okRutinas) {
         rutinas = []
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -289,10 +294,7 @@ class GenerarBase extends Component {
     }
     traerRutinasPropias(okRutinas) {
         rutinas = []
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -317,10 +319,7 @@ class GenerarBase extends Component {
     //Trae la rutina seleccionada en la screen anterior a la screen rutinaEspecifica
     traerRutinaEspecifica(id_rutina, okRutinas) {
         var rutina
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -343,10 +342,6 @@ class GenerarBase extends Component {
     //La agrega o la saca de Favoritos a la rutina seleccionada
     favoritearRutina(id_rutina, fav, okFavorito) {
 
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -404,9 +399,28 @@ class GenerarBase extends Component {
             }
         );
     }
+    actualizarRutina(rutinaNueva, okRutinaActualizada){
+        let db = SQLite.openDatabase('appgym.db');
+
+        db.transaction(
+            tx => {
+                tx.executeSql('UPDATE Rutinas SET nombre = ?, dias = ?  WHERE id_rutina = ? ', [rutinaNueva.nombre, rutinaNueva.dias, rutinaNueva.id_rutina])
+            },
+            error => {
+                console.log(error)
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okRutinaActualizada()
+            }
+        );
+    }
     conseguirIdRutinaParaGuardar(rutinaNueva, okIdRutina){
         let db = SQLite.openDatabase('appgym.db');
 
+        console.log("Viejo"+rutinaNueva.id_rutina)
         db.transaction(
             tx => {
                 tx.executeSql('SELECT id_rutina FROM Rutinas where Rutinas.nombre = ? ', [rutinaNueva.nombre], function (tx, res) {
@@ -418,6 +432,7 @@ class GenerarBase extends Component {
                 alert("Algo Salio Mal")
             },
             () => {
+                console.log("nuevo"+rutinaNueva.id_rutina)
                 console.log("Correcto")
                 db._db.close()
                 okIdRutina(rutinaNueva)
@@ -448,7 +463,7 @@ class GenerarBase extends Component {
         db.transaction(
             tx => {
                 for(i=0; i<rutinaNueva.rutina.length;i++){
-                    tx.executeSql("INSERT INTO Ejercicios_Rutina (id_rutina, id_ejercicio, dia, series, repeticiones) VALUES ( ?, ?, ?, ?, ?)", [rutinaNueva.id_rutina, rutinaNueva.rutina[i].id_ejercicio, rutinaNueva.rutina[i].dia, rutinaNueva.rutina[i].series, rutinaNueva.rutina[i].repeticiones])
+                    tx.executeSql("INSERT INTO Ejercicios_Rutina (id_rutina, id_ejercicio, dia, series, repeticiones, combinado) VALUES ( ?, ?, ?, ?, ?, ?)", [rutinaNueva.id_rutina, rutinaNueva.rutina[i].id_ejercicio, rutinaNueva.rutina[i].dia, rutinaNueva.rutina[i].series, rutinaNueva.rutina[i].repeticiones, rutinaNueva.rutina[i].combinado])
                 }
             },
             error => {
@@ -458,7 +473,7 @@ class GenerarBase extends Component {
             () => {
                 console.log("Creados Ejercicios Rutina")
                 db._db.close()
-                okEjerciciosRutinaCreados()
+                okEjerciciosRutinaCreados(rutinaNueva)
             }
         );
     }
@@ -485,18 +500,15 @@ class GenerarBase extends Component {
     // *****************************************************
 
     //Trae todos los suplemetos en la screen Suplementos
-    traerSuplementos(okSuplementos) {
+    traerSuplementos(tipo_suplemento, okSuplementos) {
 
         suplementos = []
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
             tx => {
-                tx.executeSql('SELECT * FROM Suplementos', [], function (tx, res) {
+                tx.executeSql('SELECT * FROM Suplementos where tipo = ?', [tipo_suplemento], function (tx, res) {
                     for (let i = 0; i < res.rows.length; ++i) {
                         suplementos.push(res.rows._array[i]);
                     }
@@ -517,10 +529,7 @@ class GenerarBase extends Component {
     traerSuplementoEspecifico(id_suplemento, okSuplementos) {
 
         var suplemento
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -543,10 +552,6 @@ class GenerarBase extends Component {
     //Favoritear un suplemento
     favoritearSuplemento(id_suplemento, fav, okFavorito) {
 
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -572,10 +577,7 @@ class GenerarBase extends Component {
     //Trae todos los ejercicios que esten en favoritos en la screen EjerciciosFavs
     traerEjerciciosFavoritos(okEjercicios) {
         ejercicios = []
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -600,10 +602,7 @@ class GenerarBase extends Component {
     //Trae todos los suplementos que esten en favoritos en la screen SumplementosFavs
     traerSuplementosFavoritas(okSuplementos) {
         suplementos = []
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -628,10 +627,7 @@ class GenerarBase extends Component {
     //Trae todos las rutinas que esten en favoritos en la screen RutinasFavs
     traerRutinasFavoritas(okRutinas) {
         rutinas = []
-        // FileSystem.downloadAsync(
-        //     Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-        //     `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        // );
+
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -654,72 +650,5 @@ class GenerarBase extends Component {
         );
     }
 
-
-
-
-
-
-
-    //No se usa
-    //Trae los ejercicios de la rutina seleccionada en la screen rutinaEspecifica
-    traerEjerciciosRutina(rutina, okEjercicios) {
-        var ejercicios = []
-        FileSystem.downloadAsync(
-            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-            `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        );
-        let db = SQLite.openDatabase('appgym.db');
-
-        db.transaction(
-            tx => {
-                tx.executeSql('SELECT * FROM Ejercicios_Rutina where id_rutina = ?', [rutina.id_rutina], function (tx, res) {
-                    for (let i = 0; i < res.rows.length; ++i) {
-                        ejercicios.push(res.rows._array[i]);
-                    }
-                });
-            },
-            error => {
-                console.log("Error")
-                alert("Algo Salio Mal")
-            },
-            () => {
-                console.log("Correcto")
-                db._db.close()
-                rutina.rutina = ejercicios
-                okEjercicios(rutina)
-            }
-        );
-    }
-    //No se usa
-    traerEjercicioEspecificoRutina(rutinaEjercicios, rutinaTotal, okEjercicio) {
-        var ejercicio = createEjercicio(rutinaEjercicios)
-        var ejercicio2
-        FileSystem.downloadAsync(
-            Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
-            `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        );
-        let db = SQLite.openDatabase('appgym.db');
-
-        db.transaction(
-            tx => {
-                tx.executeSql('SELECT * FROM Ejercicios where id = ?', [rutinaEjercicios.id_ejercicio], function (tx, res) {
-                    ejercicio2 = res.rows._array;
-                });
-            },
-            error => {
-                console.log("Error")
-                alert("Algo Salio Mal")
-            },
-            () => {
-                console.log("Correcto")
-                db._db.close()
-                okEjercicio(rutinaTotal, ejercicio, ejercicio2)
-            }
-        );
-    }
-    //No se usa
-    tirarMagia(ejercicio, rutina, okTodo) {
-        okTodo(rutina, ejercicio)
-    }
 }
 export default new GenerarBase();

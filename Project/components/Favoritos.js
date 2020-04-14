@@ -94,16 +94,15 @@ const styles = StyleSheet.create({
     resizeMode: 'cover'
   },
   imageContainer: {
-    width: wp(99),
-    height: hp(28.6),
-    margin: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black'
   },
   image: {
-    width: wp(98.5),
-    height: hp(28.1),
+    height: hp(29.5),
+    width: wp(99),
+    margin: 1,
+    borderWidth: 1.5,
+    borderColor: 'black'
   },
 
   name: {

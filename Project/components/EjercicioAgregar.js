@@ -45,10 +45,9 @@ class EjercicioAgregar extends Component {
       {id:8,musculo: 'Cardio',imagen: require('./Fotos/Ejercicios/CARDIO.png')}],
       isLoading: false, 
       dia: this.props.navigation.getParam('dia'),
-      tipo: this.props.navigation.getParam('tipo')
+      tipo: this.props.navigation.getParam('tipo'),
+      combinado: this.props.navigation.getParam('combinado'),
     };
-    this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-    //this.obtenerEventos()
   }
 
   render() {
@@ -74,10 +73,8 @@ class EjercicioAgregar extends Component {
             }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity onPress={() => this.props.onPressGo(this.state.dia, item.musculo,this.state.tipo)}>
-                <View style={styles.imageContainer}>
+              <TouchableOpacity onPress={() => this.props.onPressGo(this.state.dia, item.musculo,this.state.tipo, this.state.combinado)}>
                 <Image style={styles.image} source={item.imagen} />
-                </View>
               </TouchableOpacity>
             )
           }} />
@@ -100,18 +97,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     padding:2,
   },
-  imageContainer: {
-    width: Dimensions.get('window').width /2 -4,
-    height: hp("28"),
-    // height: 200,
-    margin:1,
-    justifyContent: 'center',
-    alignItems:'center',
-    backgroundColor: 'black'
-  },
   image: {
-    width: Dimensions.get('window').width /2 -4,
-    height: hp("28"),
+    width: wp(49),
+    height: hp(28),
+    margin: 1,
+    borderWidth: 1.5,
+    borderColor: 'black'
   },
   bgImage:{
     flex: 1,

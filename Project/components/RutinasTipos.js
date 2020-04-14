@@ -3,7 +3,6 @@ import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorLogos from './Fotos/ExportadorLogos'
-import ExportadorMenus from './Fotos/ExportadorMenus'
 import {
   StyleSheet,
   Text,
@@ -15,7 +14,6 @@ import {
   ScrollView,
   AsyncStorage
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 class RutinasTipos extends Component {
@@ -105,8 +103,7 @@ class RutinasTipos extends Component {
       );
     } else {
       return (
-        //<View style={styles.container}>
-        <LinearGradient colors={['black', 'grey']} style={styles.container}>
+        <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
             <FlatList
@@ -120,24 +117,21 @@ class RutinasTipos extends Component {
               renderItem={({ item }) => {
                   return (
                     <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre,item.modificable)}>
-                      <View style={{ flexDirection: "row" }} >
-                        <Image style={styles.image} source={ExportadorMenus.Musculacion()} />
+                        {/* <Image style={styles.image} source={ExportadorMenus.Musculacion()} /> */}
                         <View style={styles.cardContent}>
                           <Text style={styles.name}>{item.nombre}</Text>
                           <Text style={styles.dias}>{item.dias} Dias</Text>
-                        </View>
-                        <View style={styles.ViewEstrella} >
+                      </View> 
+                      <View style={styles.ViewEstrella} >
                           <TouchableOpacity onPress={() => {this.favear(item.id_rutina)}}>
                             <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
                           </TouchableOpacity>
                         </View>
-                      </View>
                     </TouchableOpacity>
                   )
               }} />
           </ScrollView>
-        </LinearGradient>
-        //</View>
+        </View>
       );
     }
   }
@@ -196,6 +190,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     padding: 10,
     flexDirection: 'row',
+    height: hp(11)
   },
 
   name: {
@@ -221,12 +216,15 @@ const styles = StyleSheet.create({
   StarImage: {
     width: hp(5.5),
     height: hp(5.5),
-    //resizeMode: 'cover',
+    alignSelf: "center"
   },
   ViewEstrella: {
     alignItems: 'center',
+    alignSelf: "center",
     justifyContent: "center",
     paddingHorizontal: wp("5"),
+    position: "absolute",
+    right: 0,
   }
 })
 

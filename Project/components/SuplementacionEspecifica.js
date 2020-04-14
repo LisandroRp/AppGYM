@@ -79,8 +79,14 @@ class SuplementacionEspecifica extends Component {
                   <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.nombre}</Text></View>
                 }
               >
-
-                <Text style={styles.descripcion}>Marca: {this.state.detalle.marca}</Text>
+                <View style={{flexDirection: "row"}}>
+                <Text style={styles.descripcionUnderline}>Marca:</Text> 
+                <Text style={styles.descripcion}> {this.state.detalle.marca}</Text>
+                </View>
+                <View style={{flexDirection: "row"}}>
+                <Text style={styles.descripcionUnderline}>Sabor:</Text> 
+                <Text style={styles.descripcion}>{this.state.detalle.sabores}</Text>
+                </View>
                 <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
               </DropDownItem>
             </View>
@@ -133,24 +139,15 @@ const styles = StyleSheet.create({
   },
   todo: {
     backgroundColor: 'grey',
-    //margin: 20,
     marginHorizontal: wp("4"),
     marginVertical: hp("2"),
-    paddingHorizontal: wp("2"),
-    paddingVertical: hp("1"),
-    //padding: 10,
-    borderRadius: 20
+    opacity: 2
   },
   backgroundTitulo: {
     backgroundColor: 'black',
     alignItems: 'center',
-    //margin: 10,
-    marginHorizontal: wp("2"),
-    marginVertical: hp("1"),
-    //padding: 10,
     paddingHorizontal: wp("2"),
-    paddingVertical: hp("1"),
-    borderRadius: 20
+    paddingVertical: hp("2"),
   },
   titulo: {
     fontSize: 33,
@@ -158,11 +155,17 @@ const styles = StyleSheet.create({
     color: '#3399ff'
   },
   descripcion: {
-    color: 'white',
-    //margin: 10,
-    marginHorizontal: wp("2"),
-    marginVertical: hp("1"),
-    fontSize: 15,
+    color: 'black',
+    marginHorizontal: wp("5"),
+    marginVertical: hp("2"),
+    fontSize: 18,
+  },
+  descripcionUnderline: {
+    color: 'black',
+    textDecorationLine: 'underline',
+    marginLeft: wp("5"),
+    marginVertical: hp("2"),
+    fontSize: 18,
   },
 })
 

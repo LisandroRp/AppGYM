@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { SearchBar, Icon } from 'react-native-elements';
-import { withNavigation } from 'react-navigation';
+import { SearchBar} from 'react-native-elements';
 import base from './GenerarBase';
-import ExportadorEjercicios from './Fotos/ExportadorEjercicios';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
+import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion'
 import {
   StyleSheet,
   Text,
@@ -13,65 +12,35 @@ import {
   TouchableOpacity,
   FlatList,
   Keyboard,
-  Dimensions,
-  Alert,
-  ActivityIndicator,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { withNavigation } from 'react-navigation';
 
-function createData(item) {
-  return {
-    key: item._id,
-    idEvento: item._id,
-    imagen: item.imagen,
-    nombre: item.nombre,
-    rating: item.rating,
-    descripcion: item.descripcion,
-    tipo: item.tipo,
-    ubicacion: item.ubicacion,
-    precioE: item.precioE,
-    genero: item.genero,
-  };
-}
 
-class Musculo extends Component {
+class SuplementacionTipos extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       searchBarFocused: false,
-      musculo: this.props.navigation.getParam('musculo'),
       modalVisible: false,
-      memory:[],
-      ejercicios: [],
+      suplementos: [],
       isLoading: true,
     };
-    
-    this.cargarEjercicios();
+    this.cargarSuplementos();
   }
-
-  //Trae los ejercicios especificios del musculo seleccionado en la screen anterior
-  cargarEjercicios = async () => {
-    base.traerEjercicios(await this.props.navigation.getParam('musculo'), this.okEjercicios.bind(this))
+  cargarSuplementos = async () => {
+    base.traerSuplementos(await this.props.navigation.getParam('tipo_suplementacion'), this.okSuplementos.bind(this))
   }
-
-  //Setea los ejercicios y renderiza la screen
-  okEjercicios(ejercicios){
+  okSuplementos(suplementos){
     this.setState({
-      ejercicios: ejercicios,
-      memory: ejercicios,
+      suplementos: suplementos,
+      memory: suplementos,
       isLoading: false,
     });
-  }
-
-  esGenero(genero) {
-    for (i = 0; i <= this.state.generoEvento.length; i++) {
-      if (this.state.generoEvento[i] == genero) {
-        return true
-      }
-    }
-    return false
+    console.log(suplementos)
   }
 
   componentDidMount() {
@@ -92,52 +61,50 @@ class Musculo extends Component {
     this.setState({ searchBarFocused: false })
   }
 
-  searchEjercicio = value => {
-    const filterDeEjercicios = this.state.memory.filter(ejercicio => {
-      let ejercicioLowercase = (
-        ejercicio.nombre +
+  searchSuplementos = value => {
+    const filterDeSuplementos = this.state.memory.filter(suplemento => {
+      let suplementoLowercase = (
+        suplemento.nombre +
         ' ' +
-        ejercicio.id_ejercicio +
+        suplemento.descripcion +
         ' ' +
-        ejercicio.genero +
+        suplemento.marca +
         ' ' +
-        ejercicio.tipo +
-        ' ' +
-        ejercicio.elemento
+        suplemento.sabores
       ).toLowerCase();
 
       let searchTermLowercase = value.toLowerCase();
 
-      return ejercicioLowercase.indexOf(searchTermLowercase) > -1;
+      return suplementoLowercase.indexOf(searchTermLowercase) > -1;
     });
-    this.setState({ ejercicios: filterDeEjercicios });
+    this.setState({ suplementos: filterDeSuplementos });
     this.setState({ value })
   };
 
-  favear(id_ejercicio) {
+  favear(id_suplemento) {
     var i = 0
     var fav
     aux = 0
-    ejercicios2 = []
-    while (i < this.state.ejercicios.length) {
-      if (this.state.ejercicios[i].id_ejercicio == id_ejercicio) {
+    suplementos2 = []
+    while (i < this.state.suplementos.length) {
+      if (this.state.suplementos[i].id_suplemento == id_suplemento) {
         aux = i
       }
-      ejercicios2.push(this.state.ejercicios[i])
+      suplementos2.push(this.state.suplementos[i])
       i++
     }
-    if (ejercicios2[aux].favoritos) {
-      ejercicios2[aux].favoritos = 0
+    if (suplementos2[aux].favoritos) {
+      suplementos2[aux].favoritos = 0
       fav= 0
     } else {
-      ejercicios2[aux].favoritos = 1
+      suplementos2[aux].favoritos = 1
       fav= 1
     }
-    base.favoritearEjercicio(id_ejercicio, fav, this.okFavorito.bind(this))  
+    base.favoritearSuplemento(id_suplemento, fav, this.okFavorito.bind(this))  
   }
 
   okFavorito() {
-    this.cargarEjercicios()
+    this.cargarSuplementos()
   }
 
   favoritos(favoritos){
@@ -165,42 +132,44 @@ class Musculo extends Component {
             <SearchBar
               placeholder="Search..."
               platform='ios'
-              onChangeText={value => this.searchEjercicio(value)}
+              onChangeText={value => this.searchSuplementos(value)}
               value={this.state.value}
               inputContainerStyle={{ backgroundColor: 'grey' }}
               placeholderTextColor='black'
-              containerStyle={{ backgroundColor: 'black'}}
-              buttonStyle={{}}
+              containerStyle={{ backgroundColor: 'black', height: 50, paddingBottom: 22 }}
+              buttonStyle={{ marginBottom: 30 }}
               searchIcon={{ color: 'black' }}
             />
           </View>
-          <FlatList
-            style={styles.contentList}
-            columnWrapperStyle={styles.listContainer}
-            data={this.state.ejercicios.sort((a,b) => a.nombre.localeCompare(b.nombre))}
-            initialNumToRender={50}
-            keyExtractor={(item) => {
-              return item.id_ejercicio.toString();
-            }}
-            renderItem={({ item }) => {
+          <ScrollView>
+            <FlatList
+              style={styles.contentList}
+              columnWrapperStyle={styles.listContainer}
+              data={this.state.suplementos}
+              initialNumToRender={50}
+              keyExtractor= {(item) => {
+                return item.id_suplemento;
+              }}
+              renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion, item.modificable)}>
+                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre)}>
                     <View style={{ flexDirection: "row" }} >
-                      <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.musculo)} />
+                      <Image style={styles.image} source={ExportadorSuplementacion.queSuplementacion(item.tipo)} />
                       <View style={styles.cardContent}>
                         <Text style={styles.name}>{item.nombre}</Text>
-                        <Text style={styles.elemento}>{item.elemento}</Text>
+                        <Text style={styles.marca}>{item.marca}</Text>
                       </View>
                       <View style={styles.ViewEstrella} >
-                        <TouchableOpacity onPress={() => { this.favear(item.id_ejercicio) }}>
+                        <TouchableOpacity onPress={() => { this.favear(item.id_suplemento) }}>
                           <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
                         </TouchableOpacity>
                       </View>
                     </View>
                   </TouchableOpacity>
                 )
-            }
-            } />
+              }
+              } />
+          </ScrollView>
         </View>
       );
     }
@@ -211,7 +180,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: "grey"
+    backgroundColor: "black"
   },
   contentList: {
     flex: 1,
@@ -269,14 +238,11 @@ const styles = StyleSheet.create({
     color: "#3399ff",
     fontWeight: 'bold'
   },
-
-  elemento: {
-    marginTop:1,
+  marca: {
     fontSize: 15,
     // color: "#6666ff"
     color: "white"
   },
-
   StarImage: {
     width: hp(5.5),
     height: hp(5.5),
@@ -289,4 +255,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default withNavigation(Musculo);
+export default withNavigation(SuplementacionTipos);

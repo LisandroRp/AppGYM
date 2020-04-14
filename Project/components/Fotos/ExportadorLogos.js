@@ -52,6 +52,13 @@ class ExportadorLogos extends Component {
             return require('./Logos/Star_Borde.png')
         }
     }
+    traerEstrellaBlanca(favorito){
+        if (favorito){
+            return require('./Logos/Star_Llena_Blanca.png')
+        }else{
+            return require('./Logos/Star_Borde_Blanca.png')
+        }
+    }
 
 }
 export default new ExportadorLogos();

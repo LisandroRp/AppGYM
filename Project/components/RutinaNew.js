@@ -14,7 +14,8 @@ import {
   ScrollView,
   ActivityIndicator,
   Modal,
-  AsyncStorage
+  AsyncStorage,
+  TouchableWithoutFeedback
 } from 'react-native';
 import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
@@ -32,9 +33,10 @@ class RutinaNew extends Component {
     super(props);
     this.state = {
       nombre: '',
-      tipo: '',
+      tipo: 'Tipo de Rutina',
       modalGuardarVisible: false,
       modalBorrarTodoVisible: false,
+      modalTipoEjercicioTodoVisible: false,
       userSelected: [],
       rutina: [],
       isLoading: false,
@@ -42,7 +44,9 @@ class RutinaNew extends Component {
       ultimoDia: 0,
       imagen: '',
       diasTotal: [1, 2, 3, 4, 5, 6, 7],
-      showAlert: false
+      showAlert: false,
+      dia: 0,
+      combinado: 1,
     };
   }
   componentWillReceiveProps() {
@@ -53,26 +57,46 @@ class RutinaNew extends Component {
     try {
       const value = await AsyncStorage.getItem('rutina');
       if (value !== null) {
-        if (this.yaEsta(JSON.parse(value)[0])) {
-          this.setState({ isLoading: true })
-          this.state.rutina.push(JSON.parse(value)[0])
-          this.termino()
+        if (JSON.parse(value)[0].combinado) {
+          combinada1 = JSON.parse(value)[0]
+          combinada2 = JSON.parse(value)[1]
+          if (this.yaEsta(combinada1) && this.yaEsta(combinada2)) {
+            combinada1.combinado = this.state.combinado
+            combinada2.combinado = this.state.combinado
+            this.setState({ combinado: this.state.combinado + 1 })
+            this.state.rutina.push(combinada1)
+            this.state.rutina.push(combinada2)
+            this.setState({ isLoading: true })
+            this.termino()
+          } else {
+            this._storeData()
+            this.setState({ showAlert: true })
+          }
         } else {
-          this._storeData()
-          this.setState({ showAlert: true })
+          simple = JSON.parse(value)[0]
+          if (this.yaEsta(simple)) {
+            this.setState({ isLoading: true })
+            simple.combinado = null
+            this.state.rutina.push(simple)
+            this.termino()
+          } else {
+            this._storeData()
+            this.setState({ showAlert: true })
+          }
         }
       }
     } catch (error) {
       console.log(error);
     }
   };
+
   termino() {
     this._storeData()
   }
   touch(dia) {
     if (this.diaAnterior(dia) || dia == 1) {
-      this.setState({ ultimoDia: dia })
-      this.props.onPressGo(dia, 'nuevo')
+      this.setState({ ultimoDia: dia, modalTipoEjercicioTodoVisible: true, dia: dia })
+
     } else {
       alert('Debe agregar ejercicios en el dia ' + (dia - 1) + ' para poder agregar los en este dia')
     }
@@ -87,6 +111,14 @@ class RutinaNew extends Component {
     }
     return false
   }
+  agregarEjercicio() {
+    this.setState({ modalTipoEjercicioTodoVisible: false })
+    this.props.onPressGo(this.state.dia, 'nuevo', false)
+  }
+  agregarEjercicioCombinado() {
+    this.setState({ modalTipoEjercicioTodoVisible: false })
+    this.props.onPressGo(this.state.dia, 'nuevo', true)
+  }
   yaEsta(data) {
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].id_ejercicio == data.id_ejercicio) {
@@ -99,7 +131,8 @@ class RutinaNew extends Component {
   }
   _storeData = async () => {
     try {
-      await AsyncStorage.setItem('rutina', JSON.stringify(this.state.rutinaVacia));
+      //await AsyncStorage.setItem('rutina', JSON.stringify(this.state.rutinaVacia));
+      await AsyncStorage.removeItem('rutina')
       this.setState({
         isLoading: false,
       })
@@ -207,7 +240,7 @@ class RutinaNew extends Component {
     }
     rutinaNueva.nombre = this.state.nombre
     rutinaNueva.imagen = this.state.imagen
-    rutinaNueva.dias = aux.toString()
+    rutinaNueva.dias = (Math.floor(aux)).toString()
     rutinaNueva.rutina = this.state.rutina
     base.crearRutina(rutinaNueva, this.okRutinaCreada.bind(this));
   }
@@ -224,19 +257,19 @@ class RutinaNew extends Component {
     this.props.onPressCancelar()
   }
   botonGuardar() {
-    if(this.state.tipo == ''){
-      alert("Debes seleccionar un tipo de rutina")
-      return
-    }
-    if(this.state.nombre == ''){
+    if (this.state.nombre == '') {
       alert("Debes escribir el nombre de la rutina")
       return
     }
-    if(this.state.rutina.length == 0){
+    if (this.state.tipo == '') {
+      alert("Debes seleccionar un tipo de rutina")
+      return
+    }
+    if (this.state.rutina.length == 0) {
       alert("Debes agregar almenos un ejercicio a la rutina")
       return
     }
-    this.setState({ modalGuardarVisible: true }) 
+    this.setState({ modalGuardarVisible: true })
   }
 
   render() {
@@ -253,51 +286,51 @@ class RutinaNew extends Component {
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
             <View style={styles.inputContainer}>
-            <View style={styles.inputContainerInside}>
-              <TextInput style={styles.TextContainer} maxLength={15} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
-            <RNPickerSelect
-              placeholder={{
-                label: 'Tipo de Rutina',
-                value: '0',
-              }}
-              placeholderTextColor="black"
-              style={{
-                inputIOS: {
-                  backgroundColor: 'grey',
-                  borderRadius: 10,
-                  paddingLeft: 10,
-                  marginLeft: 20,
-                  marginBottom: 20,
-                  width: wp("70"),
-                  height: hp("5.5"),
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  fontWeight: 'bold',
-                  fontSize: 15,
-                  color: "black",
-                },
-                inputAndroid: {
-                  backgroundColor: 'grey',
-                  borderRadius: 10,
-                  paddingLeft: 10,
-                  marginLeft: 20,
-                  marginBottom: 20,
-                  width: wp("70"),
-                  height: hp("5.5"),
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  fontWeight: 'bold',
-                  fontSize: 15,
-                  color: "black",
-                }
-              }}
-              onValueChange={(value) => this.setState({ tipo: value })}
-              items={[
-                { label: 'Musculacion', value: 'Musculacion'},
-                { label: 'Aeróbico', value: 'Aeróbico' },
-              ]}
-            />
-            </View>
+              <View style={styles.inputContainerInside}>
+                <TextInput style={styles.TextContainer} maxLength={15} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
+                <RNPickerSelect
+                  placeholder={{
+                    label: this.state.tipo,
+                    value: '0',
+                  }}
+                  placeholderTextColor="black"
+                  style={{
+                    inputIOS: {
+                      backgroundColor: 'grey',
+                      borderRadius: 10,
+                      paddingLeft: 10,
+                      marginLeft: 20,
+                      marginBottom: 20,
+                      width: wp("70"),
+                      height: hp("5.5"),
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      fontWeight: 'bold',
+                      fontSize: 15,
+                      color: "black",
+                    },
+                    inputAndroid: {
+                      backgroundColor: 'grey',
+                      borderRadius: 10,
+                      paddingLeft: 10,
+                      marginLeft: 20,
+                      marginBottom: 20,
+                      width: wp("70"),
+                      height: hp("5.5"),
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      fontWeight: 'bold',
+                      fontSize: 15,
+                      color: "black",
+                    }
+                  }}
+                  onValueChange={(value) => this.setState({ tipo: value })}
+                  items={[
+                    { label: 'Musculacion', value: 'Musculacion' },
+                    { label: 'Aeróbico', value: 'Aeróbico' },
+                  ]}
+                />
+              </View>
               <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: true }) }} style={styles.borrarTodo}>
                 <AntDesign name="delete" size={25} color="white" />
               </TouchableOpacity>
@@ -316,6 +349,7 @@ class RutinaNew extends Component {
               }}
               renderItem={({ item }) => {
                 aux = item
+                contadorCobinadosFlatlist = false
                 return (
                   <View style={styles.cuadraditos}>
                     <DropDownItem key={1} contentVisible={false}
@@ -342,32 +376,92 @@ class RutinaNew extends Component {
                         }}
                         renderItem={({ item }) => {
                           if (item.dia == aux) {
-                            return (
-                              <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
-                                <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
-                                    <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                      <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                      <Text>Series: {item.series}</Text>
-                                      <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                            if (item.combinado != null) {
+                              if (contadorCobinadosFlatlist) {
+                                contadorCobinadosFlatlist= false
+                                return (
+                                  <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
+                                    onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                    <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                        <View style={{ flexDirection: 'column', width: wp("33") }}>
+                                          <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
+                                          <Text>Series: {item.series}</Text>
+                                          <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                        </View>
+                                      </View>
+                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                          <AntDesign name="up" size={15} color="white" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                          <AntDesign name="down" size={15} color="white" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                          <AntDesign name="delete" size={17} color="white" />
+                                        </TouchableOpacity>
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                )
+                              } else {
+                                contadorCobinadosFlatlist= true
+                                return (
+                                  <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
+                                    onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                    <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                        <View style={{ flexDirection: 'column', width: wp("33") }}>
+                                          <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
+                                          <Text>Series: {item.series}</Text>
+                                          <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                        </View>
+                                      </View>
+                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                          <AntDesign name="up" size={15} color="white" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                          <AntDesign name="down" size={15} color="white" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                          <AntDesign name="delete" size={17} color="white" />
+                                        </TouchableOpacity>
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                )
+                              }
+                            } else {
+                              return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                      <View style={{ flexDirection: 'column', width: wp("33") }}>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
+                                        <Text>Series: {item.series}</Text>
+                                        <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                      </View>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                        <AntDesign name="up" size={15} color="white" />
+                                      </TouchableOpacity>
+                                      <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                        <AntDesign name="down" size={15} color="white" />
+                                      </TouchableOpacity>
+                                      <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                        <AntDesign name="delete" size={17} color="white" />
+                                      </TouchableOpacity>
                                     </View>
                                   </View>
-                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                      <AntDesign name="up" size={15} color="white" />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                      <AntDesign name="down" size={15} color="white" />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                      <AntDesign name="delete" size={17} color="white" />
-                                    </TouchableOpacity>
-                                  </View>
-                                </View>
-                              </TouchableOpacity>
-                            )
+                                </TouchableOpacity>
+                              )
+                            }
                           }
                         }} />
                     </DropDownItem>
@@ -384,7 +478,7 @@ class RutinaNew extends Component {
                   Cancelar
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.guardarButton} onPress={() => {this.botonGuardar()}}>
+              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.botonGuardar() }}>
                 <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
                   Guardar
                 </Text>
@@ -433,7 +527,6 @@ class RutinaNew extends Component {
                 <Text style={styles.textButton}>Esta seguro que desea borrar todos los ejercicios de la rutina "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
-
                 <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: false }) }} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
@@ -444,6 +537,26 @@ class RutinaNew extends Component {
                 </TouchableOpacity>
               </View>
             </View>
+          </Modal>
+          <Modal
+            animationType="fade"
+            visible={this.state.modalTipoEjercicioTodoVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalTipoEjercicioTodoVisible: false })}  >
+            <TouchableOpacity style={{ height: height, width: width, position: "absolute", top: 0, left: 0 }} onPress={() => { this.setState({ modalTipoEjercicioTodoVisible: false }) }}>
+              <View style={styles.modalTipoEjericios}>
+                <View style={styles.modal2TipoEjericios}>
+                  <TouchableOpacity onPress={() => this.agregarEjercicio()} style={{ width: width * 0.4, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderTopLeftRadius: 22, borderBottomLeftRadius: 22 }}>
+                    <Text style={styles.textButtonTipoEjercicios}>Ejercicio{"\n"}Simple</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => this.agregarEjercicioCombinado()} style={{ width: width * 0.4, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22, borderTopRightRadius: 22 }}>
+                    <Text style={styles.textButtonTipoEjercicios}>Ejercicio{"\n"}Combinado</Text>
+
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableOpacity>
           </Modal>
           <AwesomeAlert
             show={this.state.showAlert}
@@ -542,6 +655,25 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     width: Dimensions.get('window').width * 0.88
   },
+  cuadraditosDeAdentroPrimerCombinado: {
+    borderBottomWidth: 0,
+    backgroundColor: 'grey',
+    marginTop: 5,
+    marginTop: 2,
+    paddingVertical: 10,
+    paddingLeft: 10,
+    alignSelf: 'stretch',
+    width: Dimensions.get('window').width * 0.88
+  },
+  cuadraditosDeAdentroSegundoCombinado: {
+    borderTopWidth: 0,
+    backgroundColor: 'grey',
+    marginBottom: 5,
+    paddingVertical: 10,
+    paddingLeft: 10,
+    alignSelf: 'stretch',
+    width: Dimensions.get('window').width * 0.88
+  },
   bgImage: {
     flex: 1,
     resizeMode,
@@ -630,9 +762,38 @@ const styles = StyleSheet.create({
     bottom: 0,
     opacity: .95
   },
+  modalTipoEjericios: {
+    width: width * 0.80,
+    height: height * 0.33,
+    position: 'absolute',
+    top: height * 0.33,
+    left: width * 0.10,
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22,
+    opacity: .95
+  },
+  modal2TipoEjericios: {
+    flexDirection: 'row',
+    width: width * 0.80,
+    height: height * 0.33,
+    position: 'absolute',
+    bottom: 0,
+    opacity: .95
+  },
   textButton: {
     color: 'white',
     fontSize: 15,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  textButtonTipoEjercicios: {
+    color: 'white',
+    fontSize: 20,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'

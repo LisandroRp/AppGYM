@@ -44,11 +44,11 @@ class MusculoAgregar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      //IdUser: props.navigation.getParam('IdUser'),
       searchBarFocused: false,
       musculo: this.props.navigation.getParam('musculo'),
       dia: this.props.navigation.getParam('dia'),
       tipo: this.props.navigation.getParam('tipo'),
+      combinado: this.props.navigation.getParam('combinado'),
       modalRepeticionesVisible: false,
       modalSeriesVisible: false,
       favoritos: null,
@@ -99,9 +99,9 @@ class MusculoAgregar extends Component {
   }
   queEstrella() {
     if(this.state.favoritos == false){
-      return ExportadorLogos.traerEstrella(true)
+      return ExportadorLogos.traerEstrellaBlanca(true)
     }else{
-      return ExportadorLogos.traerEstrella(false)
+      return ExportadorLogos.traerEstrellaBlanca(false)
     }
   }
   guardarEjercicio() {
@@ -152,7 +152,8 @@ class MusculoAgregar extends Component {
       nombre: this.state.nombreEjercicio,
       repeticiones: repeticiones,
       series: this.state.series,
-      dia: this.state.dia
+      dia: this.state.dia,
+      combinado: this.state.combinado,
     }
     this.state.rutinaNueva.push(terminada)
     this.props.onPressSave(this.state.rutinaNueva, this.state.tipo)
@@ -351,7 +352,7 @@ class MusculoAgregar extends Component {
                 renderItem={({ item }) => {
                   return (
                     <View style={styles.containerInputReps}>
-                      <TextInput keyboardType={'numeric'} placeholder='Reps.' style={styles.textInput} multiline={true} autoFocus={true} maxLength={2} onChangeText={(text) => this.guardarRepeticiones(item, text)} value={this.state.repeticiones[item]}></TextInput>
+                      <TextInput keyboardType={'numeric'} placeholder='Reps.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarRepeticiones(item, text)} value={this.state.repeticiones[item]}></TextInput>
                     </View>
                   )
                 }

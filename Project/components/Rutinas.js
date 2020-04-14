@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: "black"
+    backgroundColor: "grey"
   },
   contentList: {
     flex: 1,
@@ -94,16 +94,15 @@ const styles = StyleSheet.create({
     resizeMode: 'cover'
   },
   imageContainer: {
-    height: hp(28.6),
-    width: wp(99),
-    margin: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black'
   },
   image: {
-    width: wp(98.5),
-    height: hp(28.1),
+    height: hp(29.5),
+    width: wp(99),
+    margin: 1,
+    borderWidth: 1.5,
+    borderColor: 'black'
   },
   name: {
     fontSize: 22,

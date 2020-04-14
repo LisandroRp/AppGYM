@@ -31,31 +31,6 @@ function createData(item) {
     rutina: [],
   };
 }
-function createEjercicio(item, ejercicio) {
-  return {
-    id_rutina: ejercicio.id_rutina,
-    id_ejercicio: item.id_ejercicio,
-    dia: ejercicio.dia,
-    repeticiones: ejercicio.repeticiones,
-    series: ejercicio.series,
-    nombre: item.nombre,
-    musculo: item.musculo,
-    descripcion: item.descripcion,
-    ejecucion: item.ejecucion,
-    imagen1: item.imagen1,
-    imagen2: item.imagen2,
-  };
-}
-function createRutina(item) {
-  return {
-    dias: item.dias,
-    fav: item.fav,
-    id_rutina: item.id_rutina,
-    imagen: item.imagen,
-    modificable: item.modificable,
-    rutina: []
-  };
-}
 
 class RutinaEspecifica extends Component {
 
@@ -105,6 +80,7 @@ class RutinaEspecifica extends Component {
       dias--
     }
     this.setState({ diasTotal: cantidad, isLoading: false })
+    console.log(this.state.rutina)
   }
   
   render() {
@@ -120,16 +96,20 @@ class RutinaEspecifica extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
+          <View style={styles.imageContainer}>
+                  <Image style={styles.image} source={require('../assets/Logo_Solo.png')} />
+          </View>
             <FlatList
               style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
               data={this.state.diasTotal}
               initialNumToRender={50}
               keyExtractor={(item) => {
-                return item;
+                return item.toString();
               }}
               renderItem={({ item }) => {
                 aux = item
+                contadorCobinadosFlatlist = false
                 return (
                   <View style={styles.cuadraditos}>
                     <DropDownItem key={item} contentVisible={false}
@@ -141,7 +121,6 @@ class RutinaEspecifica extends Component {
                     >
                       <FlatList
                         style={styles.contentList}
-                        columnWrapperStyle={styles.listContainer}
                         data={this.state.rutina.rutina}
                         initialNumToRender={50}
                         keyExtractor={(item) => {
@@ -149,6 +128,43 @@ class RutinaEspecifica extends Component {
                         }}
                         renderItem={({ item }) => {
                           if (item.dia == aux) {
+                            if (item.combinado != null) {
+                              if (contadorCobinadosFlatlist) {
+                                contadorCobinadosFlatlist=false
+                                return (
+                              <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
+                                onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
+                                <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                    <View style={{ flexDirection: 'column', width: wp("60") }}>
+                                      <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                      <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                    </View>
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            )
+                              }else{
+                                contadorCobinadosFlatlist=true
+                                return (
+                              <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
+                                onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
+                                <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                    <View style={{ flexDirection: 'column', width: wp("60") }}>
+                                      <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
+                                      <Text>Series: {item.series}</Text>
+                                      <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                    </View>
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            )
+                              }
+                            }else{
                             return (
                               <TouchableOpacity style={styles.cuadraditosDeAdentro}
                                 onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
@@ -164,6 +180,7 @@ class RutinaEspecifica extends Component {
                                 </View>
                               </TouchableOpacity>
                             )
+                            }
                           }
                         }} />
                     </DropDownItem>
@@ -185,20 +202,19 @@ const styles = StyleSheet.create({
   },
 
   imageContainer: {
-    height: height * 0.28,
-    width: width * 0.51,
-    margin: 1,
+    height: height * 0.40,
+    width: height * 0.33,
+    margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
     backgroundColor: 'black',
     borderWidth: 4,
-    borderColor: "#ebf0f7"
+    borderRadius: 15
   },
   image: {
-    height: height * 0.28,
-    width: width * 0.51,
-    borderWidth: 4,
-    borderColor: "#ebf0f7"
+    height: height * 0.30,
+    width: height * 0.30,
   },
   bgImage: {
     flex: 1,
@@ -228,8 +244,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   musculosLogo: {
-    //width: 40,
-    //height: 40,
     width: wp("10.5"),
     height: hp("6"),
     marginRight: 12,
@@ -238,7 +252,6 @@ const styles = StyleSheet.create({
   detalleGenresTitles: {
     fontSize: 33,
     margin: 10,
-    //marginBottom: 2.5,
     alignSelf:"center",
     color: '#3399ff',
     fontWeight: 'bold'
@@ -248,6 +261,25 @@ const styles = StyleSheet.create({
   },
   cuadraditosDeAdentro: {
     backgroundColor: 'grey', marginVertical: 5, marginTop: 2, paddingVertical: 10, paddingLeft: 10, alignSelf: 'stretch', width: Dimensions.get('window').width * 0.88
+  },
+  cuadraditosDeAdentroPrimerCombinado: {
+    borderWidth: 0,
+    backgroundColor: 'grey',
+    marginTop: 5,
+    marginTop: 2,
+    paddingVertical: 10,
+    paddingLeft: 10,
+    alignSelf: 'stretch',
+    width: Dimensions.get('window').width * 0.88
+  },
+  cuadraditosDeAdentroSegundoCombinado: {
+    borderWidth: 0,
+    backgroundColor: 'grey',
+    marginBottom: 5,
+    paddingVertical: 10,
+    paddingLeft: 10,
+    alignSelf: 'stretch',
+    width: Dimensions.get('window').width * 0.88
   },
 })
 

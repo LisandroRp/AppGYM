@@ -8,9 +8,7 @@ import {
   Text,
   View,
   Image,
-  PixelRatio,
   Dimensions,
-  Alert,
   ScrollView,
   ActivityIndicator
 } from 'react-native';
@@ -39,7 +37,7 @@ class EjercicioEspecifico extends Component {
     this.state = {
       detalle: {
         id: this.props.navigation.getParam('id_ejercicio'),
-        nombre: this.props.navigation.getParam('nombreEjercicio'),
+        nombre: this.props.navigation.getParam('nombre_Ejercicio'),
         musculo: '',
         descripcion: '',
         ejecucion: '',
@@ -49,7 +47,6 @@ class EjercicioEspecifico extends Component {
       modalVisible: false,
       isLoading: true,
     };
-    this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
     this.cargarEjercicio();
   }
 
@@ -115,7 +112,7 @@ class EjercicioEspecifico extends Component {
     }else{
     return (
       <View style={styles.container}>
-        <Image style={styles.bgImage} source={ExportarFondo.traerFondo()} />
+        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
         <ScrollView>
           <View style={styles.todo}>
             <DropDownItem contentVisible={false}
@@ -169,36 +166,21 @@ const styles = StyleSheet.create({
   },
   todo: {
     backgroundColor: 'grey',
-    //margin: 20,
     marginHorizontal: wp("4"),
     marginVertical: hp("2"),
-    opacity: 2,
-    // paddingHorizontal: wp("2"),
-    //  paddingVertical: hp("1"),
-    //padding: 10,
-    //borderRadius: 20
+    opacity: 2
   },
   backgroundTituloPrincipal:{
     backgroundColor: 'black',
     alignItems: 'center',
-    //margin: 10,
-    // marginHorizontal: wp("2"),
-    // marginVertical: hp("1"),
-    //padding: 10,
     paddingHorizontal: wp("2"),
     paddingVertical: hp("2"),
-    //borderRadius: 20
   },
   backgroundTitulo: {
     backgroundColor: 'black',
     alignItems: 'center',
-    //margin: 10,
-    // marginHorizontal: wp("2"),
-    // marginVertical: hp("1"),
-    //padding: 10,
     paddingHorizontal: wp("2"),
     paddingVertical: hp("2"),
-    //borderRadius: 20
   },
   tituloPrincipal: {
     fontSize: 33,
@@ -212,11 +194,9 @@ const styles = StyleSheet.create({
   },
   descripcion: {
     color: 'black',
-    //margin: 10,
     marginHorizontal: wp("5"),
     marginVertical: hp("2"),
     fontSize: 18,
-    //shadowOpacity: 5.0,
   },
   imageContainer: {
     justifyContent: 'center',
