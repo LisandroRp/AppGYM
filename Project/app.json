@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "Gualter React",
+    "icon": "./assets/Logo.png",
     "slug": "Project",
     "privacy": "unlisted",
     "sdkVersion": "33.0.0",
@@ -20,11 +21,10 @@
     },
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/Logo.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/splashLogo.png",
+      "backgroundColor": "#ffffff",
+      "resizeMode": "cover"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
