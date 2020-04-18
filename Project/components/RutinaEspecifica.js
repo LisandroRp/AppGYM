@@ -80,7 +80,6 @@ class RutinaEspecifica extends Component {
       dias--
     }
     this.setState({ diasTotal: cantidad, isLoading: false })
-    console.log(this.state.rutina)
   }
   
   render() {
@@ -128,58 +127,114 @@ class RutinaEspecifica extends Component {
                         }}
                         renderItem={({ item }) => {
                           if (item.dia == aux) {
-                            if (item.combinado != null) {
-                              if (contadorCobinadosFlatlist) {
-                                contadorCobinadosFlatlist=false
-                                return (
-                              <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
-                                onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
-                                <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
-                                    <View style={{ flexDirection: 'column', width: wp("60") }}>
-                                      <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
-                                      <Text>Series: {item.series}</Text>
-                                      <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                            if (item.tiempo == null){
+                              if (item.combinado != null) {
+                                if (contadorCobinadosFlatlist) {
+                                  contadorCobinadosFlatlist=false
+                                  return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
+                                  onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
+                                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                      <View style={{ flexDirection: 'column', width: wp("60") }}>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
+                                        <Text>Series: {item.series}</Text>
+                                        <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                      </View>
                                     </View>
                                   </View>
-                                </View>
-                              </TouchableOpacity>
-                            )
+                                </TouchableOpacity>
+                              )
+                                }else{
+                                  contadorCobinadosFlatlist=true
+                                  return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
+                                  onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
+                                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                      <View style={{ flexDirection: 'column', width: wp("60") }}>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
+                                        <Text>Series: {item.series}</Text>
+                                        <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                      </View>
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                                }
                               }else{
-                                contadorCobinadosFlatlist=true
-                                return (
-                              <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
-                                onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
-                                <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
-                                    <View style={{ flexDirection: 'column', width: wp("60") }}>
-                                      <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
-                                      <Text>Series: {item.series}</Text>
-                                      <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                              return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
+                                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                      <View style={{ flexDirection: 'column', width: wp("60") }}>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
+                                        <Text>Series: {item.series}</Text>
+                                        <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                      </View>
                                     </View>
                                   </View>
-                                </View>
-                              </TouchableOpacity>
-                            )
+                                </TouchableOpacity>
+                              )
                               }
                             }else{
-                            return (
-                              <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
-                                <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
-                                    <View style={{ flexDirection: 'column', width: wp("60") }}>
-                                      <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
-                                      <Text>Series: {item.series}</Text>
-                                      <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                              if (item.combinado != null) {
+                                if (contadorCobinadosFlatlist) {
+                                  contadorCobinadosFlatlist=false
+                                  return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
+                                  onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
+                                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                      <View style={{ flexDirection: 'column', width: wp("60") }}>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
+                                        <Text>Series: {item.series}</Text>
+                                        <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                      </View>
                                     </View>
                                   </View>
-                                </View>
-                              </TouchableOpacity>
-                            )
+                                </TouchableOpacity>
+                              )
+                                }else{
+                                  contadorCobinadosFlatlist=true
+                                  return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
+                                  onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
+                                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                      <View style={{ flexDirection: 'column', width: wp("60") }}>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
+                                        <Text>Series: {item.series}</Text>
+                                        <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                      </View>
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                                }
+                              }else{
+                              return (
+                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre)}>
+                                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                      <View style={{ flexDirection: 'column', width: wp("60") }}>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1")}}>{item.nombre}</Text>
+                                        <Text>Series: {item.series}</Text>
+                                        <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                      </View>
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              )
+                              }
                             }
                           }
                         }} />

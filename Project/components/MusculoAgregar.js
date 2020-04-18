@@ -24,21 +24,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 var { height, width } = Dimensions.get('window');
 
-function createData(item) {
-  return {
-    key: item._id,
-    idEvento: item._id,
-    imagen: item.imagen,
-    nombre: item.nombre,
-    rating: item.rating,
-    descripcion: item.descripcion,
-    tipo: item.tipo,
-    ubicacion: item.ubicacion,
-    precioE: item.precioE,
-    genero: item.genero,
-  };
-}
-
 class MusculoAgregar extends Component {
 
   constructor(props) {
@@ -49,7 +34,9 @@ class MusculoAgregar extends Component {
       dia: this.props.navigation.getParam('dia'),
       tipo: this.props.navigation.getParam('tipo'),
       combinado: this.props.navigation.getParam('combinado'),
+      ultimaPos: this.props.navigation.getParam('ultimaPos'),
       modalRepeticionesVisible: false,
+      modalTiempoVisible: false,
       modalSeriesVisible: false,
       favoritos: null,
       memory: [],
@@ -65,7 +52,10 @@ class MusculoAgregar extends Component {
       ejercicioNuevo: [{ id_ejercicio: 0, nombre: '', repeticiones: '', series: '' }],
       modalRepeticionesHeigh: 0.25,
       contador: 0,
-      contador2: 0
+      contador2: 0,
+      tiempo: 0,
+      minutos: 0,
+      segundos: 0
     };
     var { height, width } = Dimensions.get('window');
     this.cargarEjercicios();
@@ -115,9 +105,18 @@ class MusculoAgregar extends Component {
         i++
       }
       this.setState({ modalRepeticionesVisible: false })
-      this._retrieveData(this.repeticionesString());
+      this._retrieveData(this.repeticionesString(), null);
     } else {
       alert("Debe completar todos los casilleros")
+    }
+  }
+  guardarEjercicioTiempo() {
+    if(this.state.minutos == 0 && this.state.segundos == 0)
+    {
+      alert("Debe marcar un tiempo")
+    }else{
+      this.setState({ modalTiempoVisible: false })
+      this._retrieveData(null, (this.state.minutos + " : " + this.state.segundos));
     }
   }
   repeticionesString() {
@@ -128,7 +127,7 @@ class MusculoAgregar extends Component {
     return repeticiones
   }
 
-  _retrieveData = async (repeticiones) => {
+  _retrieveData = async (repeticiones, tiempo) => {
     try {
       const value = await AsyncStorage.getItem('rutina');
       if (value != null) {
@@ -136,42 +135,64 @@ class MusculoAgregar extends Component {
           rutinaNueva: JSON.parse(value),
 
         })
-        this.cargarEjercicio(repeticiones);
+        this.cargarEjercicio(repeticiones, tiempo);
       }
       else {
-        this.cargarEjercicio(repeticiones)
+        this.cargarEjercicio(repeticiones, tiempo)
       }
     } catch (error) {
       console.log(error);
     }
   };
-  cargarEjercicio(repeticiones) {
-    terminada = {
-      id_ejercicio: this.state.id_ejercicio,
-      musculo: this.state.musculoEjercicio,
-      nombre: this.state.nombreEjercicio,
-      repeticiones: repeticiones,
-      series: this.state.series,
-      dia: this.state.dia,
-      combinado: this.state.combinado,
+  cargarEjercicio(repeticiones, tiempo) {
+    if(tiempo == null){
+      terminada = {
+        id_ejercicio: this.state.id_ejercicio,
+        musculo: this.state.musculoEjercicio,
+        nombre: this.state.nombreEjercicio,
+        repeticiones: repeticiones,
+        series: this.state.series,
+        dia: this.state.dia,
+        combinado: this.state.combinado,
+        posicion: this.state.ultimaPos.toString(),
+        tiempo: null
+      }
+    }else{
+      terminada = {
+        id_ejercicio: this.state.id_ejercicio,
+        musculo: this.state.musculoEjercicio,
+        nombre: this.state.nombreEjercicio,
+        repeticiones: null,
+        series: this.state.series,
+        dia: this.state.dia,
+        combinado: this.state.combinado,
+        posicion: this.state.ultimaPos.toString(),
+        tiempo: tiempo.toString()
+      }
     }
+
+    
     this.state.rutinaNueva.push(terminada)
-    this.props.onPressSave(this.state.rutinaNueva, this.state.tipo)
+    this.props.onPressSave(this.state.rutinaNueva, this.state.tipo, this.state.ultimaPos)
   }
   setModalSeriesVisible(visible, id_ejercicio, nombre, musculo) {
-    this.setState({ modalSeriesVisible: visible, modalRepeticionesVisible: !visible, nombreEjercicio: nombre, id_ejercicio: id_ejercicio, musculoEjercicio: musculo });
+    this.setState({ modalSeriesVisible: visible, modalRepeticionesVisible: !visible, modalTiempoVisible: !visible, nombreEjercicio: nombre, id_ejercicio: id_ejercicio, musculoEjercicio: musculo});
   }
-  setModalRepeticionesHeigh(visible) {
+  setModalRepeticionesOTiempo(visible){
     if (parseInt(this.state.series) == 0) {
       alert("Debe ingresar una cantidad de series")
     }
     else {
-      if (parseInt(this.state.series) < 5) {
-        this.setState({ modalRepeticionesHeigh: 0.25 })
-        this.setModalRepeticionesVisible(visible)
-      } else {
-        this.setState({ modalRepeticionesHeigh: 0.33 })
-        this.setModalRepeticionesVisible(visible)
+      if(this.state.musculo != "Cardio" && this.state.id_ejercicio != 68 && this.state.id_ejercicio != 69){
+        if (parseInt(this.state.series) < 5) {
+          this.setState({ modalRepeticionesHeigh: 0.25 })
+          this.setModalRepeticionesVisible(visible)
+        } else {
+          this.setState({ modalRepeticionesHeigh: 0.33 })
+          this.setModalRepeticionesVisible(visible)
+        }
+      }else{
+        this.setState({ modalSeriesVisible: !visible, modalTiempoVisible: visible})
       }
     }
   }
@@ -187,6 +208,12 @@ class MusculoAgregar extends Component {
     repeticiones = this.state.repeticiones,
       repeticiones[repeticion - 1] = cantidad
     this.setState({ repeticiones: repeticiones })
+  }
+  guardarMinutos(tiempo) {
+    this.setState({ minutos: tiempo })
+  }
+  guardarSegundos(tiempo) {
+    this.setState({ segundos: tiempo })
   }
   componentDidMount() {
     this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
@@ -285,7 +312,7 @@ class MusculoAgregar extends Component {
             animationType="fade"
             visible={this.state.modalSeriesVisible}
             transparent={true}
-            onRequestClose={() => this.setState({ modalVisible: false })}  >
+            onRequestClose={() => this.setState({ modalSeriesVisible: false })}  >
             <View style={styles.modalSeries}>
               <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                 <Text style={styles.modalText}>Selecione el orden y la cantidad de sus repeticiones</Text>
@@ -326,7 +353,7 @@ class MusculoAgregar extends Component {
                 <TouchableOpacity onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.setModalRepeticionesHeigh(true)} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                <TouchableOpacity onPress={() => this.setModalRepeticionesOTiempo(true)} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
                   <Text style={styles.textButton}>Aceptar</Text>
 
                 </TouchableOpacity>
@@ -337,7 +364,7 @@ class MusculoAgregar extends Component {
             animationType="fade"
             visible={this.state.modalRepeticionesVisible}
             transparent={true}
-            onRequestClose={() => this.setState({ modalVisible: false })}  >
+            onRequestClose={() => this.setState({ modalRepeticionesVisible: false })}  >
 
             <View style={[{ height: height * this.state.modalRepeticionesHeigh }, styles.modalReps]}>
               <Text style={styles.modalText}>Selecione el orden y la cantidad de sus repeticiones</Text>
@@ -369,6 +396,36 @@ class MusculoAgregar extends Component {
               </View>
             </View>
           </Modal>
+          <Modal
+            animationType="fade"
+            visible={this.state.modalTiempoVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalTiempoVisible: false })}  >
+
+            <View style={[{ height: height * this.state.modalRepeticionesHeigh }, styles.modalReps]}>
+              <Text style={styles.modalText}>Escriba el tiempo del ejercicio</Text>
+                <View style={styles.contentList3}>
+                    <View style={styles.containerInputReps}>
+                      <TextInput keyboardType={'numeric'} placeholder='Mins.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarMinutos(parseInt(text))} value={this.state.minutos}></TextInput>
+                    </View>
+                <View style={{marginHorizontal: 15, justifyContent: "center"}}>
+                <Text>:</Text>
+                </View>
+                <View style={styles.containerInputReps}>
+                      <TextInput keyboardType={'numeric'} placeholder='Segs.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarSegundos(parseInt(text))} value={this.state.segundos}></TextInput>
+                </View>
+                </View>
+              <View style={styles.modal2}>
+                <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({ minutos: 0, segundos: 0}) }} style={styles.modalButtonCancelar}>
+                  <Text style={styles.textButton}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.guardarEjercicioTiempo()} style={styles.modalButtonAceptar}>
+                  <Text style={styles.textButton}>Aceptar</Text>
+
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </View>
       );
     }
@@ -388,6 +445,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: 'wrap'
+  },
+  contentList3: {
+    flexDirection: "row",
+    justifyContent: "center",
+    flexWrap: 'wrap',
+    marginTop: 10
   },
 
   textInput: {

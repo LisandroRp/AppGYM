@@ -61,7 +61,6 @@ class EjerciciosNew extends Component {
   }
 
   actualizarEjercicio() {
-    console.log()
     base.actualizarEjercicio(this.state.ejercicio.nombre, this.state.ejercicio.descripcion, this.state.ejercicio.ejecucion, this.state.ejercicio.elemento, this.state.ejercicio.musculo, this.state.ejercicio.id_ejercicio, this.cancelarEjercicio.bind(this))
   }
   cancelarEjercicio() {

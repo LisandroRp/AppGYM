@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet, ActivityIndicator, TouchableOpacity, FlatList, TextInput, Button, Text, Keyboard } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient'
-import ApiController from '../controller/ApiController';
+import { View, Image, StyleSheet, ActivityIndicator,Text, ScrollView, Keyboard } from 'react-native';
 import { AsyncStorage } from 'react-native';
 
+import { withNavigation } from 'react-navigation';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import base from './GenerarBase';
@@ -13,16 +12,24 @@ class MiPlan extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            plan: "",
-            isLoading: false
+            perfil: {},
+            isLoading: true
         };
-        //this._retrieveData();
     }
-    componentDidMount(){
-        base.crearPlan(this.okPlan.bind(this))
+    componentDidMount() {
+        base.traerPlan(this.okPlan.bind(this))
+        this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
+        this.keyboardWillShow = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
+        this.keyboardWillHide = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
     }
-    okPlan(){
-        this.setState({isLoading: false})
+    
+    componentWillReceiveProps(){
+        this.setState({isLoading:true})
+        base.traerPlan(this.okPlan.bind(this))
+    }
+
+    okPlan(perfil){
+        this.setState({perfil:perfil, isLoading:false})
     }
     _retrieveData = async () => {
         try {
@@ -38,15 +45,6 @@ class MiPlan extends Component {
         }
     };
 
-    changeGenre = value => {
-        this.setState({ genrePosta: value })
-        this.setState({ value })
-    }
-    componentDidMount() {
-        this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
-        this.keyboardWillShow = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
-        this.keyboardWillHide = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
-    }
     keyboardDidShow = () => {
         this.setState({ searchBarFocused: true })
     }
@@ -55,65 +53,28 @@ class MiPlan extends Component {
     }
     keyboardWillHide = () => {
         this.setState({ searchBarFocused: false })
-        this.changeGenre2()
     }
-    changeGenre2() {
-        if (this.state.genrePosta != null) {
-            if (this.state.generoEvento[0] == null) {
-                this.state.generoEvento[0] = this.state.genrePosta
-            }
-            else {
-                this.state.generoEvento.push(this.state.genrePosta)
-            }
-            ApiController.saveGenre(this.state.IdUser, this.state.generoEvento, this.okChange.bind(this));
-        }
-    }
-    getUserData() {
-        ApiController.getUsuario(this.okUserData.bind(this), this.state.IdUser);
-    }
-
-    okUserData(data) {
-        this.setState({
-            nombre: data.nombre,
-            apellido: data.apellido,
-            email: data.email,
-            generoEvento: data.generoEvento,
-            isLoading: false,
-        })
-    }
-    okChange() {
-        alert("Your favorite genre was successfully added");
-        this.setState({ value: null, genrePosta: null })
-        this.getUserData(this.state.IdUser)
-    }
-    borrarGenero() {
-        if (this.state.generoEvento.length != 0) {
-            ApiController.saveGenre(this.state.IdUser, this.state.generoVacio, this.okChange.bind(this));
-        }
-        else {
-            alert('There is no genres to erase')
-        }
-    }
+    
     render() {
         var key = 0
         if (this.state.isLoading) {
             return (
-                <LinearGradient colors={['grey', 'black']} style={{ flex: 1 }}>
-                    <View style={styles.detalleContainer}>
+                    <View style={styles.container}>
+                    <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                         <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 1 }}></ActivityIndicator>
                     </View>
-                </LinearGradient>
             );
         } else {
             return (
                 <View style={styles.container}>
                     <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                    <ScrollView>
                             <View style={styles.ContainerInside}>
-                                        <Text style={styles.Text}>• Se le creara un plan de entrenamiento en base a los datos personales y objetivos señadalos anteriormente.
-                                        {"\n"}{"\n"}• Se incluira un plan de alimentacion y las rutinas que son mas utiles para el objetivo deseado.
-                                        {"\n"}{"\n"}• Podras cambiar tu ficha personal y objetivos en el momento que quieras accediendo en la parte de {"\n"}"Mi Plan" desde el SideMenu.</Text>
-                                    </View>
-                            
+                                <Text style={styles.Text}>{this.state.perfil.plan}</Text>
+                                <Text style={styles.Text}>•  Calorias a consumir para mantener tu peso en base a la vida que llevas: {this.state.perfil.caloriasEjercicio}{"\n"}</Text>
+                                <Text style={styles.Text}>•  Calorias a consumir para cumplir con tu objetivo: {this.state.perfil.caloriasTotal}</Text>
+                            </View>
+                            </ScrollView>   
                 </View>
             )
         }
@@ -207,17 +168,17 @@ const styles = StyleSheet.create({
     ContainerInside: {
         backgroundColor: "black",
         marginHorizontal: wp(5),
-        marginTop: hp(10),
-        marginBottom: hp(6),
+        marginTop: hp(5),
+        marginBottom: hp(5),
+        padding: 30,
         borderRadius: 10,
         alignItems: "center",
         justifyContent: 'center',
 
     },
     Text: {
-        padding: wp(10),
         fontSize: 20,
         color: "#3399ff"
     },
 })
-export default MiPlan;
+export default withNavigation(MiPlan);

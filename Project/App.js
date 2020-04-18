@@ -66,11 +66,10 @@ class TrainingScreen extends React.Component {
     )
   }
   goPass() {
-    //this.props.navigation.navigate('Ejercicios');
-    this.props.navigation.navigate('Rutinas');
+    this.props.navigation.navigate('Ejercicios');
   }
-  goPlan() {
-    this.props.navigation.navigate('Perfil');
+  goPlan(caloriasEjercicio, caloriasTotal, objetivoDeseado) {
+    this.props.navigation.navigate('Perfil',{caloriasEjercicio: caloriasEjercicio, caloriasTotal: caloriasTotal, objetivoDeseado: objetivoDeseado});
   }
 }
 
@@ -149,13 +148,14 @@ class MusculoAgregarScreen extends React.Component {
   pasarEjercicio(id_ejercicio, nombre, descripcion) {
     this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio, nombreEjercicio: nombre, descripcionEjercicio: descripcion });
   }
-  guardarRutina(rutina, tipo) {
+  guardarRutina(rutina, tipo, ultimaPos) {
     this._storeData(rutina);
     console.log(rutina)
     if (tipo == 'nuevo') {
+      console.log("pito")
       if (rutina[0].combinado) {
         if (rutina[1] == null) {
-          this.props.navigation.navigate('EjercicioAgregar', { dia: rutina[0].dia, tipo: tipo, combinado: rutina[0].combinado })
+          this.props.navigation.navigate('EjercicioAgregar', { dia: rutina[0].dia, tipo: tipo, combinado: rutina[0].combinado, ultimaPos: ultimaPos})
         } else {
           this.props.navigation.navigate('RutinaNew', { rutina: rutina })
         }
@@ -165,7 +165,7 @@ class MusculoAgregarScreen extends React.Component {
     } else {
       if (rutina[0].combinado) {
         if (rutina[1] == null) {
-          this.props.navigation.navigate('EjercicioAgregar', { dia: rutina[0].dia, tipo: tipo, combinado: rutina[0].combinado })
+          this.props.navigation.navigate('EjercicioAgregar', { dia: rutina[0].dia, tipo: tipo, combinado: rutina[0].combinado, ultimaPos: ultimaPos})
         } else {
           this.props.navigation.navigate('RutinaModificable', { rutina: rutina })
         }
@@ -321,8 +321,8 @@ class EjercicioAgregarScreen extends React.Component {
       />
     );
   }
-  pasarEjercicio(dia, musculo, tipo, combinado) {
-    this.props.navigation.navigate('MusculoAgregar', { dia: dia, musculo: musculo, tipo: tipo, combinado: combinado });
+  pasarEjercicio(dia, musculo, tipo, combinado, ultimaPos) {
+    this.props.navigation.navigate('MusculoAgregar', { dia: dia, musculo: musculo, tipo: tipo, combinado: combinado, ultimaPos: ultimaPos});
   }
 }
 class EjerciciosNewScreen extends React.Component {
@@ -472,8 +472,8 @@ class RutinaNewScreen extends React.Component {
       />
     );
   }
-  agregarEjercicio(dia, tipo, combinado) {
-    this.props.navigation.navigate('EjercicioAgregar', { dia: dia, tipo: tipo, combinado: combinado });
+  agregarEjercicio(dia, tipo, combinado, ultimaPos) {
+    this.props.navigation.navigate('EjercicioAgregar', { dia: dia, tipo: tipo, combinado: combinado, ultimaPos: ultimaPos });
   }
   verInfo(id_ejercicio) {
     this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio });
@@ -590,8 +590,8 @@ class RutinaModificableScreen extends React.Component {
       />
     );
   }
-  agregarEjercicio(dia, tipo) {
-    this.props.navigation.navigate('EjercicioAgregar', { dia: dia, tipo: tipo });
+  agregarEjercicio(dia, tipo, combinado, ultimaPos) {
+    this.props.navigation.navigate('EjercicioAgregar', { dia: dia, tipo: tipo, combinado: combinado, ultimaPos: ultimaPos });
   }
   verInfo(id_ejercicio) {
     this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio });
@@ -880,13 +880,13 @@ class FichaScreen extends React.Component {
   render() {
     return (
       <Ficha
-        onPressChange={this.cambiarPlan.bind(this)}
+        onPressUpdate={this.cambiarPlan.bind(this)}
       />
     );
 
   }
-  cambiarPlan(altura, peso, experiencia, objetivo) {
-    //this.props.navigation.navigate('RutinaEspecificaMScreen', { id_rutina: id_rutina ,nombre: nombre});
+  cambiarPlan(caloriasEjercicio, caloriasTotal, objetivoDeseado) {
+    this.props.navigation.navigate("MiPlan",{caloriasEjercicio: caloriasEjercicio, caloriasTotal: caloriasTotal, objetivoDeseado: objetivoDeseado});
   }
 }
 // *****************************************************
@@ -1023,7 +1023,7 @@ const FavoritosStackNavigator = createStackNavigator(
 // *****************************************************
 
 const PerfilTabNavigator = createBottomTabNavigator({
-  Perfil: MiPlanScreen,
+  MiPlan: MiPlanScreen,
   Ficha: FichaScreen
 }, {
   navigationOptions: ({ navigation }) => {
@@ -1064,8 +1064,7 @@ const PerfilTabNavigator = createBottomTabNavigator({
 });
 
 const PerfilStackNavigator = createStackNavigator({
-  PerfilTabNavigator: PerfilTabNavigator,
-  MiPlan: MiPlanScreen,
+  PerfilTabNavigator: PerfilTabNavigator
 });
 
 // *****************************************************

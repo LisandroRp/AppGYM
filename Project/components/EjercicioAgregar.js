@@ -47,6 +47,7 @@ class EjercicioAgregar extends Component {
       dia: this.props.navigation.getParam('dia'),
       tipo: this.props.navigation.getParam('tipo'),
       combinado: this.props.navigation.getParam('combinado'),
+      ultimaPos: this.props.navigation.getParam('ultimaPos'),
     };
   }
 
@@ -73,7 +74,7 @@ class EjercicioAgregar extends Component {
             }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity onPress={() => this.props.onPressGo(this.state.dia, item.musculo,this.state.tipo, this.state.combinado)}>
+              <TouchableOpacity onPress={() => this.props.onPressGo(this.state.dia, item.musculo,this.state.tipo, this.state.combinado, this.state.ultimaPos)}>
                 <Image style={styles.image} source={item.imagen} />
               </TouchableOpacity>
             )

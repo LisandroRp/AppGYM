@@ -38,7 +38,6 @@ class EjerciciosNew extends Component {
     };
   }
   guardarEjercicio(){
-    console.log(this.state.nombre + this.state.descripcion + this.state.ejecucion + this.state.elemento + this.state.musculo)
     base.crearEjercicio(this.state.nombre, this.state.descripcion, this.state.ejecucion, this.state.elemento, this.state.musculo, this.cancelarEjercicio.bind(this))
   }
   cancelarEjercicio() {

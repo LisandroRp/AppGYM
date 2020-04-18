@@ -56,7 +56,7 @@ class Rutinas extends Component {
               <Image style={styles.image} source={ExportadorMenus.Musculacion()} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas("Aeróbico")}>
+            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas("Aerobico")}>
               <Image style={styles.image} source={ExportadorMenus.Aerobico()} />
             </TouchableOpacity>
 

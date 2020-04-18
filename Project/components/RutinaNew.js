@@ -33,7 +33,7 @@ class RutinaNew extends Component {
     super(props);
     this.state = {
       nombre: '',
-      tipo: 'Tipo de Rutina',
+      tipo: '',
       modalGuardarVisible: false,
       modalBorrarTodoVisible: false,
       modalTipoEjercicioTodoVisible: false,
@@ -56,34 +56,38 @@ class RutinaNew extends Component {
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem('rutina');
+
       if (value !== null) {
         if (JSON.parse(value)[0].combinado) {
-          combinada1 = JSON.parse(value)[0]
-          combinada2 = JSON.parse(value)[1]
-          if (this.yaEsta(combinada1) && this.yaEsta(combinada2)) {
-            combinada1.combinado = this.state.combinado
-            combinada2.combinado = this.state.combinado
-            this.setState({ combinado: this.state.combinado + 1 })
-            this.state.rutina.push(combinada1)
-            this.state.rutina.push(combinada2)
-            this.setState({ isLoading: true })
-            this.termino()
-          } else {
-            this._storeData()
-            this.setState({ showAlert: true })
-          }
+        combinada1 = JSON.parse(value)[0]
+        combinada2 = JSON.parse(value)[1]
+        if (this.yaEsta(combinada1) && this.yaEsta(combinada2)) {
+          this.setState({ isLoading: true })
+          ultimoCombinado = this.queCombinado(combinada1.dia)
+          combinada1.combinado = ultimoCombinado.toString()
+          combinada2.combinado = ultimoCombinado.toString()
+          this.setState({ combinado: this.state.combinado + 1 })
+          this.state.rutina.push(combinada1)
+          this.state.rutina.push(combinada2)
+          this.termino()
         } else {
-          simple = JSON.parse(value)[0]
-          if (this.yaEsta(simple)) {
-            this.setState({ isLoading: true })
-            simple.combinado = null
-            this.state.rutina.push(simple)
-            this.termino()
-          } else {
-            this._storeData()
-            this.setState({ showAlert: true })
-          }
+          this._storeData()
+          this.setState({ showAlert: true })
         }
+      } else {
+        simple = JSON.parse(value)[0]
+        if (this.yaEsta(simple)) {
+          this.setState({ isLoading: true })
+          simple.combinado = null
+          this.state.rutina.push(simple)
+          this.termino()
+        } else {
+          this._storeData()
+          this.setState({ showAlert: true })
+        }
+      }
+      } else {
+        this.setState({ isLoading: false })
       }
     } catch (error) {
       console.log(error);
@@ -92,6 +96,15 @@ class RutinaNew extends Component {
 
   termino() {
     this._storeData()
+  }
+  queCombinado(dia){
+    ultimoCombinado= 0
+    for(i=0; i<this.state.rutina; i++){
+      if(this.state.rutina[i].dia == dia && this.state.rutina[i].combinado != null){
+        ultimoCombinado=this.state.rutina[i].combinado 
+      }
+    }
+    return parseInt(ultimoCombinado+1)
   }
   touch(dia) {
     if (this.diaAnterior(dia) || dia == 1) {
@@ -113,11 +126,20 @@ class RutinaNew extends Component {
   }
   agregarEjercicio() {
     this.setState({ modalTipoEjercicioTodoVisible: false })
-    this.props.onPressGo(this.state.dia, 'nuevo', false)
+    this.props.onPressGo(this.state.ultimoDia, 'nuevo', false, this.ultimaPos())
   }
   agregarEjercicioCombinado() {
     this.setState({ modalTipoEjercicioTodoVisible: false })
-    this.props.onPressGo(this.state.dia, 'nuevo', true)
+    this.props.onPressGo(this.state.ultimoDia, 'nuevo', true, this.ultimaPos())
+  }
+  ultimaPos(){
+    ultimaPosicion=0
+    for(i=0;i<this.state.rutina.length;i++){
+      if(this.state.rutina[i].dia == this.state.ultimoDia && this.state.rutina[i].posicion > ultimaPosicion){
+        ultimaPosicion = this.state.rutina[i].posicion
+      }
+    }
+     return parseInt(ultimaPosicion)+1
   }
   yaEsta(data) {
     for (i = 0; i < this.state.rutina.length; i++) {
@@ -141,77 +163,178 @@ class RutinaNew extends Component {
     }
   };
 
-  subir(dia, id_ejercicio) {
-    var aux
-    var rutinaNueva = []
-    var i = 0
-    var flag = 0
-    var fallador = 0
-    while (i < this.state.rutina.length) {
+  subir(dia, id_ejercicio, combinado) {
+    rutinaNueva = []
+    aux = 0
+    posicionASubir = 0
+    posicionABajar = 0
+    for(i=0; i<this.state.rutina.length;i++){
       rutinaNueva.push(this.state.rutina[i])
-      if (dia == this.state.rutina[i].dia && flag != 1) {
-        fallador++
-        if (id_ejercicio == this.state.rutina[i].id_ejercicio) {
-          if (fallador != 1) {
-            this.setState({ isLoading: true })
-            rutinaNueva[i] = this.state.rutina[aux]
-            rutinaNueva[aux] = this.state.rutina[i]
-            flag = 1
-          } else {
-            return this.termino()
-          }
-        } else {
-          aux = i
+      if(rutinaNueva[i].id_ejercicio == id_ejercicio && rutinaNueva[i].dia == dia){
+        posicionASubir=i
+      }
+    }
+    if(rutinaNueva[posicionASubir].posicion == "1")
+    {
+      this.termino()
+    }else{
+      this.setState({isLoading: true})
+    for(i=0; i< rutinaNueva.length;i++){
+      if((rutinaNueva[i].posicion == rutinaNueva[posicionASubir].posicion-1) && rutinaNueva[i].dia == dia){
+        if(rutinaNueva[i].combinado == null){
+          posicionABajar=i
+        }else{
+          posicionABajar=(i-1)
         }
       }
-      i++
     }
-    this.setState({ rutina: rutinaNueva })
-    this.termino()
+      if (combinado == null) {
+        //Ninguno Combinado
+        if (rutinaNueva[posicionABajar].combinado == null) {
+          console.log("Ninguno Combinado")
+          aux= rutinaNueva[posicionASubir].posicion
+
+          rutinaNueva[posicionASubir].posicion = rutinaNueva[posicionABajar].posicion
+          rutinaNueva[posicionABajar].posicion = aux
+
+        } else {
+          //El que baja es Combinado
+          console.log("el que baja es Combinado")
+          aux = rutinaNueva[posicionASubir].posicion
+
+          rutinaNueva[posicionASubir].posicion = rutinaNueva[posicionABajar].posicion
+          rutinaNueva[posicionABajar].posicion = aux
+          rutinaNueva[(posicionABajar + 1)].posicion = aux
+
+        }
+      } else {
+        //El que sube es combinado
+        if (rutinaNueva[posicionABajar].combinado == null) {
+          console.log("El que sube es combinado")
+          aux= rutinaNueva[posicionASubir].posicion
+
+          rutinaNueva[posicionASubir].posicion = rutinaNueva[posicionABajar].posicion
+          rutinaNueva[(posicionASubir + 1)].posicion = rutinaNueva[posicionABajar].posicion
+          rutinaNueva[posicionABajar].posicion = aux
+
+        } else {
+          //Dos Combinados
+          console.log("Dos Combinados")
+          aux= rutinaNueva[posicionASubir].posicion
+
+          rutinaNueva[posicionASubir].posicion = rutinaNueva[posicionABajar].posicion
+          rutinaNueva[(posicionASubir + 1)].posicion = rutinaNueva[posicionABajar].posicion
+          rutinaNueva[posicionABajar].posicion = aux
+          rutinaNueva[(posicionABajar + 1)].posicion = aux
+        
+        }
+      }
+      this.setState({rutina: rutinaNueva })
+      this.termino()
+    }
   }
 
-  bajar(dia, id_ejercicio) {
-    var aux
+  bajar(dia, id_ejercicio, combinado) {
+    rutinaNueva = []
+    aux = 0
+    maxPosDia=0
+    posicionASubir = (-5)
+    posicionABajar = 0
+    flag=0
+
+    for(i=0; i<this.state.rutina.length; i++){
+      rutinaNueva.push(this.state.rutina[i])
+      if(rutinaNueva[i].dia == dia){
+      if(rutinaNueva[i].id_ejercicio == id_ejercicio){
+        posicionABajar=i
+        flag=1
+      }
+      if(flag != 0 && (rutinaNueva[i].posicion == parseInt(rutinaNueva[posicionABajar].posicion)+1)){
+        if(rutinaNueva[i].combinado == null){
+          posicionASubir=i
+        }else{
+          posicionASubir=(i-1)
+        }
+      }
+      maxPosDia++
+    }
+    }
+    if((-5) == posicionASubir)
+    {
+      this.termino()
+    }else{
+      this.setState({isLoading: true})
+      if (combinado == null) {
+        //Ninguno Combinado
+        if (rutinaNueva[posicionASubir].combinado == null) {
+          console.log("Ninguno Combinado")
+          aux= rutinaNueva[posicionABajar].posicion
+
+          rutinaNueva[posicionABajar].posicion = rutinaNueva[posicionASubir].posicion
+          rutinaNueva[posicionASubir].posicion = aux
+
+        } else {
+          //El que sube es Combinado
+          console.log("el que sube es Combinado")
+          aux = rutinaNueva[posicionABajar].posicion
+
+          rutinaNueva[posicionABajar].posicion = rutinaNueva[posicionASubir].posicion
+          rutinaNueva[posicionASubir].posicion = aux
+          rutinaNueva[(posicionASubir + 1)].posicion = aux
+
+        }
+      } else {
+        //El que baja es combinado
+        if (rutinaNueva[posicionASubir].combinado == null) {
+          console.log("El que baja es combinado")
+          aux= rutinaNueva[posicionABajar].posicion
+
+          rutinaNueva[posicionABajar].posicion = rutinaNueva[posicionASubir].posicion
+          rutinaNueva[(posicionABajar + 1)].posicion = rutinaNueva[posicionASubir].posicion
+          rutinaNueva[posicionASubir].posicion = aux
+
+        } else {
+          //Dos Combinados
+          console.log("Dos Combinados")
+          aux= rutinaNueva[posicionABajar].posicion
+
+          rutinaNueva[posicionABajar].posicion = rutinaNueva[posicionASubir].posicion
+          rutinaNueva[(posicionABajar + 1)].posicion = rutinaNueva[posicionASubir].posicion
+          rutinaNueva[posicionASubir].posicion = aux
+          rutinaNueva[(posicionASubir + 1)].posicion = aux
+        
+        }
+      }
+      this.setState({rutina: rutinaNueva })
+      this.termino()
+    }
+  }
+
+  borrar(dia, id_ejercicio, combinado) {
     var rutinaNueva = []
     var i = 0
     var flag = 0
-    while (i < this.state.rutina.length) {
-      rutinaNueva.push(this.state.rutina[i])
-      if ((id_ejercicio == this.state.rutina[i].id_ejercicio && dia == this.state.rutina[i].dia) && flag != 1) {
-        aux = i
-        aux++
-        if (aux < this.state.rutina.length) {
-          while (aux != this.state.rutina.length && dia != this.state.rutina[aux].dia) {
-            rutinaNueva.push(this.state.rutina[aux])
-            aux++
-          }
-          if (aux != this.state.rutina.length) {
-            this.setState({ isLoading: true })
-            rutinaNueva.push(this.state.rutina[i])
-            rutinaNueva[i] = this.state.rutina[aux]
-            i = aux
-            flag = 1
-          } else {
-            return this.termino()
-          }
-        } else {
-          return this.termino()
-        }
-      }
-      i++
-    }
-    this.setState({ rutina: rutinaNueva })
-    this.termino()
-  }
-  borrar(dia, id_ejercicio) {
-    var rutinaNueva = []
-    var i = 0
+    var valorPosicionBorrada = 0
+    var posicionBorrada
     while (i < this.state.rutina.length) {
       if (id_ejercicio == this.state.rutina[i].id_ejercicio && dia == this.state.rutina[i].dia) {
-        i++
+        if(combinado == null)
+        {
+          valorPosicionBorrada = this.state.rutina[i].posicion
+          i++
+          flag=1
+        }else{
+          valorPosicionBorrada = this.state.rutina[i].posicion
+          i = (i + 2)
+          flag=1
+        }
       }
       if (i < this.state.rutina.length) {
         rutinaNueva.push(this.state.rutina[i])
+        if(flag!=0 && this.state.rutina[i].dia == dia){
+          rutinaNueva[(rutinaNueva.length)-1].posicion = valorPosicionBorrada
+          valorPosicionBorrada = (valorPosicionBorrada - 1)
+        }
       } else {
         this.setState({ rutina: rutinaNueva })
         this.termino()
@@ -220,7 +343,7 @@ class RutinaNew extends Component {
     }
     this.setState({ rutina: rutinaNueva })
     this.termino()
-  }
+}
   borrarTodo() {
     var rutinaVacia = []
     if (this.state.rutina.length != 0) {
@@ -290,8 +413,8 @@ class RutinaNew extends Component {
                 <TextInput style={styles.TextContainer} maxLength={15} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
                 <RNPickerSelect
                   placeholder={{
-                    label: this.state.tipo,
-                    value: '0',
+                    label: 'Seleccionar Tipo de Rutina',
+                    value: '',
                   }}
                   placeholderTextColor="black"
                   style={{
@@ -327,7 +450,7 @@ class RutinaNew extends Component {
                   onValueChange={(value) => this.setState({ tipo: value })}
                   items={[
                     { label: 'Musculacion', value: 'Musculacion' },
-                    { label: 'Aeróbico', value: 'Aeróbico' },
+                    { label: 'Aerobico', value: 'Aerobico' },
                   ]}
                 />
               </View>
@@ -350,6 +473,7 @@ class RutinaNew extends Component {
               renderItem={({ item }) => {
                 aux = item
                 contadorCobinadosFlatlist = false
+                rutinaLocal = this.state.rutina
                 return (
                   <View style={styles.cuadraditos}>
                     <DropDownItem key={1} contentVisible={false}
@@ -369,46 +493,64 @@ class RutinaNew extends Component {
                       <FlatList
                         style={styles.contentList}
                         columnWrapperStyle={styles.listContainer}
-                        data={this.state.rutina}
+                        data={rutinaLocal.sort((a, b) => a.posicion.localeCompare(b.posicion))}
                         initialNumToRender={50}
                         keyExtractor={(item) => {
                           return item.id_ejercicio;
                         }}
                         renderItem={({ item }) => {
                           if (item.dia == aux) {
-                            if (item.combinado != null) {
-                              if (contadorCobinadosFlatlist) {
-                                contadorCobinadosFlatlist= false
-                                return (
-                                  <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
-                                    onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
-                                    <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
-                                        <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                          <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                          <Text>Series: {item.series}</Text>
-                                          <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                            if(item.tiempo == null){
+                              if (item.combinado != null) {
+                                if (contadorCobinadosFlatlist) {
+                                  contadorCobinadosFlatlist = false
+                                  return (
+                                    <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
+                                      onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                      <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                          <View style={{ flexDirection: 'column', width: wp("60") }}>
+                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
+                                            <Text>Series: {item.series}</Text>
+                                            <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                          </View>
                                         </View>
                                       </View>
-                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                          <AntDesign name="up" size={15} color="white" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                          <AntDesign name="down" size={15} color="white" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                          <AntDesign name="delete" size={17} color="white" />
-                                        </TouchableOpacity>
+                                    </TouchableOpacity>
+                                  )
+                                } else {
+                                  contadorCobinadosFlatlist = true
+                                  return (
+                                    <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
+                                      onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                      <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                          <View style={{ flexDirection: 'column', width: wp("33") }}>
+                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
+                                            <Text>Series: {item.series}</Text>
+                                            <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                          </View>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                          <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
+                                            <AntDesign name="up" size={15} color="white" />
+                                          </TouchableOpacity>
+                                          <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
+                                            <AntDesign name="down" size={15} color="white" />
+                                          </TouchableOpacity>
+                                          <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                            <AntDesign name="delete" size={17} color="white" />
+                                          </TouchableOpacity>
+                                        </View>
                                       </View>
-                                    </View>
-                                  </TouchableOpacity>
-                                )
+                                    </TouchableOpacity>
+                                  )
+                                }
                               } else {
-                                contadorCobinadosFlatlist= true
                                 return (
-                                  <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
+                                  <TouchableOpacity style={styles.cuadraditosDeAdentro}
                                     onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
                                     <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -434,33 +576,82 @@ class RutinaNew extends Component {
                                   </TouchableOpacity>
                                 )
                               }
-                            } else {
-                              return (
-                                <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                  onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
-                                  <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                      <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
-                                      <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                        <Text>Series: {item.series}</Text>
-                                        <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                            }else{
+                              if (item.combinado != null) {
+                                if (contadorCobinadosFlatlist) {
+                                  contadorCobinadosFlatlist = false
+                                  return (
+                                    <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
+                                      onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                      <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                          <View style={{ flexDirection: 'column', width: wp("60") }}>
+                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
+                                            <Text>Series: {item.series}</Text>
+                                            <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                          </View>
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
+                                  )
+                                } else {
+                                  contadorCobinadosFlatlist = true
+                                  return (
+                                    <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
+                                      onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                      <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                          <View style={{ flexDirection: 'column', width: wp("33") }}>
+                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
+                                            <Text>Series: {item.series}</Text>
+                                            <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                          </View>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                          <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
+                                            <AntDesign name="up" size={15} color="white" />
+                                          </TouchableOpacity>
+                                          <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
+                                            <AntDesign name="down" size={15} color="white" />
+                                          </TouchableOpacity>
+                                          <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                            <AntDesign name="delete" size={17} color="white" />
+                                          </TouchableOpacity>
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
+                                  )
+                                }
+                              } else {
+                                return (
+                                  <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                    onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                    <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                        <View style={{ flexDirection: 'column', width: wp("33") }}>
+                                          <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
+                                          <Text>Series: {item.series}</Text>
+                                          <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                        </View>
+                                      </View>
+                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                          <AntDesign name="up" size={15} color="white" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
+                                          <AntDesign name="down" size={15} color="white" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
+                                          <AntDesign name="delete" size={17} color="white" />
+                                        </TouchableOpacity>
                                       </View>
                                     </View>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                      <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                        <AntDesign name="up" size={15} color="white" />
-                                      </TouchableOpacity>
-                                      <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                        <AntDesign name="down" size={15} color="white" />
-                                      </TouchableOpacity>
-                                      <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                        <AntDesign name="delete" size={17} color="white" />
-                                      </TouchableOpacity>
-                                    </View>
-                                  </View>
-                                </TouchableOpacity>
-                              )
+                                  </TouchableOpacity>
+                                )
+                              }
                             }
                           }
                         }} />

@@ -40,7 +40,6 @@ class SuplementacionTipos extends Component {
       memory: suplementos,
       isLoading: false,
     });
-    console.log(suplementos)
   }
 
   componentDidMount() {
