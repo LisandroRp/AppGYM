@@ -1,7 +1,7 @@
 import { Component } from 'react';
 //import * as FS  from 'expo-file-system';
 import { Asset } from 'expo-asset'
-import { SQLite } from "expo-sqlite";
+import * as SQLite from 'expo-sqlite'
 
 import * as FileSystem from 'expo-file-system';
 
