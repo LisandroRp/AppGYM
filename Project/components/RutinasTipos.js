@@ -12,9 +12,12 @@ import {
   FlatList,
   ActivityIndicator,
   ScrollView,
-  AsyncStorage
+  AsyncStorage,
+  Dimensions
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
+var { height, width } = Dimensions.get('window');
 
 class RutinasTipos extends Component {
 
@@ -109,7 +112,7 @@ class RutinasTipos extends Component {
             <FlatList
               style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
-              data={this.state.rutinas}
+              data={this.state.rutinas.sort((a,b) => a.nombre.localeCompare(b.nombre))}
               initialNumToRender={50}
               keyExtractor={(item) => {
                 return item.nombre;
@@ -184,34 +187,26 @@ const styles = StyleSheet.create({
     shadowRadius: 7.49,
     elevation: 12,
 
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 20,
+    marginLeft: height * 0.028,
+    marginRight: height * 0.028,
+    marginTop: height * 0.028,
     backgroundColor: "black",
     padding: 10,
     flexDirection: 'row',
-    height: hp(11)
   },
 
   name: {
-    fontSize: 22,
+    fontSize: height * 0.028,
     //flex: 1,
     //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
   dias: {
-    fontSize: 15,
+    fontSize: height * 0.02,
     marginTop: 5,
     //flex: 1,
     color: "white",
-  },
-  count: {
-    fontSize: 14,
-    paddingBottom: 11,
-    flex: 1,
-    //alignSelf: 'center',
-    color: "#6666ff"
   },
   StarImage: {
     width: hp(5.5),

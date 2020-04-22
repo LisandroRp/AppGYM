@@ -9,24 +9,13 @@ import {
   View,
   Image,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions
 } from 'react-native';
 import DropDownItem from 'react-native-drop-down-item';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-function createData(item) {
-  return {
-    key: item._id,
-    idEjercicio: item._id,
-    imagen: item.imagen,
-    nombre: item.nombre,
-    rating: item.rating,
-    descripcion: item.descripcion,
-    tipo: item.tipo,
-    ubicacion: item.ubicacion,
-    precioE: item.precioE,
-  };
-}
+var { height, width } = Dimensions.get('window');
 
 class SuplementacionEspecifica extends Component {
 
@@ -150,7 +139,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp("2"),
   },
   titulo: {
-    fontSize: 33,
+    fontSize: height * 0.04,
     fontWeight: 'bold',
     color: '#3399ff'
   },
@@ -158,14 +147,14 @@ const styles = StyleSheet.create({
     color: 'black',
     marginHorizontal: wp("5"),
     marginVertical: hp("2"),
-    fontSize: 18,
+    fontSize: height * 0.025,
   },
   descripcionUnderline: {
     color: 'black',
     textDecorationLine: 'underline',
     marginLeft: wp("5"),
     marginVertical: hp("2"),
-    fontSize: 18,
+    fontSize: height * 0.025,
   },
 })
 

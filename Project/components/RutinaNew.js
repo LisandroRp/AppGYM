@@ -59,33 +59,33 @@ class RutinaNew extends Component {
 
       if (value !== null) {
         if (JSON.parse(value)[0].combinado) {
-        combinada1 = JSON.parse(value)[0]
-        combinada2 = JSON.parse(value)[1]
-        if (this.yaEsta(combinada1) && this.yaEsta(combinada2)) {
-          this.setState({ isLoading: true })
-          ultimoCombinado = this.queCombinado(combinada1.dia)
-          combinada1.combinado = ultimoCombinado.toString()
-          combinada2.combinado = ultimoCombinado.toString()
-          this.setState({ combinado: this.state.combinado + 1 })
-          this.state.rutina.push(combinada1)
-          this.state.rutina.push(combinada2)
-          this.termino()
+          combinada1 = JSON.parse(value)[0]
+          combinada2 = JSON.parse(value)[1]
+          if (this.yaEsta(combinada1) && this.yaEsta(combinada2)) {
+            this.setState({ isLoading: true })
+            ultimoCombinado = this.queCombinado(combinada1.dia)
+            combinada1.combinado = ultimoCombinado.toString()
+            combinada2.combinado = ultimoCombinado.toString()
+            this.setState({ combinado: this.state.combinado + 1 })
+            this.state.rutina.push(combinada1)
+            this.state.rutina.push(combinada2)
+            this.termino()
+          } else {
+            this._storeData()
+            this.setState({ showAlert: true })
+          }
         } else {
-          this._storeData()
-          this.setState({ showAlert: true })
+          simple = JSON.parse(value)[0]
+          if (this.yaEsta(simple)) {
+            this.setState({ isLoading: true })
+            simple.combinado = null
+            this.state.rutina.push(simple)
+            this.termino()
+          } else {
+            this._storeData()
+            this.setState({ showAlert: true })
+          }
         }
-      } else {
-        simple = JSON.parse(value)[0]
-        if (this.yaEsta(simple)) {
-          this.setState({ isLoading: true })
-          simple.combinado = null
-          this.state.rutina.push(simple)
-          this.termino()
-        } else {
-          this._storeData()
-          this.setState({ showAlert: true })
-        }
-      }
       } else {
         this.setState({ isLoading: false })
       }
@@ -97,14 +97,14 @@ class RutinaNew extends Component {
   termino() {
     this._storeData()
   }
-  queCombinado(dia){
-    ultimoCombinado= 0
-    for(i=0; i<this.state.rutina; i++){
-      if(this.state.rutina[i].dia == dia && this.state.rutina[i].combinado != null){
-        ultimoCombinado=this.state.rutina[i].combinado 
+  queCombinado(dia) {
+    ultimoCombinado = 0
+    for (i = 0; i < this.state.rutina; i++) {
+      if (this.state.rutina[i].dia == dia && this.state.rutina[i].combinado != null) {
+        ultimoCombinado = this.state.rutina[i].combinado
       }
     }
-    return parseInt(ultimoCombinado+1)
+    return parseInt(ultimoCombinado + 1)
   }
   touch(dia) {
     if (this.diaAnterior(dia) || dia == 1) {
@@ -132,14 +132,14 @@ class RutinaNew extends Component {
     this.setState({ modalTipoEjercicioTodoVisible: false })
     this.props.onPressGo(this.state.ultimoDia, 'nuevo', true, this.ultimaPos())
   }
-  ultimaPos(){
-    ultimaPosicion=0
-    for(i=0;i<this.state.rutina.length;i++){
-      if(this.state.rutina[i].dia == this.state.ultimoDia && this.state.rutina[i].posicion > ultimaPosicion){
+  ultimaPos() {
+    ultimaPosicion = 0
+    for (i = 0; i < this.state.rutina.length; i++) {
+      if (this.state.rutina[i].dia == this.state.ultimoDia && this.state.rutina[i].posicion > ultimaPosicion) {
         ultimaPosicion = this.state.rutina[i].posicion
       }
     }
-     return parseInt(ultimaPosicion)+1
+    return parseInt(ultimaPosicion) + 1
   }
   yaEsta(data) {
     for (i = 0; i < this.state.rutina.length; i++) {
@@ -168,31 +168,30 @@ class RutinaNew extends Component {
     aux = 0
     posicionASubir = 0
     posicionABajar = 0
-    for(i=0; i<this.state.rutina.length;i++){
+    for (i = 0; i < this.state.rutina.length; i++) {
       rutinaNueva.push(this.state.rutina[i])
-      if(rutinaNueva[i].id_ejercicio == id_ejercicio && rutinaNueva[i].dia == dia){
-        posicionASubir=i
+      if (rutinaNueva[i].id_ejercicio == id_ejercicio && rutinaNueva[i].dia == dia) {
+        posicionASubir = i
       }
     }
-    if(rutinaNueva[posicionASubir].posicion == "1")
-    {
+    if (rutinaNueva[posicionASubir].posicion == "1") {
       this.termino()
-    }else{
-      this.setState({isLoading: true})
-    for(i=0; i< rutinaNueva.length;i++){
-      if((rutinaNueva[i].posicion == rutinaNueva[posicionASubir].posicion-1) && rutinaNueva[i].dia == dia){
-        if(rutinaNueva[i].combinado == null){
-          posicionABajar=i
-        }else{
-          posicionABajar=(i-1)
+    } else {
+      this.setState({ isLoading: true })
+      for (i = 0; i < rutinaNueva.length; i++) {
+        if ((rutinaNueva[i].posicion == rutinaNueva[posicionASubir].posicion - 1) && rutinaNueva[i].dia == dia) {
+          if (rutinaNueva[i].combinado == null) {
+            posicionABajar = i
+          } else {
+            posicionABajar = (i - 1)
+          }
         }
       }
-    }
       if (combinado == null) {
         //Ninguno Combinado
         if (rutinaNueva[posicionABajar].combinado == null) {
           console.log("Ninguno Combinado")
-          aux= rutinaNueva[posicionASubir].posicion
+          aux = rutinaNueva[posicionASubir].posicion
 
           rutinaNueva[posicionASubir].posicion = rutinaNueva[posicionABajar].posicion
           rutinaNueva[posicionABajar].posicion = aux
@@ -211,7 +210,7 @@ class RutinaNew extends Component {
         //El que sube es combinado
         if (rutinaNueva[posicionABajar].combinado == null) {
           console.log("El que sube es combinado")
-          aux= rutinaNueva[posicionASubir].posicion
+          aux = rutinaNueva[posicionASubir].posicion
 
           rutinaNueva[posicionASubir].posicion = rutinaNueva[posicionABajar].posicion
           rutinaNueva[(posicionASubir + 1)].posicion = rutinaNueva[posicionABajar].posicion
@@ -220,16 +219,16 @@ class RutinaNew extends Component {
         } else {
           //Dos Combinados
           console.log("Dos Combinados")
-          aux= rutinaNueva[posicionASubir].posicion
+          aux = rutinaNueva[posicionASubir].posicion
 
           rutinaNueva[posicionASubir].posicion = rutinaNueva[posicionABajar].posicion
           rutinaNueva[(posicionASubir + 1)].posicion = rutinaNueva[posicionABajar].posicion
           rutinaNueva[posicionABajar].posicion = aux
           rutinaNueva[(posicionABajar + 1)].posicion = aux
-        
+
         }
       }
-      this.setState({rutina: rutinaNueva })
+      this.setState({ rutina: rutinaNueva })
       this.termino()
     }
   }
@@ -237,38 +236,37 @@ class RutinaNew extends Component {
   bajar(dia, id_ejercicio, combinado) {
     rutinaNueva = []
     aux = 0
-    maxPosDia=0
+    maxPosDia = 0
     posicionASubir = (-5)
     posicionABajar = 0
-    flag=0
+    flag = 0
 
-    for(i=0; i<this.state.rutina.length; i++){
+    for (i = 0; i < this.state.rutina.length; i++) {
       rutinaNueva.push(this.state.rutina[i])
-      if(rutinaNueva[i].dia == dia){
-      if(rutinaNueva[i].id_ejercicio == id_ejercicio){
-        posicionABajar=i
-        flag=1
-      }
-      if(flag != 0 && (rutinaNueva[i].posicion == parseInt(rutinaNueva[posicionABajar].posicion)+1)){
-        if(rutinaNueva[i].combinado == null){
-          posicionASubir=i
-        }else{
-          posicionASubir=(i-1)
+      if (rutinaNueva[i].dia == dia) {
+        if (rutinaNueva[i].id_ejercicio == id_ejercicio) {
+          posicionABajar = i
+          flag = 1
         }
+        if (flag != 0 && (rutinaNueva[i].posicion == parseInt(rutinaNueva[posicionABajar].posicion) + 1)) {
+          if (rutinaNueva[i].combinado == null) {
+            posicionASubir = i
+          } else {
+            posicionASubir = (i - 1)
+          }
+        }
+        maxPosDia++
       }
-      maxPosDia++
     }
-    }
-    if((-5) == posicionASubir)
-    {
+    if ((-5) == posicionASubir) {
       this.termino()
-    }else{
-      this.setState({isLoading: true})
+    } else {
+      this.setState({ isLoading: true })
       if (combinado == null) {
         //Ninguno Combinado
         if (rutinaNueva[posicionASubir].combinado == null) {
           console.log("Ninguno Combinado")
-          aux= rutinaNueva[posicionABajar].posicion
+          aux = rutinaNueva[posicionABajar].posicion
 
           rutinaNueva[posicionABajar].posicion = rutinaNueva[posicionASubir].posicion
           rutinaNueva[posicionASubir].posicion = aux
@@ -287,7 +285,7 @@ class RutinaNew extends Component {
         //El que baja es combinado
         if (rutinaNueva[posicionASubir].combinado == null) {
           console.log("El que baja es combinado")
-          aux= rutinaNueva[posicionABajar].posicion
+          aux = rutinaNueva[posicionABajar].posicion
 
           rutinaNueva[posicionABajar].posicion = rutinaNueva[posicionASubir].posicion
           rutinaNueva[(posicionABajar + 1)].posicion = rutinaNueva[posicionASubir].posicion
@@ -296,16 +294,16 @@ class RutinaNew extends Component {
         } else {
           //Dos Combinados
           console.log("Dos Combinados")
-          aux= rutinaNueva[posicionABajar].posicion
+          aux = rutinaNueva[posicionABajar].posicion
 
           rutinaNueva[posicionABajar].posicion = rutinaNueva[posicionASubir].posicion
           rutinaNueva[(posicionABajar + 1)].posicion = rutinaNueva[posicionASubir].posicion
           rutinaNueva[posicionASubir].posicion = aux
           rutinaNueva[(posicionASubir + 1)].posicion = aux
-        
+
         }
       }
-      this.setState({rutina: rutinaNueva })
+      this.setState({ rutina: rutinaNueva })
       this.termino()
     }
   }
@@ -318,21 +316,20 @@ class RutinaNew extends Component {
     var posicionBorrada
     while (i < this.state.rutina.length) {
       if (id_ejercicio == this.state.rutina[i].id_ejercicio && dia == this.state.rutina[i].dia) {
-        if(combinado == null)
-        {
+        if (combinado == null) {
           valorPosicionBorrada = this.state.rutina[i].posicion
           i++
-          flag=1
-        }else{
+          flag = 1
+        } else {
           valorPosicionBorrada = this.state.rutina[i].posicion
           i = (i + 2)
-          flag=1
+          flag = 1
         }
       }
       if (i < this.state.rutina.length) {
         rutinaNueva.push(this.state.rutina[i])
-        if(flag!=0 && this.state.rutina[i].dia == dia){
-          rutinaNueva[(rutinaNueva.length)-1].posicion = valorPosicionBorrada
+        if (flag != 0 && this.state.rutina[i].dia == dia) {
+          rutinaNueva[(rutinaNueva.length) - 1].posicion = valorPosicionBorrada
           valorPosicionBorrada = (valorPosicionBorrada - 1)
         }
       } else {
@@ -343,7 +340,7 @@ class RutinaNew extends Component {
     }
     this.setState({ rutina: rutinaNueva })
     this.termino()
-}
+  }
   borrarTodo() {
     var rutinaVacia = []
     if (this.state.rutina.length != 0) {
@@ -412,6 +409,7 @@ class RutinaNew extends Component {
               <View style={styles.inputContainerInside}>
                 <TextInput style={styles.TextContainer} maxLength={15} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
                 <RNPickerSelect
+                useNativeAndroidPickerStyle={false}
                   placeholder={{
                     label: 'Seleccionar Tipo de Rutina',
                     value: '',
@@ -429,22 +427,26 @@ class RutinaNew extends Component {
                       flexDirection: 'row',
                       alignItems: 'center',
                       fontWeight: 'bold',
-                      fontSize: 15,
+                      fontSize: height * 0.02,
                       color: "black",
+                      opacity: .95
                     },
                     inputAndroid: {
                       backgroundColor: 'grey',
-                      borderRadius: 10,
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
                       paddingLeft: 10,
-                      marginLeft: 20,
                       marginBottom: 20,
                       width: wp("70"),
                       height: hp("5.5"),
                       flexDirection: 'row',
                       alignItems: 'center',
                       fontWeight: 'bold',
-                      fontSize: 15,
+                      fontSize: height * 0.02,
                       color: "black",
+                      opacity: .95
                     }
                   }}
                   onValueChange={(value) => this.setState({ tipo: value })}
@@ -455,7 +457,7 @@ class RutinaNew extends Component {
                 />
               </View>
               <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: true }) }} style={styles.borrarTodo}>
-                <AntDesign name="delete" size={25} color="white" />
+                <AntDesign name="delete" size={height * 0.035} color="white" />
               </TouchableOpacity>
             </View>
 
@@ -500,7 +502,7 @@ class RutinaNew extends Component {
                         }}
                         renderItem={({ item }) => {
                           if (item.dia == aux) {
-                            if(item.tiempo == null){
+                            if (item.tiempo == null) {
                               if (item.combinado != null) {
                                 if (contadorCobinadosFlatlist) {
                                   contadorCobinadosFlatlist = false
@@ -511,9 +513,9 @@ class RutinaNew extends Component {
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("60") }}>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                            <Text>Series: {item.series}</Text>
-                                            <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                            <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                            <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                            <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                           </View>
                                         </View>
                                       </View>
@@ -528,9 +530,9 @@ class RutinaNew extends Component {
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                            <Text>Series: {item.series}</Text>
-                                            <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                            <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                            <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                            <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                           </View>
                                         </View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -556,9 +558,9 @@ class RutinaNew extends Component {
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                         <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                          <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                          <Text>Series: {item.series}</Text>
-                                          <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                         </View>
                                       </View>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -576,7 +578,7 @@ class RutinaNew extends Component {
                                   </TouchableOpacity>
                                 )
                               }
-                            }else{
+                            } else {
                               if (item.combinado != null) {
                                 if (contadorCobinadosFlatlist) {
                                   contadorCobinadosFlatlist = false
@@ -587,9 +589,9 @@ class RutinaNew extends Component {
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("60") }}>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                            <Text>Series: {item.series}</Text>
-                                            <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                            <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                            <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                            <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                           </View>
                                         </View>
                                       </View>
@@ -604,9 +606,9 @@ class RutinaNew extends Component {
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                            <Text>Series: {item.series}</Text>
-                                            <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                            <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                            <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                            <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                           </View>
                                         </View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -632,9 +634,9 @@ class RutinaNew extends Component {
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                         <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                          <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                          <Text>Series: {item.series}</Text>
-                                          <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                         </View>
                                       </View>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -665,12 +667,12 @@ class RutinaNew extends Component {
 
             <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
               <TouchableOpacity style={styles.guardarButton} onPress={() => { this.cancelarRutina() }}>
-                <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
+                <Text style={styles.screenButtonText}>
                   Cancelar
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.guardarButton} onPress={() => { this.botonGuardar() }}>
-                <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
+                <Text style={styles.screenButtonText}>
                   Guardar
                 </Text>
               </TouchableOpacity>
@@ -781,7 +783,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    fontSize: 15,
+    fontSize: height * 0.02,
     justifyContent: "space-between"
   },
   inputContainerInside: {
@@ -800,7 +802,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: height * 0.02,
+    opacity: .95
   },
   borrarTodo: {
     //width: 44,
@@ -811,7 +814,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#3399ff',
     borderRadius: 30,
-    marginRight: 25,
+    marginRight: height * 0.03,
   },
   imageContainer: {
     height: height * 0.28,
@@ -882,7 +885,7 @@ const styles = StyleSheet.create({
 
   name: {
     paddingTop: 12,
-    fontSize: 18,
+    fontSize: height * 0.025,
     flex: 1,
     //alignSelf: 'center',
     color: "#3399ff",
@@ -890,7 +893,7 @@ const styles = StyleSheet.create({
   },
 
   detalleGenresTitles: {
-    fontSize: 33,
+    fontSize: height * 0.044,
     margin: 10,
     //marginBottom: 2.5,
     alignSelf: "center",
@@ -898,8 +901,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   fab: {
-    //width: 33,
-    //height: 33,
     width: hp("5"),
     height: hp("5"),
     alignItems: 'center',
@@ -913,7 +914,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     width: width * 0.33,
-    marginHorizontal: 22,
+    marginHorizontal: height * 0.025,
     alignSelf: 'center',
     opacity: .95
   },
@@ -928,6 +929,21 @@ const styles = StyleSheet.create({
     marginRight: 12,
     resizeMode: 'cover',
   },
+  nombreEjercicio: {
+    fontWeight: 'bold',
+    fontSize: height * 0.021,
+    marginBottom: wp("1")
+  },
+  subsEjercicio: {
+    fontSize: height * 0.019,
+  },
+  screenButtonText: {
+    marginVertical: height * 0.02,
+    fontWeight: 'bold',
+    fontSize: height * 0.025
+  },
+
+  /*************************************** */
   //MODAAAAL
   modal: {
     height: height * 0.22,
@@ -977,14 +993,14 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: 'white',
-    fontSize: 15,
+    fontSize: height * 0.02,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'
   },
   textButtonTipoEjercicios: {
     color: 'white',
-    fontSize: 20,
+    fontSize: height * 0.028,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'

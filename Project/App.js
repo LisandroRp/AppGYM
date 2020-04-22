@@ -36,7 +36,6 @@ import {
   DrawerItems,
 } from 'react-navigation';
 import { ScrollView } from 'react-native-gesture-handler';
-import CamaraPage from './components/Camara/CamaraPage';
 import MusculoFavs from './components/MusculoFavs';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
@@ -62,6 +61,7 @@ class TrainingScreen extends React.Component {
       <Training
         onPressPass={this.goPass.bind(this)}
         onPressCreate={this.goPlan.bind(this)}
+        onOmitir={this.goPass.bind(this)}
       />
     )
   }
@@ -677,29 +677,6 @@ class SuplementacionScreen extends React.Component {
   }
 }
 // *****************************************************
-// **********************Camara*************************
-// *****************************************************
-class CamaraPageScreen extends React.Component {
-
-  static navigationOptions = {
-    title: 'Camara',
-    headerStyle: {
-      backgroundColor: 'black',
-      height: 55,
-      borderBottomWidth: 0
-    },
-    headerTintColor: '#3399ff',
-  };
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <CamaraPage />
-    );
-  }
-}
-// *****************************************************
 // ********************Favoritos************************
 // *****************************************************
 class FavoritosScreen extends React.Component {
@@ -1025,7 +1002,8 @@ const FavoritosStackNavigator = createStackNavigator(
 const PerfilTabNavigator = createBottomTabNavigator({
   MiPlan: MiPlanScreen,
   Ficha: FichaScreen
-}, {
+},
+ {
   navigationOptions: ({ navigation }) => {
     const { routeName } = navigation.state.routes[navigation.state.index]
     return {
@@ -1046,6 +1024,7 @@ const PerfilTabNavigator = createBottomTabNavigator({
       }
     }
   },
+swipeEnabled: true,
   Title: 'Ficha',
   tabBarOptions: {
     Title: 'Mi Plan',
@@ -1079,6 +1058,7 @@ const DrawerConfig = {
     activeTintColor: '#3399ff'
   }
 }
+
 const customDrawerComponent = (props) => (
   <View style={{ flex: 1 }}>
     <LinearGradient colors={['grey', 'black']} style={styles.profile}>
@@ -1098,10 +1078,12 @@ const AppDrawerNavigator = createDrawerNavigator({
   Suplementacion: SuplementacionStackNavigator,
   Favoritos: FavoritosStackNavigator,
   Perfil: PerfilStackNavigator,
-  //Camara: CamaraPageScreen,
 },
   // DrawerConfig,
+  
   {
+    //drawerType: 'slide',
+    overlayColor: 'rgba(0, 0, 0, 0.5)',
     contentComponent: customDrawerComponent,
     drawerBackgroundColor: 'black',
     //drawerWidth: width * 0.56,
@@ -1111,12 +1093,6 @@ const AppDrawerNavigator = createDrawerNavigator({
       inactiveTintColor: '#3399ff',
     },
   },
-  {
-    Perfil: {
-      Title: "Mi Plan"
-    }
-
-  }
   //  {
   //     drawerBackgroundColor: '#ebf0f7',
   //     contentOptions: {

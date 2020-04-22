@@ -272,7 +272,6 @@ class MusculoAgregar extends Component {
               inputContainerStyle={{ backgroundColor: 'grey' }}
               placeholderTextColor='black'
               containerStyle={{ backgroundColor: 'black' }}
-              //containerStyle={{ backgroundColor: 'black', height: 50, paddingBottom: 22 }}
               buttonStyle={{}}
               searchIcon={{ color: 'black' }}
             />
@@ -283,7 +282,7 @@ class MusculoAgregar extends Component {
             </TouchableOpacity>
             <FlatList
               style={styles.contentList}
-              data={this.state.ejercicios}
+              data={this.state.ejercicios.sort((a,b) => a.nombre.localeCompare(b.nombre))}
               initialNumToRender={50}
               keyExtractor={(item) => {
                 return item.id_ejercicio;
@@ -300,7 +299,7 @@ class MusculoAgregar extends Component {
                       <View style={styles.masita}>
                         <FontAwesome name="plus" style={styles.plus}
                           onPress={() => this.setModalSeriesVisible(true, item.id_ejercicio, item.nombre, item.musculo)}
-                          size={44}
+                          size={height * 0.055}
                         /></View>
                     </View>
                   </TouchableOpacity>
@@ -315,24 +314,19 @@ class MusculoAgregar extends Component {
             onRequestClose={() => this.setState({ modalSeriesVisible: false })}  >
             <View style={styles.modalSeries}>
               <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                <Text style={styles.modalText}>Selecione el orden y la cantidad de sus repeticiones</Text>
-                <View style={styles.containerInputSeries}>
+                <Text style={styles.modalText}>Selecione la cantidad de series</Text>
                   {/* <TextInput placeholder='Series' style={styles.textInput} multiline={true} autoFocus={true} maxLength={1} onChangeText={(text) => this.setState({ series: text })} value={this.state.series}></TextInput> */}
-                  <View style={{ alignSelf: "center", justifyContent: "center", paddingTop: hp("0.5") }}>
+                  <View style={styles.containerInputSeries}>
                     <RNPickerSelect
+                    useNativeAndroidPickerStyle={false}
                       placeholder={{
                         label: 'Series',
                         value: '0'
                       }}
+                      placeholderTextColor="grey"
                       style={{
-                        inputIOS: {
-                          fontSize: 20,
-                          color: '#3399ff'
-                        },
-                        inputAndroid: {
-                          fontSize: 20,
-                          color: '#3399ff'
-                        }
+                        inputIOS: styles.containerInputSeriesIOS,
+                        inputAndroid: styles.containerInputSeriesIOS
                       }}
                       onValueChange={(value) => this.setState({ series: value })}
                       items={[
@@ -347,13 +341,12 @@ class MusculoAgregar extends Component {
                       ]}
                     />
                   </View>
-                </View>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                <TouchableOpacity onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={styles.modalButtonCancelar}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.setModalRepeticionesOTiempo(true)} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                <TouchableOpacity onPress={() => this.setModalRepeticionesOTiempo(true)} style={styles.modalButtonAceptar}>
                   <Text style={styles.textButton}>Aceptar</Text>
 
                 </TouchableOpacity>
@@ -408,7 +401,7 @@ class MusculoAgregar extends Component {
                     <View style={styles.containerInputReps}>
                       <TextInput keyboardType={'numeric'} placeholder='Mins.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarMinutos(parseInt(text))} value={this.state.minutos}></TextInput>
                     </View>
-                <View style={{marginHorizontal: 15, justifyContent: "center"}}>
+                <View style={{marginHorizontal: height * 0.02, justifyContent: "center"}}>
                 <Text>:</Text>
                 </View>
                 <View style={styles.containerInputReps}>
@@ -450,17 +443,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: 'wrap',
-    marginTop: 10
+    marginTop: height * 0.02
   },
 
   textInput: {
     color: '#3399ff',
-    fontSize: 20,
+    fontSize: height * 0.028,
     alignSelf: 'center',
   },
   textButton: {
     color: 'white',
-    fontSize: 15,
+    fontSize: height * 0.02,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold',
@@ -487,7 +480,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   cardContent: {
-    marginLeft: 20,
+    marginLeft: height * 0.028,
     //marginTop: 10,
     paddingRight: 5,
     width: wp("40"),
@@ -515,21 +508,23 @@ const styles = StyleSheet.create({
     shadowRadius: 7.49,
     elevation: 12,
 
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 20,
+    marginLeft: height * 0.028,
+    marginRight: height * 0.028,
+    marginTop: height * 0.028,
     backgroundColor: "black",
     padding: 10,
     flexDirection: 'row',
   },
 
   name: {
-    fontSize: 22,
+    fontSize: height * 0.028,
+    //fontSize: 20,
     //flex: 1,
     //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
+  
   modalSeries: {
     height: height * 0.25,
     width: width * 0.75,
@@ -571,7 +566,7 @@ const styles = StyleSheet.create({
   },
   modalText: {
     color: 'white',
-    fontSize: 15,
+    fontSize: height * 0.02,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold',
@@ -582,19 +577,39 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: 'white',
-    fontSize: 15,
+    fontSize: height * 0.02,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold',
     marginHorizontal: wp(0.2)
   },
+  
   containerInputSeries: {
-    marginTop: height * 0.02,
+    alignSelf: "center", justifyContent: "center", alignItems: "center", paddingTop: hp("0.5"), backgroundColor: 'white', borderRadius: 11, marginTop: height * 0.02
+  },
+  containerInputSeriesIOS: {
     backgroundColor: 'white',
-    marginBottom: 15,
     borderRadius: 11,
     height: height * 0.045,
-    width: width * 0.20
+    width: width * 0.20,
+    justifyContent: 'center',
+    textAlign: 'center',
+    fontSize: height * 0.028,
+    margin: height * 0.005,
+    color: '#3399ff',
+  },
+  containerInputSeriesAndroid: {
+   // backgroundColor: 'white',
+    borderRadius: 11,
+    height: height * 0.045,
+    width: width * 0.20,
+    justifyContent: 'center',
+    textAlign: 'center',
+    fontSize: height * 0.022,
+    color: '#3399ff',
+    margin: height * 0.005,
+    backgroundColor: 'white',
+    textAlign: 'center'
   },
   containerInputReps: {
     marginTop: height * 0.02,
@@ -605,29 +620,21 @@ const styles = StyleSheet.create({
     height: height * 0.045,
     width: width * 0.15,
   },
-  PikerInput: {
-    color: '#3399ff',
-    fontSize: 200,
-    alignSelf: 'center',
-    backgroundColor: 'white'
-  },
   itemStyle: {
-    fontSize: 15,
+    fontSize: height * 0.02,
     height: 75,
     color: 'black',
     textAlign: 'center',
     fontWeight: 'bold'
   },
-  picker: {
-    width: 100
-  },
+  
   modalButtonCancelar: {
     width: width * 0.37,
     height: height * 0.0775,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'grey',
-    borderRadius: 22
+    borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
     width: width * 0.37,
@@ -658,7 +665,7 @@ const styles = StyleSheet.create({
   },
   elemento: {
     marginTop:1,
-    fontSize: 15,
+    fontSize: height * 0.02,
     // color: "#6666ff"
     color: "white"
 },

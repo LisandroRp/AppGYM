@@ -102,14 +102,10 @@ class MusculoFavs extends Component {
     render() {
         if (this.state.isLoading) {
             return (
-                //<LinearGradient colors={['#584150', '#1e161b']} style={{ flex: 1 }}>
-                //<View style={styles.container}>
                 <View style={styles.container}>
                     <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                     <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
                 </View>
-                //</View>
-                // </LinearGradient>
             );
         } else {
             return (
@@ -124,7 +120,6 @@ class MusculoFavs extends Component {
                             inputContainerStyle={{ backgroundColor: 'grey' }}
                             placeholderTextColor='black'
                             containerStyle={{ backgroundColor: 'black' }}
-                            //containerStyle={{ backgroundColor: 'black', height: 50, paddingBottom: 22 }}
                             buttonStyle={{}}
                             searchIcon={{ color: 'black' }}
                         />
@@ -133,7 +128,7 @@ class MusculoFavs extends Component {
                         <FlatList
                             style={styles.contentList}
                             columnWrapperStyle={styles.listContainer}
-                            data={this.state.ejercicios}
+                            data={this.state.ejercicios.sort((a,b) => a.nombre.localeCompare(b.nombre))}
                             initialNumToRender={50}
                             keyExtractor={(item) => {
                                 return item.id_rutina;
@@ -208,7 +203,7 @@ const styles = StyleSheet.create({
         resizeMode: 'cover'
     },
     cardContent: {
-        marginLeft: 20,
+        marginLeft: height * 0.028,
         //marginTop: 10,
         paddingRight: 5,
         width: wp("40"),
@@ -229,23 +224,23 @@ const styles = StyleSheet.create({
     card: {
         shadowColor: '#00000021',
         shadowOffset: {
-            width: 0,
-            height: 6,
+          width: 0,
+          height: 6,
         },
         shadowOpacity: 0.37,
         shadowRadius: 7.49,
         elevation: 12,
-
-        marginLeft: 20,
-        marginRight: 20,
-        marginTop: 20,
+    
+        marginLeft: height * 0.028,
+        marginRight: height * 0.028,
+        marginTop: height * 0.028,
         backgroundColor: "black",
         padding: 10,
         flexDirection: 'row',
     },
 
     name: {
-        fontSize: 20,
+        fontSize: height * 0.028,
         //flex: 1,
         //alignSelf: 'center',
         color: "#3399ff",
@@ -254,7 +249,7 @@ const styles = StyleSheet.create({
 
     elemento: {
         marginTop: 1,
-        fontSize: 15,
+        fontSize: height * 0.02,
         // color: "#6666ff"
         color: "white"
     },
@@ -296,7 +291,7 @@ modal: {
   },
   textButton: {
     color: 'white',
-    fontSize: 15,
+    fontSize: height * 0.02,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'
@@ -307,7 +302,7 @@ modal: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'grey',
-    borderRadius: 22
+    borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
     width: width * 0.37,

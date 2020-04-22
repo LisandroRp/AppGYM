@@ -28,7 +28,7 @@ class ExportadorLogos extends Component {
 
             case "Triceps":
 
-                return require('./Logos/Logo_Bicep.png');
+                return require('./Logos/Logo_Tricep.png');
 
             case "Pecho":
 

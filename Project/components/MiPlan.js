@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet, ActivityIndicator,Text, ScrollView, Keyboard } from 'react-native';
+import { View, Image, StyleSheet, ActivityIndicator, Text, ScrollView, Dimensions, Keyboard } from 'react-native';
 import { AsyncStorage } from 'react-native';
+import Swiper from "react-native-web-swiper";
 
 import { withNavigation } from 'react-navigation';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import base from './GenerarBase';
+
+var { height, width } = Dimensions.get('window');
 
 class MiPlan extends Component {
 
@@ -22,14 +25,15 @@ class MiPlan extends Component {
         this.keyboardWillShow = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
         this.keyboardWillHide = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
     }
-    
-    componentWillReceiveProps(){
-        this.setState({isLoading:true})
+
+    componentWillReceiveProps() {
+        this.setState({ isLoading: true })
         base.traerPlan(this.okPlan.bind(this))
     }
 
-    okPlan(perfil){
-        this.setState({perfil:perfil, isLoading:false})
+    okPlan(perfil) {
+        console.log(perfil)
+        this.setState({ perfil: perfil, isLoading: false })
     }
     _retrieveData = async () => {
         try {
@@ -54,38 +58,125 @@ class MiPlan extends Component {
     keyboardWillHide = () => {
         this.setState({ searchBarFocused: false })
     }
-    
+
     render() {
         var key = 0
         if (this.state.isLoading) {
             return (
-                    <View style={styles.container}>
-                    <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                        <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 1 }}></ActivityIndicator>
-                    </View>
-            );
-        } else {
-            return (
                 <View style={styles.container}>
                     <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                    <ScrollView>
-                            <View style={styles.ContainerInside}>
-                                <Text style={styles.Text}>{this.state.perfil.plan}</Text>
-                                <Text style={styles.Text}>•  Calorias a consumir para mantener tu peso en base a la vida que llevas: {this.state.perfil.caloriasEjercicio}{"\n"}</Text>
-                                <Text style={styles.Text}>•  Calorias a consumir para cumplir con tu objetivo: {this.state.perfil.caloriasTotal}</Text>
-                            </View>
-                            </ScrollView>   
+                    <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 1 }}></ActivityIndicator>
                 </View>
-            )
+            );
+        } else {
+            if(this.state.perfil == null){
+                return ( 
+                    <View style={styles.containerNull}>
+                        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                        <View style={styles.imageContainer}>
+                                <Image style={styles.Logo} source={require('../assets/Logo_Solo.png')} />
+                            </View>
+                        <View style={styles.ContainerInsideNull}>
+                                    <Text style={styles.Text}> Si desea crear su plan de entrenamiento solo debe completar la ficha tecnica en la seccion de "Cambiar Plan"</Text>
+                        </View>
+                    </View>
+                )
+            }
+            else{
+                return ( 
+                    <View style={styles.container}>
+                        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                        <Swiper style={styles.swiper}>
+                            <View style={styles.slideContainer1}>
+                                <View style={styles.ContainerInside}>
+                                    <Text style={styles.calories}>{this.state.perfil.caloriasEjercicio - 200} - {this.state.perfil.caloriasEjercicio}</Text>
+                                    <Text style={styles.Text}>Calorias a consumir para mantener tu peso en base a la vida que llevas</Text>
+                                </View>
+                                <View style={styles.ContainerInside}>
+                                    <Text style={styles.calories}>{this.state.perfil.caloriasTotal - 200} - {this.state.perfil.caloriasTotal}</Text>
+                                    <Text style={styles.Text}>Calorias a consumir para cumplir con tu objetivo</Text>
+                                </View>
+                            </View>
+                            <ScrollView style={{paddingHorizontal: height * 0.03}}>
+                                <View style={styles.ContainerInsideTitle2}>
+                                    <Text style={styles.TextTitle}>{this.state.perfil.obj_nombre}</Text>
+                                </View>
+                                <View style={styles.ContainerInside2}>
+                                    <Text style={styles.Text}>{this.state.perfil.obj_descripcion}</Text>
+                                </View>
+                            </ScrollView>
+                            <View style={{paddingHorizontal: height * 0.03}}>
+                                <View style={styles.ContainerInsideTitle3}>
+                                    <Text style={styles.TextTitle}>{this.state.perfil.exp_nombre}</Text>
+                                </View>
+                                <View style={styles.ContainerInside3}>
+                                    <Text style={styles.Text}>{this.state.perfil.exp_descripcion}</Text>
+                                </View>
+                            </View>
+                        </Swiper>
+                    </View>
+                )
+            }
         }
     }
 };
 const resizeMode = 'center';
 const styles = StyleSheet.create({
+    containerNull: {
+        backgroundColor: "grey",
+        flex: 1,
+        justifyContent: "center"
+    },
+    ContainerInsideNull: {
+        backgroundColor: "black",
+        marginTop: hp(5),
+        padding: height * 0.04,
+        borderRadius: 10,
+        marginHorizontal: height * 0.05,
+        alignItems: "center",
+        justifyContent: 'center',
+    },
+    imageContainer: {
+        height: height * 0.44,
+        width: height * 0.40,
+        margin: 10,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black',
+        borderWidth: 4,
+        borderRadius: 10,
+        marginTop: hp(2)
+    },
+
+    Logo: {
+        height: height * 0.35,
+        width: height * 0.35,
+        marginTop: hp(9),
+        marginBottom: hp(6.6)
+    },
+
+    // EXISTE PLAN
     container: {
+        width: width,
+        height: height,
+        backgroundColor: "grey",
+        flex: 1
+    },
+    swiper: {
         flex: 1,
         alignItems: "center",
-        backgroundColor: "grey"
+        backgroundColor: "grey",
+        height : height
+    },
+    slideContainer: {
+        flex: 1,
+        alignItems: "center"
+    },
+    slideContainer1: {
+        flex: 1,
+        alignItems: "center",
+        height: height
     },
     bgImage: {
         flex: 1,
@@ -96,64 +187,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         resizeMode: 'cover'
     },
-    firstContainer: {
-        alignSelf: 'center', alignItems: 'center', paddingBottom: 30, width: 2000
-    },
-    textInput: {
-        color: '#3399ff',
-        fontSize: 20,
-        marginLeft: 20,
-    },
-    underline: {
-        marginTop: 5,
-        flexDirection: 'row',
-    },
-    TextUnderline: {
-        textDecorationLine: 'underline',
-        color: '#3399ff',
-        fontSize: 25,
-        marginBottom: 10,
-    },
-    buttonContainer: {
-        height: 45,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 5,
-        marginHorizontal: 5,
-        width: 100,
-        borderRadius: 30,
-        backgroundColor: 'transparent'
-    },
-
-    loginButton: {
-        backgroundColor: "#3399ff",
-
-        shadowOffset: {
-            width: 0,
-            height: 9,
-        },
-        shadowOpacity: 0.50,
-        shadowRadius: 12.35,
-
-        elevation: 19,
-    },
-    loginText: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
-    CircleShapeView: {
-        height: 150,
-        width: 150,
-        borderRadius: 100,
-        backgroundColor: '#6666ff',
-        marginBottom: 30,
-        marginTop: 30,
-        alignItems: 'center',
-        alignContent: 'center'
-    },
     contentList: {
         flexDirection: 'column',
-        marginLeft: 18,
+        marginLeft: height * 0.025,
         backgroundColor: 'white',
         borderRadius: 10,
         //height:200,
@@ -167,18 +203,62 @@ const styles = StyleSheet.create({
     },
     ContainerInside: {
         backgroundColor: "black",
-        marginHorizontal: wp(5),
         marginTop: hp(5),
-        marginBottom: hp(5),
-        padding: 30,
+        padding: height * 0.04,
         borderRadius: 10,
         alignItems: "center",
         justifyContent: 'center',
-
+        height: height * 0.33,
+        width: width * 0.88
+    },
+    ContainerInsideTitle2: {
+        backgroundColor: "black",
+        marginTop: hp(5),
+        padding: height * 0.028,
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: 'center',
+    },
+    ContainerInside2: {
+        backgroundColor: "black",
+        marginTop: hp(5),
+        padding: height * 0.028,
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: 'center',
+        marginBottom: height * 0.11
+    },
+    ContainerInsideTitle3: {
+        backgroundColor: "black",
+        marginTop: hp(5),
+        padding: height * 0.028,
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: 'center',
+    },
+    ContainerInside3: {
+        backgroundColor: "black",
+        marginTop: hp(5),
+        padding: height * 0.028,
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: 'center',
+        marginBottom: height * 0.11
     },
     Text: {
-        fontSize: 20,
-        color: "#3399ff"
+        fontSize: height * 0.027,
+        color: "#3399ff",
+        textAlign: "center"
     },
+    TextTitle: {
+        fontSize: height * 0.04,
+        color: "#3399ff",
+        textAlign: "center"
+    },
+    calories: {
+        fontSize: height * 0.07,
+        marginBottom: height * 0.02,
+        color: "#3399ff"
+    }
 })
 export default withNavigation(MiPlan);

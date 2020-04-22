@@ -435,7 +435,7 @@ class RutinaModificable extends Component {
             <View style={styles.inputContainer}>
               <TextInput style={styles.TextContainer} maxLength={15} placeholder={this.props.navigation.getParam("nombre_rutina")} placeholderTextColor='black' onChangeText={(nombreNuevo) => this.setState({ nombreNuevo })} value={this.state.nombreNuevo}></TextInput>
               <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: true }) }} style={styles.borrarTodo}>
-                <AntDesign name="delete" size={20} color="white" />
+                <AntDesign name="delete" size={height * 0.03} color="white" />
               </TouchableOpacity>
             </View>
 
@@ -465,7 +465,7 @@ class RutinaModificable extends Component {
                           <TouchableOpacity onPress={() => {
                             this.touch(item);
                           }} style={styles.fab}>
-                            <AntDesign name="plus" size={20} color="white" />
+                            <AntDesign name="plus" size={height * 0.028} color="white" />
                           </TouchableOpacity>
                         </View>
                       }
@@ -492,9 +492,9 @@ class RutinaModificable extends Component {
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("60") }}>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                            <Text>Series: {item.series}</Text>
-                                            <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                           </View>
                                         </View>
                                       </View>
@@ -509,20 +509,20 @@ class RutinaModificable extends Component {
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                            <Text>Series: {item.series}</Text>
-                                            <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                           </View>
                                         </View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                           <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
-                                            <AntDesign name="up" size={15} color="white" />
+                                            <AntDesign name="up" size={height * 0.02} color="white" />
                                           </TouchableOpacity>
                                           <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
-                                            <AntDesign name="down" size={15} color="white" />
+                                            <AntDesign name="down" size={height * 0.02} color="white" />
                                           </TouchableOpacity>
                                           <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                            <AntDesign name="delete" size={17} color="white" />
+                                            <AntDesign name="delete" size={height * 0.022} color="white" />
                                           </TouchableOpacity>
                                         </View>
                                       </View>
@@ -537,20 +537,20 @@ class RutinaModificable extends Component {
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                         <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                          <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                          <Text>Series: {item.series}</Text>
-                                          <Text>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                        <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                         </View>
                                       </View>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                          <AntDesign name="up" size={15} color="white" />
+                                          <AntDesign name="up" size={height * 0.02} color="white" />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                          <AntDesign name="down" size={15} color="white" />
+                                          <AntDesign name="down" size={height * 0.02} color="white" />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                          <AntDesign name="delete" size={17} color="white" />
+                                          <AntDesign name="delete" size={height * 0.022} color="white" />
                                         </TouchableOpacity>
                                       </View>
                                     </View>
@@ -568,9 +568,9 @@ class RutinaModificable extends Component {
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("60") }}>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                            <Text>Series: {item.series}</Text>
-                                            <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                           </View>
                                         </View>
                                       </View>
@@ -585,20 +585,20 @@ class RutinaModificable extends Component {
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                            <Text>Series: {item.series}</Text>
-                                            <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                           </View>
                                         </View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                           <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
-                                            <AntDesign name="up" size={15} color="white" />
+                                            <AntDesign name="up" size={height * 0.02} color="white" />
                                           </TouchableOpacity>
                                           <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
-                                            <AntDesign name="down" size={15} color="white" />
+                                            <AntDesign name="down" size={height * 0.02} color="white" />
                                           </TouchableOpacity>
                                           <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                            <AntDesign name="delete" size={17} color="white" />
+                                            <AntDesign name="delete" size={height * 0.022} color="white" />
                                           </TouchableOpacity>
                                         </View>
                                       </View>
@@ -613,20 +613,20 @@ class RutinaModificable extends Component {
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
                                         <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                          <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: wp("1") }}>{item.nombre}</Text>
-                                          <Text>Series: {item.series}</Text>
-                                          <Text>Tiempo:{"\n"}{item.tiempo}</Text>
+                                        <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
+                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
                                         </View>
                                       </View>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                          <AntDesign name="up" size={15} color="white" />
+                                          <AntDesign name="up" size={height * 0.02} color="white" />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                          <AntDesign name="down" size={15} color="white" />
+                                          <AntDesign name="down" size={height * 0.02} color="white" />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                          <AntDesign name="delete" size={17} color="white" />
+                                          <AntDesign name="delete" size={height * 0.022} color="white" />
                                         </TouchableOpacity>
                                       </View>
                                     </View>
@@ -646,12 +646,12 @@ class RutinaModificable extends Component {
 
             <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
               <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalGuardarVisible: true }) }}>
-                <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
+                <Text style={styles.screenButtonText}>
                   Borrar
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.guardarButton} onPress={() => { this.guardarRutina() }}>
-                <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
+                <Text style={styles.screenButtonText}>
                   Guardar
                 </Text>
               </TouchableOpacity>
@@ -745,7 +745,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    fontSize: 15,
+    fontSize: height * 0.02,
     justifyContent: "space-between"
   },
   TextContainer: {
@@ -756,11 +756,12 @@ const styles = StyleSheet.create({
     //height: 45,
     width: wp("70"),
     height: hp("5.5"),
-    margin: 20,
+    margin: height * 0.028,
     flexDirection: 'row',
     alignItems: 'center',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: height * 0.02,
+    opacity: .95
   },
   borrarTodo: {
     //width: 44,
@@ -771,7 +772,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#3399ff',
     borderRadius: 30,
-    marginRight: 25,
+    marginRight: height * 0.033,
   },
   cuadraditos: {
     backgroundColor: 'black',
@@ -825,15 +826,15 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    paddingTop: 12,
-    fontSize: 18,
+    paddingTop: height * 0.018,
+    fontSize: height * 0.025,
     flex: 1,
     //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
   detalleGenresTitles: {
-    fontSize: 33,
+    fontSize: height * 0.044,
     margin: 10,
     //marginBottom: 2.5,
     alignSelf: "center",
@@ -856,8 +857,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     width: width * 0.33,
-    marginHorizontal: 22,
-    alignSelf: 'center'
+    marginHorizontal: height * 0.03,
+    alignSelf: 'center',
+    opacity: .95
   },
   DropDownItem: {
     alignItems: 'stretch'
@@ -867,6 +869,19 @@ const styles = StyleSheet.create({
     height: hp("6"),
     marginRight: 12,
     resizeMode: 'cover',
+  },
+  nombreEjercicio: {
+    fontWeight: 'bold',
+    fontSize: height * 0.021,
+    marginBottom: wp("1")
+  },
+  subsEjercicio:{
+    fontSize: height * 0.019,
+  },
+  screenButtonText: {
+    marginVertical: height * 0.02,
+    fontWeight: 'bold',
+    fontSize: height * 0.025 
   },
   //MODAAAAL
   modal: {
@@ -895,7 +910,7 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: 'white',
-    fontSize: 15,
+    fontSize: height * 0.05,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'
@@ -903,14 +918,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignSelf: 'center',
     justifyContent: 'center'
-  },
-  musculosLogo2: {
-    width: 40,
-    height: 40,
-    // width: width*0.05,
-    // height: height*0.05,
-    marginRight: 10,
-    resizeMode: 'cover',
   },
   modalTipoEjericios: {
     width: width * 0.80,
@@ -936,7 +943,7 @@ const styles = StyleSheet.create({
   },
   textButtonTipoEjercicios: {
     color: 'white',
-    fontSize: 20,
+    fontSize: height * 0.028,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'

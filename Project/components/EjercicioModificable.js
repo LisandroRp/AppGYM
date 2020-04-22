@@ -61,7 +61,13 @@ class EjerciciosNew extends Component {
   }
 
   actualizarEjercicio() {
-    base.actualizarEjercicio(this.state.ejercicio.nombre, this.state.ejercicio.descripcion, this.state.ejercicio.ejecucion, this.state.ejercicio.elemento, this.state.ejercicio.musculo, this.state.ejercicio.id_ejercicio, this.cancelarEjercicio.bind(this))
+    ejercicioUpdate = this.state.ejercicio
+    ejercicioUpdate.nombre = this.state.nombre
+    ejercicioUpdate.musculo = this.state.musculo
+    ejercicioUpdate.elemento = this.state.elemento
+    ejercicioUpdate.ejecucion = this.state.ejecucion
+    ejercicioUpdate.descripcion = this.state.descripcion
+    base.actualizarEjercicio(ejercicioUpdate , this.cancelarEjercicio.bind(this))
   }
   cancelarEjercicio() {
     this.props.onPressCancelar()
@@ -96,43 +102,46 @@ class EjerciciosNew extends Component {
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
 
-            <KeyboardAvoidingView style={[styles.inputContainer]} behavior="position" keyboardVerticalOffset={64} enabled>
+            <KeyboardAvoidingView style={[styles.inputContainer]} behavior="position" keyboardVerticalOffset={height * 0.008} enabled>
               <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.inputContainerView}>
                   <RNPickerSelect
+                  useNativeAndroidPickerStyle={false}
                     placeholder={{
                       label: 'Musculo del Ejercicio',
                       value: '0',
                     }}
-                    value={this.state.ejercicio.musculo}
+                    value={this.state.musculo}
                     placeholderTextColor="black"
+                    placeholderfontWeight="bold"
                     style={{
                       inputIOS: {
                         backgroundColor: 'grey',
                         borderRadius: 10,
                         paddingLeft: 10,
-                        margin: 20,
+                        margin: height * 0.028,
                         width: wp("70"),
                         height: hp("5.5"),
                         flexDirection: 'row',
                         alignItems: 'center',
                         alignSelf: 'center',
                         fontWeight: 'bold',
-                        fontSize: 15,
+                        fontSize: height * 0.02,
                         color: "black",
                       },
                       inputAndroid: {
                         backgroundColor: 'grey',
                         borderRadius: 10,
                         paddingLeft: 10,
-                        margin: 20,
+                        margin: height * 0.028,
                         width: wp("70"),
                         height: hp("5.5"),
                         flexDirection: 'row',
                         alignItems: 'center',
                         alignSelf: 'center',
                         fontWeight: 'bold',
-                        fontSize: 15,
+                        fontSize: height * 0.02,
+                        //fontSize: 15,
                         color: "black",
                       }
                     }}
@@ -149,39 +158,40 @@ class EjerciciosNew extends Component {
                     ]}
                   />
                   <RNPickerSelect
+                  useNativeAndroidPickerStyle={false}
                     placeholder={{
                       label: 'Elemento del Ejercicio',
                       value: '0',
                     }}
-                    value={this.state.ejercicio.elemento}
+                    value={this.state.elemento}
                     placeholderTextColor="black"
                     style={{
                       inputIOS: {
                         backgroundColor: 'grey',
                         borderRadius: 10,
                         paddingLeft: 10,
-                        margin: 20,
+                        margin: height * 0.028,
                         width: wp("70"),
                         height: hp("5.5"),
                         flexDirection: 'row',
                         alignItems: 'center',
                         alignSelf: 'center',
                         fontWeight: 'bold',
-                        fontSize: 15,
+                        fontSize: height * 0.02,
                         color: "black",
                       },
                       inputAndroid: {
                         backgroundColor: 'grey',
                         borderRadius: 10,
                         paddingLeft: 10,
-                        margin: 20,
+                        margin: height * 0.028,
                         width: wp("70"),
                         height: hp("5.5"),
                         flexDirection: 'row',
                         alignItems: 'center',
                         alignSelf: 'center',
                         fontWeight: 'bold',
-                        fontSize: 15,
+                        fontSize: height * 0.02,
                         color: "black",
                       }
                     }}
@@ -192,18 +202,18 @@ class EjerciciosNew extends Component {
                       { label: 'Libre', value: 'Libre' },
                     ]}
                   />
-                  <TextInput style={styles.TextContainer} maxLength={15} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.ejercicio.nombre}></TextInput>
-                  <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder='Descripcion' placeholderTextColor='black' onChangeText={(descripcion) => this.setState({ descripcion })} value={this.state.ejercicio.descripcion}></TextInput>
-                  <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder='Ejecucion' placeholderTextColor='black' onChangeText={(ejecucion) => this.setState({ ejecucion })} value={this.state.ejercicio.ejecucion}></TextInput>
+                  <TextInput style={styles.TextContainer} maxLength={33} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
+                  <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder='Descripcion' placeholderTextColor='black' onChangeText={(descripcion) => this.setState({ descripcion })} value={this.state.descripcion}></TextInput>
+                  <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder='Ejecucion' placeholderTextColor='black' onChangeText={(ejecucion) => this.setState({ ejecucion })} value={this.state.ejecucion}></TextInput>
 
                   <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
                     <TouchableOpacity style={styles.guardarButton} onPress={() => { this.cancelarEjercicio() }}>
-                      <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
+                      <Text style={styles.screenButtonText}>
                         Cancelar
                 </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.guardarButton} onPress={() => { this.botonGuardar() }}>
-                      <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
+                      <Text style={styles.screenButtonText}>
                         Actualizar
                 </Text>
                     </TouchableOpacity>
@@ -267,7 +277,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     fontWeight: 'bold',
-    fontSize: 15
+    fontSize: height * 0.02
   },
   TextContainerLarge: {
     backgroundColor: 'grey',
@@ -279,7 +289,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     fontWeight: 'bold',
-    fontSize: 15
+    fontSize: height * 0.02
   },
 
   bgImage: {
@@ -299,6 +309,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 22,
     alignSelf: 'center',
     opacity: .95
+  },
+  screenButtonText: {
+    marginVertical: height * 0.02,
+    fontWeight: 'bold',
+    fontSize: height * 0.025 
   },
   //MODAAAAL
   modal: {
@@ -327,7 +342,7 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: 'white',
-    fontSize: 15,
+    fontSize: height * 0.02,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'
@@ -338,7 +353,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'grey',
-    borderRadius: 22
+    borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
     width: width * 0.37,

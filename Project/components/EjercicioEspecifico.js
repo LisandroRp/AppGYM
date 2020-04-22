@@ -182,13 +182,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("2"),
     paddingVertical: hp("2"),
   },
-  tituloPrincipal: {
-    fontSize: 33,
-    fontWeight: 'bold',
-    color: '#3399ff'
-  },
   titulo: {
-    fontSize: 30,
+    fontSize: height * 0.04,
     fontWeight: 'bold',
     color: '#3399ff'
   },
@@ -196,7 +191,7 @@ const styles = StyleSheet.create({
     color: 'black',
     marginHorizontal: wp("5"),
     marginVertical: hp("2"),
-    fontSize: 18,
+    fontSize: height * 0.025,
   },
   imageContainer: {
     justifyContent: 'center',

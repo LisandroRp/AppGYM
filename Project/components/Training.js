@@ -14,7 +14,8 @@ import {
     Keyboard,
     TouchableWithoutFeedback,
     KeyboardAvoidingView,
-    StatusBar
+    StatusBar,
+    Modal
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import Swiper from "react-native-web-swiper";
@@ -27,13 +28,14 @@ class Training extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            peso: 0,
+            modalVisible: false,
             objetivoDeseado: '',
             experiencia: '',
             actividad: '',
             genero: '',
             altura: 0,
             edad: 0,
+            peso: 0,
 
             calorias: {}
         };
@@ -166,7 +168,7 @@ class Training extends Component {
         base.traerInfo(this.state.experiencia, this.state.objetivoDeseado, this.okExperiencia.bind(this))
     }
     okExperiencia(experiencia, objetivo) {
-        base.guardarPlan(this.state.calorias, (experiencia.descripcion + "\n" + "\n" + objetivo.descripcion), this.state.experiencia, this.state.objetivoDeseado, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
+        base.guardarPlan(this.state.calorias, this.state.objetivoDeseado, this.state.experiencia, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
     }
     mostrarPlan() {
         this.props.onPressCreate(this.state.caloriasEjercicio, this.state.caloriasTotal, this.state.objetivoDeseado)
@@ -197,7 +199,7 @@ class Training extends Component {
                                 <Text style={styles.slideText}>Desliza para crear tu plan de entrenamiento a medida</Text>
                             </View>
                         </View>
-                        <KeyboardAvoidingView style={[styles.slideContainer]} behavior="position" enabled>
+                        <KeyboardAvoidingView style={[styles.slideContainer]} behavior="position" keyboardVerticalOffset={height * 0.11} enabled>
 
                             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                                 <View style={[styles.slideContainerInside2]}>
@@ -206,6 +208,7 @@ class Training extends Component {
                                     </View>
                                     <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
                                         <RNPickerSelect
+                                        useNativeAndroidPickerStyle={false}
                                             placeholder={{
                                                 label: 'Nivel de Actividad',
                                                 value: ''
@@ -217,24 +220,27 @@ class Training extends Component {
                                                     borderRadius: 10,
                                                     width: wp("44"),
                                                     height: hp("5.5"),
-                                                    marginBottom: 20,
+                                                    marginBottom: height * 0.028,
                                                     alignItems: 'center',
                                                     alignSelf: 'center',
                                                     fontWeight: 'bold',
-                                                    fontSize: 15,
+                                                    fontSize: height * 0.02,
                                                     color: "black",
                                                     textAlign: 'center'
                                                 },
                                                 inputAndroid: {
                                                     backgroundColor: 'grey',
-                                                    borderRadius: 10,
+                                                    borderTopLeftRadius: 10,
+                                                    borderTopRightRadius: 10,
+                                                    borderBottomLeftRadius: 10,
+                                                    borderBottomRightRadius: 10,
                                                     width: wp("44"),
                                                     height: hp("5.5"),
-                                                    marginBottom: 20,
+                                                    marginBottom: height * 0.02,
                                                     alignItems: 'center',
                                                     alignSelf: 'center',
                                                     fontWeight: 'bold',
-                                                    fontSize: 15,
+                                                    fontSize: height * 0.02,
                                                     color: "black",
                                                     textAlign: 'center'
                                                 }
@@ -249,6 +255,7 @@ class Training extends Component {
                                             ]}
                                         />
                                         <RNPickerSelect
+                                        useNativeAndroidPickerStyle={false}
                                             placeholder={{
                                                 label: 'Genero',
                                                 value: ''
@@ -260,24 +267,27 @@ class Training extends Component {
                                                     borderRadius: 10,
                                                     width: wp("22"),
                                                     height: hp("5.5"),
-                                                    marginBottom: 20,
+                                                    marginBottom: height * 0.028,
                                                     alignItems: 'center',
                                                     alignSelf: 'center',
                                                     fontWeight: 'bold',
-                                                    fontSize: 15,
+                                                    fontSize: height * 0.02,
                                                     color: "black",
                                                     textAlign: 'center'
                                                 },
                                                 inputAndroid: {
                                                     backgroundColor: 'grey',
-                                                    borderRadius: 10,
+                                                    borderTopLeftRadius: 10,
+                                                    borderTopRightRadius: 10,
+                                                    borderBottomLeftRadius: 10,
+                                                    borderBottomRightRadius: 10,
                                                     width: wp("22"),
                                                     height: hp("5.5"),
-                                                    marginBottom: 20,
+                                                    marginBottom: height * 0.028,
                                                     alignItems: 'center',
                                                     alignSelf: 'center',
                                                     fontWeight: 'bold',
-                                                    fontSize: 15,
+                                                    fontSize: height * 0.02,
                                                     color: "black",
                                                     textAlign: 'center'
                                                 }
@@ -290,6 +300,7 @@ class Training extends Component {
                                         />
                                     </View>
                                     <RNPickerSelect
+                                    useNativeAndroidPickerStyle={false}
                                         placeholder={{
                                             label: 'Objetivo Deseado',
                                             value: ''
@@ -301,24 +312,27 @@ class Training extends Component {
                                                 borderRadius: 10,
                                                 width: wp("70"),
                                                 height: hp("5.5"),
-                                                margin: 20,
+                                                margin: height * 0.028,
                                                 alignItems: 'center',
                                                 alignSelf: 'center',
                                                 fontWeight: 'bold',
-                                                fontSize: 15,
+                                                fontSize: height * 0.02,
                                                 color: "black",
                                                 textAlign: 'center'
                                             },
                                             inputAndroid: {
                                                 backgroundColor: 'grey',
-                                                borderRadius: 10,
+                                                borderTopLeftRadius: 10,
+                                                borderTopRightRadius: 10,
+                                                borderBottomLeftRadius: 10,
+                                                borderBottomRightRadius: 10,
                                                 width: wp("70"),
                                                 height: hp("5.5"),
-                                                margin: 20,
+                                                margin: height * 0.028,
                                                 alignItems: 'center',
                                                 alignSelf: 'center',
                                                 fontWeight: 'bold',
-                                                fontSize: 15,
+                                                fontSize: height * 0.02,
                                                 color: "black",
                                                 textAlign: 'center'
                                             }
@@ -334,6 +348,7 @@ class Training extends Component {
                                         ]}
                                     />
                                     <RNPickerSelect
+                                    useNativeAndroidPickerStyle={false}
                                         placeholder={{
                                             label: 'Experiencia en Entrenamiento',
                                             value: ''
@@ -345,24 +360,27 @@ class Training extends Component {
                                                 borderRadius: 10,
                                                 width: wp("70"),
                                                 height: hp("5.5"),
-                                                margin: 20,
+                                                margin: height * 0.028,
                                                 alignItems: 'center',
                                                 alignSelf: 'center',
                                                 fontWeight: 'bold',
-                                                fontSize: 15,
+                                                fontSize: height * 0.02,
                                                 color: "black",
                                                 textAlign: 'center'
                                             },
                                             inputAndroid: {
                                                 backgroundColor: 'grey',
-                                                borderRadius: 10,
+                                                borderTopLeftRadius: 10,
+                                                borderTopRightRadius: 10,
+                                                borderBottomLeftRadius: 10,
+                                                borderBottomRightRadius: 10,
                                                 width: wp("70"),
                                                 height: hp("5.5"),
-                                                margin: 20,
+                                                margin: height * 0.028,
                                                 alignItems: 'center',
                                                 alignSelf: 'center',
                                                 fontWeight: 'bold',
-                                                fontSize: 15,
+                                                fontSize: height * 0.02,
                                                 color: "black",
                                                 textAlign: 'center'
                                             }
@@ -386,17 +404,47 @@ class Training extends Component {
                         {/* </View> */}
                         <View style={[styles.slideContainer]}>
                             <View style={styles.slideContainerInside3}>
-                                <Text style={styles.slideText3}>• Se le creara un plan de entrenamiento en base a los datos personales y objetivos señadalos anteriormente.
+                                <Text style={styles.slideText3}>• Se le creara un plan de entrenamiento en base a los datos personales y objetivos señalados anteriormente.
                                         {"\n"}{"\n"}• Se incluira un plan de alimentacion y las rutinas que son mas utiles para el objetivo deseado.
                                         {"\n"}{"\n"}• Podras cambiar tu ficha personal y objetivos en el momento que quieras accediendo en la parte de {"\n"}"Perfil" desde el SideMenu.</Text>
                             </View>
-                            <TouchableOpacity style={styles.guardarButton} onPress={() => { this.crearPlan() }}>
-                                <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
-                                    Continuar
-                </Text>
+                            <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
+                            <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalVisible: true }) }}>
+                                <Text style={styles.screenButtonText}>
+                                    Omitir Plan
+                                </Text>
                             </TouchableOpacity>
+                            <TouchableOpacity style={styles.guardarButton} onPress={() => { this.crearPlan() }}>
+                                <Text style={styles.screenButtonText}>
+                                    Crear Plan
+                                </Text>
+                            </TouchableOpacity>
+                            </View>
                         </View>
                     </Swiper>
+                    <Modal
+          animationType="fade"
+          visible={this.state.modalVisible}
+          transparent={true}
+          onRequestClose={() => this.setState({ modalVisible: false })}  >
+
+          <View style={styles.modal}>
+            <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
+              <Text style={styles.textButton}>Desea omitir la creacion de su plan?</Text>
+            </View>
+            <View style={styles.modal2}>
+
+              <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
+                <Text style={styles.textButton}>Cancelar</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => this.props.onOmitir()} style={styles.modalButtonAceptar}>
+                <Text style={styles.textButton}>Aceptar</Text>
+              </TouchableOpacity>
+
+            </View>
+          </View>
+        </Modal>
                 </View>
 
             )
@@ -412,18 +460,6 @@ const styles = StyleSheet.create({
     StatusBar: {
         height: hp(3),
         backgroundColor: "black"
-    },
-    header: {
-        position: "absolute",
-        backgroundColor: "black",
-        top: 0,
-        height: hp(9),
-        width: "100%",
-        flexDirection: "row-reverse"
-    },
-    headerContent: {
-        justifyContent: "center",
-        marginRight: wp(5)
     },
     imageContainer: {
         height: height * 0.55,
@@ -442,12 +478,6 @@ const styles = StyleSheet.create({
         width: height * 0.45,
         marginTop: hp(9),
         marginBottom: hp(6.6)
-    },
-
-    headerText: {
-        fontSize: 18,
-        alignSelf: 'center',
-        color: "#3399ff",
     },
     slide1: {
         backgroundColor: "black",
@@ -483,13 +513,13 @@ const styles = StyleSheet.create({
 
     slideText2: {
         textAlign: "center",
-        fontSize: 22,
+        fontSize: height * 0.03,
         color: "#3399ff"
     },
 
     slideText3: {
         padding: wp(10),
-        fontSize: 20,
+        fontSize: height * 0.028,
         color: "#3399ff"
     },
 
@@ -504,7 +534,7 @@ const styles = StyleSheet.create({
     },
     slideContainer: {
         flex: 1,
-        alignItems: "center",
+        alignItems: "center"
     },
 
     TextContainer: {
@@ -515,23 +545,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         fontWeight: 'bold',
-        fontSize: 15,
+        fontSize: height * 0.02,
         textAlign: 'center',
-        marginTop: 20
-    },
-    Piker: {
-        backgroundColor: 'grey',
-        borderRadius: 10,
-        paddingLeft: 10,
-        marginLeft: 20,
-        marginBottom: 20,
-        width: wp("70"),
-        height: hp("5.5"),
-        flexDirection: 'row',
-        alignItems: 'center',
-        fontWeight: 'bold',
-        fontSize: 15,
-        color: "black",
+        marginTop: height * 0.028
     },
     slideContainerInside2: {
         width: width,
@@ -553,10 +569,66 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         width: width * 0.33,
-        marginHorizontal: 22,
+        marginHorizontal: height * 0.025,
         alignSelf: 'center',
         opacity: .95
-    }
+      },
+      screenButtonText: {
+        marginVertical: height * 0.02,
+        fontWeight: 'bold',
+        fontSize: height * 0.025
+      },
+
+    //MODAAAAL
+  modal: {
+    height: height * 0.22,
+    width: width * 0.75,
+    position: 'absolute',
+    top: height * 0.3,
+    left: width * 0.13,
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22,
+    opacity: .95
+  },
+  modal2: {
+    flexDirection: 'row',
+    borderColor: 'black',
+    borderTopWidth: 2,
+    width: width * 0.74,
+    height: height * 0.08,
+    position: 'absolute',
+    bottom: 0,
+    opacity: .95
+  },
+  textButton: {
+    color: 'white',
+    fontSize: height * 0.02,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  modalButtonCancelar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'grey',
+    borderBottomLeftRadius: 22
+  },
+  modalButtonAceptar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+    borderLeftWidth: 2,
+    backgroundColor: 'grey',
+    borderBottomRightRadius: 22
+  }
 });
 
 export default withNavigation(Training);

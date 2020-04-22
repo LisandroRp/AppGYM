@@ -2,7 +2,6 @@ import { Component } from 'react';
 //import * as FS  from 'expo-file-system';
 import { Asset } from 'expo-asset'
 import { SQLite } from "expo-sqlite";
-import DocumentPicker from 'expo-document-picker';
 
 import * as FileSystem from 'expo-file-system';
 
@@ -36,10 +35,12 @@ class GenerarBase extends Component {
     }
     crearBase(okBase){
         let db;
+
         FileSystem.downloadAsync(
             Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
             `${FileSystem.documentDirectory}/SQLite/appgym.db`
         ).then(db = SQLite.openDatabase('appgym.db'))
+
         db.transaction(
             tx => {
                 tx.executeSql('SELECT * FROM Rutinas', [], function (tx, res) {
@@ -123,14 +124,14 @@ class GenerarBase extends Component {
             );
     }
 
-    guardarPlan(calorias, plan, objetivo, experiencia, edad, peso, mostrarPlan){
+    guardarPlan(calorias, objetivo, experiencia, edad, peso, mostrarPlan){
         var plan
 
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
             tx => {
-                tx.executeSql("INSERT INTO Perfil (caloriasBase, caloriasEjercicio, caloriasTotal, plan, id_objetivo, id_experiencia, edad, peso) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)", [Math.floor(calorias.caloriasBase), Math.floor(calorias.caloriasEjercicio), Math.floor(calorias.caloriasTotal), plan, objetivo, experiencia, edad, peso ])
+                tx.executeSql("INSERT INTO Perfil (caloriasBase, caloriasEjercicio, caloriasTotal, id_objetivo, id_experiencia, edad, peso) VALUES ( ?, ?, ?, ?, ?, ?, ?)", [Math.floor(calorias.caloriasBase), Math.floor(calorias.caloriasEjercicio), Math.floor(calorias.caloriasTotal), objetivo, experiencia, edad, peso ])
             },
             error => {
                 console.log(error)
@@ -168,13 +169,18 @@ class GenerarBase extends Component {
     }
     traerPlan(okPlan){
         perfil= {}
+        flag = false
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
             tx => {
-                tx.executeSql('SELECT * FROM Perfil', [], function (tx, res) {
+                tx.executeSql('SELECT * FROM Perfil p JOIN experiencia e ON p.id_experiencia = e.id_experiencia JOIN objetivo o ON p.id_objetivo = o.id_objetivo', [], function (tx, res) {
+                    console.log(res.rows.length)
                     for (let i = 0; i < res.rows.length; ++i) {
                         perfil = res.rows._array[0];
+                    }
+                    if(res.rows.length == 0){
+                        flag = true
                     }
                 });
             },
@@ -183,17 +189,21 @@ class GenerarBase extends Component {
             },
             () => {
                 console.log("Correcto")
-                okPlan(perfil)
+                if(flag == false){
+                    okPlan(perfil)
+                }else{
+                    okPlan(null)
+                }
                 db._db.close();
             }
         );
     }
-    cambiarPlan(calorias, plan, objetivo, experiencia, edad, peso, mostrarPlan){
+    cambiarPlan(calorias, objetivo, experiencia, edad, peso, mostrarPlan){
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
             tx => {
-                tx.executeSql('UPDATE Perfil set caloriasBase = ?, caloriasEjercicio = ?, caloriasTotal = ?, plan = ?, id_objetivo = ?, id_experiencia = ?, edad = ?, peso = ? where id_perfil = 1', [Math.floor(calorias.caloriasBase), Math.floor(calorias.caloriasEjercicio), Math.floor(calorias.caloriasTotal), plan, objetivo, experiencia, edad, peso ])
+                tx.executeSql('UPDATE Perfil set caloriasBase = ?, caloriasEjercicio = ?, caloriasTotal = ?, id_objetivo = ?, id_experiencia = ?, edad = ?, peso = ? where id_perfil = 1', [Math.floor(calorias.caloriasBase), Math.floor(calorias.caloriasEjercicio), Math.floor(calorias.caloriasTotal), objetivo, experiencia, edad, peso ])
             },
             error => {
                 console.log(error)
@@ -290,8 +300,8 @@ class GenerarBase extends Component {
 
         db.transaction(
             tx => {
-                //tx.executeSql('SELECT * FROM Ejercicios_Rutina JOIN Ejercicios where Ejercicios_Rutina.id_ejercicio = Ejercicios.id_ejercicio AND Ejercicios_Rutina.id_rutina=? ORDER BY dia, posicion, combinado', [rutina.id_rutina], function (tx, res) {
-                tx.executeSql('SELECT * FROM Ejercicios_Rutina JOIN Ejercicios where Ejercicios_Rutina.id_ejercicio = Ejercicios.id_ejercicio AND Ejercicios_Rutina.id_rutina=?', [rutina.id_rutina], function (tx, res) {
+                tx.executeSql('SELECT * FROM Ejercicios_Rutina JOIN Ejercicios where Ejercicios_Rutina.id_ejercicio = Ejercicios.id_ejercicio AND Ejercicios_Rutina.id_rutina=? ORDER BY dia, posicion, combinado', [rutina.id_rutina], function (tx, res) {
+                //tx.executeSql('SELECT * FROM Ejercicios_Rutina JOIN Ejercicios where Ejercicios_Rutina.id_ejercicio = Ejercicios.id_ejercicio AND Ejercicios_Rutina.id_rutina=?', [rutina.id_rutina], function (tx, res) {
                     rutina.rutina = res.rows._array;
                 });
             },
@@ -364,12 +374,12 @@ class GenerarBase extends Component {
             }
         );
     }
-    actualizarEjercicio(nombre, descripcion, ejecucion, elemento, musculo, id_ejercicio, okEjercicioActualizado){
+    actualizarEjercicio(ejercicio, okEjercicioActualizado){
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
             tx => {
-                tx.executeSql('UPDATE Ejercicios SET nombre = ?, descripcion = ?, ejecucion = ?, elemento = ?, musculo = ?  WHERE id_ejercicio = ? ', [nombre, descripcion, ejecucion, elemento, musculo, id_ejercicio])
+                tx.executeSql('UPDATE Ejercicios SET nombre = ?, descripcion = ?, ejecucion = ?, elemento = ?, musculo = ?  WHERE id_ejercicio = ? ', [ejercicio.nombre, ejercicio.descripcion, ejercicio.ejecucion, ejercicio.elemento, ejercicio.musculo, ejercicio.id_ejercicio])
             },
             error => {
                 alert("Algo Salio Mal")

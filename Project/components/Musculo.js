@@ -20,6 +20,8 @@ import {
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
+var { height, width } = Dimensions.get('window');
+
 function createData(item) {
   return {
     key: item._id,
@@ -226,7 +228,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover'
   },
   cardContent: {
-    marginLeft: 20,
+    marginLeft: height * 0.028,
     //marginTop: 10,
     paddingRight: 5,
     width: wp("40"),
@@ -254,16 +256,16 @@ const styles = StyleSheet.create({
     shadowRadius: 7.49,
     elevation: 12,
 
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 20,
+    marginLeft: height * 0.028,
+    marginRight: height * 0.028,
+    marginTop: height * 0.028,
     backgroundColor: "black",
     padding: 10,
     flexDirection: 'row',
   },
 
   name: {
-    fontSize: 20,
+    fontSize: height * 0.028,
     //flex: 1,
     //alignSelf: 'center',
     color: "#3399ff",
@@ -272,7 +274,7 @@ const styles = StyleSheet.create({
 
   elemento: {
     marginTop:1,
-    fontSize: 15,
+    fontSize: height * 0.02,
     // color: "#6666ff"
     color: "white"
   },

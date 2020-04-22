@@ -141,10 +141,14 @@ class Ficha extends Component {
         }
     }
     traerInfo = async (okInfo) => {
-        base.traerInfo(this.state.experiencia, this.state.objetivoDeseado, this.okExperiencia.bind(this))
+        base.traerPlan(this.okExperiencia.bind(this))
     }
-    okExperiencia(experiencia, objetivo) {
-        base.cambiarPlan(this.state.calorias, (experiencia.descripcion + "\n" + "\n" + objetivo.descripcion), this.state.experiencia, this.state.objetivoDeseado, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
+    okExperiencia(plan) {
+        if(plan == null){
+            base.guardarPlan(this.state.calorias, this.state.objetivoDeseado, this.state.experiencia, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
+        }else{
+            base.cambiarPlan(this.state.calorias, this.state.objetivoDeseado, this.state.experiencia, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
+        }
     }
 
     mostrarPlan() {
@@ -152,7 +156,6 @@ class Ficha extends Component {
     }
 
     render() {
-        var key = 0
         if (this.state.isLoading) {
             return (
                 <View style={styles.container}>
@@ -164,7 +167,7 @@ class Ficha extends Component {
         } else {
             return (
 
-                <KeyboardAvoidingView style={[styles.container]} behavior="position" enabled>
+                <KeyboardAvoidingView style={[styles.container]} behavior="position" keyboardVerticalOffset={height * 0.11} enabled>
                     <StatusBar barStyle="light-content" />
                     <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} onPress={Keyboard.dismiss} />
 
@@ -176,6 +179,7 @@ class Ficha extends Component {
                             </View>
                             <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
                                 <RNPickerSelect
+                                useNativeAndroidPickerStyle={false}
                                     placeholder={{
                                         label: 'Nivel de Actividad',
                                         value: ''
@@ -187,24 +191,27 @@ class Ficha extends Component {
                                             borderRadius: 10,
                                             width: wp("44"),
                                             height: hp("5.5"),
-                                            marginBottom: 20,
+                                            marginBottom: height * 0.028,
                                             alignItems: 'center',
                                             alignSelf: 'center',
                                             fontWeight: 'bold',
-                                            fontSize: 15,
+                                            fontSize: height * 0.02,
                                             color: "black",
                                             textAlign: 'center'
                                         },
                                         inputAndroid: {
                                             backgroundColor: 'grey',
-                                            borderRadius: 10,
+                                            borderTopLeftRadius: 10,
+                                                    borderTopRightRadius: 10,
+                                                    borderBottomLeftRadius: 10,
+                                                    borderBottomRightRadius: 10,
                                             width: wp("44"),
                                             height: hp("5.5"),
-                                            marginBottom: 20,
+                                            marginBottom: height * 0.028,
                                             alignItems: 'center',
                                             alignSelf: 'center',
                                             fontWeight: 'bold',
-                                            fontSize: 15,
+                                            fontSize: height * 0.02,
                                             color: "black",
                                             textAlign: 'center'
                                         }
@@ -219,6 +226,7 @@ class Ficha extends Component {
                                     ]}
                                 />
                                 <RNPickerSelect
+                                useNativeAndroidPickerStyle={false}
                                     placeholder={{
                                         label: 'Genero',
                                         value: ''
@@ -230,24 +238,27 @@ class Ficha extends Component {
                                             borderRadius: 10,
                                             width: wp("22"),
                                             height: hp("5.5"),
-                                            marginBottom: 20,
+                                            marginBottom: height * 0.028,
                                             alignItems: 'center',
                                             alignSelf: 'center',
                                             fontWeight: 'bold',
-                                            fontSize: 15,
+                                            fontSize: height * 0.02,
                                             color: "black",
                                             textAlign: 'center'
                                         },
                                         inputAndroid: {
                                             backgroundColor: 'grey',
-                                            borderRadius: 10,
+                                            borderTopLeftRadius: 10,
+                                                    borderTopRightRadius: 10,
+                                                    borderBottomLeftRadius: 10,
+                                                    borderBottomRightRadius: 10,
                                             width: wp("22"),
                                             height: hp("5.5"),
-                                            marginBottom: 20,
+                                            marginBottom: height * 0.028,
                                             alignItems: 'center',
                                             alignSelf: 'center',
                                             fontWeight: 'bold',
-                                            fontSize: 15,
+                                            fontSize: height * 0.02,
                                             color: "black",
                                             textAlign: 'center'
                                         }
@@ -260,6 +271,7 @@ class Ficha extends Component {
                                 />
                             </View>
                             <RNPickerSelect
+                            useNativeAndroidPickerStyle={false}
                                 placeholder={{
                                     label: 'Objetivo Deseado',
                                     value: ''
@@ -271,24 +283,27 @@ class Ficha extends Component {
                                         borderRadius: 10,
                                         width: wp("70"),
                                         height: hp("5.5"),
-                                        margin: 20,
+                                        margin: height * 0.028,
                                         alignItems: 'center',
                                         alignSelf: 'center',
                                         fontWeight: 'bold',
-                                        fontSize: 15,
+                                        fontSize: height * 0.02,
                                         color: "black",
                                         textAlign: 'center'
                                     },
                                     inputAndroid: {
                                         backgroundColor: 'grey',
-                                        borderRadius: 10,
+                                        borderTopLeftRadius: 10,
+                                                    borderTopRightRadius: 10,
+                                                    borderBottomLeftRadius: 10,
+                                                    borderBottomRightRadius: 10,
                                         width: wp("70"),
                                         height: hp("5.5"),
-                                        margin: 20,
+                                        margin: height * 0.028,
                                         alignItems: 'center',
                                         alignSelf: 'center',
                                         fontWeight: 'bold',
-                                        fontSize: 15,
+                                        fontSize: height * 0.02,
                                         color: "black",
                                         textAlign: 'center'
                                     }
@@ -304,6 +319,7 @@ class Ficha extends Component {
                                 ]}
                             />
                             <RNPickerSelect
+                            useNativeAndroidPickerStyle={false}
                                 placeholder={{
                                     label: 'Experiencia en Entrenamiento',
                                     value: ''
@@ -315,24 +331,27 @@ class Ficha extends Component {
                                         borderRadius: 10,
                                         width: wp("70"),
                                         height: hp("5.5"),
-                                        margin: 20,
+                                        margin: height * 0.028,
                                         alignItems: 'center',
                                         alignSelf: 'center',
                                         fontWeight: 'bold',
-                                        fontSize: 15,
+                                        fontSize: height * 0.02,
                                         color: "black",
                                         textAlign: 'center'
                                     },
                                     inputAndroid: {
                                         backgroundColor: 'grey',
-                                        borderRadius: 10,
+                                        borderTopLeftRadius: 10,
+                                        borderTopRightRadius: 10,
+                                        borderBottomLeftRadius: 10,
+                                        borderBottomRightRadius: 10,
                                         width: wp("70"),
                                         height: hp("5.5"),
-                                        margin: 20,
+                                        margin: height * 0.028,
                                         alignItems: 'center',
                                         alignSelf: 'center',
                                         fontWeight: 'bold',
-                                        fontSize: 15,
+                                        fontSize: height * 0.02,
                                         color: "black",
                                         textAlign: 'center'
                                     }
@@ -352,8 +371,8 @@ class Ficha extends Component {
 
 
                             <TouchableOpacity style={styles.guardarButton} onPress={() => { this.crearPlan() }}>
-                                <Text style={{ margin: 15, fontWeight: 'bold', fontSize: 18 }}>
-                                    Continuar
+                                <Text style={{ margin: height * 0.02, fontWeight: 'bold', fontSize: height * 0.025 }}>
+                                    Actualizar
                 </Text>
                             </TouchableOpacity>
 
@@ -395,7 +414,7 @@ const styles = StyleSheet.create({
     },
 
     headerText: {
-        fontSize: 18,
+        fontSize: height * 0.025,
         alignSelf: 'center',
         color: "#3399ff",
     },
@@ -450,7 +469,7 @@ const styles = StyleSheet.create({
 
     slideText: {
         textAlign: "center",
-        fontSize: 22,
+        fontSize: height * 0.03,
         color: "#3399ff"
     },
 
@@ -476,9 +495,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         fontWeight: 'bold',
-        fontSize: 15,
+        fontSize: height * 0.02,
         textAlign: 'center',
-        marginTop: 20
+        marginTop: height * 0.028,
+        opacity: .95
     },
 
     slideContainerInside2: {
@@ -491,8 +511,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         width: width * 0.33,
-        marginTop: 33,
         marginHorizontal: 22,
+        marginTop: height * 0.05,
         alignSelf: 'center',
         opacity: .95
     }

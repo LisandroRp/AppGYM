@@ -102,7 +102,7 @@ class RutinasFavs extends Component {
                         <FlatList
                             style={styles.contentList}
                             columnWrapperStyle={styles.listContainer}
-                            data={this.state.rutinas}
+                            data={this.state.rutinas.sort((a,b) => a.nombre.localeCompare(b.nombre))}
                             initialNumToRender={50}
                             keyExtractor={(item) => {
                                 return item.id_rutina;
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
         resizeMode: 'cover'
     },
     cardContent: {
-        marginLeft: 20,
+        marginLeft: height * 0.028,
         //marginTop: 10,
         paddingRight: 5,
         width: wp("40"),
@@ -196,33 +196,31 @@ const styles = StyleSheet.create({
 
     card: {
         shadowColor: '#00000021',
-        shadowOffset: {
-            width: 0,
-            height: 6,
-        },
-        shadowOpacity: 0.37,
-        shadowRadius: 7.49,
-        elevation: 12,
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12,
 
-        marginLeft: 20,
-        marginRight: 20,
-        marginTop: 20,
-        backgroundColor: "black",
-        padding: 10,
-        flexDirection: 'row',
-        alignItems: "center",
-        justifyContent: "center"
+    marginLeft: height * 0.028,
+    marginRight: height * 0.028,
+    marginTop: height * 0.028,
+    backgroundColor: "black",
+    padding: 10,
+    flexDirection: 'row',
     },
 
     name: {
-        fontSize: 22,
+        fontSize: height * 0.028,
         //flex: 1,
         //alignSelf: 'center',
         color: "#3399ff",
         fontWeight: 'bold'
     },
     dias: {
-        fontSize: 15,
+        fontSize: height * 0.02,
         marginTop: 5,
         //flex: 1,
         color: "white",
@@ -264,7 +262,7 @@ modal: {
     },
     textButton: {
         color: 'white',
-        fontSize: 15,
+        fontSize: height * 0.02,
         alignSelf: 'center',
         textAlign: 'center',
         fontWeight: 'bold'
