@@ -20,21 +20,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 var { height, width } = Dimensions.get('window');
 
-function createData(item) {
-    return {
-        key: item._id,
-        idEvento: item._id,
-        imagen: item.imagen,
-        nombre: item.nombre,
-        rating: item.rating,
-        descripcion: item.descripcion,
-        tipo: item.tipo,
-        ubicacion: item.ubicacion,
-        precioE: item.precioE,
-        genero: item.genero,
-    };
-}
-
 class RutinasFavs extends Component {
     constructor(props) {
         super(props);
@@ -105,7 +90,7 @@ class RutinasFavs extends Component {
                             data={this.state.rutinas.sort((a,b) => a.nombre.localeCompare(b.nombre))}
                             initialNumToRender={50}
                             keyExtractor={(item) => {
-                                return item.id_rutina;
+                                return item.id_rutina.toString();
                             }}
                             renderItem={({ item }) => {
                                 if (item.favoritos) {
@@ -214,21 +199,17 @@ const styles = StyleSheet.create({
 
     name: {
         fontSize: height * 0.028,
-        //flex: 1,
-        //alignSelf: 'center',
         color: "#3399ff",
         fontWeight: 'bold'
     },
     dias: {
         fontSize: height * 0.02,
         marginTop: 5,
-        //flex: 1,
         color: "white",
     },
     StarImage: {
         width: hp(5.5),
         height: hp(5.5),
-        //resizeMode: 'cover',
     },
     ViewEstrella: {
         alignItems: 'center',

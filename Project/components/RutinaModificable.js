@@ -477,7 +477,7 @@ class RutinaModificable extends Component {
                         data={rutinaLocal.sort((a, b) => a.posicion.localeCompare(b.posicion))}
                         initialNumToRender={50}
                         keyExtractor={(item) => {
-                          return (item.dia + item.id_ejercicio.toString());
+                          return (item.dia + item.id_ejercicio).toString();
                         }}
                         renderItem={({ item }) => {
                           if (item.dia == aux) {
@@ -664,20 +664,16 @@ class RutinaModificable extends Component {
             onRequestClose={() => this.setState({ modalGuardarVisible: false })}  >
 
             <View style={styles.modal}>
-              {/* <View style={{ flexDirection: 'column' }}>
-                  <Text>Repeticiones:</Text>
-                  <Text>Series:</Text>
-                </View> */}
               <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
                 <Text style={styles.textButton}>Esta seguro que desea borrar la rutina "{this.props.navigation.getParam("nombre_rutina")}"</Text>
               </View>
               <View style={styles.modal2}>
 
-                <TouchableOpacity onPress={() => { this.setModalGuardarVisible(!this.state.modalGuardarVisible); }} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                <TouchableOpacity onPress={() => { this.setModalGuardarVisible(!this.state.modalGuardarVisible); }} style={styles.modalButtonCancelar}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => base.conseguirIdRutinaParaBorrar(this.state.nombre, this.borrarRutina.bind(this))} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                <TouchableOpacity onPress={() => base.conseguirIdRutinaParaBorrar(this.state.nombre, this.borrarRutina.bind(this))} style={styles.modalButtonAceptar}>
                   <Text style={styles.textButton}>Aceptar</Text>
 
                 </TouchableOpacity>
@@ -695,11 +691,11 @@ class RutinaModificable extends Component {
               </View>
               <View style={styles.modal2}>
 
-                <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: false }) }} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: false }) }} style={styles.modalButtonCancelar}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => this.borrarTodo()} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                <TouchableOpacity onPress={() => this.borrarTodo()} style={styles.modalButtonAceptar}>
                   <Text style={styles.textButton}>Borrar</Text>
 
                 </TouchableOpacity>
@@ -752,8 +748,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     borderRadius: 10,
     paddingLeft: 10,
-    // width: 300,
-    //height: 45,
     width: wp("70"),
     height: hp("5.5"),
     margin: height * 0.028,
@@ -764,8 +758,6 @@ const styles = StyleSheet.create({
     opacity: .95
   },
   borrarTodo: {
-    //width: 44,
-    //height: 44,
     height: hp("6"),
     width: hp("6"),
     alignItems: 'center',
@@ -779,7 +771,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 5,
     marginHorizontal: 10,
-    //paddingBottom: 10,
     alignItems: 'center'
   },
   cuadraditosDeAdentro: {
@@ -829,21 +820,17 @@ const styles = StyleSheet.create({
     paddingTop: height * 0.018,
     fontSize: height * 0.025,
     flex: 1,
-    //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
   detalleGenresTitles: {
     fontSize: height * 0.044,
     margin: 10,
-    //marginBottom: 2.5,
     alignSelf: "center",
     color: '#3399ff',
     fontWeight: 'bold'
   },
   fab: {
-    //width: 33,
-    //height: 33,
     width: hp("5"),
     height: hp("5"),
     alignItems: 'center',
@@ -910,7 +897,7 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: 'white',
-    fontSize: height * 0.05,
+    fontSize: height * 0.02,
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'
@@ -947,6 +934,24 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'
+  },
+  modalButtonCancelar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'grey',
+    borderBottomLeftRadius: 22
+  },
+  modalButtonAceptar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+    borderLeftWidth: 2,
+    backgroundColor: 'grey',
+    borderBottomRightRadius: 22
   }
 })
 

@@ -26,7 +26,6 @@ class RutinasTipos extends Component {
     super(props);
     this.state = {
       searchStatus: 'none',
-      Status: 'none',
       modalVisible: false,
       userSelected: [],
       rutinas:[],
@@ -34,11 +33,6 @@ class RutinasTipos extends Component {
       generoEvento: [],
     };
     this.cargarRutinas();
-  }
-
-  componentWillReceiveProps() {
-    this.setState({isLoading:true})
-    this.cargarRutinas()
   }
 
   cargarRutinas = async () => {
@@ -115,12 +109,11 @@ class RutinasTipos extends Component {
               data={this.state.rutinas.sort((a,b) => a.nombre.localeCompare(b.nombre))}
               initialNumToRender={50}
               keyExtractor={(item) => {
-                return item.nombre;
+                return item.nombre.toString();
               }}
               renderItem={({ item }) => {
                   return (
                     <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre,item.modificable)}>
-                        {/* <Image style={styles.image} source={ExportadorMenus.Musculacion()} /> */}
                         <View style={styles.cardContent}>
                           <Text style={styles.name}>{item.nombre}</Text>
                           <Text style={styles.dias}>{item.dias} Dias</Text>

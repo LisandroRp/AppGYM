@@ -15,7 +15,6 @@ import {
   ActivityIndicator,
   Modal,
   AsyncStorage,
-  TouchableWithoutFeedback
 } from 'react-native';
 import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
@@ -498,7 +497,7 @@ class RutinaNew extends Component {
                         data={rutinaLocal.sort((a, b) => a.posicion.localeCompare(b.posicion))}
                         initialNumToRender={50}
                         keyExtractor={(item) => {
-                          return item.id_ejercicio;
+                          return item.id_ejercicio.toString();
                         }}
                         renderItem={({ item }) => {
                           if (item.dia == aux) {
@@ -794,8 +793,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     borderRadius: 10,
     paddingLeft: 10,
-    // width: 300,
-    //height: 45,
     width: wp("70"),
     height: hp("5.5"),
     margin: 20,
@@ -806,8 +803,6 @@ const styles = StyleSheet.create({
     opacity: .95
   },
   borrarTodo: {
-    //width: 44,
-    //height: 44,
     height: hp("8"),
     width: hp("8"),
     alignItems: 'center',
@@ -837,7 +832,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 5,
     marginHorizontal: 10,
-    //paddingBottom: 10,
     alignItems: 'center'
   },
   cuadraditosDeAdentro: {
@@ -887,7 +881,6 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     fontSize: height * 0.025,
     flex: 1,
-    //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
@@ -895,7 +888,6 @@ const styles = StyleSheet.create({
   detalleGenresTitles: {
     fontSize: height * 0.044,
     margin: 10,
-    //marginBottom: 2.5,
     alignSelf: "center",
     color: '#3399ff',
     fontWeight: 'bold'
@@ -923,9 +915,7 @@ const styles = StyleSheet.create({
   },
   musculosLogo: {
     width: wp("10.5"),
-    //width: 40,
     height: hp("6"),
-    //height: 40,
     marginRight: 12,
     resizeMode: 'cover',
   },
@@ -1011,7 +1001,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'grey',
-    borderRadius: 22
+    borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
     width: width * 0.37,

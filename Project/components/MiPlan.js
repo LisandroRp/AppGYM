@@ -32,7 +32,6 @@ class MiPlan extends Component {
     }
 
     okPlan(perfil) {
-        console.log(perfil)
         this.setState({ perfil: perfil, isLoading: false })
     }
     _retrieveData = async () => {

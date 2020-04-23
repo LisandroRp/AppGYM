@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import {
   StyleSheet,
@@ -8,28 +7,11 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  RefreshControl,
-  Dimensions,
-  Alert,
   ScrollView,
   ActivityIndicator
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
-
-function createData(item) {
-  return {
-    key: item._id,
-    idEvento: item._id,
-    imagen: item.imagen,
-    nombre: item.nombre,
-    rating: item.rating,
-    descripcion: item.descripcion,
-    tipo: item.tipo,
-    ubicacion: item.ubicacion,
-    precioE: item.precioE,
-  };
-}
+import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
 
 class Ejercicios extends Component {
 
@@ -49,8 +31,13 @@ class Ejercicios extends Component {
       isLoading: false, 
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-    //base.ejerciciosRutina(this.listo.bind(this))
   }
+
+  bannerError() {
+    console.log("An error");
+    return;
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -64,14 +51,13 @@ class Ejercicios extends Component {
       <View style={styles.container}>
       <StatusBar backgroundColor="#3399ff" barStyle="light-content" />
       <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()}/>
-      <ScrollView>
         <FlatList
           style={styles.contentList}
           numColumns={2}
           data={this.state.musculos}
           initialNumToRender={50}
           keyExtractor={(item) => {
-              return item.id;
+              return item.id.toString();
             }}
           renderItem={({ item }) => {
             return (
@@ -80,7 +66,34 @@ class Ejercicios extends Component {
               </TouchableOpacity>
             )
           }} />
-          </ScrollView>
+         <AdMobBanner
+          style={styles.bottomBanner}
+          bannerSize="fullBanner"
+          adUnitID="ca-app-pub-4175223710505457/8516284384"
+          //useEffect  = {setTestDeviceIDAsync('EMULATOR')}
+          onDidFailToReceiveAdWithError={err => {
+            console.log(err)
+          }}
+          onAdViewDidReceiveAd={() => {
+            console.log("Ad Recieved");
+          }}
+          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+          didFailToReceiveAdWithError={this.bannerError()}
+        />
+        <AdMobBanner
+          style={styles.bottomBanner}
+          bannerSize="fullBanner"
+          adUnitID="ca-app-pub-4175223710505457/4865400712"
+          //useEffect  = {setTestDeviceIDAsync('EMULATOR')}
+          onDidFailToReceiveAdWithError={err => {
+            console.log(err)
+          }}
+          onAdViewDidReceiveAd={() => {
+            console.log("Ad Recieved");
+          }}
+          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+          didFailToReceiveAdWithError={this.bannerError()}
+        />
       </View>
     );
   }
@@ -92,6 +105,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: "grey"
+  },
+  bottomBanner: {
+    position: "absolute",
+    bottom: 0
   },
   contentList: {
     flex: 1,

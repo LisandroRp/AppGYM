@@ -16,20 +16,6 @@ import DropDownItem from 'react-native-drop-down-item';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 var { height, width } = Dimensions.get('window');
 
-function createData(item) {
-  return {
-    key: item._id,
-    idEjercicio: item._id,
-    imagen: item.imagen,
-    nombre: item.nombre,
-    rating: item.rating,
-    descripcion: item.descripcion,
-    tipo: item.tipo,
-    ubicacion: item.ubicacion,
-    precioE: item.precioE,
-  };
-}
-
 class EjercicioEspecifico extends Component {
 
   constructor(props) {
@@ -41,9 +27,7 @@ class EjercicioEspecifico extends Component {
         musculo: '',
         descripcion: '',
         ejecucion: '',
-        imagen:'',
       },
-      imagen:'',
       modalVisible: false,
       isLoading: true,
     };
@@ -58,12 +42,9 @@ class EjercicioEspecifico extends Component {
     this.setState({
       detalle: data[0],
       isLoading: false,
-      imagen: data[0].imagen
     });
   }
-  traerImagen(imagen){
-    return imagen
-  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -98,14 +79,6 @@ class EjercicioEspecifico extends Component {
                 <Text style={styles.descripcion}>{this.state.detalle.ejecucion}</Text>
               </DropDownItem>
             </View>
-            {/* <View style={styles.todo}>
-              <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.detalle.nombre}</Text></View>
-              <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
-            </View>
-            <View style={styles.todo}>
-              <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Ejecucion</Text></View>
-              <Text style={styles.descripcion}>{this.state.detalle.ejecucion}</Text>
-            </View> */}
           </ScrollView>
         </View>
       );
@@ -133,14 +106,6 @@ class EjercicioEspecifico extends Component {
               <Text style={styles.descripcion}>{this.state.detalle.ejecucion}</Text>
             </DropDownItem>
           </View>
-          {/* <View style={styles.todo}>
-            <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.detalle.nombre}</Text></View>
-            <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
-          </View>
-          <View style={styles.todo}>
-            <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Ejecucion</Text></View>
-            <Text style={styles.descripcion}>{this.state.detalle.ejecucion}</Text>
-          </View> */}
         </ScrollView>
       </View>
     );

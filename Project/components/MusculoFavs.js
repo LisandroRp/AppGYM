@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SearchBar, Icon } from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorEjercicios from './Fotos/ExportadorEjercicios'
@@ -131,7 +131,7 @@ class MusculoFavs extends Component {
                             data={this.state.ejercicios.sort((a,b) => a.nombre.localeCompare(b.nombre))}
                             initialNumToRender={50}
                             keyExtractor={(item) => {
-                                return item.id_rutina;
+                                return item.id_rutina.toString();
                             }}
                             renderItem={({ item }) => {
                                 if (item.favoritos) {
@@ -204,15 +204,12 @@ const styles = StyleSheet.create({
     },
     cardContent: {
         marginLeft: height * 0.028,
-        //marginTop: 10,
         paddingRight: 5,
         width: wp("40"),
         justifyContent: 'center'
     },
     image: {
-        //width: 90,
         width: wp("20"),
-        //height: 90,
         height: hp("11"),
         borderWidth: 2,
         borderColor: "#ebf0f7",
@@ -241,8 +238,6 @@ const styles = StyleSheet.create({
 
     name: {
         fontSize: height * 0.028,
-        //flex: 1,
-        //alignSelf: 'center',
         color: "#3399ff",
         fontWeight: 'bold'
     },
@@ -250,15 +245,14 @@ const styles = StyleSheet.create({
     elemento: {
         marginTop: 1,
         fontSize: height * 0.02,
-        // color: "#6666ff"
         color: "white"
     },
 
     StarImage: {
         width: hp(5.5),
         height: hp(5.5),
-        //resizeMode: 'cover',
     },
+    
     ViewEstrella: {
         alignItems: 'center',
         justifyContent: "center",

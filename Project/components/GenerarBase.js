@@ -1,5 +1,4 @@
 import { Component } from 'react';
-//import * as FS  from 'expo-file-system';
 import { Asset } from 'expo-asset'
 import * as SQLite from 'expo-sqlite'
 

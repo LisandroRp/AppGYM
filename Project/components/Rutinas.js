@@ -3,7 +3,6 @@ import ExportadorMenus from './Fotos/ExportadorMenus'
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import {
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableOpacity,
@@ -11,20 +10,6 @@ import {
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { withNavigation } from 'react-navigation';
-
-function createData(item) {
-  return {
-    key: item._id,
-    idEvento: item._id,
-    imagen: item.imagen,
-    nombre: item.nombre,
-    rating: item.rating,
-    descripcion: item.descripcion,
-    tipo: item.tipo,
-    ubicacion: item.ubicacion,
-    precioE: item.precioE,
-  };
-}
 
 class Rutinas extends Component {
 
@@ -106,7 +91,6 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 22,
-    //flex: 1,
     alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'

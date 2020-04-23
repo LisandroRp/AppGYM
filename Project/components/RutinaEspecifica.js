@@ -10,9 +10,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  RefreshControl,
   Dimensions,
-  Alert,
   ScrollView,
   ActivityIndicator
 } from 'react-native';
@@ -120,7 +118,7 @@ class RutinaEspecifica extends Component {
                         data={this.state.rutina.rutina}
                         initialNumToRender={50}
                         keyExtractor={(item) => {
-                          return item.id_ejercicio;
+                          return item.id_ejercicio.toString();
                         }}
                         renderItem={({ item }) => {
                           if (item.dia == aux) {

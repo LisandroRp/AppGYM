@@ -4,7 +4,6 @@
     "icon": "./assets/Logo.png",
     "slug": "Project",
     "privacy": "unlisted",
-    "sdkVersion": "35.0.0",
     "packagerOpts": {
       "assetExts": [
         "db"
@@ -16,10 +15,16 @@
     ],
     "ios": {
       "bundleIdentifier": "AppGym.com",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config" : {
+        "googleMobileAdsAppId": "ca-app-pub-4175223710505457~5097582425"
+      }
     },
     "android": {
-      "package": "AppGym.com"
+      "package": "AppGym.com",
+      "config" : {
+        "googleMobileAdsAppId": "ca-app-pub-4175223710505457~3729139362"
+      }
     },
     "version": "1.0.0",
     "orientation": "portrait",

@@ -14,28 +14,11 @@ import {
   FlatList,
   Keyboard,
   Dimensions,
-  Alert,
   ActivityIndicator,
-  ScrollView
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 var { height, width } = Dimensions.get('window');
-
-function createData(item) {
-  return {
-    key: item._id,
-    idEvento: item._id,
-    imagen: item.imagen,
-    nombre: item.nombre,
-    rating: item.rating,
-    descripcion: item.descripcion,
-    tipo: item.tipo,
-    ubicacion: item.ubicacion,
-    precioE: item.precioE,
-    genero: item.genero,
-  };
-}
 
 class Musculo extends Component {
 
@@ -229,15 +212,12 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     marginLeft: height * 0.028,
-    //marginTop: 10,
     paddingRight: 5,
     width: wp("40"),
     justifyContent: 'center',
   },
   image: {
-    //width: 90,
     width: wp("20"),
-    //height: 90,
     height: hp("11"),
     borderWidth: 2,
     borderColor: "#ebf0f7",
@@ -266,8 +246,6 @@ const styles = StyleSheet.create({
 
   name: {
     fontSize: height * 0.028,
-    //flex: 1,
-    //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
@@ -275,14 +253,12 @@ const styles = StyleSheet.create({
   elemento: {
     marginTop:1,
     fontSize: height * 0.02,
-    // color: "#6666ff"
     color: "white"
   },
 
   StarImage: {
     width: hp(5.5),
     height: hp(5.5),
-    //resizeMode: 'cover',
   },
   ViewEstrella: {
     alignItems: 'center',

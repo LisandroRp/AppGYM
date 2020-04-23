@@ -144,9 +144,9 @@ class Ficha extends Component {
         base.traerPlan(this.okExperiencia.bind(this))
     }
     okExperiencia(plan) {
-        if(plan == null){
+        if (plan == null) {
             base.guardarPlan(this.state.calorias, this.state.objetivoDeseado, this.state.experiencia, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
-        }else{
+        } else {
             base.cambiarPlan(this.state.calorias, this.state.objetivoDeseado, this.state.experiencia, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
         }
     }
@@ -179,7 +179,7 @@ class Ficha extends Component {
                             </View>
                             <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
                                 <RNPickerSelect
-                                useNativeAndroidPickerStyle={false}
+                                    useNativeAndroidPickerStyle={false}
                                     placeholder={{
                                         label: 'Nivel de Actividad',
                                         value: ''
@@ -202,9 +202,9 @@ class Ficha extends Component {
                                         inputAndroid: {
                                             backgroundColor: 'grey',
                                             borderTopLeftRadius: 10,
-                                                    borderTopRightRadius: 10,
-                                                    borderBottomLeftRadius: 10,
-                                                    borderBottomRightRadius: 10,
+                                            borderTopRightRadius: 10,
+                                            borderBottomLeftRadius: 10,
+                                            borderBottomRightRadius: 10,
                                             width: wp("44"),
                                             height: hp("5.5"),
                                             marginBottom: height * 0.028,
@@ -226,7 +226,7 @@ class Ficha extends Component {
                                     ]}
                                 />
                                 <RNPickerSelect
-                                useNativeAndroidPickerStyle={false}
+                                    useNativeAndroidPickerStyle={false}
                                     placeholder={{
                                         label: 'Genero',
                                         value: ''
@@ -249,9 +249,9 @@ class Ficha extends Component {
                                         inputAndroid: {
                                             backgroundColor: 'grey',
                                             borderTopLeftRadius: 10,
-                                                    borderTopRightRadius: 10,
-                                                    borderBottomLeftRadius: 10,
-                                                    borderBottomRightRadius: 10,
+                                            borderTopRightRadius: 10,
+                                            borderBottomLeftRadius: 10,
+                                            borderBottomRightRadius: 10,
                                             width: wp("22"),
                                             height: hp("5.5"),
                                             marginBottom: height * 0.028,
@@ -271,7 +271,7 @@ class Ficha extends Component {
                                 />
                             </View>
                             <RNPickerSelect
-                            useNativeAndroidPickerStyle={false}
+                                useNativeAndroidPickerStyle={false}
                                 placeholder={{
                                     label: 'Objetivo Deseado',
                                     value: ''
@@ -294,9 +294,9 @@ class Ficha extends Component {
                                     inputAndroid: {
                                         backgroundColor: 'grey',
                                         borderTopLeftRadius: 10,
-                                                    borderTopRightRadius: 10,
-                                                    borderBottomLeftRadius: 10,
-                                                    borderBottomRightRadius: 10,
+                                        borderTopRightRadius: 10,
+                                        borderBottomLeftRadius: 10,
+                                        borderBottomRightRadius: 10,
                                         width: wp("70"),
                                         height: hp("5.5"),
                                         margin: height * 0.028,
@@ -319,7 +319,7 @@ class Ficha extends Component {
                                 ]}
                             />
                             <RNPickerSelect
-                            useNativeAndroidPickerStyle={false}
+                                useNativeAndroidPickerStyle={false}
                                 placeholder={{
                                     label: 'Experiencia en Entrenamiento',
                                     value: ''
@@ -373,7 +373,7 @@ class Ficha extends Component {
                             <TouchableOpacity style={styles.guardarButton} onPress={() => { this.crearPlan() }}>
                                 <Text style={{ margin: height * 0.02, fontWeight: 'bold', fontSize: height * 0.025 }}>
                                     Actualizar
-                </Text>
+                                </Text>
                             </TouchableOpacity>
 
                         </View>

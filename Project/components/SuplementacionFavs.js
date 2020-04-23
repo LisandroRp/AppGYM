@@ -138,7 +138,7 @@ class SuplementacionFavs extends Component {
               data={this.state.suplementos.sort((a,b) => a.nombre.localeCompare(b.nombre))}
               initialNumToRender={50}
               keyExtractor={(item) => {
-                return item.id_suplemento;
+                return item.id_suplemento.toString();
               }}
               renderItem={({ item }) => {
                 return (

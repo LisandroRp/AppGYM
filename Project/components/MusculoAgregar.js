@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SearchBar, Icon, ThemeConsumer } from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import { AsyncStorage, Modal, TextInput } from 'react-native';
 import base from './GenerarBase';
@@ -285,7 +285,7 @@ class MusculoAgregar extends Component {
               data={this.state.ejercicios.sort((a,b) => a.nombre.localeCompare(b.nombre))}
               initialNumToRender={50}
               keyExtractor={(item) => {
-                return item.id_ejercicio;
+                return item.id_ejercicio.toString();
               }}
               renderItem={({ item }) => {
                 return (
@@ -315,7 +315,6 @@ class MusculoAgregar extends Component {
             <View style={styles.modalSeries}>
               <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                 <Text style={styles.modalText}>Selecione la cantidad de series</Text>
-                  {/* <TextInput placeholder='Series' style={styles.textInput} multiline={true} autoFocus={true} maxLength={1} onChangeText={(text) => this.setState({ series: text })} value={this.state.series}></TextInput> */}
                   <View style={styles.containerInputSeries}>
                     <RNPickerSelect
                     useNativeAndroidPickerStyle={false}
@@ -367,7 +366,7 @@ class MusculoAgregar extends Component {
                 data={this.state.contadorRepeticiones}
                 initialNumToRender={10}
                 keyExtractor={(item) => {
-                  return item;
+                  return item.toString();
                 }}
                 renderItem={({ item }) => {
                   return (

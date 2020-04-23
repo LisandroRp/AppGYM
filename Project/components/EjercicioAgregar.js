@@ -6,7 +6,6 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  Dimensions,
   ScrollView,
   ActivityIndicator
 } from 'react-native';
@@ -70,7 +69,7 @@ class EjercicioAgregar extends Component {
           data={this.state.musculos}
           initialNumToRender={50}
           keyExtractor={(item) => {
-              return item.id;
+              return item.id.toString();
             }}
           renderItem={({ item }) => {
             return (

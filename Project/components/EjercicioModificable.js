@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo'
-import ExportadorLogos from './Fotos/ExportadorLogos';
 import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
@@ -17,12 +16,9 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView
 } from 'react-native';
-import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
-import { AntDesign } from '@expo/vector-icons';
 import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import AwesomeAlert from 'react-native-awesome-alerts';
 
 
 var { height, width } = Dimensions.get('window');

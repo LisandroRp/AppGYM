@@ -18,7 +18,6 @@ import {
 import { TextInput } from 'react-native-gesture-handler';
 import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import AwesomeAlert from 'react-native-awesome-alerts';
 
 
 var { height, width } = Dimensions.get('window');
