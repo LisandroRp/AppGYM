@@ -150,9 +150,7 @@ class MusculoAgregarScreen extends React.Component {
   }
   guardarRutina(rutina, tipo, ultimaPos) {
     this._storeData(rutina);
-    console.log(rutina)
     if (tipo == 'nuevo') {
-      console.log("pito")
       if (rutina[0].combinado) {
         if (rutina[1] == null) {
           this.props.navigation.navigate('EjercicioAgregar', { dia: rutina[0].dia, tipo: tipo, combinado: rutina[0].combinado, ultimaPos: ultimaPos})

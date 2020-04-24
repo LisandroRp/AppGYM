@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
-import ExportadorFondo from './Fotos/ExportadorFondo'
-import ExportadorLogos from './Fotos/ExportadorLogos'
+import ExportadorFondo from './Fotos/ExportadorFondo';
+import ExportadorLogos from './Fotos/ExportadorLogos';
+import ExportadorAds from './Fotos/ExportadorAds';
 import {
   StyleSheet,
   Text,
@@ -16,6 +17,7 @@ import {
   Dimensions
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -57,7 +59,7 @@ class RutinasTipos extends Component {
     var i = 0
     var fav
     aux = 0
-    rutinas2 = []
+    var rutinas2 = []
     while (i < this.state.rutinas.length) {
       if (this.state.rutinas[i].id_rutina == id_rutina) {
         aux = i
@@ -99,10 +101,36 @@ class RutinasTipos extends Component {
         </View>
       );
     } else {
+      if(this.state.rutinas.length == 0){
+        return(
+        <View style={[styles.NoItemsContainer]}>
+            <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                    <View style={styles.NoItemsImageContainer}>
+                        <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
+                    </View>
+                    <View style={styles.NoItems}>
+                        <Text style={styles.NoItemsText}>Ups! {"\n"} No hay ninguna Rutina Propia</Text>
+                    </View>
+                    <AdMobBanner
+          style={styles.bottomBanner}
+          bannerSize="fullBanner"
+          adUnitID= {ExportadorAds.Banner()}
+          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
+          onDidFailToReceiveAdWithError={err => {
+            console.log(err)
+          }}
+          onAdViewDidReceiveAd={() => {
+            console.log("Ad Recieved");
+          }}
+          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+          //didFailToReceiveAdWithError={this.bannerError()}
+        />
+                </View>
+        );
+    }else{
       return (
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-          <ScrollView>
             <FlatList
               style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
@@ -126,9 +154,23 @@ class RutinasTipos extends Component {
                     </TouchableOpacity>
                   )
               }} />
-          </ScrollView>
+          <AdMobBanner
+          style={styles.bottomBanner}
+          bannerSize="fullBanner"
+          adUnitID= {ExportadorAds.Banner()}
+          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
+          onDidFailToReceiveAdWithError={err => {
+            console.log(err)
+          }}
+          onAdViewDidReceiveAd={() => {
+            console.log("Ad Recieved");
+          }}
+          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+          //didFailToReceiveAdWithError={this.bannerError()}
+        />
         </View>
       );
+        }
     }
   }
 }
@@ -138,6 +180,48 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: "grey"
+  },
+  NoItemsContainer: {
+    backgroundColor: 'grey',
+    flex: 1,
+    alignItems: "center"
+},
+NoItemsText: {
+    alignSelf: "center",
+    fontSize: height *0.028,
+    color: "#3399ff",
+    textAlign: 'center'
+},
+NoItemsImageContainer: {
+    height: height * 0.55,
+    width: height * 0.50,
+    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderWidth: 4,
+    borderRadius: 10,
+    marginTop: hp(8)
+},
+
+NoItemsLogo: {
+    height: height * 0.45,
+    width: height * 0.45,
+    marginTop: hp(9),
+    marginBottom: hp(6.6)
+},
+NoItems: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 10,
+    opacity: .95,
+    marginHorizontal: wp(5),
+    marginVertical: hp(6)
+},
+  bottomBanner: {
+    position: "absolute",
+    bottom: 0,
+    alignSelf: 'center',
   },
   contentList: {
     flex: 1,
@@ -152,7 +236,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover'
   },
   cardContent: {
-    marginLeft: 20,
+    marginLeft: height * 0.028,
     //marginTop: 10,
     paddingRight: 5,
     width: wp("40"),
@@ -190,15 +274,12 @@ const styles = StyleSheet.create({
 
   name: {
     fontSize: height * 0.028,
-    //flex: 1,
-    //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
   dias: {
     fontSize: height * 0.02,
     marginTop: 5,
-    //flex: 1,
     color: "white",
   },
   StarImage: {

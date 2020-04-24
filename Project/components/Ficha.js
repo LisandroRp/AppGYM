@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet, ActivityIndicator, KeyboardAvoidingView, TextInput, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Text, Keyboard, Dimensions } from 'react-native';
+import { View, Image, StyleSheet, ActivityIndicator, KeyboardAvoidingView,Modal, TextInput, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Text, Keyboard, Dimensions } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorAds from './Fotos/ExportadorAds'
 import base from './GenerarBase';
+import { AdMobRewarded } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -14,6 +16,7 @@ class Ficha extends Component {
         super(props);
         this.state = {
             isLoading: false,
+            modalVisible: false,
             objetivoDeseado: '',
             experiencia: '',
             actividad: '',
@@ -28,6 +31,20 @@ class Ficha extends Component {
 
     okPlan(perfil) {
         this.setState({ id_perfil: perfil.id_perfil, isLoading: false })
+    }
+    showRewarded = async () => {
+        AdMobRewarded.setAdUnitID(ExportadorAds.Rewarded()); // Test ID, Replace with your-admob-unit-id
+        
+        try{
+          await AdMobRewarded.requestAdAsync();
+          await AdMobRewarded.showAdAsync();
+        }
+        catch(e){
+          console.log(e);
+        }
+    }
+    componentDidMount(){
+        AdMobRewarded.addEventListener("rewardedVideoDidClose", () => this.crearPlan());
     }
 
     crearPlan() {
@@ -152,6 +169,7 @@ class Ficha extends Component {
     }
 
     mostrarPlan() {
+        this.setState({modalVisible: false})
         this.props.onPressUpdate(this.state.caloriasEjercicio, this.state.caloriasTotal, this.state.objetivoDeseado)
     }
 
@@ -370,7 +388,7 @@ class Ficha extends Component {
                             </View>
 
 
-                            <TouchableOpacity style={styles.guardarButton} onPress={() => { this.crearPlan() }}>
+                            <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({modalVisible: true}) }}>
                                 <Text style={{ margin: height * 0.02, fontWeight: 'bold', fontSize: height * 0.025 }}>
                                     Actualizar
                                 </Text>
@@ -378,6 +396,27 @@ class Ficha extends Component {
 
                         </View>
                     </TouchableWithoutFeedback>
+                    <Modal
+                        animationType="fade"
+                        visible={this.state.modalVisible}
+                        transparent={true}
+                        onRequestClose={() => this.setState({ modalVisible: false })}  >
+                        <View style={styles.modal}>
+                            <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
+                                <Text style={styles.textButton}>Para desbloquear el cambio de plan se le mostrara una publicidad</Text>
+                            </View>
+                            <View style={styles.modal2}>
+                                <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
+                                    <Text style={styles.textButton}>Cancelar</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={() => this.showRewarded()} style={styles.modalButtonAceptar}>
+                                    <Text style={styles.textButton}>Aceptar</Text>
+
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
                 </KeyboardAvoidingView>
             )
         }
@@ -515,6 +554,87 @@ const styles = StyleSheet.create({
         marginTop: height * 0.05,
         alignSelf: 'center',
         opacity: .95
-    }
+    },
+
+    /*************************************** */
+  //MODAAAAL
+  modal: {
+    height: height * 0.22,
+    width: width * 0.75,
+    position: 'absolute',
+    top: height * 0.4,
+    left: width * 0.13,
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22,
+    opacity: .95
+  },
+  modal2: {
+    flexDirection: 'row',
+    borderColor: 'black',
+    borderTopWidth: 2,
+    width: width * 0.74,
+    height: height * 0.08,
+    position: 'absolute',
+    bottom: 0,
+    opacity: .95
+  },
+  modalTipoEjericios: {
+    width: width * 0.80,
+    height: height * 0.33,
+    position: 'absolute',
+    top: height * 0.33,
+    left: width * 0.10,
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22,
+    opacity: .95
+  },
+  modal2TipoEjericios: {
+    flexDirection: 'row',
+    width: width * 0.80,
+    height: height * 0.33,
+    position: 'absolute',
+    bottom: 0,
+    opacity: .95
+  },
+  textButton: {
+    color: 'white',
+    fontSize: height * 0.02,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  textButtonTipoEjercicios: {
+    color: 'white',
+    fontSize: height * 0.028,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  modalButtonCancelar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'grey',
+    borderBottomLeftRadius: 22
+  },
+  modalButtonAceptar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+    borderLeftWidth: 2,
+    backgroundColor: 'grey',
+    borderBottomRightRadius: 22
+  }
 })
 export default Ficha;

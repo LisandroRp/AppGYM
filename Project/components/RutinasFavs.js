@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
-import ExportadorFondo from './Fotos/ExportadorFondo'
-import ExportadorLogos from './Fotos/ExportadorLogos'
+import ExportadorFondo from './Fotos/ExportadorFondo';
+import ExportadorLogos from './Fotos/ExportadorLogos';
+import ExportadorAds from './Fotos/ExportadorAds';
 import {
     StyleSheet,
     Text,
@@ -17,6 +18,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -66,6 +68,14 @@ class RutinasFavs extends Component {
         this.setState({ modalVisible: false })
         base.favoritearRutina(id_rutina, fav, this.okFavorito.bind(this))
     }
+    favoritos(favoritos){
+        if(favoritos){
+          return ExportadorLogos.traerEstrella(true)
+        }
+        else{
+          return ExportadorLogos.traerEstrella(false)
+        }
+      }
 
     okFavorito() {
         this.cargarRutinasFavoritas()
@@ -80,14 +90,41 @@ class RutinasFavs extends Component {
                 </View>
             );
         } else {
+            
+            if(this.state.rutinas.length == 0){
+                return(
+                <View style={[styles.NoItemsContainer]}>
+                    <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                            <View style={styles.NoItemsImageContainer}>
+                                <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
+                            </View>
+                            <View style={styles.NoItems}>
+                                <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Rutinas agregadas a tu lista</Text>
+                            </View>
+                            <AdMobBanner
+                        style={styles.bottomBanner}
+                        bannerSize="fullBanner"
+                        adUnitID= {ExportadorAds.Banner()}
+                        useEffect={setTestDeviceIDAsync('EMULATOR')}
+                        onDidFailToReceiveAdWithError={err => {
+                            console.log(err)
+                        }}
+                        onAdViewDidReceiveAd={() => {
+                            console.log("Ad Recieved");
+                        }}
+                        adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+                    //didFailToReceiveAdWithError={this.bannerError()}
+                    />
+                        </View>
+                );
+            }else{
             return (
                 <LinearGradient colors={['black', 'grey']} style={styles.container}>
                     <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                    <ScrollView>
                         <FlatList
                             style={styles.contentList}
                             columnWrapperStyle={styles.listContainer}
-                            data={this.state.rutinas.sort((a,b) => a.nombre.localeCompare(b.nombre))}
+                            data={this.state.rutinas.sort((a, b) => a.nombre.localeCompare(b.nombre))}
                             initialNumToRender={50}
                             keyExtractor={(item) => {
                                 return item.id_rutina.toString();
@@ -96,23 +133,19 @@ class RutinasFavs extends Component {
                                 if (item.favoritos) {
                                     return (
                                         <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre, item.modificable)}>
-                                            <View style={{ flexDirection: "row" }} >
-                                                <Image style={styles.image} source={item.imagen} />
-                                                <View style={styles.cardContent}>
-                                                    <Text style={styles.name}>{item.nombre}</Text>
-                                                    <Text style={styles.dias}>{item.dias} Dias</Text>
-                                                </View>
-                                                <View style={styles.ViewEstrella} >
-                                                    <TouchableOpacity onPress={() => { this.modalVisible(item.id_rutina, item.nombre) }}>
-                                                        <Image style={styles.StarImage} source={ExportadorLogos.traerEstrella(true)} />
-                                                    </TouchableOpacity>
-                                                </View>
+                                            <View style={styles.cardContent}>
+                                                <Text style={styles.name}>{item.nombre}</Text>
+                                                <Text style={styles.dias}>{item.dias} Dias</Text>
+                                            </View>
+                                            <View style={styles.ViewEstrella} >
+                                                <TouchableOpacity onPress={() => { this.modalVisible(item.id_rutina, item.nombre) }}>
+                                                    <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
+                                                </TouchableOpacity>
                                             </View>
                                         </TouchableOpacity>
                                     )
                                 }
                             }} />
-                    </ScrollView>
                     <Modal
                         animationType="fade"
                         visible={this.state.modalVisible}
@@ -121,7 +154,7 @@ class RutinasFavs extends Component {
 
                         <View style={styles.modal}>
 
-                            <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: width * 0.05}}>
+                            <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: width * 0.05 }}>
                                 <Text style={styles.textButton}>Desea sacar la rutina "{this.state.nombre}" de su lista de favoritos</Text>
                             </View>
                             <View style={styles.modal2}>
@@ -137,8 +170,23 @@ class RutinasFavs extends Component {
                             </View>
                         </View>
                     </Modal>
+                    <AdMobBanner
+                        style={styles.bottomBanner}
+                        bannerSize="fullBanner"
+                        adUnitID= {ExportadorAds.Banner()}
+                        useEffect={setTestDeviceIDAsync('EMULATOR')}
+                        onDidFailToReceiveAdWithError={err => {
+                            console.log(err)
+                        }}
+                        onAdViewDidReceiveAd={() => {
+                            console.log("Ad Recieved");
+                        }}
+                        adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+                    //didFailToReceiveAdWithError={this.bannerError()}
+                    />
                 </LinearGradient>
             );
+                    }
         }
     }
 }
@@ -149,8 +197,53 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: "grey"
     },
+    bottomBanner: {
+        position: "absolute",
+        bottom: 0,
+        alignSelf: 'center'
+    },
     contentList: {
         flex: 1,
+    },
+      contentList: {
+        flex: 1,
+      },
+      NoItemsContainer: {
+        flex: 1,
+        alignItems: "center",
+        backgroundColor: "grey"
+    },
+    NoItemsText: {
+        alignSelf: "center",
+        fontSize: height *0.028,
+        color: "#3399ff",
+        textAlign: 'center'
+    },
+    NoItemsImageContainer: {
+        height: height * 0.55,
+        width: height * 0.50,
+        margin: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black',
+        borderWidth: 4,
+        borderRadius: 10,
+        marginTop: hp(5)
+    },
+    
+    NoItemsLogo: {
+        height: height * 0.45,
+        width: height * 0.45,
+        marginTop: hp(9),
+        marginBottom: hp(6.6)
+    },
+    NoItems: {
+        backgroundColor: "black",
+        padding: 10,
+        borderRadius: 10,
+        opacity: .95,
+        marginHorizontal: wp(5),
+        marginVertical: hp(3)
     },
     bgImage: {
         flex: 1,
@@ -181,20 +274,20 @@ const styles = StyleSheet.create({
 
     card: {
         shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.37,
+        shadowRadius: 7.49,
+        elevation: 12,
 
-    marginLeft: height * 0.028,
-    marginRight: height * 0.028,
-    marginTop: height * 0.028,
-    backgroundColor: "black",
-    padding: 10,
-    flexDirection: 'row',
+        marginLeft: height * 0.028,
+        marginRight: height * 0.028,
+        marginTop: height * 0.028,
+        backgroundColor: "black",
+        padding: 10,
+        flexDirection: 'row',
     },
 
     name: {
@@ -210,18 +303,22 @@ const styles = StyleSheet.create({
     StarImage: {
         width: hp(5.5),
         height: hp(5.5),
+        alignSelf: "center"
     },
     ViewEstrella: {
         alignItems: 'center',
+        alignSelf: "center",
         justifyContent: "center",
-        paddingHorizontal: wp("5")
-    },
-      //MODAAAAL
-modal: {
+        paddingHorizontal: wp("5"),
+        position: "absolute",
+        right: 0,
+      },
+    //MODAAAAL
+    modal: {
         height: height * 0.22,
         width: width * 0.75,
         position: 'absolute',
-        top: height * 0.3,
+        top: height * 0.4,
         left: width * 0.13,
         borderColor: 'black',
         borderWidth: 2,

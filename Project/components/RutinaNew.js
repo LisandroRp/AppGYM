@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorLogos from './Fotos/ExportadorLogos';
+import ExportadorAds from './Fotos/ExportadorAds';
 import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
@@ -22,6 +23,7 @@ import { AntDesign } from '@expo/vector-icons';
 import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import {AdMobInterstitial} from 'expo-ads-admob';
 
 
 var { height, width } = Dimensions.get('window');
@@ -52,14 +54,30 @@ class RutinaNew extends Component {
     this._retrieveData()
   }
 
+  componentDidMount(){
+    AdMobInterstitial.addEventListener("interstitialDidClose", () => this.props.onPressCancelar());
+}
+
+  showInterstitial = async () => {
+    AdMobInterstitial.setAdUnitID(ExportadorAds.Interracial()); // Test ID, Replace with your-admob-unit-id
+    
+    try{
+      await AdMobInterstitial.requestAdAsync();
+      await AdMobInterstitial.showAdAsync();
+    }
+    catch(e){
+      console.log(e);
+    }
+}
+
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem('rutina');
 
       if (value !== null) {
         if (JSON.parse(value)[0].combinado) {
-          combinada1 = JSON.parse(value)[0]
-          combinada2 = JSON.parse(value)[1]
+          var combinada1 = JSON.parse(value)[0]
+          var combinada2 = JSON.parse(value)[1]
           if (this.yaEsta(combinada1) && this.yaEsta(combinada2)) {
             this.setState({ isLoading: true })
             ultimoCombinado = this.queCombinado(combinada1.dia)
@@ -70,6 +88,7 @@ class RutinaNew extends Component {
             this.state.rutina.push(combinada2)
             this.termino()
           } else {
+            alert('Este ejercicio ya esta en el dia seleccionado')
             this._storeData()
             this.setState({ showAlert: true })
           }
@@ -81,8 +100,9 @@ class RutinaNew extends Component {
             this.state.rutina.push(simple)
             this.termino()
           } else {
+            alert('Este ejercicio ya esta en el dia seleccionado')
             this._storeData()
-            this.setState({ showAlert: true })
+            //this.setState({ showAlert: true })
           }
         }
       } else {
@@ -97,7 +117,7 @@ class RutinaNew extends Component {
     this._storeData()
   }
   queCombinado(dia) {
-    ultimoCombinado = 0
+    var ultimoCombinado = 0
     for (i = 0; i < this.state.rutina; i++) {
       if (this.state.rutina[i].dia == dia && this.state.rutina[i].combinado != null) {
         ultimoCombinado = this.state.rutina[i].combinado
@@ -114,7 +134,7 @@ class RutinaNew extends Component {
     }
   }
   diaAnterior(dia) {
-    i = 0
+    var i = 0
     while (i < this.state.rutina.length) {
       if (this.state.rutina[i].dia == (dia - 1)) {
         return true
@@ -132,7 +152,7 @@ class RutinaNew extends Component {
     this.props.onPressGo(this.state.ultimoDia, 'nuevo', true, this.ultimaPos())
   }
   ultimaPos() {
-    ultimaPosicion = 0
+   var ultimaPosicion = 0
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].dia == this.state.ultimoDia && this.state.rutina[i].posicion > ultimaPosicion) {
         ultimaPosicion = this.state.rutina[i].posicion
@@ -143,9 +163,9 @@ class RutinaNew extends Component {
   yaEsta(data) {
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].id_ejercicio == data.id_ejercicio) {
-        if (this.state.rutina[i].dia == data.dia)
-          return false
-        alert('Este ejercicio ya esta en el dia seleccionado')
+        if (this.state.rutina[i].dia == data.dia){
+          return false 
+        }
       }
     }
     return true
@@ -163,10 +183,10 @@ class RutinaNew extends Component {
   };
 
   subir(dia, id_ejercicio, combinado) {
-    rutinaNueva = []
-    aux = 0
-    posicionASubir = 0
-    posicionABajar = 0
+    var rutinaNueva = []
+    var aux = 0
+    var posicionASubir = 0
+    var posicionABajar = 0
     for (i = 0; i < this.state.rutina.length; i++) {
       rutinaNueva.push(this.state.rutina[i])
       if (rutinaNueva[i].id_ejercicio == id_ejercicio && rutinaNueva[i].dia == dia) {
@@ -233,12 +253,12 @@ class RutinaNew extends Component {
   }
 
   bajar(dia, id_ejercicio, combinado) {
-    rutinaNueva = []
-    aux = 0
-    maxPosDia = 0
-    posicionASubir = (-5)
-    posicionABajar = 0
-    flag = 0
+   var rutinaNueva = []
+    var aux = 0
+   var maxPosDia = 0
+   var posicionASubir = (-5)
+   var posicionABajar = 0
+   var flag = 0
 
     for (i = 0; i < this.state.rutina.length; i++) {
       rutinaNueva.push(this.state.rutina[i])
@@ -312,7 +332,6 @@ class RutinaNew extends Component {
     var i = 0
     var flag = 0
     var valorPosicionBorrada = 0
-    var posicionBorrada
     while (i < this.state.rutina.length) {
       if (id_ejercicio == this.state.rutina[i].id_ejercicio && dia == this.state.rutina[i].dia) {
         if (combinado == null) {
@@ -370,7 +389,7 @@ class RutinaNew extends Component {
     base.crearEjerciciosRutina(rutinaNueva, this.okEjerciciosRutinaCreados.bind(this))
   }
   okEjerciciosRutinaCreados() {
-    this.props.onPressCancelar()
+    this.showInterstitial()
   }
   cancelarRutina() {
     this.props.onPressCancelar()
@@ -413,6 +432,7 @@ class RutinaNew extends Component {
                     label: 'Seleccionar Tipo de Rutina',
                     value: '',
                   }}
+                  value= {this.state.tipo}
                   placeholderTextColor="black"
                   style={{
                     inputIOS: {
@@ -472,9 +492,9 @@ class RutinaNew extends Component {
                 return item;
               }}
               renderItem={({ item }) => {
-                aux = item
-                contadorCobinadosFlatlist = false
-                rutinaLocal = this.state.rutina
+                var aux = item
+                var contadorCobinadosFlatlist = false
+                var rutinaLocal = this.state.rutina
                 return (
                   <View style={styles.cuadraditos}>
                     <DropDownItem key={1} contentVisible={false}
@@ -497,7 +517,7 @@ class RutinaNew extends Component {
                         data={rutinaLocal.sort((a, b) => a.posicion.localeCompare(b.posicion))}
                         initialNumToRender={50}
                         keyExtractor={(item) => {
-                          return item.id_ejercicio.toString();
+                          return item.id_ejercicio;
                         }}
                         renderItem={({ item }) => {
                           if (item.dia == aux) {
@@ -514,7 +534,7 @@ class RutinaNew extends Component {
                                           <View style={{ flexDirection: 'column', width: wp("60") }}>
                                             <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
                                             <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                            <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
+                                            <Text style={styles.subsEjercicio}>Repeticiones:{"\n"}{item.repeticiones}</Text>
                                           </View>
                                         </View>
                                       </View>
@@ -531,7 +551,7 @@ class RutinaNew extends Component {
                                           <View style={{ flexDirection: 'column', width: wp("33") }}>
                                             <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
                                             <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                            <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
+                                            <Text style={styles.subsEjercicio}>Repeticiones:{"\n"}{item.repeticiones}</Text>
                                           </View>
                                         </View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -559,7 +579,7 @@ class RutinaNew extends Component {
                                         <View style={{ flexDirection: 'column', width: wp("33") }}>
                                           <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
                                           <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
+                                          <Text style={styles.subsEjercicio}>Repeticiones:{"\n"}{item.repeticiones}</Text>
                                         </View>
                                       </View>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -719,11 +739,11 @@ class RutinaNew extends Component {
                 <Text style={styles.textButton}>Esta seguro que desea borrar todos los ejercicios de la rutina "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: false }) }} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderRadius: 22 }}>
+                <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: false }) }} style={styles.modalButtonCancelar}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => this.borrarTodo()} style={{ width: width * 0.37, height: height * 0.0775, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22 }}>
+                <TouchableOpacity onPress={() => this.borrarTodo()} style={styles.modalButtonAceptar}>
                   <Text style={styles.textButton}>Borrar</Text>
 
                 </TouchableOpacity>
@@ -939,7 +959,7 @@ const styles = StyleSheet.create({
     height: height * 0.22,
     width: width * 0.75,
     position: 'absolute',
-    top: height * 0.3,
+    top: height * 0.4,
     left: width * 0.13,
     borderColor: 'black',
     borderWidth: 2,

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
-import ExportadorGifs from './Fotos/ExportadorGifs'
-import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorGifs from './Fotos/ExportadorGifs';
+import ExportadorFondo from './Fotos/ExportadorFondo';
+import ExportadorAds from './Fotos/ExportadorAds';
 import {
   StyleSheet,
   Text,
@@ -15,6 +16,7 @@ import {
 import DropDownItem from 'react-native-drop-down-item';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 var { height, width } = Dimensions.get('window');
+import {AdMobBanner} from 'expo-ads-admob';
 
 class EjercicioEspecifico extends Component {
 
@@ -80,6 +82,20 @@ class EjercicioEspecifico extends Component {
               </DropDownItem>
             </View>
           </ScrollView>
+          <AdMobBanner
+          style={styles.bottomBanner}
+          bannerSize="fullBanner"
+          adUnitID={ExportadorAds.Banner()}
+          //useEffect  = {setTestDeviceIDAsync('EMULATOR')}
+          onDidFailToReceiveAdWithError={err => {
+            console.log(err)
+          }}
+          onAdViewDidReceiveAd={() => {
+            console.log("Ad Recieved");
+          }}
+          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+          //didFailToReceiveAdWithError={this.bannerError()}
+        />
         </View>
       );
     }else{
@@ -107,6 +123,20 @@ class EjercicioEspecifico extends Component {
             </DropDownItem>
           </View>
         </ScrollView>
+        <AdMobBanner
+          style={styles.bottomBanner}
+          bannerSize="fullBanner"
+          adUnitID={ExportadorAds.Banner()}
+          //useEffect  = {setTestDeviceIDAsync('EMULATOR')}
+          onDidFailToReceiveAdWithError={err => {
+            console.log(err)
+          }}
+          onAdViewDidReceiveAd={() => {
+            console.log("Ad Recieved");
+          }}
+          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+          //didFailToReceiveAdWithError={this.bannerError()}
+        />
       </View>
     );
   }
@@ -119,6 +149,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: "black"
+  },
+  bottomBanner: {
+    position: "absolute",
+    bottom: 0,
+    alignSelf: 'center'
   },
   bgImage: {
     flex: 1,
@@ -167,8 +202,6 @@ const styles = StyleSheet.create({
   image: {
     height: height * 0.50,
     width: width,
-    //height: 300,
-    //width: 215,
   },
 })
 

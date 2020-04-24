@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import base from './GenerarBase';
-import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorFondo from './Fotos/ExportadorFondo';
+import ExportadorAds from './Fotos/ExportadorAds';
 import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
@@ -19,6 +20,7 @@ import {
 import { TextInput } from 'react-native-gesture-handler';
 import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { AdMobInterstitial } from 'expo-ads-admob';
 
 
 var { height, width } = Dimensions.get('window');
@@ -40,6 +42,21 @@ class EjerciciosNew extends Component {
     this.cargarEjercicio();
   }
 
+  componentDidMount() {
+    AdMobInterstitial.addEventListener("interstitialDidClose", () => this.props.onPressCancelar());
+  }
+
+  showInterstitial = async () => {
+    AdMobInterstitial.setAdUnitID(ExportadorAds.Interracial()); // Test ID, Replace with your-admob-unit-id
+
+    try {
+      await AdMobInterstitial.requestAdAsync();
+      await AdMobInterstitial.showAdAsync();
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
   cargarEjercicio = async () => {
     base.traerEjercicioEspecifico(await this.props.navigation.getParam('id_ejercicio'), this.okEjercicio.bind(this));
   }
@@ -57,13 +74,15 @@ class EjerciciosNew extends Component {
   }
 
   actualizarEjercicio() {
-    ejercicioUpdate = this.state.ejercicio
+    var ejercicioUpdate = this.state.ejercicio
+
+    this.setState({ modalGuardarVisible: false })
     ejercicioUpdate.nombre = this.state.nombre
     ejercicioUpdate.musculo = this.state.musculo
     ejercicioUpdate.elemento = this.state.elemento
     ejercicioUpdate.ejecucion = this.state.ejecucion
     ejercicioUpdate.descripcion = this.state.descripcion
-    base.actualizarEjercicio(ejercicioUpdate , this.cancelarEjercicio.bind(this))
+    base.actualizarEjercicio(ejercicioUpdate, this.showInterstitial.bind(this))
   }
   cancelarEjercicio() {
     this.props.onPressCancelar()
@@ -102,7 +121,7 @@ class EjerciciosNew extends Component {
               <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.inputContainerView}>
                   <RNPickerSelect
-                  useNativeAndroidPickerStyle={false}
+                    useNativeAndroidPickerStyle={false}
                     placeholder={{
                       label: 'Musculo del Ejercicio',
                       value: '0',
@@ -154,7 +173,7 @@ class EjerciciosNew extends Component {
                     ]}
                   />
                   <RNPickerSelect
-                  useNativeAndroidPickerStyle={false}
+                    useNativeAndroidPickerStyle={false}
                     placeholder={{
                       label: 'Elemento del Ejercicio',
                       value: '0',
@@ -309,14 +328,14 @@ const styles = StyleSheet.create({
   screenButtonText: {
     marginVertical: height * 0.02,
     fontWeight: 'bold',
-    fontSize: height * 0.025 
+    fontSize: height * 0.025
   },
   //MODAAAAL
   modal: {
     height: height * 0.22,
     width: width * 0.75,
     position: 'absolute',
-    top: height * 0.3,
+    top: height * 0.4,
     left: width * 0.13,
     borderColor: 'black',
     borderWidth: 2,

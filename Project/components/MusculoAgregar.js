@@ -4,9 +4,11 @@ import { withNavigation } from 'react-navigation';
 import { AsyncStorage, Modal, TextInput } from 'react-native';
 import base from './GenerarBase';
 import ExportadorEjercicios from './Fotos/ExportadorEjercicios';
-import ExportadorFondo from './Fotos/ExportadorFondo'
-import ExportadorLogos from './Fotos/ExportadorLogos'
+import ExportadorFondo from './Fotos/ExportadorFondo';
+import ExportadorLogos from './Fotos/ExportadorLogos';
+import ExportadorAds from './Fotos/ExportadorAds';
 import { FontAwesome } from '@expo/vector-icons';
+import { AdMobBanner } from 'expo-ads-admob';
 import {
   StyleSheet,
   Text,
@@ -63,10 +65,10 @@ class MusculoAgregar extends Component {
 
   //Trae los ejercicios especificios del musculo seleccionado en la screen anterior
   cargarEjercicios = async () => {
-    if(this.state.favoritos == false || this.state.favoritos == null){
+    if (this.state.favoritos == false || this.state.favoritos == null) {
       base.traerEjercicios(await this.props.navigation.getParam('musculo'), this.okEjercicios.bind(this))
     }
-    else{
+    else {
       base.traerEjerciciosMusculoFavs(this.state.musculo, this.okEjerciciosFavs.bind(this))
     }
   }
@@ -88,9 +90,9 @@ class MusculoAgregar extends Component {
     });
   }
   queEstrella() {
-    if(this.state.favoritos == false){
+    if (this.state.favoritos == false) {
       return ExportadorLogos.traerEstrellaBlanca(true)
-    }else{
+    } else {
       return ExportadorLogos.traerEstrellaBlanca(false)
     }
   }
@@ -111,10 +113,9 @@ class MusculoAgregar extends Component {
     }
   }
   guardarEjercicioTiempo() {
-    if(this.state.minutos == 0 && this.state.segundos == 0)
-    {
+    if (this.state.minutos == 0 && this.state.segundos == 0) {
       alert("Debe marcar un tiempo")
-    }else{
+    } else {
       this.setState({ modalTiempoVisible: false })
       this._retrieveData(null, (this.state.minutos + " : " + this.state.segundos));
     }
@@ -145,7 +146,7 @@ class MusculoAgregar extends Component {
     }
   };
   cargarEjercicio(repeticiones, tiempo) {
-    if(tiempo == null){
+    if (tiempo == null) {
       terminada = {
         id_ejercicio: this.state.id_ejercicio,
         musculo: this.state.musculoEjercicio,
@@ -157,7 +158,7 @@ class MusculoAgregar extends Component {
         posicion: this.state.ultimaPos.toString(),
         tiempo: null
       }
-    }else{
+    } else {
       terminada = {
         id_ejercicio: this.state.id_ejercicio,
         musculo: this.state.musculoEjercicio,
@@ -171,19 +172,19 @@ class MusculoAgregar extends Component {
       }
     }
 
-    
+
     this.state.rutinaNueva.push(terminada)
     this.props.onPressSave(this.state.rutinaNueva, this.state.tipo, this.state.ultimaPos)
   }
   setModalSeriesVisible(visible, id_ejercicio, nombre, musculo) {
-    this.setState({ modalSeriesVisible: visible, modalRepeticionesVisible: !visible, modalTiempoVisible: !visible, nombreEjercicio: nombre, id_ejercicio: id_ejercicio, musculoEjercicio: musculo});
+    this.setState({ modalSeriesVisible: visible, modalRepeticionesVisible: !visible, modalTiempoVisible: !visible, nombreEjercicio: nombre, id_ejercicio: id_ejercicio, musculoEjercicio: musculo });
   }
-  setModalRepeticionesOTiempo(visible){
+  setModalRepeticionesOTiempo(visible) {
     if (parseInt(this.state.series) == 0) {
       alert("Debe ingresar una cantidad de series")
     }
     else {
-      if(this.state.musculo != "Cardio" && this.state.id_ejercicio != 68 && this.state.id_ejercicio != 69){
+      if (this.state.musculo != "Cardio" && this.state.id_ejercicio != 68 && this.state.id_ejercicio != 69) {
         if (parseInt(this.state.series) < 5) {
           this.setState({ modalRepeticionesHeigh: 0.25 })
           this.setModalRepeticionesVisible(visible)
@@ -191,8 +192,8 @@ class MusculoAgregar extends Component {
           this.setState({ modalRepeticionesHeigh: 0.33 })
           this.setModalRepeticionesVisible(visible)
         }
-      }else{
-        this.setState({ modalSeriesVisible: !visible, modalTiempoVisible: visible})
+      } else {
+        this.setState({ modalSeriesVisible: !visible, modalTiempoVisible: visible })
       }
     }
   }
@@ -205,9 +206,9 @@ class MusculoAgregar extends Component {
     this.setState({ modalSeriesVisible: !visible, modalRepeticionesVisible: visible, contadorRepeticiones: contadorRepeticiones })
   }
   guardarRepeticiones(repeticion, cantidad) {
-    repeticiones = this.state.repeticiones,
-      repeticiones[repeticion - 1] = cantidad
-    this.setState({ repeticiones: repeticiones })
+    var repeticiones2 = this.state.repeticiones
+    repeticiones2[repeticion - 1] = cantidad
+    this.setState({ repeticiones: repeticiones2 })
   }
   guardarMinutos(tiempo) {
     this.setState({ minutos: tiempo })
@@ -277,12 +278,12 @@ class MusculoAgregar extends Component {
             />
           </View>
           <ScrollView>
-            <TouchableOpacity onPress={() => {this.cargarEjercicios()}} style={styles.favoritos}>
+            <TouchableOpacity onPress={() => { this.cargarEjercicios() }} style={styles.favoritos}>
               <Image style={styles.StarImage} source={this.queEstrella()} />
             </TouchableOpacity>
             <FlatList
               style={styles.contentList}
-              data={this.state.ejercicios.sort((a,b) => a.nombre.localeCompare(b.nombre))}
+              data={this.state.ejercicios.sort((a, b) => a.nombre.localeCompare(b.nombre))}
               initialNumToRender={50}
               keyExtractor={(item) => {
                 return item.id_ejercicio.toString();
@@ -314,32 +315,32 @@ class MusculoAgregar extends Component {
             onRequestClose={() => this.setState({ modalSeriesVisible: false })}  >
             <View style={styles.modalSeries}>
               <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                <Text style={styles.modalText}>Selecione la cantidad de series</Text>
-                  <View style={styles.containerInputSeries}>
-                    <RNPickerSelect
+                <Text style={styles.modalTextSeries}>Selecione la cantidad de series</Text>
+                <View style={styles.containerInputSeries}>
+                  <RNPickerSelect
                     useNativeAndroidPickerStyle={false}
-                      placeholder={{
-                        label: 'Series',
-                        value: '0'
-                      }}
-                      placeholderTextColor="grey"
-                      style={{
-                        inputIOS: styles.containerInputSeriesIOS,
-                        inputAndroid: styles.containerInputSeriesIOS
-                      }}
-                      onValueChange={(value) => this.setState({ series: value })}
-                      items={[
-                        { label: '1', value: '1' },
-                        { label: '2', value: '2' },
-                        { label: '3', value: '3' },
-                        { label: '4', value: '4' },
-                        { label: '5', value: '5' },
-                        { label: '6', value: '6' },
-                        { label: '7', value: '7' },
-                        { label: '8', value: '8' },
-                      ]}
-                    />
-                  </View>
+                    placeholder={{
+                      label: 'Series',
+                      value: '0'
+                    }}
+                    placeholderTextColor="grey"
+                    style={{
+                      inputIOS: styles.containerInputSeriesIOS,
+                      inputAndroid: styles.containerInputSeriesIOS
+                    }}
+                    onValueChange={(value) => this.setState({ series: value })}
+                    items={[
+                      { label: '1', value: '1' },
+                      { label: '2', value: '2' },
+                      { label: '3', value: '3' },
+                      { label: '4', value: '4' },
+                      { label: '5', value: '5' },
+                      { label: '6', value: '6' },
+                      { label: '7', value: '7' },
+                      { label: '8', value: '8' },
+                    ]}
+                  />
+                </View>
               </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={styles.modalButtonCancelar}>
@@ -366,12 +367,12 @@ class MusculoAgregar extends Component {
                 data={this.state.contadorRepeticiones}
                 initialNumToRender={10}
                 keyExtractor={(item) => {
-                  return item.toString();
+                  return item;
                 }}
                 renderItem={({ item }) => {
                   return (
                     <View style={styles.containerInputReps}>
-                      <TextInput keyboardType={'numeric'} placeholder='Reps.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarRepeticiones(item, text)} value={this.state.repeticiones[item]}></TextInput>
+                      <TextInput keyboardType={'numeric'} placeholder='Reps.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarRepeticiones(item, text)} value={this.state.repeticiones[parseInt(item - 1)]}></TextInput>
                     </View>
                   )
                 }
@@ -396,19 +397,19 @@ class MusculoAgregar extends Component {
 
             <View style={[{ height: height * this.state.modalRepeticionesHeigh }, styles.modalReps]}>
               <Text style={styles.modalText}>Escriba el tiempo del ejercicio</Text>
-                <View style={styles.contentList3}>
-                    <View style={styles.containerInputReps}>
-                      <TextInput keyboardType={'numeric'} placeholder='Mins.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarMinutos(parseInt(text))} value={this.state.minutos}></TextInput>
-                    </View>
-                <View style={{marginHorizontal: height * 0.02, justifyContent: "center"}}>
-                <Text>:</Text>
+              <View style={styles.contentList3}>
+                <View style={styles.containerInputReps}>
+                  <TextInput keyboardType={'numeric'} placeholder='Mins.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarMinutos(parseInt(text))} value={this.state.minutos}></TextInput>
+                </View>
+                <View style={{ marginHorizontal: height * 0.02, justifyContent: "center" }}>
+                  <Text>:</Text>
                 </View>
                 <View style={styles.containerInputReps}>
-                      <TextInput keyboardType={'numeric'} placeholder='Segs.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarSegundos(parseInt(text))} value={this.state.segundos}></TextInput>
+                  <TextInput keyboardType={'numeric'} placeholder='Segs.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarSegundos(parseInt(text))} value={this.state.segundos}></TextInput>
                 </View>
-                </View>
+              </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({ minutos: 0, segundos: 0}) }} style={styles.modalButtonCancelar}>
+                <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({ minutos: 0, segundos: 0 }) }} style={styles.modalButtonCancelar}>
                   <Text style={styles.textButton}>Cancelar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.guardarEjercicioTiempo()} style={styles.modalButtonAceptar}>
@@ -418,6 +419,18 @@ class MusculoAgregar extends Component {
               </View>
             </View>
           </Modal>
+          <AdMobBanner
+            style={styles.bottomBanner}
+            bannerSize="fullBanner"
+            adUnitID={ExportadorAds.Banner()}
+            onDidFailToReceiveAdWithError={err => {
+              console.log(err)
+            }}
+            onAdViewDidReceiveAd={() => {
+              console.log("Ad Recieved");
+            }}
+            adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+          />
         </View>
       );
     }
@@ -436,15 +449,17 @@ const styles = StyleSheet.create({
   contentList2: {
     flexDirection: "row",
     justifyContent: "center",
-    flexWrap: 'wrap'
   },
   contentList3: {
     flexDirection: "row",
     justifyContent: "center",
-    flexWrap: 'wrap',
     marginTop: height * 0.02
   },
-
+  bottomBanner: {
+    position: "absolute",
+    bottom: 0,
+    alignSelf: 'center'
+  },
   textInput: {
     color: '#3399ff',
     fontSize: height * 0.028,
@@ -480,15 +495,12 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     marginLeft: height * 0.028,
-    //marginTop: 10,
     paddingRight: 5,
     width: wp("40"),
     justifyContent: 'center',
   },
   image: {
-    //width: 90,
     width: wp("20"),
-    //height: 90,
     height: hp("11"),
     borderWidth: 2,
     borderColor: "#ebf0f7",
@@ -523,12 +535,12 @@ const styles = StyleSheet.create({
     color: "#3399ff",
     fontWeight: 'bold'
   },
-  
+
   modalSeries: {
     height: height * 0.25,
     width: width * 0.75,
     position: 'absolute',
-    top: height * 0.3,
+    top: height * 0.4,
     left: width * 0.13,
     borderColor: 'black',
     borderWidth: 2,
@@ -542,7 +554,7 @@ const styles = StyleSheet.create({
   modalReps: {
     width: width * 0.75,
     position: 'absolute',
-    top: height * 0.3,
+    top: height * 0.4,
     left: width * 0.13,
     borderColor: 'black',
     borderWidth: 2,
@@ -563,6 +575,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: "center"
   },
+  modalTextSeries: {
+    color: 'white',
+    fontSize: height * 0.02,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: height * 0.02
+  },
   modalText: {
     color: 'white',
     fontSize: height * 0.02,
@@ -582,9 +602,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginHorizontal: wp(0.2)
   },
-  
+
   containerInputSeries: {
-    alignSelf: "center", justifyContent: "center", alignItems: "center", paddingTop: hp("0.5"), backgroundColor: 'white', borderRadius: 11, marginTop: height * 0.02
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: 'white',
+    borderRadius: 11,
+    marginTop: height * 0.02,
   },
   containerInputSeriesIOS: {
     backgroundColor: 'white',
@@ -594,11 +619,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center',
     fontSize: height * 0.028,
-    margin: height * 0.005,
+    // margin: height * 0.005,
     color: '#3399ff',
   },
   containerInputSeriesAndroid: {
-   // backgroundColor: 'white',
+    // backgroundColor: 'white',
     borderRadius: 11,
     height: height * 0.045,
     width: width * 0.20,
@@ -606,7 +631,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: height * 0.022,
     color: '#3399ff',
-    margin: height * 0.005,
+    // margin: height * 0.005,
     backgroundColor: 'white',
     textAlign: 'center'
   },
@@ -626,7 +651,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold'
   },
-  
+
   modalButtonCancelar: {
     width: width * 0.37,
     height: height * 0.0775,
@@ -663,11 +688,11 @@ const styles = StyleSheet.create({
     //resizeMode: 'cover',
   },
   elemento: {
-    marginTop:1,
+    marginTop: 1,
     fontSize: height * 0.02,
     // color: "#6666ff"
     color: "white"
-},
+  },
 })
 
 export default withNavigation(MusculoAgregar);

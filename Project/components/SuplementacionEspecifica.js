@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import ApiController from '../controller/ApiController'
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
-import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorFondo from './Fotos/ExportadorFondo';
+import ExportadorAds from './Fotos/ExportadorAds';
 import {
   StyleSheet,
   Text,
@@ -14,6 +15,7 @@ import {
 } from 'react-native';
 import DropDownItem from 'react-native-drop-down-item';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -105,6 +107,20 @@ class SuplementacionEspecifica extends Component {
             </View>
 
           </ScrollView>
+          <AdMobBanner
+          style={styles.bottomBanner}
+          bannerSize="fullBanner"
+          adUnitID= {ExportadorAds.Banner()}
+          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
+          onDidFailToReceiveAdWithError={err => {
+            console.log(err)
+          }}
+          onAdViewDidReceiveAd={() => {
+            console.log("Ad Recieved");
+          }}
+          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+          //didFailToReceiveAdWithError={this.bannerError()}
+        />
         </View>
       );
     }
@@ -116,6 +132,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: "black"
+  },
+  bottomBanner: {
+    position: "absolute",
+    bottom: 0,
+    alignSelf: 'center',
   },
   bgImage: {
     flex: 1,

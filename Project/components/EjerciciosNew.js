@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorAds from './Fotos/ExportadorAds'
 import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
@@ -18,6 +19,7 @@ import {
 import { TextInput } from 'react-native-gesture-handler';
 import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { AdMobInterstitial } from 'expo-ads-admob';
 
 
 var { height, width } = Dimensions.get('window');
@@ -36,26 +38,41 @@ class EjerciciosNew extends Component {
       modalGuardarVisible: false,
     };
   }
-  guardarEjercicio(){
-    base.crearEjercicio(this.state.nombre, this.state.descripcion, this.state.ejecucion, this.state.elemento, this.state.musculo, this.cancelarEjercicio.bind(this))
+  componentDidMount() {
+    AdMobInterstitial.addEventListener("interstitialDidClose", () => this.props.onPressCancelar());
+  }
+
+  showInterstitial = async () => {
+    AdMobInterstitial.setAdUnitID(ExportadorAds.Interracial()); // Test ID, Replace with your-admob-unit-id
+
+    try {
+      await AdMobInterstitial.requestAdAsync();
+      await AdMobInterstitial.showAdAsync();
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
+  guardarEjercicio() {
+    base.crearEjercicio(this.state.nombre, this.state.descripcion, this.state.ejecucion, this.state.elemento, this.state.musculo, this.showInterstitial().bind(this))
   }
   cancelarEjercicio() {
     this.props.onPressCancelar()
   }
   botonGuardar() {
-    if(this.state.nombre == ''){
+    if (this.state.nombre == '') {
       alert("Debes escribir el nombre del ejercicio")
       return
     }
-    if(this.state.musculo == ''){
+    if (this.state.musculo == '') {
       alert("Debes seleccionar el musculo del ejercicio")
       return
     }
-    if(this.state.elemento == ''){
+    if (this.state.elemento == '') {
       alert("Debes seleccionar el elemento a usar del ejercicio")
       return
     }
-    this.setState({ modalGuardarVisible: true }) 
+    this.setState({ modalGuardarVisible: true })
   }
 
   render() {
@@ -68,7 +85,7 @@ class EjerciciosNew extends Component {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
               <View style={styles.inputContainerView}>
                 <RNPickerSelect
-                useNativeAndroidPickerStyle={false}
+                  useNativeAndroidPickerStyle={false}
                   placeholder={{
                     label: 'Musculo del Ejercicio',
                     value: '0',
@@ -92,9 +109,9 @@ class EjerciciosNew extends Component {
                     inputAndroid: {
                       backgroundColor: 'grey',
                       borderTopLeftRadius: 10,
-                                                    borderTopRightRadius: 10,
-                                                    borderBottomLeftRadius: 10,
-                                                    borderBottomRightRadius: 10,
+                      borderTopRightRadius: 10,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
                       paddingLeft: 10,
                       margin: height * 0.028,
                       width: wp("70"),
@@ -120,7 +137,7 @@ class EjerciciosNew extends Component {
                   ]}
                 />
                 <RNPickerSelect
-                useNativeAndroidPickerStyle={false}
+                  useNativeAndroidPickerStyle={false}
                   placeholder={{
                     label: 'Elemento del Ejercicio',
                     value: '0',
@@ -144,9 +161,9 @@ class EjerciciosNew extends Component {
                     inputAndroid: {
                       backgroundColor: 'grey',
                       borderTopLeftRadius: 10,
-                                                    borderTopRightRadius: 10,
-                                                    borderBottomLeftRadius: 10,
-                                                    borderBottomRightRadius: 10,
+                      borderTopRightRadius: 10,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
                       paddingLeft: 10,
                       margin: height * 0.028,
                       width: wp("70"),
@@ -283,7 +300,7 @@ const styles = StyleSheet.create({
     height: height * 0.22,
     width: width * 0.75,
     position: 'absolute',
-    top: height * 0.3,
+    top: height * 0.4,
     left: width * 0.13,
     borderColor: 'black',
     borderWidth: 2,

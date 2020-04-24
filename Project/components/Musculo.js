@@ -5,6 +5,7 @@ import base from './GenerarBase';
 import ExportadorEjercicios from './Fotos/ExportadorEjercicios';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
+import ExportadorAds from './Fotos/ExportadorAds';
 import {
   StyleSheet,
   Text,
@@ -17,6 +18,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -186,6 +188,20 @@ class Musculo extends Component {
                 )
             }
             } />
+            <AdMobBanner
+          style={styles.bottomBanner}
+          bannerSize="fullBanner"
+          adUnitID= {ExportadorAds.Banner()}
+          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
+          onDidFailToReceiveAdWithError={err => {
+            console.log(err)
+          }}
+          onAdViewDidReceiveAd={() => {
+            console.log("Ad Recieved");
+          }}
+          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+          //didFailToReceiveAdWithError={this.bannerError()}
+        />
         </View>
       );
     }
@@ -200,6 +216,11 @@ const styles = StyleSheet.create({
   },
   contentList: {
     flex: 1,
+  },
+  bottomBanner: {
+    position: "absolute",
+    bottom: 0,
+    alignSelf: 'center',
   },
   bgImage: {
     flex: 1,

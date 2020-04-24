@@ -3,7 +3,8 @@ import { SearchBar} from 'react-native-elements';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
-import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion'
+import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion';
+import ExportadorAds from './Fotos/ExportadorAds';
 import {
   StyleSheet,
   Text,
@@ -12,12 +13,12 @@ import {
   TouchableOpacity,
   FlatList,
   Keyboard,
-  ScrollView,
   ActivityIndicator,
   Dimensions
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { withNavigation } from 'react-navigation';
+import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -142,7 +143,6 @@ class SuplementacionTipos extends Component {
               searchIcon={{ color: 'black' }}
             />
           </View>
-          <ScrollView>
             <FlatList
               style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
@@ -170,7 +170,20 @@ class SuplementacionTipos extends Component {
                 )
               }
               } />
-          </ScrollView>
+              <AdMobBanner
+          style={styles.bottomBanner}
+          bannerSize="fullBanner"
+          adUnitID= {ExportadorAds.Banner()}
+          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
+          onDidFailToReceiveAdWithError={err => {
+            console.log(err)
+          }}
+          onAdViewDidReceiveAd={() => {
+            console.log("Ad Recieved");
+          }}
+          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+          //didFailToReceiveAdWithError={this.bannerError()}
+        />
         </View>
       );
     }
@@ -182,6 +195,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: "black"
+  },
+  bottomBanner: {
+    position: "absolute",
+    bottom: 0,
+    alignSelf: 'center',
   },
   contentList: {
     flex: 1,

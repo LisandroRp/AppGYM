@@ -3,6 +3,7 @@ import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorLogos from './Fotos/ExportadorLogos';
+import ExportadorAds from './Fotos/ExportadorAds';
 import {
   StyleSheet,
   Text,
@@ -20,19 +21,9 @@ import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {AdMobInterstitial} from 'expo-ads-admob';
+
 var { height, width } = Dimensions.get('window');
-
-
-function createData(item) {
-  return {
-    key: item.id,
-    id: item.id,
-    nombre: item.nombre,
-    musculo: item.musculo,
-    repeticiones: item.repeticiones,
-    series: item.series,
-  };
-}
 
 class RutinaModificable extends Component {
 
@@ -63,10 +54,26 @@ class RutinaModificable extends Component {
   componentWillMount() {
     this._retrieveModificable()
   }
+
+  componentDidMount(){
+    AdMobInterstitial.addEventListener("interstitialDidClose", () => this.props.onPressActualizar(this.props.navigation.getParam("id_rutina"), this.props.navigation.getParam("nombre_rutina")));
+}
+
+  showInterstitial = async () => {
+    AdMobInterstitial.setAdUnitID(ExportadorAds.Interracial()); // Test ID, Replace with your-admob-unit-id
+    
+    try{
+      await AdMobInterstitial.requestAdAsync();
+      await AdMobInterstitial.showAdAsync();
+    }
+    catch(e){
+      console.log(e);
+    }
+}
   _retrieveModificable = async () => {
     try {
       const value = await AsyncStorage.getItem('rutinaEditable');
-      rutinaNueva2 = []
+      var rutinaNueva2 = []
       if (value !== null) {
         rutinaNueva2 = JSON.parse(value)
         this.setState({ rutina: rutinaNueva2.rutina, rutina2: rutinaNueva2.rutina })
@@ -82,8 +89,8 @@ class RutinaModificable extends Component {
 
       if (value !== null) {
         if (JSON.parse(value)[0].combinado) {
-        combinada1 = JSON.parse(value)[0]
-        combinada2 = JSON.parse(value)[1]
+        var combinada1 = JSON.parse(value)[0]
+        var combinada2 = JSON.parse(value)[1]
         if (this.yaEsta(combinada1) && this.yaEsta(combinada2)) {
           this.setState({ isLoading: true })
           ultimoCombinado = this.queCombinado(combinada1.dia)
@@ -94,8 +101,9 @@ class RutinaModificable extends Component {
           this.state.rutina.push(combinada2)
           this.termino()
         } else {
+          alert('Este ejercicio ya esta en el dia seleccionado')
           this._storeData()
-          this.setState({ showAlert: true })
+          //this.setState({ showAlert: true })
         }
       } else {
         simple = JSON.parse(value)[0]
@@ -105,6 +113,7 @@ class RutinaModificable extends Component {
           this.state.rutina.push(simple)
           this.termino()
         } else {
+          alert('Este ejercicio ya esta en el dia seleccionado')
           this._storeData()
           this.setState({ showAlert: true })
         }
@@ -120,7 +129,7 @@ class RutinaModificable extends Component {
     this._storeData()
   }
   queCombinado(dia){
-    ultimoCombinado= 0
+    var ultimoCombinado= 0
     for(i=0; i<this.state.rutina; i++){
       if(this.state.rutina[i].dia == dia && this.state.rutina[i].combinado != null){
         ultimoCombinado=this.state.rutina[i].combinado 
@@ -145,7 +154,7 @@ class RutinaModificable extends Component {
     this.props.onPressGo(this.state.ultimoDia, 'modificar', true, this.ultimaPos())
   }
   ultimaPos(){
-    ultimaPosicion=0
+    var ultimaPosicion=0
     for(i=0;i<this.state.rutina.length;i++){
       if(this.state.rutina[i].dia == this.state.ultimoDia && this.state.rutina[i].posicion > ultimaPosicion){
         ultimaPosicion = this.state.rutina[i].posicion
@@ -154,7 +163,7 @@ class RutinaModificable extends Component {
      return parseInt(ultimaPosicion)+1
   }
   diaAnterior(dia) {
-    i = 0
+   var i = 0
     while (i < this.state.rutina.length) {
       if (this.state.rutina[i].dia == (dia - 1)) {
         return true
@@ -166,8 +175,9 @@ class RutinaModificable extends Component {
   yaEsta(data) {
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].id_ejercicio == data.id_ejercicio) {
-        if (this.state.rutina[i].dia == data.dia)
+        if (this.state.rutina[i].dia == data.dia){
           return false
+        }
       }
     }
     return true
@@ -185,10 +195,10 @@ class RutinaModificable extends Component {
   };
 
   subir(dia, id_ejercicio, combinado) {
-    rutinaNueva = []
-    aux = 0
-    posicionASubir = 0
-    posicionABajar = 0
+    var rutinaNueva = []
+    var aux = 0
+    var posicionASubir = 0
+    var posicionABajar = 0
 
     for(i=0; i<this.state.rutina.length;i++){
       rutinaNueva.push(this.state.rutina[i])
@@ -257,12 +267,12 @@ class RutinaModificable extends Component {
   }
 
   bajar(dia, id_ejercicio, combinado) {
-    rutinaNueva = []
-    aux = 0
-    maxPosDia=0
-    posicionASubir = (-5)
-    posicionABajar = 0
-    flag=0
+    var rutinaNueva = []
+    var aux = 0
+    var maxPosDia=0
+    var posicionASubir = (-5)
+    var posicionABajar = 0
+    var flag=0
 
     for(i=0; i<this.state.rutina.length; i++){
       rutinaNueva.push(this.state.rutina[i])
@@ -332,7 +342,6 @@ class RutinaModificable extends Component {
     }
   }
 
-
   borrar(dia, id_ejercicio, combinado) {
     var rutinaNueva = []
     var i = 0
@@ -393,17 +402,15 @@ class RutinaModificable extends Component {
   }
   seBorraronEjercicios(rutinaNueva) {
     base.crearEjerciciosRutina(rutinaNueva, this.okEjerciciosRutinaCreados.bind(this))
-    //base.conseguirIdRutinaParaGuardar(rutinaNueva, this.okIdRutina.bind(this))
   }
   okIdRutina(rutinaNueva) {
     base.crearEjerciciosRutina(rutinaNueva, this.okEjerciciosRutinaCreados.bind(this))
   }
   okEjerciciosRutinaCreados(rutinaNueva) {
     base.actualizarRutina(rutinaNueva, this.okRutinaActualizada.bind(this))
-    //this.props.onPressActualizar(this.props.navigation.getParam("id_rutina"), this.props.navigation.getParam("nombre_rutina"))
   }
   okRutinaActualizada() {
-    this.props.onPressActualizar(this.props.navigation.getParam("id_rutina"), this.props.navigation.getParam("nombre_rutina"))
+    this.showInterstitial()
   }
   borrarRutina(id_rutina) {
     this.setModalGuardarVisible(!this.state.modalGuardarVisible)
@@ -451,9 +458,9 @@ class RutinaModificable extends Component {
                 return item.toString();
               }}
               renderItem={({ item }) => {
-                aux = item
-                contadorCobinadosFlatlist = false
-                rutinaLocal = this.state.rutina
+               var aux = item
+               var contadorCobinadosFlatlist = false
+               var rutinaLocal = this.state.rutina
                 return (
                   <View style={styles.cuadraditos}>
                     <DropDownItem key={1} contentVisible={false}
@@ -494,7 +501,7 @@ class RutinaModificable extends Component {
                                           <View style={{ flexDirection: 'column', width: wp("60") }}>
                                           <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
                                           <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
+                                          <Text style={styles.subsEjercicio}>Repeticiones:{"\n"}{item.repeticiones}</Text>
                                           </View>
                                         </View>
                                       </View>
@@ -511,7 +518,7 @@ class RutinaModificable extends Component {
                                           <View style={{ flexDirection: 'column', width: wp("33") }}>
                                           <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
                                           <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
+                                          <Text style={styles.subsEjercicio}>Repeticiones:{"\n"}{item.repeticiones}</Text>
                                           </View>
                                         </View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -539,7 +546,7 @@ class RutinaModificable extends Component {
                                         <View style={{ flexDirection: 'column', width: wp("33") }}>
                                         <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
                                           <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
+                                          <Text style={styles.subsEjercicio}>Repeticiones:{"\n"}{item.repeticiones}</Text>
                                         </View>
                                       </View>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -875,7 +882,7 @@ const styles = StyleSheet.create({
     height: height * 0.22,
     width: width * 0.75,
     position: 'absolute',
-    top: height * 0.3,
+    top: height * 0.4,
     left: width * 0.13,
     borderColor: 'black',
     borderWidth: 2,

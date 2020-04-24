@@ -174,7 +174,6 @@ class GenerarBase extends Component {
         db.transaction(
             tx => {
                 tx.executeSql('SELECT * FROM Perfil p JOIN experiencia e ON p.id_experiencia = e.id_experiencia JOIN objetivo o ON p.id_objetivo = o.id_objetivo', [], function (tx, res) {
-                    console.log(res.rows.length)
                     for (let i = 0; i < res.rows.length; ++i) {
                         perfil = res.rows._array[0];
                     }

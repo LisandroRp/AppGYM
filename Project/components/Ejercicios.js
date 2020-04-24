@@ -11,7 +11,6 @@ import {
   ActivityIndicator
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
 
 class Ejercicios extends Component {
 
@@ -31,11 +30,6 @@ class Ejercicios extends Component {
       isLoading: false, 
     };
     this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
-  }
-
-  bannerError() {
-    console.log("An error");
-    return;
   }
 
   render() {
@@ -66,34 +60,6 @@ class Ejercicios extends Component {
               </TouchableOpacity>
             )
           }} />
-         <AdMobBanner
-          style={styles.bottomBanner}
-          bannerSize="fullBanner"
-          adUnitID="ca-app-pub-4175223710505457/8516284384"
-          //useEffect  = {setTestDeviceIDAsync('EMULATOR')}
-          onDidFailToReceiveAdWithError={err => {
-            console.log(err)
-          }}
-          onAdViewDidReceiveAd={() => {
-            console.log("Ad Recieved");
-          }}
-          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
-          didFailToReceiveAdWithError={this.bannerError()}
-        />
-        <AdMobBanner
-          style={styles.bottomBanner}
-          bannerSize="fullBanner"
-          adUnitID="ca-app-pub-4175223710505457/4865400712"
-          //useEffect  = {setTestDeviceIDAsync('EMULATOR')}
-          onDidFailToReceiveAdWithError={err => {
-            console.log(err)
-          }}
-          onAdViewDidReceiveAd={() => {
-            console.log("Ad Recieved");
-          }}
-          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
-          didFailToReceiveAdWithError={this.bannerError()}
-        />
       </View>
     );
   }
@@ -105,10 +71,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: "grey"
-  },
-  bottomBanner: {
-    position: "absolute",
-    bottom: 0
   },
   contentList: {
     flex: 1,

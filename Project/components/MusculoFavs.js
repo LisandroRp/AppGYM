@@ -5,6 +5,7 @@ import base from './GenerarBase';
 import ExportadorEjercicios from './Fotos/ExportadorEjercicios'
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorLogos from './Fotos/ExportadorLogos'
+import ExportadorAds from './Fotos/ExportadorAds'
 import {
     StyleSheet,
     Text,
@@ -18,6 +19,7 @@ import {
     ScrollView
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -108,6 +110,33 @@ class MusculoFavs extends Component {
                 </View>
             );
         } else {
+            if(this.state.ejercicios.length == 0){
+                return(
+                <View style={[styles.NoItemsContainer]}>
+                    <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                            <View style={styles.NoItemsImageContainer}>
+                                <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
+                            </View>
+                            <View style={styles.NoItems}>
+                                <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Ejercicios agregados a tu lista</Text>
+                            </View>
+                            <AdMobBanner
+                        style={styles.bottomBanner}
+                        bannerSize="fullBanner"
+                        adUnitID= {ExportadorAds.Banner()}
+                        useEffect={setTestDeviceIDAsync('EMULATOR')}
+                        onDidFailToReceiveAdWithError={err => {
+                            console.log(err)
+                        }}
+                        onAdViewDidReceiveAd={() => {
+                            console.log("Ad Recieved");
+                        }}
+                        adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+                    //didFailToReceiveAdWithError={this.bannerError()}
+                    />
+                        </View>
+                );
+            }else{
             return (
                 <View style={styles.container}>
                     <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
@@ -124,14 +153,13 @@ class MusculoFavs extends Component {
                             searchIcon={{ color: 'black' }}
                         />
                     </View>
-                    <ScrollView>
                         <FlatList
                             style={styles.contentList}
                             columnWrapperStyle={styles.listContainer}
                             data={this.state.ejercicios.sort((a,b) => a.nombre.localeCompare(b.nombre))}
                             initialNumToRender={50}
                             keyExtractor={(item) => {
-                                return item.id_rutina.toString();
+                                return item.id_ejercicio.toString();
                             }}
                             renderItem={({ item }) => {
                                 if (item.favoritos) {
@@ -153,7 +181,6 @@ class MusculoFavs extends Component {
                                     )
                                 }
                             }} />
-                    </ScrollView>
                     <Modal
                         animationType="fade"
                         visible={this.state.modalVisible}
@@ -178,8 +205,23 @@ class MusculoFavs extends Component {
                             </View>
                         </View>
                     </Modal>
+                    <AdMobBanner
+                        style={styles.bottomBanner}
+                        bannerSize="fullBanner"
+                        adUnitID= {ExportadorAds.Banner()}
+                        useEffect={setTestDeviceIDAsync('EMULATOR')}
+                        onDidFailToReceiveAdWithError={err => {
+                            console.log(err)
+                        }}
+                        onAdViewDidReceiveAd={() => {
+                            console.log("Ad Recieved");
+                        }}
+                        adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+                    //didFailToReceiveAdWithError={this.bannerError()}
+                    />
                 </View>
             );
+                        }
         }
     }
 }
@@ -192,6 +234,51 @@ const styles = StyleSheet.create({
     },
     contentList: {
         flex: 1,
+    },
+    bottomBanner: {
+        position: "absolute",
+        bottom: 0,
+        alignSelf: 'center',
+      },
+      contentList: {
+        flex: 1,
+      },
+      NoItemsContainer: {
+        flex: 1,
+        alignItems: "center",
+        backgroundColor: "grey"
+    },
+    NoItemsText: {
+        alignSelf: "center",
+        fontSize: height *0.028,
+        color: "#3399ff",
+        textAlign: 'center'
+    },
+    NoItemsImageContainer: {
+        height: height * 0.55,
+        width: height * 0.50,
+        margin: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black',
+        borderWidth: 4,
+        borderRadius: 10,
+        marginTop: hp(5)
+    },
+    
+    NoItemsLogo: {
+        height: height * 0.45,
+        width: height * 0.45,
+        marginTop: hp(9),
+        marginBottom: hp(6.6)
+    },
+    NoItems: {
+        backgroundColor: "black",
+        padding: 10,
+        borderRadius: 10,
+        opacity: .95,
+        marginHorizontal: wp(5),
+        marginVertical: hp(3)
     },
     bgImage: {
         flex: 1,
@@ -263,7 +350,7 @@ modal: {
     height: height * 0.22,
     width: width * 0.75,
     position: 'absolute',
-    top: height * 0.3,
+    top: height * 0.4,
     left: width * 0.13,
     borderColor: 'black',
     borderWidth: 2,
