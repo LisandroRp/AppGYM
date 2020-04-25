@@ -86,7 +86,7 @@ class MiPlan extends Component {
                     <View style={styles.container}>
                         <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                         <Swiper style={styles.swiper}>
-                            <View style={styles.slideContainer1}>
+                            <View style={styles.slideContainer}>
                                 <View style={styles.ContainerInside}>
                                     <Text style={styles.calories}>{this.state.perfil.caloriasEjercicio - 200} - {this.state.perfil.caloriasEjercicio}</Text>
                                     <Text style={styles.Text}>Calorias a consumir para mantener tu peso en base a la vida que llevas</Text>
@@ -170,10 +170,6 @@ const styles = StyleSheet.create({
     },
     slideContainer: {
         flex: 1,
-        alignItems: "center"
-    },
-    slideContainer1: {
-        flex: 1,
         alignItems: "center",
         height: height
     },
@@ -186,20 +182,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         resizeMode: 'cover'
     },
-    contentList: {
-        flexDirection: 'column',
-        marginLeft: height * 0.025,
-        backgroundColor: 'white',
-        borderRadius: 10,
-        //height:200,
-        paddingHorizontal: 18,
-        marginTop: 18,
-        // alignItems:'center', height:100 
-    },
-    contentList2: {
-        alignItems: 'flex-start'
-        // alignItems:'center', height:100 
-    },
+
     ContainerInside: {
         backgroundColor: "black",
         marginTop: hp(5),

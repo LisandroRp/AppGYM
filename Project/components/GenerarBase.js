@@ -214,6 +214,26 @@ class GenerarBase extends Component {
             }
         );
     }
+    borrarEjercicio(id_ejercicio, okEjercicioBorrado) {
+
+        const db = SQLite.openDatabase('appgym.db');
+        db.exec([{ sql: 'PRAGMA foreign_keys = ON;', args: [] }], false, () => console.log('Foreign keys turned on')); 
+
+        db.transaction(
+            tx => {
+                tx.executeSql('DELETE FROM  Ejercicios where id_ejercicio = ?', [id_ejercicio])
+            },
+            error => {
+                console.log(error)
+                alert("Algo Salio Mal")
+            },
+            () => {
+                console.log("Correcto")
+                db._db.close()
+                okEjercicioBorrado()
+            }
+        );
+    }
     // *****************************************************
     // ********************Ejercicios***********************
     // *****************************************************
@@ -390,13 +410,53 @@ class GenerarBase extends Component {
             }
         );
     }
+    conseguirIdEjercicioParaBorrar(nombre, borrarEjercicio){
+        let db = SQLite.openDatabase('appgym.db');
+        var id_ejercicio=''
+        db.transaction(
+            tx => {
+                tx.executeSql('SELECT id_ejercicio FROM Ejercicios where Ejercicios.nombre = ? ', [nombre], function (tx, res) {
+                    id_ejercicio = res.rows._array[0].id_ejercicio
+                });
+            },
+            error => {
+                console.log(error)
+                alert("Algo Salio Mal")
+            },
+            () => {
+                db._db.close()
+                borrarEjercicio(id_ejercicio)
+            }
+        );
+    }
+    estaEjercicioRutina(id_ejercicio, okEsta){
+        let db = SQLite.openDatabase('appgym.db');
+        var rutinas=[]
+        db.transaction(
+            tx => {
+                tx.executeSql('SELECT nombre FROM Rutinas Join Ejercicios_Rutina on Rutinas.id_rutina = Ejercicios_Rutina.id_rutina where Ejercicios_Rutina.id_ejercicio = ? ', [id_ejercicio], function (tx, res) {
+                    for (let i = 0; i < res.rows.length; ++i) {
+                        rutinas.push(res.rows._array[i]);
+                    }
+                });
+            },
+            error => {
+                console.log(error)
+                alert("Algo Salio Mal")
+            },
+            () => {
+                db._db.close()
+                okEsta(rutinas, id_ejercicio)
+            }
+        );
+    }
     // *****************************************************
     // ***********************Rutinas***********************
     // *****************************************************
 
     //Trae todos las rutinas en la screen rutinas
     traerRutinas(tipo_rutina, okRutinas) {
-        rutinas = []
+       var rutinas = []
 
         let db = SQLite.openDatabase('appgym.db');
 
@@ -420,7 +480,7 @@ class GenerarBase extends Component {
         );
     }
     traerRutinasPropias(okRutinas) {
-        rutinas = []
+        var rutinas = []
 
         let db = SQLite.openDatabase('appgym.db');
 

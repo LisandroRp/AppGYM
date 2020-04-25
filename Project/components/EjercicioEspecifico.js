@@ -170,12 +170,6 @@ const styles = StyleSheet.create({
     marginVertical: hp("2"),
     opacity: 2
   },
-  backgroundTituloPrincipal:{
-    backgroundColor: 'black',
-    alignItems: 'center',
-    paddingHorizontal: wp("2"),
-    paddingVertical: hp("2"),
-  },
   backgroundTitulo: {
     backgroundColor: 'black',
     alignItems: 'center',
@@ -192,12 +186,6 @@ const styles = StyleSheet.create({
     marginHorizontal: wp("5"),
     marginVertical: hp("2"),
     fontSize: height * 0.025,
-  },
-  imageContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: hp(4),
-    marginBottom: hp(1)
   },
   image: {
     height: height * 0.50,

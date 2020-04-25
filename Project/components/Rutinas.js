@@ -35,8 +35,6 @@ class Rutinas extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
 
-          <View style={styles.contentList}>
-
             <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas("Musculacion")}>
               <Image style={styles.image} source={ExportadorMenus.Musculacion()} />
             </TouchableOpacity>
@@ -49,8 +47,6 @@ class Rutinas extends Component {
               <Image style={styles.image} source={ExportadorMenus.Propias()} />
             </TouchableOpacity>
 
-          </View>
-
         </View>
       );
     }
@@ -62,12 +58,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: "grey"
-  },
-  contentList: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding: 2,
   },
   bgImage: {
     flex: 1,
@@ -88,13 +78,7 @@ const styles = StyleSheet.create({
     margin: 1,
     borderWidth: 1.5,
     borderColor: 'black'
-  },
-  name: {
-    fontSize: 22,
-    alignSelf: 'center',
-    color: "#3399ff",
-    fontWeight: 'bold'
-  },
+  }
 })
 
 export default withNavigation(Rutinas);

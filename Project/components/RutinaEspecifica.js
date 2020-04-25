@@ -295,23 +295,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-
-    marginLeft: height * 0.028,
-    marginRight: height * 0.028,
-    marginTop: height * 0.028,
-    backgroundColor: "black",
-    padding: 10,
-    flexDirection: 'row',
-  },
   musculosLogo: {
     width: wp("10.5"),
     height: hp("6"),

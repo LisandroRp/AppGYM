@@ -7,7 +7,7 @@ class ExportadorAds extends Component {
         return "ca-app-pub-3940256099942544/2934735716"
     }
     Rewarded(){
-        return "ca-app-pub-3940256099942544/5135589807"
+        return "ca-app-pub-3940256099942544/1712485313"
     }
     Interracial(){
         return "ca-app-pub-3940256099942544/1033173712"

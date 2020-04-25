@@ -247,26 +247,22 @@ const styles = StyleSheet.create({
     marginTop: height * 0.028,
     backgroundColor: "black",
     padding: 10,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
 
   name: {
     fontSize: height * 0.028,
-    //flex: 1,
-    //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
   marca: {
     fontSize: height * 0.02,
-    // color: "#6666ff"
     color: "white"
   },
   StarImage: {
     width: hp(5.5),
     height: hp(5.5),
     paddingHorizontal: wp("5"),
-    //resizeMode: 'cover',
   },
   ViewEstrella: {
     alignItems: "center",

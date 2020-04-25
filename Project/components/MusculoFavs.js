@@ -114,11 +114,11 @@ class MusculoFavs extends Component {
                 return(
                 <View style={[styles.NoItemsContainer]}>
                     <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                    <View style={styles.NoItems}>
+                                <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Ejercicios agregados a tu lista</Text>
+                            </View>
                             <View style={styles.NoItemsImageContainer}>
                                 <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
-                            </View>
-                            <View style={styles.NoItems}>
-                                <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Ejercicios agregados a tu lista</Text>
                             </View>
                             <AdMobBanner
                         style={styles.bottomBanner}
@@ -263,7 +263,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         borderWidth: 4,
         borderRadius: 10,
-        marginTop: hp(5)
     },
     
     NoItemsLogo: {

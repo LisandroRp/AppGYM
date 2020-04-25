@@ -21,7 +21,7 @@
       }
     },
     "android": {
-      "package": "AppGym.com",
+      "package": "com.morgan.myapp",
       "config" : {
         "googleMobileAdsAppId": "ca-app-pub-4175223710505457~3729139362"
       }

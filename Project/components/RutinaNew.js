@@ -831,16 +831,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginRight: height * 0.03,
   },
-  imageContainer: {
-    height: height * 0.28,
-    width: width * 0.51,
-    margin: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-    borderWidth: 4,
-    borderColor: "#ebf0f7"
-  },
   image: {
     height: height * 0.28,
     width: width * 0.51,
@@ -891,12 +881,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  card: {
-    backgroundColor: "grey",
-    padding: 10,
-    borderRadius: 30,
-  },
-
   name: {
     paddingTop: 12,
     fontSize: height * 0.025,

@@ -497,13 +497,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         opacity: .95,
     },
-    slide3: {
-        backgroundColor: "black",
-        marginVertical: height * 0.05,
-        padding: 10,
-        borderRadius: 10,
-        opacity: .95,
-    },
 
     slideText: {
         alignSelf: "center",

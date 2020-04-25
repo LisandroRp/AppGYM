@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet, ActivityIndicator, KeyboardAvoidingView,Modal, TextInput, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Text, Keyboard, Dimensions } from 'react-native';
+import { View, Image, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Modal, TextInput, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Text, Keyboard, Dimensions } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -34,17 +34,19 @@ class Ficha extends Component {
     }
     showRewarded = async () => {
         AdMobRewarded.setAdUnitID(ExportadorAds.Rewarded()); // Test ID, Replace with your-admob-unit-id
-        
-        try{
-          await AdMobRewarded.requestAdAsync();
-          await AdMobRewarded.showAdAsync();
+
+        try {
+            this.setState({ modalVisible: false })
+            await AdMobRewarded.requestAdAsync();
+            await AdMobRewarded.showAdAsync();
         }
-        catch(e){
-          console.log(e);
+        catch (e) {
+            console.log(e);
         }
     }
-    componentDidMount(){
-        AdMobRewarded.addEventListener("rewardedVideoDidClose", () => this.crearPlan());
+    componentDidMount() {
+        AdMobRewarded.addEventListener('rewardedVideoDidRewardUser', () => this.crearPlan()
+        );
     }
 
     crearPlan() {
@@ -169,7 +171,6 @@ class Ficha extends Component {
     }
 
     mostrarPlan() {
-        this.setState({modalVisible: false})
         this.props.onPressUpdate(this.state.caloriasEjercicio, this.state.caloriasTotal, this.state.objetivoDeseado)
     }
 
@@ -191,8 +192,8 @@ class Ficha extends Component {
 
 
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                        <View style={[styles.slideContainerInside2]}>
-                            <View style={styles.slide2}>
+                        <View style={[styles.ContainerInside]}>
+                            <View style={styles.slide}>
                                 <Text style={styles.slideText}>Ficha Personal{"\n"}y{"\n"}Objetivos a Alcanzar</Text>
                             </View>
                             <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
@@ -388,7 +389,7 @@ class Ficha extends Component {
                             </View>
 
 
-                            <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({modalVisible: true}) }}>
+                            <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalVisible: true }) }}>
                                 <Text style={{ margin: height * 0.02, fontWeight: 'bold', fontSize: height * 0.025 }}>
                                     Actualizar
                                 </Text>
@@ -432,70 +433,8 @@ const styles = StyleSheet.create({
         height: hp(3),
         backgroundColor: "black"
     },
-    header: {
-        position: "absolute",
-        backgroundColor: "black",
-        top: 0,
-        height: hp(9),
-        width: "100%",
-        flexDirection: "row-reverse"
-    },
-    headerContent: {
-        justifyContent: "center",
-        marginRight: wp(5)
-    },
 
-    Logo: {
-        height: height * 0.45,
-        width: height * 0.45,
-        marginTop: hp(9),
-        marginBottom: hp(6.6)
-    },
-
-    headerText: {
-        fontSize: height * 0.025,
-        alignSelf: 'center',
-        color: "#3399ff",
-    },
-
-    slideContainerInside3: {
-        backgroundColor: "black",
-        marginHorizontal: wp(5),
-        marginTop: hp(10),
-        marginBottom: hp(6),
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: 'center',
-
-    },
-    header: {
-        position: "absolute",
-        backgroundColor: "black",
-        top: 0,
-        height: hp(9),
-        width: "100%",
-        flexDirection: "row-reverse"
-    },
-    headerContent: {
-        justifyContent: "center",
-        marginRight: wp(5)
-    },
-
-    Logo: {
-        height: height * 0.45,
-        width: height * 0.45,
-        marginTop: hp(9),
-        marginBottom: hp(6.6)
-    },
-    slide1: {
-        backgroundColor: "black",
-        padding: 10,
-        borderRadius: 10,
-        opacity: .95,
-        marginHorizontal: wp(5),
-        marginVertical: hp(6)
-    },
-    slide2: {
+    slide: {
         backgroundColor: "black",
         marginTop: height * 0.05,
         marginBottom: height * 0.05,
@@ -540,7 +479,7 @@ const styles = StyleSheet.create({
         opacity: .95
     },
 
-    slideContainerInside2: {
+    ContainerInside: {
         width: width,
         height: height,
         alignItems: "center",
@@ -557,84 +496,56 @@ const styles = StyleSheet.create({
     },
 
     /*************************************** */
-  //MODAAAAL
-  modal: {
-    height: height * 0.22,
-    width: width * 0.75,
-    position: 'absolute',
-    top: height * 0.4,
-    left: width * 0.13,
-    borderColor: 'black',
-    borderWidth: 2,
-    backgroundColor: 'grey',
-    shadowColor: 'black',
-    shadowOpacity: 5.0,
-    borderRadius: 22,
-    opacity: .95
-  },
-  modal2: {
-    flexDirection: 'row',
-    borderColor: 'black',
-    borderTopWidth: 2,
-    width: width * 0.74,
-    height: height * 0.08,
-    position: 'absolute',
-    bottom: 0,
-    opacity: .95
-  },
-  modalTipoEjericios: {
-    width: width * 0.80,
-    height: height * 0.33,
-    position: 'absolute',
-    top: height * 0.33,
-    left: width * 0.10,
-    borderColor: 'black',
-    borderWidth: 2,
-    backgroundColor: 'grey',
-    shadowColor: 'black',
-    shadowOpacity: 5.0,
-    borderRadius: 22,
-    opacity: .95
-  },
-  modal2TipoEjericios: {
-    flexDirection: 'row',
-    width: width * 0.80,
-    height: height * 0.33,
-    position: 'absolute',
-    bottom: 0,
-    opacity: .95
-  },
-  textButton: {
-    color: 'white',
-    fontSize: height * 0.02,
-    alignSelf: 'center',
-    textAlign: 'center',
-    fontWeight: 'bold'
-  },
-  textButtonTipoEjercicios: {
-    color: 'white',
-    fontSize: height * 0.028,
-    alignSelf: 'center',
-    textAlign: 'center',
-    fontWeight: 'bold'
-  },
-  modalButtonCancelar: {
-    width: width * 0.37,
-    height: height * 0.0775,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'grey',
-    borderBottomLeftRadius: 22
-  },
-  modalButtonAceptar: {
-    width: width * 0.37,
-    height: height * 0.0775,
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: "center",
-    borderLeftWidth: 2,
-    backgroundColor: 'grey',
-    borderBottomRightRadius: 22
-  }
+    //MODAAAAL
+    modal: {
+        height: height * 0.22,
+        width: width * 0.75,
+        position: 'absolute',
+        top: height * 0.4,
+        left: width * 0.13,
+        borderColor: 'black',
+        borderWidth: 2,
+        backgroundColor: 'grey',
+        shadowColor: 'black',
+        shadowOpacity: 5.0,
+        borderRadius: 22,
+        opacity: .95
+    },
+    modal2: {
+        flexDirection: 'row',
+        borderColor: 'black',
+        borderTopWidth: 2,
+        width: width * 0.74,
+        height: height * 0.08,
+        position: 'absolute',
+        bottom: 0,
+        opacity: .95
+    },
+    textButton: {
+        color: 'white',
+        fontSize: height * 0.02,
+        alignSelf: 'center',
+        textAlign: 'center',
+        fontWeight: 'bold'
+    },
+
+    modalButtonCancelar: {
+        width: width * 0.37,
+        height: height * 0.0775,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'grey',
+        borderBottomLeftRadius: 22
+    },
+    modalButtonAceptar: {
+        width: width * 0.37,
+        height: height * 0.0775,
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: "center",
+        borderLeftWidth: 2,
+        backgroundColor: 'grey',
+        borderBottomRightRadius: 22
+    }
 })
 export default Ficha;

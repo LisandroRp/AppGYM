@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ApiController from '../controller/ApiController'
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo';

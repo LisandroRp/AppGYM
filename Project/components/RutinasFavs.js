@@ -49,8 +49,8 @@ class RutinasFavs extends Component {
     favear(id_rutina) {
         var i = 0
         var fav
-        aux = 0
-        rutinas2 = []
+        var aux = 0
+        var rutinas2 = []
         while (i < this.state.rutinas.length) {
             if (this.state.rutinas[i].id_rutina == id_rutina) {
                 aux = i
@@ -95,11 +95,11 @@ class RutinasFavs extends Component {
                 return(
                 <View style={[styles.NoItemsContainer]}>
                     <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                    <View style={styles.NoItems}>
+                                <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Rutinas agregadas a tu lista</Text>
+                            </View>
                             <View style={styles.NoItemsImageContainer}>
                                 <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
-                            </View>
-                            <View style={styles.NoItems}>
-                                <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Rutinas agregadas a tu lista</Text>
                             </View>
                             <AdMobBanner
                         style={styles.bottomBanner}
@@ -205,9 +205,6 @@ const styles = StyleSheet.create({
     contentList: {
         flex: 1,
     },
-      contentList: {
-        flex: 1,
-      },
       NoItemsContainer: {
         flex: 1,
         alignItems: "center",
@@ -228,7 +225,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         borderWidth: 4,
         borderRadius: 10,
-        marginTop: hp(5)
     },
     
     NoItemsLogo: {
@@ -256,20 +252,17 @@ const styles = StyleSheet.create({
     },
     cardContent: {
         marginLeft: height * 0.028,
-        //marginTop: 10,
         paddingRight: 5,
         width: wp("40"),
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     image: {
-        //width: 90,
         width: wp("20"),
-        //height: 90,
         height: hp("11"),
         borderWidth: 2,
         borderColor: "#ebf0f7",
         margin: 5,
-        marginRight: 5,
+        marginRight: 5
     },
 
     card: {

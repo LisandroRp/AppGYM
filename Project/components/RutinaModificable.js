@@ -817,11 +817,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  card: {
-    backgroundColor: "grey",
-    padding: 10,
-    borderRadius: 30,
-  },
 
   name: {
     paddingTop: height * 0.018,
@@ -909,10 +904,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold'
   },
-  buttonContainer: {
-    alignSelf: 'center',
-    justifyContent: 'center'
-  },
+
   modalTipoEjericios: {
     width: width * 0.80,
     height: height * 0.33,

@@ -54,7 +54,8 @@ class EjerciciosNew extends Component {
     }
   }
   guardarEjercicio() {
-    base.crearEjercicio(this.state.nombre, this.state.descripcion, this.state.ejecucion, this.state.elemento, this.state.musculo, this.showInterstitial().bind(this))
+    this.setState({ modalGuardarVisible: false })
+    base.crearEjercicio(this.state.nombre, this.state.descripcion, this.state.ejecucion, this.state.elemento, this.state.musculo, this.showInterstitial.bind(this))
   }
   cancelarEjercicio() {
     this.props.onPressCancelar()

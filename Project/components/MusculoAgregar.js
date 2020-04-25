@@ -121,7 +121,7 @@ class MusculoAgregar extends Component {
     }
   }
   repeticionesString() {
-    repeticiones = this.state.repeticiones[0]
+    var repeticiones = this.state.repeticiones[0]
     for (i = 1; i < this.state.repeticiones.length; i++) {
       repeticiones = repeticiones + " - " + this.state.repeticiones[i]
     }
@@ -147,7 +147,7 @@ class MusculoAgregar extends Component {
   };
   cargarEjercicio(repeticiones, tiempo) {
     if (tiempo == null) {
-      terminada = {
+      var terminada = {
         id_ejercicio: this.state.id_ejercicio,
         musculo: this.state.musculoEjercicio,
         nombre: this.state.nombreEjercicio,
@@ -159,7 +159,7 @@ class MusculoAgregar extends Component {
         tiempo: null
       }
     } else {
-      terminada = {
+      var terminada = {
         id_ejercicio: this.state.id_ejercicio,
         musculo: this.state.musculoEjercicio,
         nombre: this.state.nombreEjercicio,
@@ -198,7 +198,7 @@ class MusculoAgregar extends Component {
     }
   }
   setModalRepeticionesVisible(visible) {
-    contadorRepeticiones = []
+    var contadorRepeticiones = []
     contadorRepeticiones.length = parseInt(this.state.series)
     for (i = 0; i < parseInt(this.state.series); i++) {
       contadorRepeticiones[i] = (i + 1)
@@ -316,7 +316,6 @@ class MusculoAgregar extends Component {
             <View style={styles.modalSeries}>
               <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                 <Text style={styles.modalTextSeries}>Selecione la cantidad de series</Text>
-                <View style={styles.containerInputSeries}>
                   <RNPickerSelect
                     useNativeAndroidPickerStyle={false}
                     placeholder={{
@@ -326,7 +325,7 @@ class MusculoAgregar extends Component {
                     placeholderTextColor="grey"
                     style={{
                       inputIOS: styles.containerInputSeriesIOS,
-                      inputAndroid: styles.containerInputSeriesIOS
+                      inputAndroid: styles.containerInputSeriesAndroid
                     }}
                     onValueChange={(value) => this.setState({ series: value })}
                     items={[
@@ -340,7 +339,6 @@ class MusculoAgregar extends Component {
                       { label: '8', value: '8' },
                     ]}
                   />
-                </View>
               </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={styles.modalButtonCancelar}>
@@ -366,6 +364,7 @@ class MusculoAgregar extends Component {
                 contentContainerStyle={styles.contentList2}
                 data={this.state.contadorRepeticiones}
                 initialNumToRender={10}
+                numColumns={4}
                 keyExtractor={(item) => {
                   return item;
                 }}
@@ -449,6 +448,7 @@ const styles = StyleSheet.create({
   contentList2: {
     flexDirection: "row",
     justifyContent: "center",
+    flexWrap: 'wrap'
   },
   contentList3: {
     flexDirection: "row",
@@ -529,9 +529,6 @@ const styles = StyleSheet.create({
 
   name: {
     fontSize: height * 0.028,
-    //fontSize: 20,
-    //flex: 1,
-    //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
@@ -540,7 +537,7 @@ const styles = StyleSheet.create({
     height: height * 0.25,
     width: width * 0.75,
     position: 'absolute',
-    top: height * 0.4,
+    top: height * 0.33,
     left: width * 0.13,
     borderColor: 'black',
     borderWidth: 2,
@@ -554,7 +551,7 @@ const styles = StyleSheet.create({
   modalReps: {
     width: width * 0.75,
     position: 'absolute',
-    top: height * 0.4,
+    top: height * 0.3,
     left: width * 0.13,
     borderColor: 'black',
     borderWidth: 2,
@@ -590,10 +587,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
-  buttonContainer: {
-    alignSelf: 'center',
-    justifyContent: 'center'
-  },
+
   textButton: {
     color: 'white',
     fontSize: height * 0.02,
@@ -616,24 +610,23 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     height: height * 0.045,
     width: width * 0.20,
+    alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
     fontSize: height * 0.028,
-    // margin: height * 0.005,
     color: '#3399ff',
   },
   containerInputSeriesAndroid: {
-    // backgroundColor: 'white',
     borderRadius: 11,
     height: height * 0.045,
-    width: width * 0.20,
+    width: width * 0.4,
+    alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
     fontSize: height * 0.022,
     color: '#3399ff',
-    // margin: height * 0.005,
+    margin: height * 0.005,
     backgroundColor: 'white',
-    textAlign: 'center'
   },
   containerInputReps: {
     marginTop: height * 0.02,
@@ -644,14 +637,6 @@ const styles = StyleSheet.create({
     height: height * 0.045,
     width: width * 0.15,
   },
-  itemStyle: {
-    fontSize: height * 0.02,
-    height: 75,
-    color: 'black',
-    textAlign: 'center',
-    fontWeight: 'bold'
-  },
-
   modalButtonCancelar: {
     width: width * 0.37,
     height: height * 0.0775,
@@ -671,8 +656,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 22
   },
   favoritos: {
-    //width: 44,
-    //height: 44,
     height: hp("6"),
     width: hp("6"),
     alignSelf: 'center',
@@ -685,12 +668,10 @@ const styles = StyleSheet.create({
   StarImage: {
     width: hp(4),
     height: hp(4),
-    //resizeMode: 'cover',
   },
   elemento: {
     marginTop: 1,
     fontSize: height * 0.02,
-    // color: "#6666ff"
     color: "white"
   },
 })

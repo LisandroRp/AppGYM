@@ -44,8 +44,8 @@ class RutinasTipos extends Component {
         base.traerRutinasPropias(this.okRutinas.bind(this))
     }
   }
-  okRutinas(rutinas){
-    this.setState({ rutinas: rutinas, isLoading: false });
+  okRutinas(rutinasNueva){
+    this.setState({ rutinas: rutinasNueva, isLoading: false });
   }
   
   _storeData = async (id_rutina) => {
@@ -58,7 +58,7 @@ class RutinasTipos extends Component {
   favear(id_rutina) {
     var i = 0
     var fav
-    aux = 0
+    var aux = 0
     var rutinas2 = []
     while (i < this.state.rutinas.length) {
       if (this.state.rutinas[i].id_rutina == id_rutina) {
@@ -105,11 +105,11 @@ class RutinasTipos extends Component {
         return(
         <View style={[styles.NoItemsContainer]}>
             <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+            <View style={styles.NoItems}>
+                        <Text style={styles.NoItemsText}>Ups! {"\n"} No hay ninguna Rutina Propia</Text>
+                    </View>
                     <View style={styles.NoItemsImageContainer}>
                         <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
-                    </View>
-                    <View style={styles.NoItems}>
-                        <Text style={styles.NoItemsText}>Ups! {"\n"} No hay ninguna Rutina Propia</Text>
                     </View>
                     <AdMobBanner
           style={styles.bottomBanner}
@@ -201,7 +201,6 @@ NoItemsImageContainer: {
     backgroundColor: 'black',
     borderWidth: 4,
     borderRadius: 10,
-    marginTop: hp(8)
 },
 
 NoItemsLogo: {
@@ -221,7 +220,7 @@ NoItems: {
   bottomBanner: {
     position: "absolute",
     bottom: 0,
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
   contentList: {
     flex: 1,
@@ -237,15 +236,12 @@ NoItems: {
   },
   cardContent: {
     marginLeft: height * 0.028,
-    //marginTop: 10,
     paddingRight: 5,
     width: wp("40"),
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   image: {
-    //width: 90,
     width: wp("20"),
-    //height: 90,
     height: hp("11"),
     borderWidth: 2,
     borderColor: "#ebf0f7",
@@ -269,7 +265,7 @@ NoItems: {
     marginTop: height * 0.028,
     backgroundColor: "black",
     padding: 10,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
 
   name: {

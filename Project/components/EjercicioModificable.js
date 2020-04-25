@@ -33,11 +33,14 @@ class EjerciciosNew extends Component {
       ejercicio: {},
       isLoading: true,
       modalGuardarVisible: false,
+      modalBorrarVisible: false,
+      modalExiste: false,
       musculo: "",
       elemento: "",
       nombre: "",
       descripcion: "",
       ejecucion: "",
+      nombres: ''
     };
     this.cargarEjercicio();
   }
@@ -86,6 +89,35 @@ class EjerciciosNew extends Component {
   }
   cancelarEjercicio() {
     this.props.onPressCancelar()
+  }
+  borrarEjercicio(id_ejercicio) {
+
+    this.setModalBorrarVisible(!this.state.modalBorrarVisible)
+    base.estaEjercicioRutina(id_ejercicio, this.okEsta.bind(this))
+    
+  }
+  okEsta(rutina, id_ejercicio){
+    if(rutina.length == 0){
+      base.borrarEjercicio(id_ejercicio, this.okEjercicioBorrado.bind(this))
+    }else{
+      var nombres = ''
+      for(i = 0; i < rutina.length; i++){
+        nombres = nombres + rutina[i].nombre + ' '
+      }
+      this.setModalExisteVisible(true, nombres)
+    }
+  }
+  okEjercicioBorrado(){
+    this.showInterstitial()
+  }
+  setModalGuardarVisible(visible) {
+    this.setState({ modalGuardadVisible: visible });
+  }
+  setModalBorrarVisible(visible) {
+    this.setState({ modalBorrarVisible: visible });
+  }
+  setModalExisteVisible(visible, nombres){
+    this.setState({ modalExiste: visible, nombres: nombres });
   }
   botonGuardar() {
     if (this.state.nombre == "") {
@@ -222,9 +254,9 @@ class EjerciciosNew extends Component {
                   <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder='Ejecucion' placeholderTextColor='black' onChangeText={(ejecucion) => this.setState({ ejecucion })} value={this.state.ejecucion}></TextInput>
 
                   <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
-                    <TouchableOpacity style={styles.guardarButton} onPress={() => { this.cancelarEjercicio() }}>
+                    <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setModalBorrarVisible(!this.state.modalBorrarVisible)}}>
                       <Text style={styles.screenButtonText}>
-                        Cancelar
+                        Borrar
                 </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.guardarButton} onPress={() => { this.botonGuardar() }}>
@@ -258,6 +290,48 @@ class EjerciciosNew extends Component {
                   <Text style={styles.textButton}>Aceptar</Text>
                 </TouchableOpacity>
 
+              </View>
+            </View>
+          </Modal>
+          <Modal
+            animationType="fade"
+            visible={this.state.modalBorrarVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalBorrarVisible: false })}  >
+
+            <View style={styles.modal}>
+              <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
+                <Text style={styles.textButton}>Esta seguro que desea borrar el ejercicio "{this.state.nombre}"</Text>
+              </View>
+              <View style={styles.modal2}>
+
+                <TouchableOpacity onPress={() => { this.setModalBorrarVisible(!this.state.modalBorrarVisible) }} style={styles.modalButtonCancelar}>
+                  <Text style={styles.textButton}>Cancelar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => base.conseguirIdEjercicioParaBorrar(this.state.nombre, this.borrarEjercicio.bind(this))} style={styles.modalButtonAceptar}>
+                  <Text style={styles.textButton}>Aceptar</Text>
+
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+          <Modal
+            animationType="fade"
+            visible={this.state.modalExiste}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalExiste: false })}  >
+
+            <View style={styles.modalExiste}>
+              <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal:  height * 0.05}}>
+                <Text style={styles.textButton}>El ejercicio {this.state.nombre} pertenece a las rutinas: {this.state.nombres} {"\n"}Debe elimnarlos de las rutinas primero</Text>
+              </View>
+              <View style={styles.modal2}>
+
+                <TouchableOpacity onPress={() => this.setState({modalExiste: false})} style={styles.modalExisteButtonAceptar}>
+                  <Text style={styles.textButton}>Aceptar</Text>
+
+                </TouchableOpacity>
               </View>
             </View>
           </Modal>
@@ -345,6 +419,20 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     opacity: .95
   },
+  modalExiste: {
+    height: height * 0.28,
+    width: width * 0.75,
+    position: 'absolute',
+    top: height * 0.4,
+    left: width * 0.13,
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22,
+    opacity: .95
+  },
   modal2: {
     flexDirection: 'row',
     borderColor: 'black',
@@ -379,6 +467,16 @@ const styles = StyleSheet.create({
     borderLeftWidth: 2,
     backgroundColor: 'grey',
     borderBottomRightRadius: 22
+  },
+  modalExisteButtonAceptar: {
+    width: width * 0.74,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+    backgroundColor: 'grey',
+    borderBottomRightRadius: 22,
+    borderBottomLeftRadius: 22
   }
 })
 

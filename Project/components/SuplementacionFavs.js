@@ -89,8 +89,8 @@ class SuplementacionFavs extends Component {
   favear(id_suplemento) {
     var i = 0
     var fav
-    aux = 0
-    suplementos2 = []
+    var aux = 0
+    var suplementos2 = []
     while (i < this.state.suplementos.length) {
       if (this.state.suplementos[i].id_suplemento == id_suplemento) {
         aux = i
@@ -135,11 +135,11 @@ class SuplementacionFavs extends Component {
         return(
         <View style={[styles.NoItemsContainer]}>
             <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+            <View style={styles.NoItems}>
+                        <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Suplementos agregados a tu lista</Text>
+                    </View>
                     <View style={styles.NoItemsImageContainer}>
                         <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
-                    </View>
-                    <View style={styles.NoItems}>
-                        <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Suplementos agregados a tu lista</Text>
                     </View>
                     <AdMobBanner
           style={styles.bottomBanner}
@@ -268,7 +268,6 @@ NoItemsImageContainer: {
     backgroundColor: 'black',
     borderWidth: 4,
     borderRadius: 10,
-    marginTop: hp(5)
 },
 
 NoItemsLogo: {
@@ -296,15 +295,12 @@ NoItems: {
   },
   cardContent: {
     marginLeft: height * 0.028,
-    //marginTop: 10,
     paddingRight: 5,
     width: wp("40"),
     justifyContent: 'center',
   },
   image: {
-    //width: 90,
     width: wp("20"),
-    //height: 90,
     height: hp("11"),
     borderWidth: 2,
     borderColor: "#ebf0f7",
@@ -327,26 +323,22 @@ NoItems: {
     marginTop: height * 0.028,
     backgroundColor: "black",
     padding: 10,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
 
   name: {
     fontSize: height * 0.028,
-    //flex: 1,
-    //alignSelf: 'center',
     color: "#3399ff",
     fontWeight: 'bold'
   },
   marca: {
     fontSize: height * 0.02,
     marginTop: 5,
-    //flex: 1,
-    color: "white",
+    color: "white"
   },
   StarImage: {
     width: hp(5.5),
-    height: hp(5.5),
-    //resizeMode: 'cover',
+    height: hp(5.5)
   },
   ViewEstrella: {
     alignItems: 'center',

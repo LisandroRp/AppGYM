@@ -35,7 +35,6 @@ class Favoritos extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
 
-          <View style={styles.contentList}>
 
             <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas()}>
               <Image style={styles.image} source={ExportadorMenus.Rutinas()} />
@@ -48,8 +47,6 @@ class Favoritos extends Component {
             <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoSuplementos()}>
               <Image style={styles.image} source={ExportadorMenus.Suplementacion()} />
             </TouchableOpacity>
-
-          </View>
                   
         </View>
       );
@@ -62,12 +59,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: "black"
-  },
-  contentList: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding: 2,
   },
   bgImage: {
     flex: 1,
@@ -88,16 +79,7 @@ const styles = StyleSheet.create({
     margin: 1,
     borderWidth: 1.5,
     borderColor: 'black'
-  },
-
-  name: {
-    fontSize: 22,
-    //flex: 1,
-    alignSelf: 'center',
-    color: "#3399ff",
-    fontWeight: 'bold'
-  },
-
+  }
 })
 
 export default Favoritos;
