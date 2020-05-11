@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SearchBar} from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
@@ -16,9 +16,9 @@ import {
   ActivityIndicator,
   Dimensions
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { withNavigation } from 'react-navigation';
-import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
+import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -37,7 +37,7 @@ class SuplementacionTipos extends Component {
   cargarSuplementos = async () => {
     base.traerSuplementos(await this.props.navigation.getParam('tipo_suplementacion'), this.okSuplementos.bind(this))
   }
-  okSuplementos(suplementos){
+  okSuplementos(suplementos) {
     this.setState({
       suplementos: suplementos,
       memory: suplementos,
@@ -86,8 +86,8 @@ class SuplementacionTipos extends Component {
   favear(id_suplemento) {
     var i = 0
     var fav
-    aux = 0
-    suplementos2 = []
+    var aux = 0
+    var suplementos2 = []
     while (i < this.state.suplementos.length) {
       if (this.state.suplementos[i].id_suplemento == id_suplemento) {
         aux = i
@@ -97,24 +97,47 @@ class SuplementacionTipos extends Component {
     }
     if (suplementos2[aux].favoritos) {
       suplementos2[aux].favoritos = 0
-      fav= 0
+      fav = 0
     } else {
       suplementos2[aux].favoritos = 1
-      fav= 1
+      fav = 1
     }
-    base.favoritearSuplemento(id_suplemento, fav, this.okFavorito.bind(this))  
+    base.favoritearSuplemento(id_suplemento, fav, this.okFavorito.bind(this))
   }
 
   okFavorito() {
     this.cargarSuplementos()
   }
 
-  favoritos(favoritos){
-    if(favoritos){
+  favoritos(favoritos) {
+    if (favoritos) {
       return ExportadorLogos.traerEstrella(true)
     }
-    else{
+    else {
       return ExportadorLogos.traerEstrella(false)
+    }
+  }
+  favoritosLabel(favoritos) {
+    if (favoritos) {
+      return "Favorito"
+    }
+    else {
+      return "No Favorito"
+    }
+  }
+  favoritosHint(favoritos) {
+    if (favoritos) {
+      return "Sacar de Favoritos este Suplemento"
+    }
+    else {
+      return "Agregar este Suplemento a favoritos"
+    }
+  }
+  marginSize(item){
+    if(item.id_suplemento !=  this.state.suplementos[this.state.suplementos.length-1].id_suplemento){
+      return {marginTop: height * 0.02}
+    }else{
+      return {marginBottom: height * 0.02, marginTop: height * 0.02}
     }
   }
 
@@ -143,47 +166,50 @@ class SuplementacionTipos extends Component {
               searchIcon={{ color: 'black' }}
             />
           </View>
-            <FlatList
-              style={styles.contentList}
-              columnWrapperStyle={styles.listContainer}
-              data={this.state.suplementos.sort((a,b) => a.nombre.localeCompare(b.nombre))}
-              initialNumToRender={50}
-              keyExtractor= {(item) => {
-                return item.id_suplemento;
-              }}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre)}>
-                    <View style={{ flexDirection: "row" }} >
-                      <Image style={styles.image} source={ExportadorSuplementacion.queSuplementacion(item.tipo)} />
-                      <View style={styles.cardContent}>
-                        <Text style={styles.name}>{item.nombre}</Text>
-                        <Text style={styles.marca}>{item.marca}</Text>
-                      </View>
-                      <View style={styles.ViewEstrella} >
-                        <TouchableOpacity onPress={() => { this.favear(item.id_suplemento) }}>
-                          <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
-                        </TouchableOpacity>
-                      </View>
+          <FlatList
+            style={styles.contentList}
+            columnWrapperStyle={styles.listContainer}
+            data={this.state.suplementos.sort((a, b) => a.nombre.localeCompare(b.nombre))}
+            initialNumToRender={50}
+            keyExtractor={(item) => {
+              return item.id_suplemento;
+            }}
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre)}>
+                  <View style={{ flexDirection: "row" }} >
+                    <Image style={styles.image} source={ExportadorSuplementacion.queSuplementacion(item.tipo)} />
+                    <View style={styles.cardContent}>
+                      <Text style={styles.name}>{item.nombre}</Text>
+                      <Text style={styles.marca}>{item.marca}</Text>
                     </View>
-                  </TouchableOpacity>
-                )
-              }
-              } />
-              <AdMobBanner
-          style={styles.bottomBanner}
-          bannerSize="fullBanner"
-          adUnitID= {ExportadorAds.Banner()}
-          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
-          onDidFailToReceiveAdWithError={err => {
-            console.log(err)
-          }}
-          onAdViewDidReceiveAd={() => {
-            console.log("Ad Recieved");
-          }}
-          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+                    <View style={styles.ViewEstrella} >
+                      <TouchableOpacity onPress={() => { this.favear(item.id_suplemento) }}>
+                        <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              )
+            }
+            } />
+            <View style={styles.bannerContainer}></View>
+          <AdMobBanner
+            accessible={true}
+            accessibilityLabel={"Add Banner"}
+            accessibilityHint={"Navega al Anuncio"}
+            style={styles.bottomBanner}
+            adUnitID={ExportadorAds.Banner()}
+            useEffect={setTestDeviceIDAsync('EMULATOR')}
+            onDidFailToReceiveAdWithError={err => {
+              console.log(err)
+            }}
+            onAdViewDidReceiveAd={() => {
+              console.log("Ad Recieved");
+            }}
+            adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
           //didFailToReceiveAdWithError={this.bannerError()}
-        />
+          />
         </View>
       );
     }
@@ -196,10 +222,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "black"
   },
+  bannerContainer: {
+    height: height * 0.08,
+    backgroundColor: 'black',
+  },
   bottomBanner: {
     position: "absolute",
     bottom: 0,
-    alignSelf: 'center',
+    height: height * 0.08
   },
   contentList: {
     flex: 1,

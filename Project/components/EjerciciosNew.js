@@ -333,7 +333,6 @@ const styles = StyleSheet.create({
     height: height * 0.0775,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'grey',
     borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
@@ -343,7 +342,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: "center",
     borderLeftWidth: 2,
-    backgroundColor: 'grey',
     borderBottomRightRadius: 22
   }
 })

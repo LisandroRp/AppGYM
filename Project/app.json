@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Gualter React",
+    "name": "Morgan",
     "icon": "./assets/Logo.png",
     "slug": "Project",
     "privacy": "unlisted",
@@ -16,17 +16,19 @@
     "ios": {
       "bundleIdentifier": "AppGym.com",
       "supportsTablet": true,
-      "config" : {
+      "config": {
         "googleMobileAdsAppId": "ca-app-pub-4175223710505457~5097582425"
       }
     },
     "android": {
       "package": "com.morgan.myapp",
-      "config" : {
+      "config": {
         "googleMobileAdsAppId": "ca-app-pub-4175223710505457~3729139362"
-      }
+      },
+      "permissions": [],
+      "versionCode": 4
     },
-    "version": "1.0.0",
+    "version": "2.0.1",
     "orientation": "portrait",
     "splash": {
       "image": "./assets/splashLogo.png",

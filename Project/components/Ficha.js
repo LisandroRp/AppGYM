@@ -42,20 +42,14 @@ class Ficha extends Component {
         }
         catch (e) {
             console.log(e);
+            this.crearPlan();
         }
     }
     componentDidMount() {
         AdMobRewarded.addEventListener('rewardedVideoDidRewardUser', () => this.crearPlan()
         );
     }
-
-    crearPlan() {
-        calorias = {
-            caloriasBase: 0,
-            caloriasEjercicio: 0,
-            caloriasTotal: 0
-        }
-
+    chequearInfo() {
         if (this.state.peso == 0) {
             alert("Ingresa un Peso")
             return
@@ -80,6 +74,15 @@ class Ficha extends Component {
             alert("Seleccionar Su Nivel de Experiencia")
             return
         }
+        this.setState({ modalVisible: true })
+    }
+    crearPlan() {
+        var calorias = {
+            caloriasBase: 0,
+            caloriasEjercicio: 0,
+            caloriasTotal: 0
+        }
+
         if (this.state.genero == 'Masculino') {
 
             calorias.caloriasBase = ((10 * parseInt(this.state.peso)) + (6.25 * parseInt(this.state.altura)) - (5 * parseInt(this.state.edad)) + 5)
@@ -227,8 +230,9 @@ class Ficha extends Component {
                                             width: wp("44"),
                                             height: hp("5.5"),
                                             marginBottom: height * 0.028,
-                                            alignItems: 'center',
                                             alignSelf: 'center',
+                                            justifyContent: 'center',
+                                            textAlign: 'center',
                                             fontWeight: 'bold',
                                             fontSize: height * 0.02,
                                             color: "black",
@@ -274,8 +278,9 @@ class Ficha extends Component {
                                             width: wp("22"),
                                             height: hp("5.5"),
                                             marginBottom: height * 0.028,
-                                            alignItems: 'center',
                                             alignSelf: 'center',
+                                            justifyContent: 'center',
+                                            textAlign: 'center',
                                             fontWeight: 'bold',
                                             fontSize: height * 0.02,
                                             color: "black",
@@ -319,8 +324,9 @@ class Ficha extends Component {
                                         width: wp("70"),
                                         height: hp("5.5"),
                                         margin: height * 0.028,
-                                        alignItems: 'center',
                                         alignSelf: 'center',
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
                                         fontWeight: 'bold',
                                         fontSize: height * 0.02,
                                         color: "black",
@@ -367,8 +373,9 @@ class Ficha extends Component {
                                         width: wp("70"),
                                         height: hp("5.5"),
                                         margin: height * 0.028,
-                                        alignItems: 'center',
                                         alignSelf: 'center',
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
                                         fontWeight: 'bold',
                                         fontSize: height * 0.02,
                                         color: "black",
@@ -389,7 +396,7 @@ class Ficha extends Component {
                             </View>
 
 
-                            <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalVisible: true }) }}>
+                            <TouchableOpacity style={styles.guardarButton} onPress={() => { this.chequearInfo() }}>
                                 <Text style={{ margin: height * 0.02, fontWeight: 'bold', fontSize: height * 0.025 }}>
                                     Actualizar
                                 </Text>
@@ -534,7 +541,6 @@ const styles = StyleSheet.create({
         height: height * 0.0775,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'grey',
         borderBottomLeftRadius: 22
     },
     modalButtonAceptar: {
@@ -544,7 +550,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         textAlign: "center",
         borderLeftWidth: 2,
-        backgroundColor: 'grey',
         borderBottomRightRadius: 22
     }
 })

@@ -55,10 +55,6 @@ class RutinaModificable extends Component {
     this._retrieveModificable()
   }
 
-  componentDidMount(){
-    AdMobInterstitial.addEventListener("interstitialDidClose", () => this.props.onPressActualizar(this.props.navigation.getParam("id_rutina"), this.props.navigation.getParam("nombre_rutina")));
-}
-
   showInterstitial = async () => {
     AdMobInterstitial.setAdUnitID(ExportadorAds.Interracial()); // Test ID, Replace with your-admob-unit-id
     
@@ -69,6 +65,17 @@ class RutinaModificable extends Component {
     catch(e){
       console.log(e);
     }
+}
+showInterstitialTiempo = async () => {
+  AdMobInterstitial.setAdUnitID(ExportadorAds.InterracialTiempo()); // Test ID, Replace with your-admob-unit-id
+  
+  try{
+    await AdMobInterstitial.requestAdAsync();
+    await AdMobInterstitial.showAdAsync();
+  }
+  catch(e){
+    console.log(e);
+  }
 }
   _retrieveModificable = async () => {
     try {
@@ -84,6 +91,7 @@ class RutinaModificable extends Component {
     }
   }
   _retrieveData = async () => {
+    this.showInterstitialTiempo()
     try {
       const value = await AsyncStorage.getItem('rutina');
 
@@ -106,7 +114,7 @@ class RutinaModificable extends Component {
           //this.setState({ showAlert: true })
         }
       } else {
-        simple = JSON.parse(value)[0]
+        var simple = JSON.parse(value)[0]
         if (this.yaEsta(simple)) {
           this.setState({ isLoading: true })
           simple.combinado = null
@@ -140,7 +148,6 @@ class RutinaModificable extends Component {
   touch(dia) {
     if (this.diaAnterior(dia) || dia == 1) {
       this.setState({ ultimoDia: dia, modalTipoEjercicioTodoVisible: true })
-      //this.props.onPressGo(dia, 'modificar')
     } else {
       alert('Debe agregar ejercicios en el dia ' + (dia - 1) + ' para poder agregar los en este dia')
     }
@@ -347,7 +354,6 @@ class RutinaModificable extends Component {
     var i = 0
     var flag = 0
     var valorPosicionBorrada = 0
-    var posicionBorrada
     while (i < this.state.rutina.length) {
       if (id_ejercicio == this.state.rutina[i].id_ejercicio && dia == this.state.rutina[i].dia) {
         if(combinado == null)
@@ -387,7 +393,7 @@ class RutinaModificable extends Component {
   guardarRutina() {
     this.setState({ modalGuardarVisible: false })
     var aux = 0
-    rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/Ejercicios/PECHO.png'), dias: '', favoritos: 1, rutina: [] }
+    var rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/Ejercicios/PECHO.png'), dias: '', favoritos: 1, rutina: [] }
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].dia > aux) {
         aux = this.state.rutina[i].dia
@@ -411,6 +417,7 @@ class RutinaModificable extends Component {
   }
   okRutinaActualizada() {
     this.showInterstitial()
+    this.props.onPressCancelar();
   }
   borrarRutina(id_rutina) {
     this.setModalGuardarVisible(!this.state.modalGuardarVisible)
@@ -939,7 +946,6 @@ const styles = StyleSheet.create({
     height: height * 0.0775,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'grey',
     borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
@@ -949,7 +955,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: "center",
     borderLeftWidth: 2,
-    backgroundColor: 'grey',
     borderBottomRightRadius: 22
   }
 })

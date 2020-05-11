@@ -35,13 +35,12 @@ class Favoritos extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
 
+            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoEjercicios()}>
+              <Image style={styles.image} source={ExportadorMenus.Ejercicios()} />
+            </TouchableOpacity>
 
             <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas()}>
               <Image style={styles.image} source={ExportadorMenus.Rutinas()} />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoEjercicios()}>
-              <Image style={styles.image} source={ExportadorMenus.Ejercicios()} />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoSuplementos()}>
@@ -58,7 +57,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: "black"
+    backgroundColor: "grey"
   },
   bgImage: {
     flex: 1,
@@ -76,7 +75,8 @@ const styles = StyleSheet.create({
   image: {
     height: hp(29.5),
     width: wp(99),
-    margin: 1,
+    marginVertical: hp(0.2),
+    marginHorizontal: wp(0.1),
     borderWidth: 1.5,
     borderColor: 'black'
   }

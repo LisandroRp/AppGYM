@@ -21,7 +21,7 @@ class Ejercicios extends Component {
       userSelected: [],
       musculos: [{id:1,musculo: 'Pecho', imagen: require('./Fotos/Ejercicios/PECHO.png')},
       {id:2,musculo: 'Espalda', imagen: require('./Fotos/Ejercicios/ESPALDA.png')},
-      {id:3,"musculo": 'Hombros',"imagen": require('./Fotos/Ejercicios/HOMBROS.png')},
+      {id:3,musculo: 'Hombros',imagen: require('./Fotos/Ejercicios/HOMBROS.png')},
       {id:4,musculo: 'Piernas',imagen: require('./Fotos/Ejercicios/PIERNAS.png')},
       {id:5,musculo: 'Biceps',imagen: require('./Fotos/Ejercicios/BICEPS.png')},
       {id:6,musculo: 'Triceps',imagen: require('./Fotos/Ejercicios/TRICEPS.png')},
@@ -55,8 +55,12 @@ class Ejercicios extends Component {
             }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity onPress={() => this.props.onPressGo(item.musculo)}>
-                <Image style={styles.image} source={item.imagen} />
+              <TouchableOpacity
+              accessible={true}
+              accessibilityLabel={item.musculo}
+              accessibilityHint={"Navega a los Ejercicios de " + item.musculo}
+               onPress={() => this.props.onPressGo(item.musculo)}>
+                <Image style={styles.image} source={item.imagen}/>
               </TouchableOpacity>
             )
           }} />

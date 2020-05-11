@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
   image: {
     width: wp(49),
     height: hp(29.5),
-    margin: 1,
+    marginVertical: hp(0.2),
+    marginHorizontal: wp(0.1),
     borderWidth: 1.5,
     borderColor: 'black'
   },

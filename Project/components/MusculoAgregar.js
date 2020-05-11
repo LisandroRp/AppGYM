@@ -89,6 +89,7 @@ class MusculoAgregar extends Component {
       isLoading: false
     });
   }
+  
   queEstrella() {
     if (this.state.favoritos == false) {
       return ExportadorLogos.traerEstrellaBlanca(true)
@@ -97,7 +98,7 @@ class MusculoAgregar extends Component {
     }
   }
   guardarEjercicio() {
-    i = 0;
+    var i = 0;
     if (this.state.repeticiones.length != 0) {
       while (i < this.state.repeticiones.length) {
         if (this.state.repeticiones[i] == undefined || this.state.repeticiones[i] == "") {
@@ -176,6 +177,7 @@ class MusculoAgregar extends Component {
     this.state.rutinaNueva.push(terminada)
     this.props.onPressSave(this.state.rutinaNueva, this.state.tipo, this.state.ultimaPos)
   }
+
   setModalSeriesVisible(visible, id_ejercicio, nombre, musculo) {
     this.setState({ modalSeriesVisible: visible, modalRepeticionesVisible: !visible, modalTiempoVisible: !visible, nombreEjercicio: nombre, id_ejercicio: id_ejercicio, musculoEjercicio: musculo });
   }
@@ -251,7 +253,14 @@ class MusculoAgregar extends Component {
     this.setState({ ejercicios: filterDeEjercicios });
     this.setState({ value })
   };
-
+  marginSize(item){
+    if(item.id_ejercicio !=  this.state.ejercicios[this.state.ejercicios.length-1].id_ejercicio){
+      
+      return {marginTop: height * 0.028}
+    }else{
+      return {marginBottom: height * 0.028, marginTop: height * 0.028}
+    }
+  }
   render() {
     if (this.state.isLoading) {
       return (
@@ -290,7 +299,7 @@ class MusculoAgregar extends Component {
               }}
               renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion)}>
+                  <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion)}>
                     <View style={{ flexDirection: "row" }} >
                       <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.musculo)} />
                       <View style={styles.cardContent}>
@@ -308,6 +317,7 @@ class MusculoAgregar extends Component {
               }
               } />
           </ScrollView>
+          <View style={styles.bannerContainer}></View>
           <Modal
             animationType="fade"
             visible={this.state.modalSeriesVisible}
@@ -316,29 +326,29 @@ class MusculoAgregar extends Component {
             <View style={styles.modalSeries}>
               <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                 <Text style={styles.modalTextSeries}>Selecione la cantidad de series</Text>
-                  <RNPickerSelect
-                    useNativeAndroidPickerStyle={false}
-                    placeholder={{
-                      label: 'Series',
-                      value: '0'
-                    }}
-                    placeholderTextColor="grey"
-                    style={{
-                      inputIOS: styles.containerInputSeriesIOS,
-                      inputAndroid: styles.containerInputSeriesAndroid
-                    }}
-                    onValueChange={(value) => this.setState({ series: value })}
-                    items={[
-                      { label: '1', value: '1' },
-                      { label: '2', value: '2' },
-                      { label: '3', value: '3' },
-                      { label: '4', value: '4' },
-                      { label: '5', value: '5' },
-                      { label: '6', value: '6' },
-                      { label: '7', value: '7' },
-                      { label: '8', value: '8' },
-                    ]}
-                  />
+                <RNPickerSelect
+                  useNativeAndroidPickerStyle={false}
+                  placeholder={{
+                    label: 'Series',
+                    value: '0'
+                  }}
+                  placeholderTextColor="grey"
+                  style={{
+                    inputIOS: styles.containerInputSeriesIOS,
+                    inputAndroid: styles.containerInputSeriesAndroid
+                  }}
+                  onValueChange={(value) => this.setState({ series: value })}
+                  items={[
+                    { label: '1', value: '1' },
+                    { label: '2', value: '2' },
+                    { label: '3', value: '3' },
+                    { label: '4', value: '4' },
+                    { label: '5', value: '5' },
+                    { label: '6', value: '6' },
+                    { label: '7', value: '7' },
+                    { label: '8', value: '8' },
+                  ]}
+                />
               </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={styles.modalButtonCancelar}>
@@ -419,8 +429,10 @@ class MusculoAgregar extends Component {
             </View>
           </Modal>
           <AdMobBanner
+            accessible={true}
+            accessibilityLabel={"Add Banner"}
+            accessibilityHint={"Navega al Anuncio"}
             style={styles.bottomBanner}
-            bannerSize="fullBanner"
             adUnitID={ExportadorAds.Banner()}
             onDidFailToReceiveAdWithError={err => {
               console.log(err)
@@ -455,15 +467,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: height * 0.02
   },
+  bannerContainer: {
+    height: height * 0.08,
+    backgroundColor: 'black',
+  },
   bottomBanner: {
     position: "absolute",
     bottom: 0,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    height: height * 0.08,
   },
   textInput: {
     color: '#3399ff',
     fontSize: height * 0.028,
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
   textButton: {
     color: 'white',
@@ -615,6 +632,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: height * 0.028,
     color: '#3399ff',
+    marginTop: height * 0.019
   },
   containerInputSeriesAndroid: {
     borderRadius: 11,
@@ -626,7 +644,7 @@ const styles = StyleSheet.create({
     fontSize: height * 0.022,
     color: '#3399ff',
     margin: height * 0.005,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   containerInputReps: {
     marginTop: height * 0.02,
@@ -634,6 +652,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(0.8),
     borderRadius: 11,
     backgroundColor: 'white',
+    textAlign: 'center',
     height: height * 0.045,
     width: width * 0.15,
   },
@@ -642,7 +661,6 @@ const styles = StyleSheet.create({
     height: height * 0.0775,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'grey',
     borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
@@ -652,7 +670,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: "center",
     borderLeftWidth: 2,
-    backgroundColor: 'grey',
     borderBottomRightRadius: 22
   },
   favoritos: {

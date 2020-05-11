@@ -46,6 +46,13 @@ class EjercicioEspecifico extends Component {
       isLoading: false,
     });
   }
+  marginSize(item){
+    if(item.id_suplemento !=  this.state.suplementos[this.state.suplementos.length-1].id_suplemento){
+      return {marginTop: height * 0.02}
+    }else{
+      return {marginBottom: height * 0.02, marginTop: height * 0.02}
+    }
+  }
 
   render() {
     if (this.state.isLoading) {
@@ -82,9 +89,9 @@ class EjercicioEspecifico extends Component {
               </DropDownItem>
             </View>
           </ScrollView>
+          <View style={styles.bannerContainer}></View>
           <AdMobBanner
           style={styles.bottomBanner}
-          bannerSize="fullBanner"
           adUnitID={ExportadorAds.Banner()}
           //useEffect  = {setTestDeviceIDAsync('EMULATOR')}
           onDidFailToReceiveAdWithError={err => {
@@ -123,9 +130,12 @@ class EjercicioEspecifico extends Component {
             </DropDownItem>
           </View>
         </ScrollView>
+        <View style={styles.bannerContainer}></View>
         <AdMobBanner
+          accessible={true}
+          accessibilityLabel={"Add Banner"}
+          accessibilityHint={"Navega al Anuncio"}
           style={styles.bottomBanner}
-          bannerSize="fullBanner"
           adUnitID={ExportadorAds.Banner()}
           //useEffect  = {setTestDeviceIDAsync('EMULATOR')}
           onDidFailToReceiveAdWithError={err => {
@@ -150,10 +160,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "black"
   },
+  bannerContainer: {
+    height: height * 0.08,
+    backgroundColor: 'black'
+  },
   bottomBanner: {
     position: "absolute",
     bottom: 0,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    height: height * 0.08,
   },
   bgImage: {
     flex: 1,

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import base from './GenerarBase';
-import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorFondo from './Fotos/ExportadorFondo';
+import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion';
 import {
   StyleSheet,
   Text,
@@ -16,7 +17,7 @@ import {
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
-import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
+import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -84,7 +85,7 @@ class SuplementacionFavs extends Component {
   };
 
   modalVisible(id, nombre) {
-    this.setState({id_suplemento: id, nombre: nombre, modalVisible: true })
+    this.setState({ id_suplemento: id, nombre: nombre, modalVisible: true })
   }
   favear(id_suplemento) {
     var i = 0
@@ -105,7 +106,7 @@ class SuplementacionFavs extends Component {
       suplementos2[aux].favoritos = 1
       fav = 1
     }
-    this.setState({modalVisible: false})
+    this.setState({ modalVisible: false })
     base.favoritearSuplemento(id_suplemento, fav, this.okFavorito.bind(this))
   }
 
@@ -121,6 +122,13 @@ class SuplementacionFavs extends Component {
       return ExportadorLogos.traerEstrella(false)
     }
   }
+  marginSize(item) {
+    if (item.id_suplemento != this.state.suplementos[this.state.suplementos.length - 1].id_suplemento) {
+      return { marginTop: height * 0.02 }
+    } else {
+      return { marginBottom: height * 0.02, marginTop: height * 0.02 }
+    }
+  }
 
   render() {
     if (this.state.isLoading) {
@@ -131,49 +139,51 @@ class SuplementacionFavs extends Component {
         </View>
       );
     } else {
-      if(this.state.suplementos.length == 0){
-        return(
-        <View style={[styles.NoItemsContainer]}>
+      if (this.state.suplementos.length == 0) {
+        return (
+          <View style={[styles.NoItemsContainer]}>
             <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
             <View style={styles.NoItems}>
-                        <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Suplementos agregados a tu lista</Text>
-                    </View>
-                    <View style={styles.NoItemsImageContainer}>
-                        <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
-                    </View>
-                    <AdMobBanner
-          style={styles.bottomBanner}
-          bannerSize="fullBanner"
-          adUnitID= {ExportadorAds.Banner()}
-          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
-          onDidFailToReceiveAdWithError={err => {
-            console.log(err)
-          }}
-          onAdViewDidReceiveAd={() => {
-            console.log("Ad Recieved");
-          }}
-          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
-          //didFailToReceiveAdWithError={this.bannerError()}
-        />
-                </View>      
+              <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Suplementos agregados a tu lista</Text>
+            </View>
+            <View style={styles.NoItemsImageContainer}>
+              <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
+            </View>
+            <AdMobBanner
+              accessible={true}
+              accessibilityLabel={"Add Banner"}
+              accessibilityHint={"Navega al Anuncio"}
+              style={styles.bottomBanner}
+              adUnitID={ExportadorAds.Banner()}
+              useEffect={setTestDeviceIDAsync('EMULATOR')}
+              onDidFailToReceiveAdWithError={err => {
+                console.log(err)
+              }}
+              onAdViewDidReceiveAd={() => {
+                console.log("Ad Recieved");
+              }}
+              adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+            //didFailToReceiveAdWithError={this.bannerError()}
+            />
+          </View>
         );
-    }else{
-      return (
-        <View style={styles.container}>
-          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+      } else {
+        return (
+          <View style={styles.container}>
+            <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
             <FlatList
               style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
-              data={this.state.suplementos.sort((a,b) => a.nombre.localeCompare(b.nombre))}
+              data={this.state.suplementos.sort((a, b) => a.nombre.localeCompare(b.nombre))}
               initialNumToRender={50}
               keyExtractor={(item) => {
                 return item.id_suplemento.toString();
               }}
               renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre)}>
+                  <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre)}>
                     <View style={{ flexDirection: "row" }} >
-                      <Image style={styles.image} source={{ uri: item.imagen }} />
+                      <Image style={styles.image} source={ExportadorSuplementacion.queSuplementacion(item.tipo)} />
                       <View style={styles.cardContent}>
                         <Text style={styles.name}>{item.nombre}</Text>
                         <Text style={styles.marca}>{item.marca}</Text>
@@ -188,6 +198,7 @@ class SuplementacionFavs extends Component {
                 )
               }
               } />
+            <View style={styles.bannerContainer}></View>
             <Modal
               animationType="fade"
               visible={this.state.modalVisible}
@@ -212,24 +223,23 @@ class SuplementacionFavs extends Component {
                 </View>
               </View>
             </Modal>
-            
+
             <AdMobBanner
-          style={styles.bottomBanner}
-          bannerSize="fullBanner"
-          adUnitID= {ExportadorAds.Banner()}
-          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
-          onDidFailToReceiveAdWithError={err => {
-            console.log(err)
-          }}
-          onAdViewDidReceiveAd={() => {
-            console.log("Ad Recieved");
-          }}
-          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
-          //didFailToReceiveAdWithError={this.bannerError()}
-        />
-        </View>
-      );
-        }
+              style={styles.bottomBanner}
+              adUnitID={ExportadorAds.Banner()}
+              useEffect={setTestDeviceIDAsync('EMULATOR')}
+              onDidFailToReceiveAdWithError={err => {
+                console.log(err)
+              }}
+              onAdViewDidReceiveAd={() => {
+                console.log("Ad Recieved");
+              }}
+              adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+            //didFailToReceiveAdWithError={this.bannerError()}
+            />
+          </View>
+        );
+      }
     }
   }
 }
@@ -240,50 +250,54 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "black"
   },
+  bannerContainer: {
+    height: height * 0.08,
+    backgroundColor: 'black',
+  },
   bottomBanner: {
     position: "absolute",
     bottom: 0,
-    alignSelf: 'center',
+    height: height * 0.08
   },
   contentList: {
     flex: 1,
   },
   NoItemsContainer: {
+    backgroundColor: 'grey',
     flex: 1,
-    alignItems: "center",
-    backgroundColor: "grey"
-},
-NoItemsText: {
+  },
+  NoItemsText: {
     alignSelf: "center",
-    fontSize: height *0.028,
+    fontSize: height * 0.028,
     color: "#3399ff",
     textAlign: 'center'
-},
-NoItemsImageContainer: {
+  },
+  NoItemsImageContainer: {
     height: height * 0.55,
     width: height * 0.50,
-    margin: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginBottom: height * 0.028,
+    marginTop: height * 0.028,
+    alignSelf: "center",
     backgroundColor: 'black',
     borderWidth: 4,
     borderRadius: 10,
-},
+  },
 
-NoItemsLogo: {
+  NoItemsLogo: {
     height: height * 0.45,
     width: height * 0.45,
+    alignSelf: "center",
     marginTop: hp(9),
     marginBottom: hp(6.6)
-},
-NoItems: {
+  },
+  NoItems: {
     backgroundColor: "black",
     padding: 10,
     borderRadius: 10,
     opacity: .95,
     marginHorizontal: wp(5),
-    marginVertical: hp(3)
-},
+    marginTop: height * 0.028
+  },
   bgImage: {
     flex: 1,
     resizeMode,
@@ -320,7 +334,6 @@ NoItems: {
 
     marginLeft: height * 0.028,
     marginRight: height * 0.028,
-    marginTop: height * 0.028,
     backgroundColor: "black",
     padding: 10,
     flexDirection: 'row'
@@ -345,56 +358,54 @@ NoItems: {
     justifyContent: "center",
     paddingHorizontal: wp("5")
   },
-//MODAAAAL
-modal: {
-  height: height * 0.22,
-  width: width * 0.75,
-  position: 'absolute',
-  top: height * 0.4,
-  left: width * 0.13,
-  borderColor: 'black',
-  borderWidth: 2,
-  backgroundColor: 'grey',
-  shadowColor: 'black',
-  shadowOpacity: 5.0,
-  borderRadius: 22,
-  opacity: .95
-},
-modal2: {
-  flexDirection: 'row',
-  borderColor: 'black',
-  borderTopWidth: 2,
-  width: width * 0.74,
-  height: height * 0.08,
-  position: 'absolute',
-  bottom: 0,
-  opacity: .95
-},
-textButton: {
-  color: 'white',
-  fontSize: height * 0.02,
-  alignSelf: 'center',
-  textAlign: 'center',
-  fontWeight: 'bold'
-},
-modalButtonCancelar: {
-  width: width * 0.37,
-  height: height * 0.0775,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'grey',
-  borderRadius: 22
-},
-modalButtonAceptar: {
-  width: width * 0.37,
-  height: height * 0.0775,
-  justifyContent: 'center',
-  alignItems: 'center',
-  textAlign: "center",
-  borderLeftWidth: 2,
-  backgroundColor: 'grey',
-  borderBottomRightRadius: 22
-}
+  //MODAAAAL
+  modal: {
+    height: height * 0.22,
+    width: width * 0.75,
+    position: 'absolute',
+    top: height * 0.4,
+    left: width * 0.13,
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22,
+    opacity: .95
+  },
+  modal2: {
+    flexDirection: 'row',
+    borderColor: 'black',
+    borderTopWidth: 2,
+    width: width * 0.74,
+    height: height * 0.08,
+    position: 'absolute',
+    bottom: 0,
+    opacity: .95
+  },
+  textButton: {
+    color: 'white',
+    fontSize: height * 0.02,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  modalButtonCancelar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 22
+  },
+  modalButtonAceptar: {
+    width: width * 0.37,
+    height: height * 0.0775,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+    borderLeftWidth: 2,
+    borderBottomRightRadius: 22
+  }
 })
 
 export default SuplementacionFavs;

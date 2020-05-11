@@ -18,7 +18,7 @@ import {
 import DropDownItem from 'react-native-drop-down-item';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 var { height, width } = Dimensions.get('window');
-import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
+import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 function createData(item) {
   return {
@@ -79,6 +79,15 @@ class RutinaEspecifica extends Component {
     this.setState({ diasTotal: cantidad, isLoading: false })
   }
 
+  marginSize(item){
+    if(item !=  this.state.diasTotal[this.state.diasTotal.length-1]){
+      
+      return {marginTop: height * 0.02}
+    }else{
+      return {marginBottom: height * 0.02, marginTop: height * 0.02}
+    }
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -107,7 +116,7 @@ class RutinaEspecifica extends Component {
                 var aux = item
                 var contadorCobinadosFlatlist = false
                 return (
-                  <View style={styles.cuadraditos}>
+                  <View style={[this.marginSize(item), styles.cuadraditos]}>
                     <DropDownItem key={item} contentVisible={false}
                       header={
                         <Text style={styles.detalleGenresTitles}>
@@ -240,20 +249,24 @@ class RutinaEspecifica extends Component {
                 )
               }} />
           </ScrollView>
+          <View style={styles.bannerContainer}>
           <AdMobBanner
-          style={styles.bottomBanner}
-          bannerSize="fullBanner"
-          adUnitID= {ExportadorAds.Banner()}
-          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
-          onDidFailToReceiveAdWithError={err => {
-            console.log(err)
-          }}
-          onAdViewDidReceiveAd={() => {
-            console.log("Ad Recieved");
-          }}
-          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+            accessible={true}
+            accessibilityLabel={"Add Banner"}
+            accessibilityHint={"Navega al Anuncio"}
+            style={styles.bottomBanner}
+            adUnitID={ExportadorAds.Banner()}
+            useEffect={setTestDeviceIDAsync('EMULATOR')}
+            onDidFailToReceiveAdWithError={err => {
+              console.log(err)
+            }}
+            onAdViewDidReceiveAd={() => {
+              console.log("Ad Recieved");
+            }}
+            adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
           //didFailToReceiveAdWithError={this.bannerError()}
-        />
+          />
+          </View>
         </View>
       );
     }
@@ -266,10 +279,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "grey"
   },
+  bannerContainer: {
+    height: height * 0.08,
+    backgroundColor: 'black',
+  },
   bottomBanner: {
     position: "absolute",
     bottom: 0,
     alignSelf: 'center',
+    height: height * 0.08,
+    width: width
   },
   imageContainer: {
     height: height * 0.40,
@@ -310,8 +329,6 @@ const styles = StyleSheet.create({
   },
   cuadraditos: {
     backgroundColor: 'black',
-    marginBottom: 5,
-    marginTop: 5,
     marginHorizontal: 10, //paddingBottom: 10
   },
   cuadraditosDeAdentro: {
@@ -342,12 +359,12 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     alignSelf: 'stretch',
     width: Dimensions.get('window').width * 0.88
-  },nombreEjercicio: {
+  }, nombreEjercicio: {
     fontWeight: 'bold',
     fontSize: height * 0.021,
     marginBottom: wp("1")
   },
-  subsEjercicio:{
+  subsEjercicio: {
     fontSize: height * 0.019,
   }
 })

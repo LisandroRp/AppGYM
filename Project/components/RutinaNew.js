@@ -54,12 +54,8 @@ class RutinaNew extends Component {
     this._retrieveData()
   }
 
-  componentDidMount(){
-    AdMobInterstitial.addEventListener("interstitialDidClose", () => this.props.onPressCancelar());
-}
-
   showInterstitial = async () => {
-    AdMobInterstitial.setAdUnitID(ExportadorAds.Interracial()); // Test ID, Replace with your-admob-unit-id
+    AdMobInterstitial.setAdUnitID(ExportadorAds.InterracialTiempo()); // Test ID, Replace with your-admob-unit-id
     
     try{
       await AdMobInterstitial.requestAdAsync();
@@ -69,8 +65,20 @@ class RutinaNew extends Component {
       console.log(e);
     }
 }
+showInterstitialTiempo = async () => {
+  AdMobInterstitial.setAdUnitID(ExportadorAds.InterracialTiempo()); // Test ID, Replace with your-admob-unit-id
+  
+  try{
+    await AdMobInterstitial.requestAdAsync();
+    await AdMobInterstitial.showAdAsync();
+  }
+  catch(e){
+    console.log(e);
+  }
+}
 
   _retrieveData = async () => {
+    this.showInterstitialTiempo()
     try {
       const value = await AsyncStorage.getItem('rutina');
 
@@ -78,7 +86,7 @@ class RutinaNew extends Component {
         if (JSON.parse(value)[0].combinado) {
           var combinada1 = JSON.parse(value)[0]
           var combinada2 = JSON.parse(value)[1]
-          if (this.yaEsta(combinada1) && this.yaEsta(combinada2)) {
+          if (this.yaEsta(combinada1) || this.yaEsta(combinada2)) {
             this.setState({ isLoading: true })
             ultimoCombinado = this.queCombinado(combinada1.dia)
             combinada1.combinado = ultimoCombinado.toString()
@@ -93,7 +101,7 @@ class RutinaNew extends Component {
             this.setState({ showAlert: true })
           }
         } else {
-          simple = JSON.parse(value)[0]
+          var simple = JSON.parse(value)[0]
           if (this.yaEsta(simple)) {
             this.setState({ isLoading: true })
             simple.combinado = null
@@ -126,6 +134,7 @@ class RutinaNew extends Component {
     return parseInt(ultimoCombinado + 1)
   }
   touch(dia) {
+    
     if (this.diaAnterior(dia) || dia == 1) {
       this.setState({ ultimoDia: dia, modalTipoEjercicioTodoVisible: true, dia: dia })
 
@@ -161,6 +170,7 @@ class RutinaNew extends Component {
     return parseInt(ultimaPosicion) + 1
   }
   yaEsta(data) {
+    console.log(this.state.rutina)
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].id_ejercicio == data.id_ejercicio) {
         if (this.state.rutina[i].dia == data.dia){
@@ -174,9 +184,8 @@ class RutinaNew extends Component {
     try {
       //await AsyncStorage.setItem('rutina', JSON.stringify(this.state.rutinaVacia));
       await AsyncStorage.removeItem('rutina')
-      this.setState({
-        isLoading: false,
-      })
+      this.setState({isLoading: false})
+      //this.showInterstitial()
     } catch (error) {
       console.log(error);
     }
@@ -370,7 +379,7 @@ class RutinaNew extends Component {
   guardarRutina() {
     this.setState({ modalGuardarVisible: false })
     var aux = 0
-    rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/Ejercicios/PECHO.png'), dias: '', favoritos: 1, rutina: [], tipo: this.state.tipo }
+    var rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/Ejercicios/PECHO.png'), dias: '', favoritos: 1, rutina: [], tipo: this.state.tipo }
     for (i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].dia > aux) {
         aux = this.state.rutina[i].dia
@@ -390,6 +399,7 @@ class RutinaNew extends Component {
   }
   okEjerciciosRutinaCreados() {
     this.showInterstitial()
+    this.props.onPressCancelar();
   }
   cancelarRutina() {
     this.props.onPressCancelar()
@@ -1004,7 +1014,6 @@ const styles = StyleSheet.create({
     height: height * 0.0775,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'grey',
     borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
@@ -1014,7 +1023,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: "center",
     borderLeftWidth: 2,
-    backgroundColor: 'grey',
     borderBottomRightRadius: 22
   }
 })

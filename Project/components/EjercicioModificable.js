@@ -102,7 +102,7 @@ class EjerciciosNew extends Component {
     }else{
       var nombres = ''
       for(i = 0; i < rutina.length; i++){
-        nombres = nombres + rutina[i].nombre + ' '
+        nombres = nombres + '"' + rutina[i].nombre + '"' + ' '
       }
       this.setModalExisteVisible(true, nombres)
     }
@@ -455,7 +455,6 @@ const styles = StyleSheet.create({
     height: height * 0.0775,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'grey',
     borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
@@ -465,7 +464,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: "center",
     borderLeftWidth: 2,
-    backgroundColor: 'grey',
     borderBottomRightRadius: 22
   },
   modalExisteButtonAceptar: {
@@ -474,7 +472,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: "center",
-    backgroundColor: 'grey',
     borderBottomRightRadius: 22,
     borderBottomLeftRadius: 22
   }

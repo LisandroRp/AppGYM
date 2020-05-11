@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet, ActivityIndicator, Text, ScrollView, Dimensions, Keyboard } from 'react-native';
+import { View, Image, StyleSheet, ActivityIndicator, Text, ScrollView, Dimensions, Keyboard, TouchableOpacity } from 'react-native';
 import { AsyncStorage } from 'react-native';
 import Swiper from "react-native-web-swiper";
 
@@ -68,35 +68,42 @@ class MiPlan extends Component {
                 </View>
             );
         } else {
-            if(this.state.perfil == null){
-                return ( 
+            if (this.state.perfil == null) {
+                return (
                     <View style={styles.containerNull}>
                         <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                         <View style={styles.imageContainer}>
-                                <Image style={styles.Logo} source={require('../assets/Logo_Solo.png')} />
-                            </View>
+                            <Image style={styles.Logo} source={require('../assets/Logo_Solo.png')} />
+                        </View>
                         <View style={styles.ContainerInsideNull}>
-                                    <Text style={styles.Text}> Si desea crear su plan de entrenamiento solo debe completar la ficha tecnica en la seccion de "Cambiar Plan"</Text>
+                            <Text style={styles.Text}> Si desea crear su plan de entrenamiento solo debe completar la ficha tecnica en la seccion de "Cambiar Plan"</Text>
                         </View>
                     </View>
                 )
             }
-            else{
-                return ( 
+            else {
+                return (
                     <View style={styles.container}>
                         <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                        <Swiper style={styles.swiper}>
+                        <Swiper style={styles.swiper}
+                            controlsProps={{
+                                prevTitle: 'Ant',
+                                nextTitle: 'Sig',
+                                nextTitleStyle: styles.swiperButtons,
+                                prevTitleStyle: styles.swiperButtons
+                            }}
+                        >
                             <View style={styles.slideContainer}>
                                 <View style={styles.ContainerInside}>
-                                    <Text style={styles.calories}>{this.state.perfil.caloriasEjercicio - 200} - {this.state.perfil.caloriasEjercicio}</Text>
+                                    <Text style={styles.calories}>{this.state.perfil.caloriasEjercicio - 188} - {this.state.perfil.caloriasEjercicio}</Text>
                                     <Text style={styles.Text}>Calorias a consumir para mantener tu peso en base a la vida que llevas</Text>
                                 </View>
                                 <View style={styles.ContainerInside}>
-                                    <Text style={styles.calories}>{this.state.perfil.caloriasTotal - 200} - {this.state.perfil.caloriasTotal}</Text>
+                                    <Text style={styles.calories}>{this.state.perfil.caloriasTotal - 188} - {this.state.perfil.caloriasTotal}</Text>
                                     <Text style={styles.Text}>Calorias a consumir para cumplir con tu objetivo</Text>
                                 </View>
                             </View>
-                            <ScrollView style={{paddingHorizontal: height * 0.03}}>
+                            <ScrollView style={{ paddingHorizontal: height * 0.03 }}>
                                 <View style={styles.ContainerInsideTitle2}>
                                     <Text style={styles.TextTitle}>{this.state.perfil.obj_nombre}</Text>
                                 </View>
@@ -104,13 +111,20 @@ class MiPlan extends Component {
                                     <Text style={styles.Text}>{this.state.perfil.obj_descripcion}</Text>
                                 </View>
                             </ScrollView>
-                            <View style={{paddingHorizontal: height * 0.03}}>
+                            <View style={{ paddingHorizontal: height * 0.03 }}>
+                            <ScrollView style={{ paddingHorizontal: height * 0.03 }}>
                                 <View style={styles.ContainerInsideTitle3}>
                                     <Text style={styles.TextTitle}>{this.state.perfil.exp_nombre}</Text>
                                 </View>
                                 <View style={styles.ContainerInside3}>
                                     <Text style={styles.Text}>{this.state.perfil.exp_descripcion}</Text>
                                 </View>
+                                <TouchableOpacity style={styles.guardarButton} onPress={() => this.props.navigation.openDrawer()}>
+                                        <Text style={styles.screenButtonText}>
+                                           ¡¡Empezar!!
+                                        </Text>
+                                </TouchableOpacity>
+                            </ScrollView>
                             </View>
                         </Swiper>
                     </View>
@@ -134,6 +148,10 @@ const styles = StyleSheet.create({
         marginHorizontal: height * 0.05,
         alignItems: "center",
         justifyContent: 'center',
+    },
+    swiperButtons: {
+        fontSize: height * 0.025,
+        marginBottom: height * 0.011
     },
     imageContainer: {
         height: height * 0.44,
@@ -166,7 +184,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         backgroundColor: "grey",
-        height : height
+        height: height
     },
     slideContainer: {
         flex: 1,
@@ -225,7 +243,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         justifyContent: 'center',
-        marginBottom: height * 0.11
+        marginBottom: height * 0.05
     },
     Text: {
         fontSize: height * 0.027,
@@ -241,6 +259,21 @@ const styles = StyleSheet.create({
         fontSize: height * 0.07,
         marginBottom: height * 0.02,
         color: "#3399ff"
-    }
+    },
+    screenButtonText: {
+        marginVertical: height * 0.02,
+        fontWeight: 'bold',
+        fontSize: height * 0.025
+      },
+      guardarButton: {
+        backgroundColor: 'grey',
+        borderRadius: 10,
+        alignItems: 'center',
+        width: width * 0.33,
+        marginHorizontal: height * 0.025,
+        marginBottom: height * 0.10,
+        alignSelf: 'center',
+        opacity: .95
+      }
 })
 export default withNavigation(MiPlan);

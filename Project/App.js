@@ -59,8 +59,7 @@ class TrainingScreen extends React.Component {
   render() {
     return (
       <Training
-        onPressPass={this.goPass.bind(this)}
-        onPressCreate={this.goPlan.bind(this)}
+        onPressCrear={this.goPlan.bind(this)}
         onOmitir={this.goPass.bind(this)}
       />
     )
@@ -380,10 +379,10 @@ class EjercicioModificableScreen extends React.Component {
     this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio });
   }
   cancelar() {
-    this.props.navigation.navigate('EjerciciosScreen', { update: "dale" });
+    this.props.navigation.navigate('EjerciciosScreen');
   }
-  actualizada(id_rutina, nombre) {
-    this.props.navigation.navigate('RutinasScreen', { id_rutina: id_rutina, nombre: nombre });
+  actualizada() {
+    this.props.navigation.navigate('RutinasScreen');
   }
 }
 // *****************************************************
@@ -1030,6 +1029,7 @@ swipeEnabled: true,
     inactiveTintColor: '#3399ff',
     style: {
       backgroundColor: 'black',
+      borderTopColor: 'black'
 
     },
     labelStyle: {
@@ -1066,7 +1066,7 @@ const customDrawerComponent = (props) => (
         source={require('./assets/Logo_Drawer.png')}></Image>
     </LinearGradient>
     <ScrollView style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }}>
-      <DrawerItems {...props} style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }} />
+      <DrawerItems {...props} style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0}} />
     </ScrollView>
   </View>
 )
@@ -1089,6 +1089,9 @@ const AppDrawerNavigator = createDrawerNavigator({
       //Esto sirve para cambiar algunos colores
       activeTintColor: 'white',
       inactiveTintColor: '#3399ff',
+      labelStyle:{
+        fontSize: height * 0.022
+      }
     },
   },
   //  {

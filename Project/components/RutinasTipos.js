@@ -16,8 +16,8 @@ import {
   AsyncStorage,
   Dimensions
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -30,7 +30,7 @@ class RutinasTipos extends Component {
       searchStatus: 'none',
       modalVisible: false,
       userSelected: [],
-      rutinas:[],
+      rutinas: [],
       isLoading: true,
       generoEvento: [],
     };
@@ -38,16 +38,16 @@ class RutinasTipos extends Component {
   }
 
   cargarRutinas = async () => {
-    if(await this.props.navigation.getParam('tipo_rutina') != "Propias"){
-        base.traerRutinas(await this.props.navigation.getParam('tipo_rutina'), this.okRutinas.bind(this))
-    }else{
-        base.traerRutinasPropias(this.okRutinas.bind(this))
+    if (await this.props.navigation.getParam('tipo_rutina') != "Propias") {
+      base.traerRutinas(await this.props.navigation.getParam('tipo_rutina'), this.okRutinas.bind(this))
+    } else {
+      base.traerRutinasPropias(this.okRutinas.bind(this))
     }
   }
-  okRutinas(rutinasNueva){
+  okRutinas(rutinasNueva) {
     this.setState({ rutinas: rutinasNueva, isLoading: false });
   }
-  
+
   _storeData = async (id_rutina) => {
     try {
       await AsyncStorage.setItem('rutinaEditable', id_rutina);
@@ -69,13 +69,13 @@ class RutinasTipos extends Component {
     }
     if (rutinas2[aux].favoritos) {
       rutinas2[aux].favoritos = 0
-      fav= 0
+      fav = 0
     } else {
       rutinas2[aux].favoritos = 1
-      fav= 1
+      fav = 1
     }
     //this.setState({ rutinas: rutinas2 })   
-    base.favoritearRutina(id_rutina, fav, this.okFavorito.bind(this))  
+    base.favoritearRutina(id_rutina, fav, this.okFavorito.bind(this))
   }
 
   okFavorito() {
@@ -83,12 +83,35 @@ class RutinasTipos extends Component {
     //this.setState({ isLoading: false })
   }
 
-  favoritos(favoritos){
-    if(favoritos){
+  favoritos(favoritos) {
+    if (favoritos) {
       return ExportadorLogos.traerEstrella(true)
     }
-    else{
+    else {
       return ExportadorLogos.traerEstrella(false)
+    }
+  }
+  favoritosLabel(favoritos) {
+    if (favoritos) {
+      return "Favorito"
+    }
+    else {
+      return "No Favorito"
+    }
+  }
+  favoritosHint(favoritos) {
+    if (favoritos) {
+      return "Sacar de Favoritos esta Rutina"
+    }
+    else {
+      return "Agregar esta Rutina a favoritos"
+    }
+  }
+  marginSize(item){
+    if(item.id_rutina !=  this.state.rutinas[this.state.rutinas.length-1].id_rutina){
+      return {marginTop: height * 0.02}
+    }else{
+      return {marginBottom: height * 0.02, marginTop: height * 0.02}
     }
   }
 
@@ -96,81 +119,91 @@ class RutinasTipos extends Component {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
       );
     } else {
-      if(this.state.rutinas.length == 0){
-        return(
-        <View style={[styles.NoItemsContainer]}>
+      if (this.state.rutinas.length == 0) {
+        return (
+          <View style={[styles.NoItemsContainer]}>
             <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
             <View style={styles.NoItems}>
-                        <Text style={styles.NoItemsText}>Ups! {"\n"} No hay ninguna Rutina Propia</Text>
-                    </View>
-                    <View style={styles.NoItemsImageContainer}>
-                        <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
-                    </View>
-                    <AdMobBanner
-          style={styles.bottomBanner}
-          bannerSize="fullBanner"
-          adUnitID= {ExportadorAds.Banner()}
-          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
-          onDidFailToReceiveAdWithError={err => {
-            console.log(err)
-          }}
-          onAdViewDidReceiveAd={() => {
-            console.log("Ad Recieved");
-          }}
-          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
-          //didFailToReceiveAdWithError={this.bannerError()}
-        />
-                </View>
+              <Text style={styles.NoItemsText}>Ups! {"\n"} No hay ninguna Rutina Propia</Text>
+            </View>
+            <View style={styles.NoItemsImageContainer}>
+              <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
+              
+            </View>
+            <AdMobBanner
+              accessible={true}
+              accessibilityLabel={"Add Banner"}
+              accessibilityHint={"Navega al Anuncio"}
+              style={styles.bottomBanner}
+              adUnitID={ExportadorAds.Banner()}
+              //useEffect={setTestDeviceIDAsync('EMULATOR')}
+              onDidFailToReceiveAdWithError={err => {
+                console.log(err)
+              }}
+              onAdViewDidReceiveAd={() => {
+                console.log("Ad Recieved");
+              }}
+              adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+            //didFailToReceiveAdWithError={this.bannerError()}
+            />
+          </View>
         );
-    }else{
-      return (
-        <View style={styles.container}>
-          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+      } else {
+        return (
+          <View style={styles.container}>
+            <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
             <FlatList
-              style={styles.contentList}
+             style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
-              data={this.state.rutinas.sort((a,b) => a.nombre.localeCompare(b.nombre))}
+              data={this.state.rutinas.sort((a, b) => a.nombre.localeCompare(b.nombre))}
               initialNumToRender={50}
               keyExtractor={(item) => {
                 return item.nombre.toString();
               }}
               renderItem={({ item }) => {
-                  return (
-                    <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre,item.modificable)}>
-                        <View style={styles.cardContent}>
-                          <Text style={styles.name}>{item.nombre}</Text>
-                          <Text style={styles.dias}>{item.dias} Dias</Text>
-                      </View> 
-                      <View style={styles.ViewEstrella} >
-                          <TouchableOpacity onPress={() => {this.favear(item.id_rutina)}}>
-                            <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
-                          </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                  )
+                return (
+                  <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre, item.modificable)}>
+                    <View style={styles.cardContent}>
+                      <Text style={styles.name}>{item.nombre}</Text>
+                      <Text style={styles.dias}>{item.dias} Dias</Text>
+                    </View>
+                    <View style={styles.ViewEstrella} >
+                      <TouchableOpacity
+                        accessible={true}
+                        accessibilityLabel={this.favoritosLabel(item.favoritos)}
+                        accessibilityHint={this.favoritosHint(item.favoritos)}
+                        onPress={() => { this.favear(item.id_rutina) }}>
+                        <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
+                )
               }} />
-          <AdMobBanner
-          style={styles.bottomBanner}
-          bannerSize="fullBanner"
-          adUnitID= {ExportadorAds.Banner()}
-          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
-          onDidFailToReceiveAdWithError={err => {
-            console.log(err)
-          }}
-          onAdViewDidReceiveAd={() => {
-            console.log("Ad Recieved");
-          }}
-          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
-          //didFailToReceiveAdWithError={this.bannerError()}
-        />
-        </View>
-      );
-        }
+              <View style={styles.bannerContainer}></View>
+            <AdMobBanner
+              accessible={true}
+              accessibilityLabel={"Add Banner"}
+              accessibilityHint={"Navega al Anuncio"}
+              style={styles.bottomBanner}
+              adUnitID={ExportadorAds.Banner()}
+              useEffect={setTestDeviceIDAsync('EMULATOR')}
+              onDidFailToReceiveAdWithError={err => {
+                console.log(err)
+              }}
+              onAdViewDidReceiveAd={() => {
+                console.log("Ad Recieved");
+              }}
+              adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+            //didFailToReceiveAdWithError={this.bannerError()}
+            />
+          </View>
+        );
+      }
     }
   }
 }
@@ -179,52 +212,59 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: "grey"
+    backgroundColor: "grey",
   },
   NoItemsContainer: {
     backgroundColor: 'grey',
     flex: 1,
-    alignItems: "center"
-},
-NoItemsText: {
+  },
+  NoItemsText: {
     alignSelf: "center",
-    fontSize: height *0.028,
+    fontSize: height * 0.028,
     color: "#3399ff",
     textAlign: 'center'
-},
-NoItemsImageContainer: {
+  },
+  NoItemsImageContainer: {
     height: height * 0.55,
     width: height * 0.50,
-    margin: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginBottom: height * 0.028,
+    marginTop: height * 0.028,
+    justifyContent: "center",
+    alignSelf: "center",
     backgroundColor: 'black',
     borderWidth: 4,
     borderRadius: 10,
-},
+  },
 
-NoItemsLogo: {
+  NoItemsLogo: {
     height: height * 0.45,
     width: height * 0.45,
+    alignSelf: "center",
     marginTop: hp(9),
     marginBottom: hp(6.6)
-},
-NoItems: {
+  },
+  NoItems: {
     backgroundColor: "black",
     padding: 10,
     borderRadius: 10,
     opacity: .95,
     marginHorizontal: wp(5),
-    marginVertical: hp(6)
-},
+    marginTop: height * 0.028
+  },
+  bannerContainer: {
+    height: height * 0.08,
+    backgroundColor: 'black',
+  },
   bottomBanner: {
     position: "absolute",
     bottom: 0,
-    alignSelf: 'center'
+    height: height * 0.08,
+    alignSelf: "center"
   },
   contentList: {
-    flex: 1,
+    paddingBottom:  height * 0.3
   },
+
   bgImage: {
     flex: 1,
     resizeMode,

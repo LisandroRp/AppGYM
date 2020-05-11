@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import DropDownItem from 'react-native-drop-down-item';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import {AdMobBanner, setTestDeviceIDAsync} from 'expo-ads-admob';
+import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -69,13 +69,13 @@ class SuplementacionEspecifica extends Component {
                   <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.nombre}</Text></View>
                 }
               >
-                <View style={{flexDirection: "row"}}>
-                <Text style={styles.descripcionUnderline}>Marca:</Text> 
-                <Text style={styles.descripcion}> {this.state.detalle.marca}</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.descripcionUnderline}>Marca:</Text>
+                  <Text style={styles.descripcion}> {this.state.detalle.marca}</Text>
                 </View>
-                <View style={{flexDirection: "row"}}>
-                <Text style={styles.descripcionUnderline}>Sabor:</Text> 
-                <Text style={styles.descripcion}>{this.state.detalle.sabores}</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.descripcionUnderline}>Sabor:</Text>
+                  <Text style={styles.descripcion}>{this.state.detalle.sabores}</Text>
                 </View>
                 <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
               </DropDownItem>
@@ -104,22 +104,25 @@ class SuplementacionEspecifica extends Component {
                 <Text style={styles.descripcion}>{this.state.detalle.uso}</Text>
               </DropDownItem>
             </View>
-
+                
           </ScrollView>
+          <View style={styles.bannerContainer}></View>
           <AdMobBanner
-          style={styles.bottomBanner}
-          bannerSize="fullBanner"
-          adUnitID= {ExportadorAds.Banner()}
-          useEffect  = {setTestDeviceIDAsync('EMULATOR')}
-          onDidFailToReceiveAdWithError={err => {
-            console.log(err)
-          }}
-          onAdViewDidReceiveAd={() => {
-            console.log("Ad Recieved");
-          }}
-          adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
+            accessible={true}
+            accessibilityLabel={"Add Banner"}
+            accessibilityHint={"Navega al Anuncio"}
+            style={styles.bottomBanner}
+            adUnitID={ExportadorAds.Banner()}
+            useEffect={setTestDeviceIDAsync('EMULATOR')}
+            onDidFailToReceiveAdWithError={err => {
+              console.log(err)
+            }}
+            onAdViewDidReceiveAd={() => {
+              console.log("Ad Recieved");
+            }}
+            adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
           //didFailToReceiveAdWithError={this.bannerError()}
-        />
+          />
         </View>
       );
     }
@@ -132,10 +135,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "black"
   },
+  bannerContainer: {
+    height: height * 0.08,
+    backgroundColor: 'black'
+  },
   bottomBanner: {
     position: "absolute",
     bottom: 0,
     alignSelf: 'center',
+    height: height * 0.08,
   },
   bgImage: {
     flex: 1,

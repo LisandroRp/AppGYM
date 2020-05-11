@@ -68,19 +68,27 @@ class RutinasFavs extends Component {
         this.setState({ modalVisible: false })
         base.favoritearRutina(id_rutina, fav, this.okFavorito.bind(this))
     }
-    favoritos(favoritos){
-        if(favoritos){
-          return ExportadorLogos.traerEstrella(true)
+    favoritos(favoritos) {
+        if (favoritos) {
+            return ExportadorLogos.traerEstrella(true)
         }
-        else{
-          return ExportadorLogos.traerEstrella(false)
+        else {
+            return ExportadorLogos.traerEstrella(false)
         }
-      }
+    }
 
     okFavorito() {
         this.cargarRutinasFavoritas()
         //this.setState({ isLoading: false })
     }
+    marginSize(item){
+        if(item.id_rutina !=  this.state.rutinas[this.state.rutinas.length-1].id_rutina){
+          return {marginTop: height * 0.02}
+        }else{
+          return {marginBottom: height * 0.02, marginTop: height * 0.02}
+        }
+      }
+
     render() {
         if (this.state.isLoading) {
             return (
@@ -90,37 +98,39 @@ class RutinasFavs extends Component {
                 </View>
             );
         } else {
-            
-            if(this.state.rutinas.length == 0){
-                return(
-                <View style={[styles.NoItemsContainer]}>
-                    <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                    <View style={styles.NoItems}>
-                                <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Rutinas agregadas a tu lista</Text>
-                            </View>
-                            <View style={styles.NoItemsImageContainer}>
-                                <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
-                            </View>
-                            <AdMobBanner
-                        style={styles.bottomBanner}
-                        bannerSize="fullBanner"
-                        adUnitID= {ExportadorAds.Banner()}
-                        useEffect={setTestDeviceIDAsync('EMULATOR')}
-                        onDidFailToReceiveAdWithError={err => {
-                            console.log(err)
-                        }}
-                        onAdViewDidReceiveAd={() => {
-                            console.log("Ad Recieved");
-                        }}
-                        adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-                    //didFailToReceiveAdWithError={this.bannerError()}
-                    />
+
+            if (this.state.rutinas.length == 0) {
+                return (
+                    <View style={[styles.NoItemsContainer]}>
+                        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                        <View style={styles.NoItems}>
+                            <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Rutinas agregadas a tu lista</Text>
                         </View>
+                        <View style={styles.NoItemsImageContainer}>
+                            <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
+                        </View>
+                        <AdMobBanner
+                            accessible={true}
+                            accessibilityLabel={"Add Banner"}
+                            accessibilityHint={"Navega al Anuncio"}
+                            style={styles.bottomBanner}
+                            adUnitID={ExportadorAds.Banner()}
+                            useEffect={setTestDeviceIDAsync('EMULATOR')}
+                            onDidFailToReceiveAdWithError={err => {
+                                console.log(err)
+                            }}
+                            onAdViewDidReceiveAd={() => {
+                                console.log("Ad Recieved");
+                            }}
+                            adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+                        //didFailToReceiveAdWithError={this.bannerError()}
+                        />
+                    </View>
                 );
-            }else{
-            return (
-                <LinearGradient colors={['black', 'grey']} style={styles.container}>
-                    <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+            } else {
+                return (
+                    <LinearGradient colors={['black', 'grey']} style={styles.container}>
+                        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                         <FlatList
                             style={styles.contentList}
                             columnWrapperStyle={styles.listContainer}
@@ -132,7 +142,7 @@ class RutinasFavs extends Component {
                             renderItem={({ item }) => {
                                 if (item.favoritos) {
                                     return (
-                                        <TouchableOpacity style={styles.card} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre, item.modificable)}>
+                                        <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre, item.modificable)}>
                                             <View style={styles.cardContent}>
                                                 <Text style={styles.name}>{item.nombre}</Text>
                                                 <Text style={styles.dias}>{item.dias} Dias</Text>
@@ -146,47 +156,50 @@ class RutinasFavs extends Component {
                                     )
                                 }
                             }} />
-                    <Modal
-                        animationType="fade"
-                        visible={this.state.modalVisible}
-                        transparent={true}
-                        onRequestClose={() => this.setState({ modalVisible: false })}  >
+                            <View style={styles.bannerContainer}></View>
+                        <Modal
+                            animationType="fade"
+                            visible={this.state.modalVisible}
+                            transparent={true}
+                            onRequestClose={() => this.setState({ modalVisible: false })}  >
 
-                        <View style={styles.modal}>
+                            <View style={styles.modal}>
 
-                            <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: width * 0.05 }}>
-                                <Text style={styles.textButton}>Desea sacar la rutina "{this.state.nombre}" de su lista de favoritos</Text>
+                                <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: width * 0.05 }}>
+                                    <Text style={styles.textButton}>Desea sacar la rutina "{this.state.nombre}" de su lista de favoritos</Text>
+                                </View>
+                                <View style={styles.modal2}>
+
+                                    <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
+                                        <Text style={styles.textButton}>Cancelar</Text>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity onPress={() => this.favear(this.state.id_rutina)} style={styles.modalButtonAceptar}>
+                                        <Text style={styles.textButton}>Aceptar</Text>
+                                    </TouchableOpacity>
+
+                                </View>
                             </View>
-                            <View style={styles.modal2}>
-
-                                <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
-                                    <Text style={styles.textButton}>Cancelar</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity onPress={() => this.favear(this.state.id_rutina)} style={styles.modalButtonAceptar}>
-                                    <Text style={styles.textButton}>Aceptar</Text>
-                                </TouchableOpacity>
-
-                            </View>
-                        </View>
-                    </Modal>
-                    <AdMobBanner
-                        style={styles.bottomBanner}
-                        bannerSize="fullBanner"
-                        adUnitID= {ExportadorAds.Banner()}
-                        useEffect={setTestDeviceIDAsync('EMULATOR')}
-                        onDidFailToReceiveAdWithError={err => {
-                            console.log(err)
-                        }}
-                        onAdViewDidReceiveAd={() => {
-                            console.log("Ad Recieved");
-                        }}
-                        adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-                    //didFailToReceiveAdWithError={this.bannerError()}
-                    />
-                </LinearGradient>
-            );
-                    }
+                        </Modal>
+                        <AdMobBanner
+                            accessible={true}
+                            accessibilityLabel={"Add Banner"}
+                            accessibilityHint={"Navega al Anuncio"}
+                            style={styles.bottomBanner}
+                            adUnitID={ExportadorAds.Banner()}
+                            useEffect={setTestDeviceIDAsync('EMULATOR')}
+                            onDidFailToReceiveAdWithError={err => {
+                                console.log(err)
+                            }}
+                            onAdViewDidReceiveAd={() => {
+                                console.log("Ad Recieved");
+                            }}
+                            adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+                        //didFailToReceiveAdWithError={this.bannerError()}
+                        />
+                    </LinearGradient>
+                );
+            }
         }
     }
 }
@@ -197,50 +210,55 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: "grey"
     },
-    bottomBanner: {
+    bannerContainer: {
+        height: height * 0.08,
+        backgroundColor: 'black',
+      },
+      bottomBanner: {
         position: "absolute",
         bottom: 0,
-        alignSelf: 'center'
-    },
+        height: height * 0.08
+      },
     contentList: {
         flex: 1,
     },
-      NoItemsContainer: {
+    NoItemsContainer: {
+        backgroundColor: 'grey',
         flex: 1,
-        alignItems: "center",
-        backgroundColor: "grey"
-    },
-    NoItemsText: {
+      },
+      NoItemsText: {
         alignSelf: "center",
-        fontSize: height *0.028,
+        fontSize: height * 0.028,
         color: "#3399ff",
         textAlign: 'center'
-    },
-    NoItemsImageContainer: {
+      },
+      NoItemsImageContainer: {
         height: height * 0.55,
         width: height * 0.50,
-        margin: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
+        marginBottom: height * 0.028,
+        marginTop: height * 0.028,
+        justifyContent: "center",
+        alignSelf: "center",
         backgroundColor: 'black',
         borderWidth: 4,
         borderRadius: 10,
-    },
+      },
     
-    NoItemsLogo: {
+      NoItemsLogo: {
         height: height * 0.45,
         width: height * 0.45,
+        alignSelf: "center",
         marginTop: hp(9),
         marginBottom: hp(6.6)
-    },
-    NoItems: {
+      },
+      NoItems: {
         backgroundColor: "black",
         padding: 10,
         borderRadius: 10,
         opacity: .95,
         marginHorizontal: wp(5),
-        marginVertical: hp(3)
-    },
+        marginTop: height * 0.028
+      },
     bgImage: {
         flex: 1,
         resizeMode,
@@ -305,7 +323,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: wp("5"),
         position: "absolute",
         right: 0,
-      },
+    },
     //MODAAAAL
     modal: {
         height: height * 0.22,
@@ -343,7 +361,6 @@ const styles = StyleSheet.create({
         height: height * 0.0775,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'grey',
         borderRadius: 22
     },
     modalButtonAceptar: {
@@ -353,7 +370,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         textAlign: "center",
         borderLeftWidth: 2,
-        backgroundColor: 'grey',
         borderBottomRightRadius: 22
     }
 })

@@ -144,7 +144,6 @@ class GenerarBase extends Component {
         );
 
     }
-   
     ejerciciosRutina(listo){
         var rutinas = []
         let db = SQLite.openDatabase('appgym.db');
@@ -167,8 +166,8 @@ class GenerarBase extends Component {
         );
     }
     traerPlan(okPlan){
-        perfil= {}
-        flag = false
+        var perfil= {}
+        var flag = false
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -217,6 +216,7 @@ class GenerarBase extends Component {
     borrarEjercicio(id_ejercicio, okEjercicioBorrado) {
 
         const db = SQLite.openDatabase('appgym.db');
+
         db.exec([{ sql: 'PRAGMA foreign_keys = ON;', args: [] }], false, () => console.log('Foreign keys turned on')); 
 
         db.transaction(
@@ -240,7 +240,7 @@ class GenerarBase extends Component {
 
     //Trae todos los ejercicios en la screen musculo y musculoAgregar
     traerEjercicios(musculo, okEjercicios) {
-        ejercicios = []
+       var ejercicios = []
 
         let db = SQLite.openDatabase('appgym.db');
 
@@ -265,7 +265,7 @@ class GenerarBase extends Component {
     }
     //Traer los ejercicios favoritos de un musculo seleccionado
     traerEjerciciosMusculoFavs(musculo, listo) {
-            ejercicios = []
+          var  ejercicios = []
 
             let db = SQLite.openDatabase('appgym.db');
     
@@ -627,7 +627,8 @@ class GenerarBase extends Component {
     }
     conseguirIdRutinaParaBorrar(nombre, borrarRutina){
         let db = SQLite.openDatabase('appgym.db');
-        id_rutina=''
+        var id_rutina=''
+
         db.transaction(
             tx => {
                 tx.executeSql('SELECT id_rutina FROM Rutinas where Rutinas.nombre = ? ', [nombre], function (tx, res) {
@@ -645,7 +646,9 @@ class GenerarBase extends Component {
         );
     }
     crearEjerciciosRutina(rutinaNueva, okEjerciciosRutinaCreados){
+
         let db = SQLite.openDatabase('appgym.db');
+
         db.transaction(
             tx => {
                 for(i=0; i<rutinaNueva.rutina.length;i++){
@@ -664,6 +667,7 @@ class GenerarBase extends Component {
         );
     }
     borrarEjerciciosRutina(id_rutina, rutinaNueva, seBorraronEjercicios){
+
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
@@ -688,7 +692,7 @@ class GenerarBase extends Component {
     //Trae todos los suplemetos en la screen Suplementos
     traerSuplementos(tipo_suplemento, okSuplementos) {
 
-        suplementos = []
+        var suplementos = []
 
         let db = SQLite.openDatabase('appgym.db');
 
@@ -762,7 +766,8 @@ class GenerarBase extends Component {
 
     //Trae todos los ejercicios que esten en favoritos en la screen EjerciciosFavs
     traerEjerciciosFavoritos(okEjercicios) {
-        ejercicios = []
+        
+        var ejercicios = []
 
         let db = SQLite.openDatabase('appgym.db');
 
@@ -787,7 +792,8 @@ class GenerarBase extends Component {
     }
     //Trae todos los suplementos que esten en favoritos en la screen SumplementosFavs
     traerSuplementosFavoritas(okSuplementos) {
-        suplementos = []
+        
+        var suplementos = []
 
         let db = SQLite.openDatabase('appgym.db');
 
@@ -812,7 +818,8 @@ class GenerarBase extends Component {
     }
     //Trae todos las rutinas que esten en favoritos en la screen RutinasFavs
     traerRutinasFavoritas(okRutinas) {
-        rutinas = []
+        
+        var rutinas = []
 
         let db = SQLite.openDatabase('appgym.db');
 
