@@ -3,6 +3,7 @@ import { View, Image, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Modal
 import RNPickerSelect from 'react-native-picker-select';
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import ExportadorFrases from './Fotos/ExportadorFrases'
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorAds from './Fotos/ExportadorAds'
 import base from './GenerarBase';
@@ -15,7 +16,7 @@ class Ficha extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: false,
+            isLoading: true,
             modalVisible: false,
             objetivoDeseado: '',
             experiencia: '',
@@ -25,12 +26,14 @@ class Ficha extends Component {
             peso: 0,
             edad: 0,
 
-            calorias: {}
+            calorias: {},
+            id_idioma: 0
         };
+        base.traerIdIdioma(this.okIdioma.bind(this))
     }
 
-    okPlan(perfil) {
-        this.setState({ id_perfil: perfil.id_perfil, isLoading: false })
+    okIdioma(id_idioma) {
+        this.setState({ id_idioma: id_idioma, isLoading: false })
     }
     showRewarded = async () => {
         AdMobRewarded.setAdUnitID(ExportadorAds.Rewarded()); // Test ID, Replace with your-admob-unit-id
@@ -42,12 +45,7 @@ class Ficha extends Component {
         }
         catch (e) {
             console.log(e);
-            this.crearPlan();
         }
-    }
-    componentDidMount() {
-        AdMobRewarded.addEventListener('rewardedVideoDidRewardUser', () => this.crearPlan()
-        );
     }
     chequearInfo() {
         if (this.state.peso == 0) {
@@ -94,27 +92,27 @@ class Ficha extends Component {
         if (calorias.caloriasBase != 0) {
             switch (this.state.actividad) {
 
-                case "1":
+                case 1:
 
                     calorias.caloriasEjercicio = calorias.caloriasBase * 1.2
                     break;
 
-                case "2":
+                case 2:
 
                     calorias.caloriasEjercicio = calorias.caloriasBase * 1.375
                     break;
 
-                case "3":
+                case 3:
 
                     calorias.caloriasEjercicio = calorias.caloriasBase * 1.55
                     break;
 
-                case "4":
+                case 4:
 
                     calorias.caloriasEjercicio = calorias.caloriasBase * 1.725
                     break;
 
-                case "5":
+                case 5:
 
                     calorias.caloriasEjercicio = calorias.caloriasBase * 1.9
                     break;
@@ -127,27 +125,27 @@ class Ficha extends Component {
             if (calorias.caloriasEjercicio != 0) {
                 switch (this.state.objetivoDeseado) {
 
-                    case "1":
+                    case 1:
 
                         calorias.caloriasTotal = calorias.caloriasEjercicio + calorias.caloriasEjercicio * 0.15
                         break;
 
-                    case "2":
+                    case 2:
 
                         calorias.caloriasTotal = calorias.caloriasEjercicio - calorias.caloriasEjercicio * 0.15
                         break;
 
-                    case "3":
+                    case 3:
 
                         calorias.caloriasTotal = calorias.caloriasEjercicio
                         break;
 
-                    case "4":
+                    case 4:
 
                         calorias.caloriasTotal = calorias.caloriasEjercicio - calorias.caloriasEjercicio * 0.1
                         break;
 
-                    case '5':
+                    case 5:
 
                         calorias.caloriasTotal = calorias.caloriasEjercicio
                         break;
@@ -159,13 +157,12 @@ class Ficha extends Component {
                 }
             }
             this.setState({ calorias: calorias })
-            this.traerInfo()
+            base.traerPlan(this.okExperiencia.bind(this))           
         }
     }
-    traerInfo = async (okInfo) => {
-        base.traerPlan(this.okExperiencia.bind(this))
-    }
-    okExperiencia(plan) {
+
+    okExperiencia(plan, id_idioma) {
+
         if (plan == null) {
             base.guardarPlan(this.state.calorias, this.state.objetivoDeseado, this.state.experiencia, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
         } else {
@@ -174,7 +171,8 @@ class Ficha extends Component {
     }
 
     mostrarPlan() {
-        this.props.onPressUpdate(this.state.caloriasEjercicio, this.state.caloriasTotal, this.state.objetivoDeseado)
+        this.setState({isLoading: false})
+        this.props.onPressUpdate(true)
     }
 
     render() {
@@ -197,13 +195,13 @@ class Ficha extends Component {
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                         <View style={[styles.ContainerInside]}>
                             <View style={styles.slide}>
-                                <Text style={styles.slideText}>Ficha Personal{"\n"}y{"\n"}Objetivos a Alcanzar</Text>
+                                <Text style={styles.slideText}>{ExportadorFrases.FichaTitulo(this.state.id_idioma)}</Text>
                             </View>
                             <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
                                 <RNPickerSelect
                                     useNativeAndroidPickerStyle={false}
                                     placeholder={{
-                                        label: 'Nivel de Actividad',
+                                        label: ExportadorFrases.NivelActividad(this.state.id_idioma),
                                         value: ''
                                     }}
                                     placeholderTextColor="black"
@@ -241,17 +239,17 @@ class Ficha extends Component {
                                     }}
                                     onValueChange={(value) => this.setState({ actividad: value })}
                                     items={[
-                                        { label: 'Casi Nulo (1 dia o menos)', value: '1' },
-                                        { label: 'Lijero (2 a 3 dias)', value: '2' },
-                                        { label: 'Moderado (4 a 5 dias)', value: '3' },
-                                        { label: 'Fuerte (5 a 7 dias)', value: '4' },
-                                        { label: 'Deportista (2 veces al dia)', value: '5' }
+                                        { label: ExportadorFrases.NivelActividadOpciones(this.state.id_idioma, 1), value: 1 },
+                                        { label: ExportadorFrases.NivelActividadOpciones(this.state.id_idioma, 2), value: 2 },
+                                        { label: ExportadorFrases.NivelActividadOpciones(this.state.id_idioma, 3), value: 3 },
+                                        { label: ExportadorFrases.NivelActividadOpciones(this.state.id_idioma, 4), value: 4 },
+                                        { label: ExportadorFrases.NivelActividadOpciones(this.state.id_idioma, 5), value: 5 }
                                     ]}
                                 />
                                 <RNPickerSelect
                                     useNativeAndroidPickerStyle={false}
                                     placeholder={{
-                                        label: 'Genero',
+                                        label: ExportadorFrases.Genero(this.state.id_idioma),
                                         value: ''
                                     }}
                                     placeholderTextColor="black"
@@ -289,15 +287,15 @@ class Ficha extends Component {
                                     }}
                                     onValueChange={(value) => this.setState({ genero: value })}
                                     items={[
-                                        { label: 'Masculino', value: 'Masculino' },
-                                        { label: 'Femenino', value: 'Femenino' },
+                                        { label: ExportadorFrases.GeneroOpciones(this.state.id_idioma, 1), value: 'Masculino' },
+                                        { label: ExportadorFrases.GeneroOpciones(this.state.id_idioma, 2), value: 'Femenino' }
                                     ]}
                                 />
                             </View>
                             <RNPickerSelect
                                 useNativeAndroidPickerStyle={false}
                                 placeholder={{
-                                    label: 'Objetivo Deseado',
+                                    label: ExportadorFrases.ObjetivoDeseado(this.state.id_idioma),
                                     value: ''
                                 }}
                                 placeholderTextColor="black"
@@ -336,17 +334,17 @@ class Ficha extends Component {
 
                                 onValueChange={(value) => this.setState({ objetivoDeseado: value })}
                                 items={[
-                                    { label: 'Ganar Masa Muscualar', value: '1' },
-                                    { label: 'Perder Peso', value: '2' },
-                                    { label: 'Ganar Resistencia', value: '3' },
-                                    { label: 'Definir', value: '4' },
-                                    { label: 'Mantener', value: '5' }
+                                    { label: ExportadorFrases.ObjetivoDeseadoOpciones(this.state.id_idioma, 1), value: 1 },
+                                    { label: ExportadorFrases.ObjetivoDeseadoOpciones(this.state.id_idioma, 2), value: 2 },
+                                    { label: ExportadorFrases.ObjetivoDeseadoOpciones(this.state.id_idioma, 3), value: 3 },
+                                    { label: ExportadorFrases.ObjetivoDeseadoOpciones(this.state.id_idioma, 4), value: 4 },
+                                    { label: ExportadorFrases.ObjetivoDeseadoOpciones(this.state.id_idioma, 5), value: 5 }
                                 ]}
                             />
                             <RNPickerSelect
                                 useNativeAndroidPickerStyle={false}
                                 placeholder={{
-                                    label: 'Experiencia en Entrenamiento',
+                                    label: ExportadorFrases.ExperienciaEntrenamiento(this.state.id_idioma),
                                     value: ''
                                 }}
                                 placeholderTextColor="black"
@@ -384,21 +382,21 @@ class Ficha extends Component {
                                 }}
                                 onValueChange={(value) => this.setState({ experiencia: value })}
                                 items={[
-                                    { label: 'Principiante', value: '1' },
-                                    { label: 'Basico', value: '2' },
-                                    { label: 'Experimentado', value: '3' },
+                                    { label: ExportadorFrases.ExperienciaEntrenamientoOpciones(this.state.id_idioma, 1), value: 1 },
+                                    { label: ExportadorFrases.ExperienciaEntrenamientoOpciones(this.state.id_idioma, 2), value: 2 },
+                                    { label: ExportadorFrases.ExperienciaEntrenamientoOpciones(this.state.id_idioma, 3), value: 3 }
                                 ]}
                             />
                             <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
-                                <TextInput style={styles.TextContainer} maxLength={3} keyboardType='numeric' placeholder='Altura cm' placeholderTextColor='black' onChangeText={(altura) => this.setState({ altura })} value={this.state.altura}></TextInput>
-                                <TextInput style={styles.TextContainer} maxLength={2} keyboardType='numeric' placeholder='Edad' placeholderTextColor='black' onChangeText={(edad) => this.setState({ edad })} value={this.state.edad}></TextInput>
-                                <TextInput style={styles.TextContainer} maxLength={5} keyboardType='numeric' placeholder='Peso Kg' placeholderTextColor='black' onChangeText={(peso) => this.setState({ peso })} value={this.state.peso}></TextInput>
+                                <TextInput style={styles.TextContainer} maxLength={3} keyboardType='numeric' placeholder={ExportadorFrases.AlturaDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(altura) => this.setState({ altura })} value={this.state.altura}></TextInput>
+                                <TextInput style={styles.TextContainer} maxLength={2} keyboardType='numeric' placeholder={ExportadorFrases.EdadDeseada(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(edad) => this.setState({ edad })} value={this.state.edad}></TextInput>
+                                <TextInput style={styles.TextContainer} maxLength={4} keyboardType='numeric' placeholder={ExportadorFrases.PesoDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(peso) => this.setState({ peso })} value={this.state.peso}></TextInput>
                             </View>
 
 
                             <TouchableOpacity style={styles.guardarButton} onPress={() => { this.chequearInfo() }}>
                                 <Text style={{ margin: height * 0.02, fontWeight: 'bold', fontSize: height * 0.025 }}>
-                                    Actualizar
+                                   {ExportadorFrases.Actualizar(this.state.id_idioma)}
                                 </Text>
                             </TouchableOpacity>
 
@@ -411,15 +409,15 @@ class Ficha extends Component {
                         onRequestClose={() => this.setState({ modalVisible: false })}  >
                         <View style={styles.modal}>
                             <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                                <Text style={styles.textButton}>Para desbloquear el cambio de plan se le mostrara una publicidad</Text>
+                                <Text style={styles.textButton}>{ExportadorFrases.ActualizarPlanModalLabel(this.state.id_idioma)}</Text>
                             </View>
                             <View style={styles.modal2}>
                                 <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
-                                    <Text style={styles.textButton}>Cancelar</Text>
+                                    <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity onPress={() => this.showRewarded()} style={styles.modalButtonAceptar}>
-                                    <Text style={styles.textButton}>Aceptar</Text>
+                                <TouchableOpacity onPress={() => {this.setState({ modalVisible: false }), this.setState({isLoading:true}), this.showRewarded(), this.crearPlan()}} style={styles.modalButtonAceptar}>
+                                    <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
 
                                 </TouchableOpacity>
                             </View>
@@ -533,7 +531,8 @@ const styles = StyleSheet.create({
         fontSize: height * 0.02,
         alignSelf: 'center',
         textAlign: 'center',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        padding: hp(1)
     },
 
     modalButtonCancelar: {

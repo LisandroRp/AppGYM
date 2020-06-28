@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
+import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorAds from './Fotos/ExportadorAds';
 import {
@@ -26,9 +27,10 @@ class SuplementacionEspecifica extends Component {
       modalVisible: false,
       detalle: {},
       idSumplemento: this.props.navigation.getParam('id_suplemento'),
-      nombre: this.props.navigation.getParam('nombre'),
+      nombre_suplemento: this.props.navigation.getParam('nombre_suplemento'),
       isLoading: true,
       refreshing: false,
+      id_idioma: 0
     };
     this.cargarSuplemento();
   }
@@ -37,10 +39,11 @@ class SuplementacionEspecifica extends Component {
   }
 
 
-  okSuplemento(data) {
+  okSuplemento(data, id_idioma) {
     if (data != null) {
       this.setState({
-        detalle: data[0],
+        detalle: data,
+        id_idioma: id_idioma,
         isLoading: false
       });
     } else {
@@ -64,27 +67,24 @@ class SuplementacionEspecifica extends Component {
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
             <View style={styles.todo}>
-              <DropDownItem contentVisible={false}
-                header={
-                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.nombre}</Text></View>
-                }
-              >
+              <View>
+                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.nombre_suplemento}</Text></View>
                 <View style={{ flexDirection: "row" }}>
-                  <Text style={styles.descripcionUnderline}>Marca:</Text>
+                  <Text style={styles.descripcionUnderline}>{ExportadorFrases.Marca(this.state.id_idioma)}:</Text>
                   <Text style={styles.descripcion}> {this.state.detalle.marca}</Text>
                 </View>
                 <View style={{ flexDirection: "row" }}>
-                  <Text style={styles.descripcionUnderline}>Sabor:</Text>
+                  <Text style={styles.descripcionUnderline}>{ExportadorFrases.Sabor(this.state.id_idioma)}:</Text>
                   <Text style={styles.descripcion}>{this.state.detalle.sabores}</Text>
                 </View>
                 <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
-              </DropDownItem>
+                </View>
             </View>
 
             <View style={styles.todo}>
               <DropDownItem contentVisible={false}
                 header={
-                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Beneficios</Text></View>
+                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{ExportadorFrases.Beneficios(this.state.id_idioma)}</Text></View>
                 }
               >
 
@@ -96,7 +96,7 @@ class SuplementacionEspecifica extends Component {
             <View style={styles.todo}>
               <DropDownItem contentVisible={false}
                 header={
-                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Uso</Text></View>
+                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{ExportadorFrases.Uso(this.state.id_idioma)}</Text></View>
                 }
               >
 
@@ -109,11 +109,10 @@ class SuplementacionEspecifica extends Component {
           <View style={styles.bannerContainer}></View>
           <AdMobBanner
             accessible={true}
-            accessibilityLabel={"Add Banner"}
-            accessibilityHint={"Navega al Anuncio"}
+            accessibilityLabel={"Banner"}
+            accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
             style={styles.bottomBanner}
             adUnitID={ExportadorAds.Banner()}
-            useEffect={setTestDeviceIDAsync('EMULATOR')}
             onDidFailToReceiveAdWithError={err => {
               console.log(err)
             }}
@@ -121,7 +120,6 @@ class SuplementacionEspecifica extends Component {
               console.log("Ad Recieved");
             }}
             adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-          //didFailToReceiveAdWithError={this.bannerError()}
           />
         </View>
       );
@@ -143,7 +141,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     alignSelf: 'center',
-    height: height * 0.08,
   },
   bgImage: {
     flex: 1,
@@ -176,6 +173,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp("5"),
     marginVertical: hp("2"),
     fontSize: height * 0.025,
+    paddingBottom: hp("1.1")
   },
   descripcionUnderline: {
     color: 'black',

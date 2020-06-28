@@ -3,6 +3,7 @@ import { SearchBar } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorEjercicios from './Fotos/ExportadorEjercicios'
+import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorLogos from './Fotos/ExportadorLogos'
 import ExportadorAds from './Fotos/ExportadorAds'
@@ -32,7 +33,8 @@ class MusculoFavs extends Component {
             isLoading: true,
             modalVisible: false,
             id_ejercicio: '',
-            nombre: ""
+            nombre_ejercicio: "",
+            id_idioma: 0
         };
         this.cargarEjerciciosFavoritas();
     }
@@ -41,11 +43,20 @@ class MusculoFavs extends Component {
         base.traerEjerciciosFavoritos(this.okEjercicios.bind(this))
     }
     okEjercicios(ejercicios) {
-        this.setState({ ejercicios: ejercicios, isLoading: false, memory: ejercicios, });
+        if(ejercicios.length == 0){
+            this.setState({ ejercicios: ejercicios, memory: ejercicios, });
+            base.traerIdIdioma(this.okIdIdioma.bind(this))
+        }else{
+            this.setState({ ejercicios: ejercicios, id_idioma: ejercicios[0].id_idioma, isLoading: false, memory: ejercicios, });
+        }
+    }
+    
+    okIdIdioma(id_idioma){
+        this.setState({id_idioma: id_idioma, isLoading: false});
     }
 
-    modalVisible(id, nombre) {
-        this.setState({ id_ejercicio: id, nombre: nombre, modalVisible: true })
+    modalVisible(id, nombre_ejercicio) {
+        this.setState({ id_ejercicio: id, nombre_ejercicio: nombre_ejercicio, modalVisible: true })
     }
 
     favear(id_ejercicio) {
@@ -77,20 +88,36 @@ class MusculoFavs extends Component {
 
     favoritos(favoritos) {
         if (favoritos) {
-            return ExportadorLogos.traerEstrella(true)
+          return ExportadorLogos.traerEstrella(true)
         }
         else {
-            return ExportadorLogos.traerEstrella(false)
+          return ExportadorLogos.traerEstrella(false)
         }
-    }
+      }
+      favoritosLabel(favoritos) {
+        if (favoritos) {
+          return ExportadorFrases.FavoritosLabel(this.state.id_idioma)
+        }
+        else {
+          return ExportadorFrases.FavoritosNoLabel(this.state.id_idioma)
+        }
+      }
+      favoritosHint(favoritos) {
+        if (favoritos) {
+          return ExportadorFrases.FavoritosNoHint(this.state.id_idioma)
+        }
+        else {
+          return ExportadorFrases.FavoritosHint(this.state.id_idioma)
+        }
+      }
     searchEjercicio = value => {
         const filterDeEjercicios = this.state.memory.filter(ejercicio => {
             let ejercicioLowercase = (
-                ejercicio.nombre +
+                ejercicio.nombre_ejercicio +
                 ' ' +
-                ejercicio.elemento +
+                ejercicio.nombre_elemento +
                 ' ' +
-                ejercicio.musculo
+                ejercicio.nombre_musculo
             ).toLowerCase();
 
             let searchTermLowercase = value.toLowerCase();
@@ -117,23 +144,22 @@ class MusculoFavs extends Component {
                 </View>
             );
         } else {
-            if (this.state.ejercicios.length == 0) {
+            if (this.state.ejercicios.length == 0 && this.state.memory.length == 0) {
                 return (
                     <View style={[styles.NoItemsContainer]}>
                         <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                         <View style={styles.NoItems}>
-                            <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Ejercicios agregados a tu lista</Text>
+                            <Text style={styles.NoItemsText}>{ExportadorFrases.EjerciciosNo(this.state.id_idioma)}</Text>
                         </View>
                         <View style={styles.NoItemsImageContainer}>
                             <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
                         </View>
                         <AdMobBanner
                             accessible={true}
-                            accessibilityLabel={"Add Banner"}
-                            accessibilityHint={"Navega al Anuncio"}
+                            accessibilityLabel={"Banner"}
+                            accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
                             style={styles.bottomBanner}
                             adUnitID={ExportadorAds.Banner()}
-                            useEffect={setTestDeviceIDAsync('EMULATOR')}
                             onDidFailToReceiveAdWithError={err => {
                                 console.log(err)
                             }}
@@ -141,7 +167,6 @@ class MusculoFavs extends Component {
                                 console.log("Ad Recieved");
                             }}
                             adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-                        //didFailToReceiveAdWithError={this.bannerError()}
                         />
                     </View>
                 );
@@ -151,7 +176,7 @@ class MusculoFavs extends Component {
                         <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                         <View>
                             <SearchBar
-                                placeholder="Nombre/Musculo/Elemento"
+                                placeholder={ExportadorFrases.SearchOpciones(this.state.id_idioma)}
                                 platform='ios'
                                 onChangeText={value => this.searchEjercicio(value)}
                                 value={this.state.value}
@@ -165,7 +190,7 @@ class MusculoFavs extends Component {
                         <FlatList
                             style={styles.contentList}
                             columnWrapperStyle={styles.listContainer}
-                            data={this.state.ejercicios.sort((a, b) => a.nombre.localeCompare(b.nombre))}
+                            data={this.state.ejercicios.sort((a, b) => a.nombre_ejercicio.localeCompare(b.nombre_ejercicio))}
                             initialNumToRender={50}
                             keyExtractor={(item) => {
                                 return item.id_ejercicio.toString();
@@ -173,15 +198,19 @@ class MusculoFavs extends Component {
                             renderItem={({ item }) => {
                                 if (item.favoritos) {
                                     return (
-                                        <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion)}>
+                                        <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
                                             <View style={{ flexDirection: "row" }} >
-                                                <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.musculo)} />
+                                                <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
                                                 <View style={styles.cardContent}>
-                                                    <Text style={styles.name}>{item.nombre}</Text>
-                                                    <Text style={styles.elemento}>{item.elemento}</Text>
+                                                    <Text style={styles.name}>{item.nombre_ejercicio}</Text>
+                                                    <Text style={styles.elemento}>{item.nombre_elemento}</Text>
                                                 </View>
                                                 <View style={styles.ViewEstrella} >
-                                                    <TouchableOpacity onPress={() => this.modalVisible(item.id_ejercicio, item.nombre)}>
+                                                    <TouchableOpacity 
+                                                    accessible={true}
+                                                    accessibilityLabel={this.favoritosLabel(item.favoritos)}
+                                                    accessibilityHint={this.favoritosHint(item.favoritos)}
+                                                    onPress={() => this.modalVisible(item.id_ejercicio, item.nombre_ejercicio)}>
                                                         <Image style={styles.StarImage} source={ExportadorLogos.traerEstrella(true)} />
                                                     </TouchableOpacity>
                                                 </View>
@@ -199,17 +228,17 @@ class MusculoFavs extends Component {
 
                             <View style={styles.modal}>
 
-                                <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: width * 0.05 }}>
-                                    <Text style={styles.textButton}>Desea sacar el ejercicio "{this.state.nombre}" de su lista de favoritos</Text>
+                                <View style={{ flexDirection: 'column', marginTop: height * 0.033, marginHorizontal: width * 0.05 }}>
+                                    <Text style={styles.textButton}>{ExportadorFrases.SacarEjercicioFavs1(this.state.id_idioma)} "{this.state.nombre_ejercicio}" {ExportadorFrases.SacarEjercicioFavs2(this.state.id_idioma)}?</Text>
                                 </View>
                                 <View style={styles.modal2}>
 
                                     <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
-                                        <Text style={styles.textButton}>Cancelar</Text>
+                                        <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
                                     </TouchableOpacity>
 
                                     <TouchableOpacity onPress={() => this.favear(this.state.id_ejercicio)} style={styles.modalButtonAceptar}>
-                                        <Text style={styles.textButton}>Aceptar</Text>
+                                        <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
                                     </TouchableOpacity>
 
                                 </View>
@@ -217,11 +246,10 @@ class MusculoFavs extends Component {
                         </Modal>
                         <AdMobBanner
                             accessible={true}
-                            accessibilityLabel={"Add Banner"}
-                            accessibilityHint={"Navega al Anuncio"}
+                            accessibilityLabel={"Banner"}
+                            accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
                             style={styles.bottomBanner}
                             adUnitID={ExportadorAds.Banner()}
-                            useEffect={setTestDeviceIDAsync('EMULATOR')}
                             onDidFailToReceiveAdWithError={err => {
                                 console.log(err)
                             }}
@@ -229,7 +257,6 @@ class MusculoFavs extends Component {
                                 console.log("Ad Recieved");
                             }}
                             adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-                        //didFailToReceiveAdWithError={this.bannerError()}
                         />
                     </View>
                 );
@@ -254,7 +281,6 @@ const styles = StyleSheet.create({
     bottomBanner: {
         position: "absolute",
         bottom: 0,
-        height: height * 0.08
     },
     contentList: {
         flex: 1,

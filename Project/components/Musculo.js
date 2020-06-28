@@ -3,6 +3,7 @@ import { SearchBar, Icon } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorEjercicios from './Fotos/ExportadorEjercicios';
+import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
@@ -28,25 +29,27 @@ class Musculo extends Component {
     super(props);
     this.state = {
       searchBarFocused: false,
-      musculo: this.props.navigation.getParam('musculo'),
+      musculo: this.props.navigation.getParam('nombre_musculo'),
+      id_idioma: 0,
       modalVisible: false,
       memory: [],
       ejercicios: [],
       isLoading: true,
     };
-
     this.cargarEjercicios();
   }
 
   //Trae los ejercicios especificios del musculo seleccionado en la screen anterior
   cargarEjercicios = async () => {
-    base.traerEjercicios(await this.props.navigation.getParam('musculo'), this.okEjercicios.bind(this))
+    base.traerEjercicios(await this.props.navigation.getParam('id_musculo'), this.okEjercicios.bind(this))
   }
 
   //Setea los ejercicios y renderiza la screen
   okEjercicios(ejercicios) {
+    
     this.setState({
       ejercicios: ejercicios,
+      id_idioma: ejercicios[0].id_idioma,
       memory: ejercicios,
       isLoading: false,
     });
@@ -82,15 +85,11 @@ class Musculo extends Component {
   searchEjercicio = value => {
     const filterDeEjercicios = this.state.memory.filter(ejercicio => {
       let ejercicioLowercase = (
-        ejercicio.nombre +
+        ejercicio.nombre_musculo +
         ' ' +
-        ejercicio.id_ejercicio +
+        ejercicio.nombre_ejercicio +
         ' ' +
-        ejercicio.genero +
-        ' ' +
-        ejercicio.tipo +
-        ' ' +
-        ejercicio.elemento
+        ejercicio.nombre_elemento
       ).toLowerCase();
 
       let searchTermLowercase = value.toLowerCase();
@@ -137,18 +136,18 @@ class Musculo extends Component {
   }
   favoritosLabel(favoritos) {
     if (favoritos) {
-      return "Favorito"
+      return ExportadorFrases.FavoritosLabel(this.state.id_idioma)
     }
     else {
-      return "No Favorito"
+      return ExportadorFrases.FavoritosNoLabel(this.state.id_idioma)
     }
   }
   favoritosHint(favoritos) {
     if (favoritos) {
-      return "Sacar de Favoritos este ejercicio"
+      return ExportadorFrases.FavoritosNoHint(this.state.id_idioma)
     }
     else {
-      return "Agregar este Ejercicio a favoritos"
+      return ExportadorFrases.FavoritosHint(this.state.id_idioma)
     }
   }
   marginSize(item){
@@ -174,7 +173,7 @@ class Musculo extends Component {
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <View>
             <SearchBar
-              placeholder="Search..."
+              placeholder= {ExportadorFrases.Search(this.state.id_idioma)+"..."}
               platform='ios'
               onChangeText={value => this.searchEjercicio(value)}
               value={this.state.value}
@@ -188,7 +187,7 @@ class Musculo extends Component {
           <FlatList
             style={styles.contentList}
             columnWrapperStyle={styles.listContainer}
-            data={this.state.ejercicios.sort((a, b) => a.nombre.localeCompare(b.nombre))}
+            data={this.state.ejercicios.sort((a, b) => a.nombre_ejercicio.localeCompare(b.nombre_ejercicio))}
             initialNumToRender={50}
             keyExtractor={(item) => {
               return item.id_ejercicio.toString();
@@ -196,12 +195,12 @@ class Musculo extends Component {
             renderItem={({ item }) => {
               return (
                 <View>
-                <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion, item.modificable)}>
+                <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio,this.state.id_idioma, item.modificable)}>
                   <View style={{ flexDirection: "row" }} >
-                    <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.musculo)} />
+                    <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
                     <View style={styles.cardContent}>
-                      <Text style={styles.name}>{item.nombre}</Text>
-                      <Text style={styles.elemento}>{item.elemento}</Text>
+                      <Text style={styles.name}>{item.nombre_ejercicio}</Text>
+                      <Text style={styles.elemento}>{item.nombre_elemento}</Text>
                     </View>
                     <View style={styles.ViewEstrella} >
                       <TouchableOpacity
@@ -222,11 +221,10 @@ class Musculo extends Component {
           <AdMobBanner
           
             accessible={true}
-            accessibilityLabel={"Add Banner"}
-            accessibilityHint={"Navega al Anuncio"}
+            accessibilityLabel={"Banner"}
+            accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
             style={styles.bottomBanner}
             adUnitID={ExportadorAds.Banner()}
-            useEffect={setTestDeviceIDAsync('EMULATOR')}
             onDidFailToReceiveAdWithError={err => {
               console.log(err)
             }}
@@ -258,7 +256,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     alignSelf: 'center',
-    height: height * 0.08,
   },
   bgImage: {
     flex: 1,

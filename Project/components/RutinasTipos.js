@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
+import ExportadorCreadores from './Fotos/ExportadorCreadores';
+import ExportadorFrases from './Fotos/ExportadorFrases'
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
@@ -12,7 +14,6 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
-  ScrollView,
   AsyncStorage,
   Dimensions
 } from 'react-native';
@@ -20,6 +21,15 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
+
+function createData(item, nombre) {
+  return {
+    id_rutina: item.id_rutina,
+    nombre_rutina: nombre,
+    modificable: item.modificable,
+    rutina: [],
+  };
+}
 
 class RutinasTipos extends Component {
 
@@ -33,19 +43,25 @@ class RutinasTipos extends Component {
       rutinas: [],
       isLoading: true,
       generoEvento: [],
+      idioma: {}
     };
-    this.cargarRutinas();
   }
 
-  cargarRutinas = async () => {
-    if (await this.props.navigation.getParam('tipo_rutina') != "Propias") {
-      base.traerRutinas(await this.props.navigation.getParam('tipo_rutina'), this.okRutinas.bind(this))
+  componentDidMount(){
+    base.traerIdioma(this.cargarRutinas.bind(this))
+  }
+  cargarRutinas = async (idioma) => {
+    if (this.props.navigation.getParam('id_tipo') != null) {
+      base.traerRutinas(await this.props.navigation.getParam('id_tipo'), idioma, this.okRutinas.bind(this))
     } else {
-      base.traerRutinasPropias(this.okRutinas.bind(this))
+      base.traerRutinasPropias(idioma, this.okRutinas.bind(this))
     }
   }
-  okRutinas(rutinasNueva) {
-    this.setState({ rutinas: rutinasNueva, isLoading: false });
+
+  okRutinas(rutinasNueva, idioma) {
+
+    this.setState({idioma: idioma, rutinas: rutinasNueva, isLoading: false });
+    
   }
 
   _storeData = async (id_rutina) => {
@@ -74,13 +90,11 @@ class RutinasTipos extends Component {
       rutinas2[aux].favoritos = 1
       fav = 1
     }
-    //this.setState({ rutinas: rutinas2 })   
     base.favoritearRutina(id_rutina, fav, this.okFavorito.bind(this))
   }
 
   okFavorito() {
-    this.cargarRutinas()
-    //this.setState({ isLoading: false })
+    this.cargarRutinas(this.state.idioma)
   }
 
   favoritos(favoritos) {
@@ -93,18 +107,18 @@ class RutinasTipos extends Component {
   }
   favoritosLabel(favoritos) {
     if (favoritos) {
-      return "Favorito"
+      return ExportadorFrases.FavoritosLabel(this.state.idioma.id_idioma)
     }
     else {
-      return "No Favorito"
+      return ExportadorFrases.FavoritosNoLabel(this.state.idioma.id_idioma)
     }
   }
   favoritosHint(favoritos) {
     if (favoritos) {
-      return "Sacar de Favoritos esta Rutina"
+      return ExportadorFrases.FavoritosNoHint(this.state.idioma.id_idioma)
     }
     else {
-      return "Agregar esta Rutina a favoritos"
+      return ExportadorFrases.FavoritosHint(this.state.idioma.id_idioma)
     }
   }
   marginSize(item){
@@ -114,7 +128,41 @@ class RutinasTipos extends Component {
       return {marginBottom: height * 0.02, marginTop: height * 0.02}
     }
   }
+  crearDatosAEnviar(rutina, nombre_rutina){
+    this.setState({isLoading: true})
+    base.traerEjerciciosRutinaJoin(createData(rutina, nombre_rutina), this.enviar.bind(this))
 
+  }
+ enviar(rutina){
+  this.props.onPressGo(rutina.id_rutina, rutina.nombre_rutina, rutina.modificable, rutina.rutina)
+  this.setState({isLoading: false})
+ }
+ queNombreRutina(rutina){
+  if(rutina.nombre_rutina == null){
+    if(this.state.idioma.id_idioma == 1){
+      return rutina.nombre_rutina_es
+    }
+    if(this.state.idioma.id_idioma == 2){
+      return rutina.nombre_rutina_en
+    }
+  }else{
+      return rutina.nombre_rutina
+    }
+ }
+ creador(creador){
+   if(creador == 'Propia'){
+     return ExportadorFrases.Propia(this.state.idioma.id_idioma)
+   }
+   return creador
+ }
+ diaDias(dias, id_idioma){
+   if(dias > 1){
+     return ExportadorFrases.Dias(id_idioma)
+   }
+   else{
+    return ExportadorFrases.Dia(id_idioma)
+   }
+ }
   render() {
     if (this.state.isLoading) {
       return (
@@ -129,7 +177,7 @@ class RutinasTipos extends Component {
           <View style={[styles.NoItemsContainer]}>
             <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
             <View style={styles.NoItems}>
-              <Text style={styles.NoItemsText}>Ups! {"\n"} No hay ninguna Rutina Propia</Text>
+              <Text style={styles.NoItemsText}>{ExportadorFrases.RutinasPropiasNo(this.state.idioma.id_idioma)}</Text>
             </View>
             <View style={styles.NoItemsImageContainer}>
               <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
@@ -137,11 +185,10 @@ class RutinasTipos extends Component {
             </View>
             <AdMobBanner
               accessible={true}
-              accessibilityLabel={"Add Banner"}
-              accessibilityHint={"Navega al Anuncio"}
+              accessibilityLabel={"Banner"}
+              accessibilityHint={ExportadorFrases.BannerHint(this.state.idioma.id_idioma)}
               style={styles.bottomBanner}
               adUnitID={ExportadorAds.Banner()}
-              //useEffect={setTestDeviceIDAsync('EMULATOR')}
               onDidFailToReceiveAdWithError={err => {
                 console.log(err)
               }}
@@ -149,7 +196,6 @@ class RutinasTipos extends Component {
                 console.log("Ad Recieved");
               }}
               adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-            //didFailToReceiveAdWithError={this.bannerError()}
             />
           </View>
         );
@@ -160,17 +206,37 @@ class RutinasTipos extends Component {
             <FlatList
              style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
-              data={this.state.rutinas.sort((a, b) => a.nombre.localeCompare(b.nombre))}
+              data={this.state.rutinas.sort((a, b) => {
+                if(a.nombre_rutina != null && b.nombre_rutina != null ){
+                  a.nombre_rutina.localeCompare(b.nombre_rutina)
+                }else{
+                  if(a.nombre_rutina == null){
+                    if(this.state.idioma.id_idioma == 1){
+                      a.nombre_rutina_es.localeCompare(b.nombre_rutina)
+                    }else{
+                      a.nombre_rutina_en.localeCompare(b.nombre_rutina)
+                    }
+                  }else{
+                    if(this.state.idioma.id_idioma == 2){
+                      a.nombre_rutina.localeCompare(b.nombre_rutina_es)
+                    }else{
+                      a.nombre_rutina.localeCompare(b.nombre_rutina_en)
+                    }
+                  }
+                }
+              })}
               initialNumToRender={50}
               keyExtractor={(item) => {
-                return item.nombre.toString();
+                return item.id_rutina.toString();
               }}
               renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre, item.modificable)}>
+                  <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.crearDatosAEnviar(item, this.queNombreRutina(item))}>
+                    <Image style={styles.image} source={ExportadorCreadores.queImagen(item.id_creador)} />
                     <View style={styles.cardContent}>
-                      <Text style={styles.name}>{item.nombre}</Text>
-                      <Text style={styles.dias}>{item.dias} Dias</Text>
+                      <Text style={styles.name}>{this.queNombreRutina(item)}</Text>
+                      <Text style={styles.dias}>{item.dias} {this.diaDias(item.dias, this.state.idioma.id_idioma)}</Text>
+                      <Text style={styles.dias}>{ExportadorFrases.Autor(this.state.idioma.id_idioma)}: {this.creador(item.nombre_creador)}</Text>
                     </View>
                     <View style={styles.ViewEstrella} >
                       <TouchableOpacity
@@ -187,11 +253,10 @@ class RutinasTipos extends Component {
               <View style={styles.bannerContainer}></View>
             <AdMobBanner
               accessible={true}
-              accessibilityLabel={"Add Banner"}
-              accessibilityHint={"Navega al Anuncio"}
+              accessibilityLabel={"Banner"}
+              accessibilityHint={ExportadorFrases.BannerHint(this.state.idioma.id_idioma)}
               style={styles.bottomBanner}
               adUnitID={ExportadorAds.Banner()}
-              useEffect={setTestDeviceIDAsync('EMULATOR')}
               onDidFailToReceiveAdWithError={err => {
                 console.log(err)
               }}
@@ -199,7 +264,7 @@ class RutinasTipos extends Component {
                 console.log("Ad Recieved");
               }}
               adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-            //didFailToReceiveAdWithError={this.bannerError()}
+
             />
           </View>
         );
@@ -258,7 +323,6 @@ const styles = StyleSheet.create({
   bottomBanner: {
     position: "absolute",
     bottom: 0,
-    height: height * 0.08,
     alignSelf: "center"
   },
   contentList: {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
+import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorGifs from './Fotos/ExportadorGifs';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorAds from './Fotos/ExportadorAds';
@@ -40,10 +41,11 @@ class EjercicioEspecifico extends Component {
     base.traerEjercicioEspecifico(await this.props.navigation.getParam('id_ejercicio'), this.okEjercicio.bind(this));
   }
 
-  okEjercicio(data) {
+  okEjercicio(data, idioma) {
     this.setState({
       detalle: data[0],
       isLoading: false,
+      idioma: idioma
     });
   }
   marginSize(item){
@@ -72,7 +74,7 @@ class EjercicioEspecifico extends Component {
             <View style={styles.todo}>
               <DropDownItem contentVisible={false}
                 header={
-                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Descripcion</Text></View>
+                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{ExportadorFrases.Descripcion(this.state.idioma)}</Text></View>
                 }
               >
                 <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
@@ -81,7 +83,7 @@ class EjercicioEspecifico extends Component {
             <View style={styles.todo}>
               <DropDownItem contentVisible={false}
                 header={
-                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Ejecucion</Text></View>
+                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{ExportadorFrases.Ejecucion(this.state.idioma)}</Text></View>
                 }
               >
 
@@ -93,7 +95,6 @@ class EjercicioEspecifico extends Component {
           <AdMobBanner
           style={styles.bottomBanner}
           adUnitID={ExportadorAds.Banner()}
-          //useEffect  = {setTestDeviceIDAsync('EMULATOR')}
           onDidFailToReceiveAdWithError={err => {
             console.log(err)
           }}
@@ -101,7 +102,6 @@ class EjercicioEspecifico extends Component {
             console.log("Ad Recieved");
           }}
           adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
-          //didFailToReceiveAdWithError={this.bannerError()}
         />
         </View>
       );
@@ -113,7 +113,7 @@ class EjercicioEspecifico extends Component {
           <View style={styles.todo}>
             <DropDownItem contentVisible={false}
               header={
-                <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Descripcion</Text></View>
+                <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{ExportadorFrases.Descripcion(this.state.idioma)}</Text></View>
               }
             >
               <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
@@ -122,7 +122,7 @@ class EjercicioEspecifico extends Component {
           <View style={styles.todo}>
             <DropDownItem contentVisible={false}
               header={
-                <View style={styles.backgroundTitulo}><Text style={styles.titulo}>Ejecucion</Text></View>
+                <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{ExportadorFrases.Ejecucion(this.state.idioma)}</Text></View>
               }
             >
 
@@ -134,10 +134,9 @@ class EjercicioEspecifico extends Component {
         <AdMobBanner
           accessible={true}
           accessibilityLabel={"Add Banner"}
-          accessibilityHint={"Navega al Anuncio"}
+          accessibilityHint={ExportadorFrases.BannerHint(this.state.idioma)}
           style={styles.bottomBanner}
           adUnitID={ExportadorAds.Banner()}
-          //useEffect  = {setTestDeviceIDAsync('EMULATOR')}
           onDidFailToReceiveAdWithError={err => {
             console.log(err)
           }}
@@ -145,7 +144,6 @@ class EjercicioEspecifico extends Component {
             console.log("Ad Recieved");
           }}
           adViewDidReceiveAd={ (e) => { console.log('adViewDidReceiveAd', e) } }
-          //didFailToReceiveAdWithError={this.bannerError()}
         />
       </View>
     );
@@ -168,7 +166,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     alignSelf: 'center',
-    height: height * 0.08,
   },
   bgImage: {
     flex: 1,
@@ -203,7 +200,7 @@ const styles = StyleSheet.create({
     fontSize: height * 0.025,
   },
   image: {
-    height: height * 0.50,
+    height: height * 0.55,
     width: width,
   },
 })

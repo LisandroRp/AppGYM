@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
-import ExportadorMenus from './Fotos/ExportadorMenus'
-import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorFrases from './Fotos/ExportadorFrases';
+import ExportadorMenus from './Fotos/ExportadorMenus';
+import ExportadorFondo from './Fotos/ExportadorFondo';
+import * as Font from 'expo-font';
+import base from './GenerarBase';
 import {
   StyleSheet,
   Text,
   View,
   Image,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  ImageBackground
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 class Favoritos extends Component {
 
@@ -19,9 +23,27 @@ class Favoritos extends Component {
       searchBarFocused: false,
       modalVisible: false,
       suplementos: [],
-      isLoading: false,
+      id_idioma: 0,
+      isLoading: true,
+      isLoadingFont: true,
     };
   }
+  componentDidMount = async() => {
+    this.loadFont()
+    base.traerIdIdioma(this.okIdIdioma.bind(this))
+  }
+  loadFont = async() => {
+    await Font.loadAsync({
+      'font1': require('../assets/fonts/BebasNeue-Regular.ttf'),
+      'font2': require('../assets/fonts/BebasNeue-Bold.ttf'),
+    });
+    this.setState({ isLoadingFont: false })
+  }
+
+  okIdIdioma(id_idioma){
+    this.setState({id_idioma: id_idioma, isLoading: false})
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -35,18 +57,24 @@ class Favoritos extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
 
-            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoEjercicios()}>
-              <Image style={styles.image} source={ExportadorMenus.Ejercicios()} />
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas()}>
+            <ImageBackground style={styles.image} source={ExportadorMenus.Rutinas()} >
+              <Text style={[styles.textImage, { fontFamily: 'font2' }]}>{ExportadorFrases.Rutinas(this.state.id_idioma)}</Text>
+            </ImageBackground>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas()}>
-              <Image style={styles.image} source={ExportadorMenus.Rutinas()} />
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoEjercicios()}>
+            <ImageBackground style={styles.image} source={ExportadorMenus.Ejercicios()} >
+              <Text style={[styles.textImage, { fontFamily: 'font2' }]}>{ExportadorFrases.Ejercicios(this.state.id_idioma)}</Text>
+            </ImageBackground>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoSuplementos()}>
-              <Image style={styles.image} source={ExportadorMenus.Suplementacion()} />
-            </TouchableOpacity>
-                  
+          <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoSuplementos()}>
+            <ImageBackground style={styles.image} source={ExportadorMenus.Suplementacion()} >
+              <Text style={[styles.textImage, { fontFamily: 'font2' }]}>{ExportadorFrases.Suplementos(this.state.id_idioma)}</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+
         </View>
       );
     }
@@ -78,7 +106,20 @@ const styles = StyleSheet.create({
     marginVertical: hp(0.2),
     marginHorizontal: wp(0.1),
     borderWidth: 1.5,
-    borderColor: 'black'
+    borderColor: 'black',
+    justifyContent: 'center',
+    overflow: 'hidden'
+  },
+  textImage: {
+    textAlign: 'center',
+    fontSize: hp(8),
+    textTransform: 'uppercase',
+    color: "#2A73E0",
+    letterSpacing: wp(2),
+    fontWeight: 'bold',
+    textShadowColor: 'black',
+    textShadowOffset: {width: 2.5, height: 2.5},
+    textShadowRadius: 0.1
   }
 })
 

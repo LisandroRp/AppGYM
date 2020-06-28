@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import base from './GenerarBase';
+import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorAds from './Fotos/ExportadorAds';
 import { withNavigation } from 'react-navigation';
@@ -31,7 +32,11 @@ class EjerciciosNew extends Component {
     super(props);
     this.state = {
       ejercicio: {},
+      id_ejercicio: this.props.navigation.getParam('id_ejercicio'),
+      id_idioma: 0,
       isLoading: true,
+      actualizando: false,
+      borrando: false,
       modalGuardarVisible: false,
       modalBorrarVisible: false,
       modalExiste: false,
@@ -40,7 +45,7 @@ class EjerciciosNew extends Component {
       nombre: "",
       descripcion: "",
       ejecucion: "",
-      nombres: ''
+      nombresRutinas: ''
     };
     this.cargarEjercicio();
   }
@@ -67,19 +72,22 @@ class EjerciciosNew extends Component {
   okEjercicio(data) {
     this.setState({
       ejercicio: data[0],
-      isLoading: false,
-      musculo: data[0].musculo,
-      elemento: data[0].elemento,
-      nombre: data[0].nombre,
+      musculo: data[0].id_musculo,
+      elemento: data[0].id_elemento,
+      nombre: data[0].nombre_ejercicio,
       descripcion: data[0].descripcion,
       ejecucion: data[0].ejecucion,
     });
+    base.traerIdIdioma(this.okIdIdioma.bind(this))
+  }
+  okIdIdioma(id_idioma) {
+    this.setState({ id_idioma: id_idioma, isLoading: false })
   }
 
   actualizarEjercicio() {
     var ejercicioUpdate = this.state.ejercicio
 
-    this.setState({ modalGuardarVisible: false })
+    this.setState({ modalGuardarVisible: false, isLoading: true, actualizando: true })
     ejercicioUpdate.nombre = this.state.nombre
     ejercicioUpdate.musculo = this.state.musculo
     ejercicioUpdate.elemento = this.state.elemento
@@ -90,46 +98,42 @@ class EjerciciosNew extends Component {
   cancelarEjercicio() {
     this.props.onPressCancelar()
   }
-  borrarEjercicio(id_ejercicio) {
+  borrarEjercicio() {
+    this.setState({ modalBorrarVisible: false, isLoading: true, borrando: true })
+    base.estaEjercicioRutina(this.state.id_ejercicio, this.okEsta.bind(this))
 
-    this.setModalBorrarVisible(!this.state.modalBorrarVisible)
-    base.estaEjercicioRutina(id_ejercicio, this.okEsta.bind(this))
-    
   }
-  okEsta(rutina, id_ejercicio){
-    if(rutina.length == 0){
+  okEsta(rutina, id_ejercicio) {
+    if (rutina.length == 0) {
       base.borrarEjercicio(id_ejercicio, this.okEjercicioBorrado.bind(this))
-    }else{
-      var nombres = ''
-      for(i = 0; i < rutina.length; i++){
-        nombres = nombres + '"' + rutina[i].nombre + '"' + ' '
+    } else {
+      var nombresRutinas = ''
+      for (i = 0; i < rutina.length; i++) {
+        nombresRutinas = nombresRutinas + '"' + rutina[i].nombre_rutina + '"' + ' '
       }
-      this.setModalExisteVisible(true, nombres)
+      this.setModalExisteVisible(true, nombresRutinas)
     }
   }
-  okEjercicioBorrado(){
+  okEjercicioBorrado() {
     this.showInterstitial()
   }
   setModalGuardarVisible(visible) {
     this.setState({ modalGuardadVisible: visible });
   }
-  setModalBorrarVisible(visible) {
-    this.setState({ modalBorrarVisible: visible });
-  }
-  setModalExisteVisible(visible, nombres){
-    this.setState({ modalExiste: visible, nombres: nombres });
+  setModalExisteVisible(visible, nombresRutinas) {
+    this.setState({ modalExiste: visible, nombresRutinas: nombresRutinas });
   }
   botonGuardar() {
-    if (this.state.nombre == "") {
-      alert("Debes escribir el nombre del ejercicio")
+    if (this.state.nombre == '') {
+      alert(ExportadorFrases.NombreEjercicioObligatorio(this.state.id_idioma))
       return
     }
-    if (this.state.musculo == "") {
-      alert("Debes seleccionar el musculo del ejercicio")
+    if (this.state.musculo == '') {
+      alert(ExportadorFrases.MusculoEjercicioObligatorio(this.state.id_idioma))
       return
     }
-    if (this.state.elemento == "") {
-      alert("Debes seleccionar el elemento a usar del ejercicio")
+    if (this.state.elemento == '') {
+      alert(ExportadorFrases.MusculoElementoObligatorio(this.state.id_idioma))
       return
     }
     this.setState({ modalGuardarVisible: true })
@@ -137,12 +141,46 @@ class EjerciciosNew extends Component {
 
   render() {
     if (this.state.isLoading) {
-      return (
-        <View style={styles.container}>
-          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-          <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
-        </View>
-      );
+      if (this.state.actualizando || this.state.borrando) {
+        if (this.state.actualizando) {
+          return (
+            <View style={styles.container}>
+              <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+              <View style={styles.insideContainer} >
+
+                <ActivityIndicator size="large" color="#3399ff" style={{}}></ActivityIndicator>
+
+                <View style={styles.slide1}>
+                  <Text style={styles.slideText}>{ExportadorFrases.ActualizandoEjercicio(this.state.id_idioma)}</Text>
+                </View>
+              </View>
+            </View>
+          );
+        }
+        if (this.state.borrando) {
+          return (
+            <View style={styles.container}>
+              <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+              <View style={styles.insideContainer} >
+
+                <ActivityIndicator size="large" color="#3399ff" style={{}}></ActivityIndicator>
+
+                <View style={styles.slide1}>
+                  <Text style={styles.slideText}>{ExportadorFrases.BorrandoEjercicio(this.state.id_idioma)}</Text>
+                </View>
+              </View>
+            </View>
+          );
+        }
+      }
+      else {
+        return (
+          <View style={styles.container}>
+            <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+            <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
+          </View>
+        );
+      }
     } else {
       return (
         <View style={styles.container}>
@@ -155,7 +193,7 @@ class EjerciciosNew extends Component {
                   <RNPickerSelect
                     useNativeAndroidPickerStyle={false}
                     placeholder={{
-                      label: 'Musculo del Ejercicio',
+                      label: ExportadorFrases.MusculoEjercicio(this.state.id_idioma),
                       value: '0',
                     }}
                     value={this.state.musculo}
@@ -194,20 +232,20 @@ class EjerciciosNew extends Component {
                     }}
                     onValueChange={(value) => this.setState({ musculo: value })}
                     items={[
-                      { label: 'Pecho', value: 'Pecho' },
-                      { label: 'Espalda', value: 'Espalda' },
-                      { label: 'Hombros', value: 'Hombros' },
-                      { label: 'Piernas', value: 'Piernas' },
-                      { label: 'Biceps', value: 'Biceps' },
-                      { label: 'Triceps', value: 'Triceps' },
-                      { label: 'Abdominales', value: 'Abdominales' },
-                      { label: 'Cardio', value: 'Cardio' },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 1), value: 1 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 2), value: 2 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 3), value: 3 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 4), value: 4 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 5), value: 5 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 6), value: 6 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 7), value: 7 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 8), value: 8 },
                     ]}
                   />
                   <RNPickerSelect
                     useNativeAndroidPickerStyle={false}
                     placeholder={{
-                      label: 'Elemento del Ejercicio',
+                      label: ExportadorFrases.ElementoEjercicio(this.state.id_idioma),
                       value: '0',
                     }}
                     value={this.state.elemento}
@@ -244,25 +282,27 @@ class EjerciciosNew extends Component {
                     }}
                     onValueChange={(value) => this.setState({ elemento: value })}
                     items={[
-                      { label: 'Barra', value: 'Barra' },
-                      { label: 'Mancuernas', value: 'Mancuernas' },
-                      { label: 'Libre', value: 'Libre' },
+                      { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 1), value: 1 },
+                      { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 2), value: 2 },
+                      { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 3), value: 3 },
+                      { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 4), value: 4 },
+                      { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 5), value: 5 },
                     ]}
                   />
-                  <TextInput style={styles.TextContainer} maxLength={33} placeholder='Nombre' placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
-                  <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder='Descripcion' placeholderTextColor='black' onChangeText={(descripcion) => this.setState({ descripcion })} value={this.state.descripcion}></TextInput>
-                  <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder='Ejecucion' placeholderTextColor='black' onChangeText={(ejecucion) => this.setState({ ejecucion })} value={this.state.ejecucion}></TextInput>
+                  <TextInput style={styles.TextContainer} maxLength={33} placeholder={ExportadorFrases.Nombre(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
+                  <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder={ExportadorFrases.Descripcion(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(descripcion) => this.setState({ descripcion })} value={this.state.descripcion}></TextInput>
+                  <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder={ExportadorFrases.Ejecucion(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(ejecucion) => this.setState({ ejecucion })} value={this.state.ejecucion}></TextInput>
 
                   <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
-                    <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setModalBorrarVisible(!this.state.modalBorrarVisible)}}>
+                    <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalBorrarVisible: true }) }}>
                       <Text style={styles.screenButtonText}>
-                        Borrar
-                </Text>
+                        {ExportadorFrases.Borrar(this.state.id_idioma)}
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.guardarButton} onPress={() => { this.botonGuardar() }}>
                       <Text style={styles.screenButtonText}>
-                        Actualizar
-                </Text>
+                        {ExportadorFrases.Actualizar(this.state.id_idioma)}
+                      </Text>
                     </TouchableOpacity>
                   </View>
 
@@ -278,16 +318,16 @@ class EjerciciosNew extends Component {
 
             <View style={styles.modal}>
               <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                <Text style={styles.textButton}>Desea actualizar el Ejercicio "{this.state.nombre}"</Text>
+                <Text style={styles.textButton}>{ExportadorFrases.ActualizarEjercicioModal(this.state.id_idioma)} "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
 
                 <TouchableOpacity onPress={() => { this.setState({ modalGuardarVisible: false }) }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>Cancelar</Text>
+                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => this.actualizarEjercicio()} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>Aceptar</Text>
+                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
                 </TouchableOpacity>
 
               </View>
@@ -301,16 +341,16 @@ class EjerciciosNew extends Component {
 
             <View style={styles.modal}>
               <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                <Text style={styles.textButton}>Esta seguro que desea borrar el ejercicio "{this.state.nombre}"</Text>
+                <Text style={styles.textButton}>{ExportadorFrases.BorrarEjercicio(this.state.id_idioma)} "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
 
-                <TouchableOpacity onPress={() => { this.setModalBorrarVisible(!this.state.modalBorrarVisible) }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>Cancelar</Text>
+                <TouchableOpacity onPress={() => { this.setState({ modalBorrarVisible: false }) }} style={styles.modalButtonCancelar}>
+                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => base.conseguirIdEjercicioParaBorrar(this.state.nombre, this.borrarEjercicio.bind(this))} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>Aceptar</Text>
+                <TouchableOpacity onPress={() => this.borrarEjercicio()} style={styles.modalButtonAceptar}>
+                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
 
                 </TouchableOpacity>
               </View>
@@ -323,13 +363,13 @@ class EjerciciosNew extends Component {
             onRequestClose={() => this.setState({ modalExiste: false })}  >
 
             <View style={styles.modalExiste}>
-              <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal:  height * 0.05}}>
-                <Text style={styles.textButton}>El ejercicio {this.state.nombre} pertenece a las rutinas: {this.state.nombres} {"\n"}Debe elimnarlos de las rutinas primero</Text>
+              <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: height * 0.05 }}>
+                <Text style={styles.textButton}>{ExportadorFrases.EjercicioPertenece1(this.state.id_idioma)} {this.state.nombre} {ExportadorFrases.EjercicioPertenece2(this.state.id_idioma)} {this.state.nombresRutinas} {"\n"}{ExportadorFrases.EjercicioPertenece3(this.state.id_idioma)}</Text>
               </View>
               <View style={styles.modal2}>
 
-                <TouchableOpacity onPress={() => this.setState({modalExiste: false})} style={styles.modalExisteButtonAceptar}>
-                  <Text style={styles.textButton}>Aceptar</Text>
+                <TouchableOpacity onPress={() => this.setState({ modalExiste: false })} style={styles.modalExisteButtonAceptar}>
+                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
 
                 </TouchableOpacity>
               </View>
@@ -346,6 +386,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: "grey"
+  },
+  insideContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  slide1: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 10,
+    opacity: .95,
+    alignSelf: 'center',
+    marginTop: hp(5)
+  },
+  slideText: {
+    alignSelf: "center",
+    fontSize: 18,
+    color: "#3399ff"
   },
 
   inputContainer: {
@@ -448,7 +505,8 @@ const styles = StyleSheet.create({
     fontSize: height * 0.02,
     alignSelf: 'center',
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    padding: hp(1)
   },
   modalButtonCancelar: {
     width: width * 0.37,

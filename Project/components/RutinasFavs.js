@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
+import ExportadorCreadores from './Fotos/ExportadorCreadores';
+import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
@@ -12,7 +14,6 @@ import {
     TouchableOpacity,
     FlatList,
     ActivityIndicator,
-    ScrollView,
     Dimensions,
     Modal
 } from 'react-native';
@@ -30,20 +31,22 @@ class RutinasFavs extends Component {
             isLoading: true,
             modalVisible: false,
             id_ruitna: '',
-            nombre: ""
+            nombre_rutina: "",
+            idioma: {}
         };
-        this.cargarRutinasFavoritas();
+    }
+    componentDidMount() {
+        base.traerIdioma(this.cargarRutinasFavoritas.bind(this))
+    }
+    cargarRutinasFavoritas = async (idioma) => {
+        base.traerRutinasFavoritas(this.okRutinas.bind(this), idioma)
+    }
+    okRutinas(rutinas, idioma) {
+        this.setState({ rutinas: rutinas, idioma: idioma, isLoading: false });
     }
 
-    cargarRutinasFavoritas = async () => {
-        base.traerRutinasFavoritas(this.okRutinas.bind(this))
-    }
-    okRutinas(rutinas) {
-        this.setState({ rutinas: rutinas, isLoading: false });
-    }
-
-    modalVisible(id, nombre) {
-        this.setState({ id_rutina: id, nombre: nombre, modalVisible: true })
+    modalVisible(id, nombre_rutina) {
+        this.setState({ id_rutina: id, nombre_rutina: nombre_rutina, modalVisible: true })
     }
 
     favear(id_rutina) {
@@ -79,16 +82,34 @@ class RutinasFavs extends Component {
 
     okFavorito() {
         this.cargarRutinasFavoritas()
-        //this.setState({ isLoading: false })
     }
-    marginSize(item){
-        if(item.id_rutina !=  this.state.rutinas[this.state.rutinas.length-1].id_rutina){
-          return {marginTop: height * 0.02}
+    marginSize(item) {
+        if (item.id_rutina != this.state.rutinas[this.state.rutinas.length - 1].id_rutina) {
+            return { marginTop: height * 0.02 }
+        } else {
+            return { marginBottom: height * 0.02, marginTop: height * 0.02 }
+        }
+    }
+    queNombreRutina(rutina){
+        if(rutina.nombre_rutina == null){
+          if(this.state.idioma.id_idioma == 1){
+            return rutina.nombre_rutina_es
+          }
+          if(this.state.idioma.id_idioma == 2){
+            return rutina.nombre_rutina_en
+          }
         }else{
-          return {marginBottom: height * 0.02, marginTop: height * 0.02}
+            return rutina.nombre_rutina
+          }
+       }
+       diaDias(dias, id_idioma){
+        if(dias > 1){
+          return ExportadorFrases.Dias(id_idioma)
+        }
+        else{
+         return ExportadorFrases.Dia(id_idioma)
         }
       }
-
     render() {
         if (this.state.isLoading) {
             return (
@@ -104,18 +125,17 @@ class RutinasFavs extends Component {
                     <View style={[styles.NoItemsContainer]}>
                         <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                         <View style={styles.NoItems}>
-                            <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Rutinas agregadas a tu lista</Text>
+                            <Text style={styles.NoItemsText}>{ExportadorFrases.RutinasNo(this.state.idioma.id_idioma)}</Text>
                         </View>
                         <View style={styles.NoItemsImageContainer}>
                             <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
                         </View>
                         <AdMobBanner
                             accessible={true}
-                            accessibilityLabel={"Add Banner"}
-                            accessibilityHint={"Navega al Anuncio"}
+                            accessibilityLabel={"Banner"}
+                            accessibilityHint={ExportadorFrases.BannerHint(this.state.idioma.id_idioma)}
                             style={styles.bottomBanner}
                             adUnitID={ExportadorAds.Banner()}
-                            useEffect={setTestDeviceIDAsync('EMULATOR')}
                             onDidFailToReceiveAdWithError={err => {
                                 console.log(err)
                             }}
@@ -123,7 +143,6 @@ class RutinasFavs extends Component {
                                 console.log("Ad Recieved");
                             }}
                             adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-                        //didFailToReceiveAdWithError={this.bannerError()}
                         />
                     </View>
                 );
@@ -134,7 +153,25 @@ class RutinasFavs extends Component {
                         <FlatList
                             style={styles.contentList}
                             columnWrapperStyle={styles.listContainer}
-                            data={this.state.rutinas.sort((a, b) => a.nombre.localeCompare(b.nombre))}
+                            data={this.state.rutinas.sort((a, b) => {
+                                if (a.nombre_rutina != null && b.nombre_rutina != null) {
+                                    a.nombre_rutina.localeCompare(b.nombre_rutina)
+                                } else {
+                                    if (a.nombre_rutina == null) {
+                                        if (this.state.idioma.id_idioma == 1) {
+                                            a.nombre_rutina_es.localeCompare(b.nombre_rutina)
+                                        } else {
+                                            a.nombre_rutina_en.localeCompare(b.nombre_rutina)
+                                        }
+                                    } else {
+                                        if (this.state.idioma.id_idioma == 2) {
+                                            a.nombre_rutina.localeCompare(b.nombre_rutina_es)
+                                        } else {
+                                            a.nombre_rutina.localeCompare(b.nombre_rutina_en)
+                                        }
+                                    }
+                                }
+                            })}
                             initialNumToRender={50}
                             keyExtractor={(item) => {
                                 return item.id_rutina.toString();
@@ -142,13 +179,15 @@ class RutinasFavs extends Component {
                             renderItem={({ item }) => {
                                 if (item.favoritos) {
                                     return (
-                                        <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre, item.modificable)}>
+                                        <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre_rutina, item.modificable)}>
+                                            <Image style={styles.image} source={ExportadorCreadores.queImagen(item.id_creador)} />
                                             <View style={styles.cardContent}>
-                                                <Text style={styles.name}>{item.nombre}</Text>
-                                                <Text style={styles.dias}>{item.dias} Dias</Text>
+                                                <Text style={styles.name}>{this.queNombreRutina(item)}</Text>
+                                                <Text style={styles.dias}>{item.dias} {this.diaDias(item.dias, this.state.idioma.id_idioma)}</Text>
+                                                <Text style={styles.dias}>{ExportadorFrases.Autor(this.state.idioma.id_idioma)}: {item.nombre_creador}</Text>
                                             </View>
                                             <View style={styles.ViewEstrella} >
-                                                <TouchableOpacity onPress={() => { this.modalVisible(item.id_rutina, item.nombre) }}>
+                                                <TouchableOpacity onPress={() => { this.modalVisible(item.id_rutina, item.nombre_rutina) }}>
                                                     <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
                                                 </TouchableOpacity>
                                             </View>
@@ -156,7 +195,7 @@ class RutinasFavs extends Component {
                                     )
                                 }
                             }} />
-                            <View style={styles.bannerContainer}></View>
+                        <View style={styles.bannerContainer}></View>
                         <Modal
                             animationType="fade"
                             visible={this.state.modalVisible}
@@ -166,16 +205,16 @@ class RutinasFavs extends Component {
                             <View style={styles.modal}>
 
                                 <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: width * 0.05 }}>
-                                    <Text style={styles.textButton}>Desea sacar la rutina "{this.state.nombre}" de su lista de favoritos</Text>
+                                    <Text style={styles.textButton}>{ExportadorFrases.SacarRutinaFavs1(this.state.idioma.id_idioma)} "{this.state.nombre_rutina}" {ExportadorFrases.SacarRutinaFavs2(this.state.idioma.id_idioma)}?</Text>
                                 </View>
                                 <View style={styles.modal2}>
 
                                     <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
-                                        <Text style={styles.textButton}>Cancelar</Text>
+                                        <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.idioma.id_idioma)}</Text>
                                     </TouchableOpacity>
 
                                     <TouchableOpacity onPress={() => this.favear(this.state.id_rutina)} style={styles.modalButtonAceptar}>
-                                        <Text style={styles.textButton}>Aceptar</Text>
+                                        <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.idioma.id_idioma)}</Text>
                                     </TouchableOpacity>
 
                                 </View>
@@ -183,11 +222,10 @@ class RutinasFavs extends Component {
                         </Modal>
                         <AdMobBanner
                             accessible={true}
-                            accessibilityLabel={"Add Banner"}
-                            accessibilityHint={"Navega al Anuncio"}
+                            accessibilityLabel={"Banner"}
+                            accessibilityHint={ExportadorFrases.BannerHint(this.state.idioma.id_idioma)}
                             style={styles.bottomBanner}
                             adUnitID={ExportadorAds.Banner()}
-                            useEffect={setTestDeviceIDAsync('EMULATOR')}
                             onDidFailToReceiveAdWithError={err => {
                                 console.log(err)
                             }}
@@ -195,7 +233,6 @@ class RutinasFavs extends Component {
                                 console.log("Ad Recieved");
                             }}
                             adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-                        //didFailToReceiveAdWithError={this.bannerError()}
                         />
                     </LinearGradient>
                 );
@@ -213,26 +250,25 @@ const styles = StyleSheet.create({
     bannerContainer: {
         height: height * 0.08,
         backgroundColor: 'black',
-      },
-      bottomBanner: {
+    },
+    bottomBanner: {
         position: "absolute",
         bottom: 0,
-        height: height * 0.08
-      },
+    },
     contentList: {
         flex: 1,
     },
     NoItemsContainer: {
         backgroundColor: 'grey',
         flex: 1,
-      },
-      NoItemsText: {
+    },
+    NoItemsText: {
         alignSelf: "center",
         fontSize: height * 0.028,
         color: "#3399ff",
         textAlign: 'center'
-      },
-      NoItemsImageContainer: {
+    },
+    NoItemsImageContainer: {
         height: height * 0.55,
         width: height * 0.50,
         marginBottom: height * 0.028,
@@ -242,23 +278,23 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         borderWidth: 4,
         borderRadius: 10,
-      },
-    
-      NoItemsLogo: {
+    },
+
+    NoItemsLogo: {
         height: height * 0.45,
         width: height * 0.45,
         alignSelf: "center",
         marginTop: hp(9),
         marginBottom: hp(6.6)
-      },
-      NoItems: {
+    },
+    NoItems: {
         backgroundColor: "black",
         padding: 10,
         borderRadius: 10,
         opacity: .95,
         marginHorizontal: wp(5),
         marginTop: height * 0.028
-      },
+    },
     bgImage: {
         flex: 1,
         resizeMode,

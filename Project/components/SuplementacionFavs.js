@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo';
+import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion';
 import {
   StyleSheet,
@@ -12,7 +13,8 @@ import {
   Keyboard,
   ActivityIndicator,
   Dimensions,
-  Modal
+  Modal,
+  ImageBackground
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ExportadorLogos from './Fotos/ExportadorLogos';
@@ -31,20 +33,32 @@ class SuplementacionFavs extends Component {
       suplementos: [],
       isLoading: true,
       id_suplemento: '',
-      nombre: ""
+      nombre_suplemento: "",
+      id_idioma: 0
     };
     this.cargarSuplementosFavoritos();
   }
   cargarSuplementosFavoritos = async () => {
     base.traerSuplementosFavoritas(this.okSuplementos.bind(this))
   }
-  okSuplementos(suplementos) {
-    this.setState({
-      suplementos: suplementos,
-      memory: suplementos,
-      isLoading: false,
-    });
+  okSuplementos(suplementos, id_idioma) {
+
+    if (suplementos.length == 0) {
+
+      this.setState({ suplementos: suplementos });
+      base.traerIdIdioma(this.okIdIdioma.bind(this))
+
+    } else {
+      this.setState({
+        suplementos: suplementos,
+        id_idioma: suplementos[0].id_idioma,
+        isLoading: false
+      });
+    }
   }
+  okIdIdioma(id_idioma){
+    this.setState({id_idioma: id_idioma, isLoading: false});
+}
 
   componentDidMount() {
     this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
@@ -67,13 +81,11 @@ class SuplementacionFavs extends Component {
   searchSuplementos = value => {
     const filterDeSuplementos = this.state.memory.filter(suplemento => {
       let suplementoLowercase = (
-        suplemento.nombre +
+        suplemento.nombre_suplemento +
         ' ' +
-        suplemento.descripcion +
+        suplemento.marca +
         ' ' +
-        suplemento.genero +
-        ' ' +
-        suplemento.tipo
+        suplemento.sabores
       ).toLowerCase();
 
       let searchTermLowercase = value.toLowerCase();
@@ -84,8 +96,8 @@ class SuplementacionFavs extends Component {
     this.setState({ value })
   };
 
-  modalVisible(id, nombre) {
-    this.setState({ id_suplemento: id, nombre: nombre, modalVisible: true })
+  modalVisible(id, nombre_suplemento) {
+    this.setState({ id_suplemento: id, nombre_suplemento: nombre_suplemento, modalVisible: true })
   }
   favear(id_suplemento) {
     var i = 0
@@ -144,18 +156,17 @@ class SuplementacionFavs extends Component {
           <View style={[styles.NoItemsContainer]}>
             <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
             <View style={styles.NoItems}>
-              <Text style={styles.NoItemsText}>Ups! {"\n"} No hay Suplementos agregados a tu lista</Text>
+              <Text style={styles.NoItemsText}>{ExportadorFrases.SuplementosNo(this.state.id_idioma)}</Text>
             </View>
             <View style={styles.NoItemsImageContainer}>
               <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
             </View>
             <AdMobBanner
               accessible={true}
-              accessibilityLabel={"Add Banner"}
-              accessibilityHint={"Navega al Anuncio"}
+              accessibilityLabel={"Banner"}
+              accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
               style={styles.bottomBanner}
               adUnitID={ExportadorAds.Banner()}
-              useEffect={setTestDeviceIDAsync('EMULATOR')}
               onDidFailToReceiveAdWithError={err => {
                 console.log(err)
               }}
@@ -163,7 +174,6 @@ class SuplementacionFavs extends Component {
                 console.log("Ad Recieved");
               }}
               adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-            //didFailToReceiveAdWithError={this.bannerError()}
             />
           </View>
         );
@@ -174,22 +184,24 @@ class SuplementacionFavs extends Component {
             <FlatList
               style={styles.contentList}
               columnWrapperStyle={styles.listContainer}
-              data={this.state.suplementos.sort((a, b) => a.nombre.localeCompare(b.nombre))}
+              data={this.state.suplementos.sort((a, b) => a.nombre_suplemento.localeCompare(b.nombre_suplemento))}
               initialNumToRender={50}
               keyExtractor={(item) => {
                 return item.id_suplemento.toString();
               }}
               renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre)}>
+                  <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre_suplemento)}>
                     <View style={{ flexDirection: "row" }} >
-                      <Image style={styles.image} source={ExportadorSuplementacion.queSuplementacion(item.tipo)} />
+                      <ImageBackground style={styles.image} source={ExportadorSuplementacion.default(this.state.id_idioma)}>
+                        <Text style={[styles.textImage, { fontFamily: 'font2' }]} >{item.nombre_tipo}</Text>
+                      </ImageBackground>
                       <View style={styles.cardContent}>
-                        <Text style={styles.name}>{item.nombre}</Text>
+                        <Text style={styles.name}>{item.nombre_suplemento}</Text>
                         <Text style={styles.marca}>{item.marca}</Text>
                       </View>
                       <View style={styles.ViewEstrella} >
-                        <TouchableOpacity onPress={() => { this.modalVisible(item.id_suplemento, item.nombre) }}>
+                        <TouchableOpacity onPress={() => { this.modalVisible(item.id_suplemento, item.nombre_suplemento) }}>
                           <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
                         </TouchableOpacity>
                       </View>
@@ -207,17 +219,17 @@ class SuplementacionFavs extends Component {
 
               <View style={styles.modal}>
 
-                <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: width * 0.05 }}>
-                  <Text style={styles.textButton}>Desea sacar el suplemento "{this.state.nombre}" de su lista de favoritos</Text>
+                <View style={{ flexDirection: 'column', marginVertical: height * 0.03, marginHorizontal: width * 0.05 }}>
+                  <Text style={styles.textButton}>{ExportadorFrases.SacarSuplementoFavs1(this.state.id_idioma)} "{this.state.nombre_suplemento}" {ExportadorFrases.SacarSuplementoFavs2(this.state.id_idioma)}?</Text>
                 </View>
                 <View style={styles.modal2}>
 
                   <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
-                    <Text style={styles.textButton}>Cancelar</Text>
+                    <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity onPress={() => this.favear(this.state.id_suplemento)} style={styles.modalButtonAceptar}>
-                    <Text style={styles.textButton}>Aceptar</Text>
+                    <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
                   </TouchableOpacity>
 
                 </View>
@@ -227,7 +239,6 @@ class SuplementacionFavs extends Component {
             <AdMobBanner
               style={styles.bottomBanner}
               adUnitID={ExportadorAds.Banner()}
-              useEffect={setTestDeviceIDAsync('EMULATOR')}
               onDidFailToReceiveAdWithError={err => {
                 console.log(err)
               }}
@@ -235,7 +246,6 @@ class SuplementacionFavs extends Component {
                 console.log("Ad Recieved");
               }}
               adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-            //didFailToReceiveAdWithError={this.bannerError()}
             />
           </View>
         );
@@ -257,7 +267,6 @@ const styles = StyleSheet.create({
   bottomBanner: {
     position: "absolute",
     bottom: 0,
-    height: height * 0.08
   },
   contentList: {
     flex: 1,
@@ -314,12 +323,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
-    width: wp("20"),
-    height: hp("11"),
+    width: hp("12.2"),
+    height: hp("12.2"),
     borderWidth: 2,
     borderColor: "#ebf0f7",
     margin: 5,
     marginRight: 5,
+    alignSelf: "center",
+    resizeMode: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    overflow: 'hidden'
+  },
+  textImage: {
+    textAlign: 'center',
+    fontSize: hp(2),
+    textTransform: 'uppercase',
+    color: "#2A73E0",
+    letterSpacing: wp(0.5),
+    padding: 1,
+    fontWeight: 'bold',
+    textShadowColor: 'black',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0.1
   },
 
   card: {

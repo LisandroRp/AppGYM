@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
-import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorFrases from './Fotos/ExportadorFrases'
 import ExportadorLogos from './Fotos/ExportadorLogos';
+import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorAds from './Fotos/ExportadorAds';
 import {
   StyleSheet,
@@ -21,7 +22,7 @@ import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import {AdMobInterstitial} from 'expo-ads-admob';
+import { AdMobInterstitial } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
@@ -31,9 +32,13 @@ class RutinaModificable extends Component {
     super(props);
     this.state = {
       isLoading: true,
+      isLoadingIdioma: true,
+      actualizando: false,
+      borrando: false,
+      id_rutina: this.props.navigation.getParam("id_rutina"),
       nombre: this.props.navigation.getParam("nombre_rutina"),
       nombreNuevo: this.props.navigation.getParam("nombre_rutina"),
-      modalGuardarVisible: false,
+      modalBorrarVisible: false,
       modalBorrarTodoVisible: false,
       modalTipoEjercicioTodoVisible: false,
       userSelected: [],
@@ -43,9 +48,12 @@ class RutinaModificable extends Component {
       ultimoDia: 0,
       imagen: '',
       diasTotal: [1, 2, 3, 4, 5, 6, 7],
-      id_rutina: '',
-      update: false
+      update: false,
+      id_idioma: 0
     };
+  }
+  componentDidMount() {
+    base.traerIdIdioma(this.okIdIdioma.bind(this))
   }
 
   componentWillReceiveProps() {
@@ -55,28 +63,32 @@ class RutinaModificable extends Component {
     this._retrieveModificable()
   }
 
+  okIdIdioma(id_idioma) {
+    this.setState({ id_idioma: id_idioma, isLoadingIdioma: false })
+  }
+
   showInterstitial = async () => {
     AdMobInterstitial.setAdUnitID(ExportadorAds.Interracial()); // Test ID, Replace with your-admob-unit-id
-    
-    try{
+
+    try {
       await AdMobInterstitial.requestAdAsync();
       await AdMobInterstitial.showAdAsync();
     }
-    catch(e){
+    catch (e) {
       console.log(e);
     }
-}
-showInterstitialTiempo = async () => {
-  AdMobInterstitial.setAdUnitID(ExportadorAds.InterracialTiempo()); // Test ID, Replace with your-admob-unit-id
-  
-  try{
-    await AdMobInterstitial.requestAdAsync();
-    await AdMobInterstitial.showAdAsync();
   }
-  catch(e){
-    console.log(e);
+  showInterstitialTiempo = async () => {
+    AdMobInterstitial.setAdUnitID(ExportadorAds.InterracialTiempo()); // Test ID, Replace with your-admob-unit-id
+
+    try {
+      await AdMobInterstitial.requestAdAsync();
+      await AdMobInterstitial.showAdAsync();
+    }
+    catch (e) {
+      console.log(e);
+    }
   }
-}
   _retrieveModificable = async () => {
     try {
       const value = await AsyncStorage.getItem('rutinaEditable');
@@ -97,35 +109,34 @@ showInterstitialTiempo = async () => {
 
       if (value !== null) {
         if (JSON.parse(value)[0].combinado) {
-        var combinada1 = JSON.parse(value)[0]
-        var combinada2 = JSON.parse(value)[1]
-        if (this.yaEsta(combinada1) && this.yaEsta(combinada2)) {
-          this.setState({ isLoading: true })
-          ultimoCombinado = this.queCombinado(combinada1.dia)
-          combinada1.combinado = ultimoCombinado.toString()
-          combinada2.combinado = ultimoCombinado.toString()
-          this.setState({ combinado: this.state.combinado + 1 })
-          this.state.rutina.push(combinada1)
-          this.state.rutina.push(combinada2)
-          this.termino()
+          var combinada1 = JSON.parse(value)[0]
+          var combinada2 = JSON.parse(value)[1]
+          if (this.yaEsta(combinada1) && this.yaEsta(combinada2)) {
+            this.setState({ isLoading: true })
+            ultimoCombinado = this.queCombinado(combinada1.dia)
+            combinada1.combinado = ultimoCombinado.toString()
+            combinada2.combinado = ultimoCombinado.toString()
+            this.setState({ combinado: this.state.combinado + 1 })
+            this.state.rutina.push(combinada1)
+            this.state.rutina.push(combinada2)
+            this.termino()
+          } else {
+            alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
+            this._storeData()
+          }
         } else {
-          alert('Este ejercicio ya esta en el dia seleccionado')
-          this._storeData()
-          //this.setState({ showAlert: true })
+          var simple = JSON.parse(value)[0]
+          if (this.yaEsta(simple)) {
+            this.setState({ isLoading: true })
+            simple.combinado = null
+            this.state.rutina.push(simple)
+            this.termino()
+          } else {
+            alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
+            this._storeData()
+            this.setState({ showAlert: true })
+          }
         }
-      } else {
-        var simple = JSON.parse(value)[0]
-        if (this.yaEsta(simple)) {
-          this.setState({ isLoading: true })
-          simple.combinado = null
-          this.state.rutina.push(simple)
-          this.termino()
-        } else {
-          alert('Este ejercicio ya esta en el dia seleccionado')
-          this._storeData()
-          this.setState({ showAlert: true })
-        }
-      }
       } else {
         this.setState({ isLoading: false })
       }
@@ -136,20 +147,20 @@ showInterstitialTiempo = async () => {
   termino() {
     this._storeData()
   }
-  queCombinado(dia){
-    var ultimoCombinado= 0
-    for(i=0; i<this.state.rutina; i++){
-      if(this.state.rutina[i].dia == dia && this.state.rutina[i].combinado != null){
-        ultimoCombinado=this.state.rutina[i].combinado 
+  queCombinado(dia) {
+    var ultimoCombinado = 0
+    for (var i = 0; i < this.state.rutina; i++) {
+      if (this.state.rutina[i].dia == dia && this.state.rutina[i].combinado != null) {
+        ultimoCombinado = this.state.rutina[i].combinado
       }
     }
-    return parseInt(ultimoCombinado+1)
+    return parseInt(ultimoCombinado + 1)
   }
   touch(dia) {
     if (this.diaAnterior(dia) || dia == 1) {
       this.setState({ ultimoDia: dia, modalTipoEjercicioTodoVisible: true })
     } else {
-      alert('Debe agregar ejercicios en el dia ' + (dia - 1) + ' para poder agregar los en este dia')
+      alert(ExportadorFrases.DiaParte1(this.state.id_idioma) + ' ' + (dia - 1) + ' ' + ExportadorFrases.DiaParte2(this.state.id_idioma))
     }
   }
   agregarEjercicio() {
@@ -160,17 +171,17 @@ showInterstitialTiempo = async () => {
     this.setState({ modalTipoEjercicioTodoVisible: false })
     this.props.onPressGo(this.state.ultimoDia, 'modificar', true, this.ultimaPos())
   }
-  ultimaPos(){
-    var ultimaPosicion=0
-    for(i=0;i<this.state.rutina.length;i++){
-      if(this.state.rutina[i].dia == this.state.ultimoDia && this.state.rutina[i].posicion > ultimaPosicion){
+  ultimaPos() {
+    var ultimaPosicion = 0
+    for (var i = 0; i < this.state.rutina.length; i++) {
+      if (this.state.rutina[i].dia == this.state.ultimoDia && this.state.rutina[i].posicion > ultimaPosicion) {
         ultimaPosicion = this.state.rutina[i].posicion
       }
     }
-     return parseInt(ultimaPosicion)+1
+    return parseInt(ultimaPosicion) + 1
   }
   diaAnterior(dia) {
-   var i = 0
+    var i = 0
     while (i < this.state.rutina.length) {
       if (this.state.rutina[i].dia == (dia - 1)) {
         return true
@@ -180,9 +191,9 @@ showInterstitialTiempo = async () => {
     return false
   }
   yaEsta(data) {
-    for (i = 0; i < this.state.rutina.length; i++) {
+    for (var i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].id_ejercicio == data.id_ejercicio) {
-        if (this.state.rutina[i].dia == data.dia){
+        if (this.state.rutina[i].dia == data.dia) {
           return false
         }
       }
@@ -207,31 +218,30 @@ showInterstitialTiempo = async () => {
     var posicionASubir = 0
     var posicionABajar = 0
 
-    for(i=0; i<this.state.rutina.length;i++){
+    for (var i = 0; i < this.state.rutina.length; i++) {
       rutinaNueva.push(this.state.rutina[i])
-      if(rutinaNueva[i].id_ejercicio == id_ejercicio && rutinaNueva[i].dia == dia){
-        posicionASubir=i
+      if (rutinaNueva[i].id_ejercicio == id_ejercicio && rutinaNueva[i].dia == dia) {
+        posicionASubir = i
       }
     }
-    if(rutinaNueva[posicionASubir].posicion == "1")
-    {
+    if (rutinaNueva[posicionASubir].posicion == "1") {
       this.termino()
-    }else{
-      this.setState({isLoading: true})
-    for(i=0; i< rutinaNueva.length;i++){
-      if((rutinaNueva[i].posicion == rutinaNueva[posicionASubir].posicion-1) && rutinaNueva[i].dia == dia){
-        if(rutinaNueva[i].combinado == null){
-          posicionABajar=i
-        }else{
-          posicionABajar=(i-1)
+    } else {
+      this.setState({ isLoading: true })
+      for (var i = 0; i < rutinaNueva.length; i++) {
+        if ((rutinaNueva[i].posicion == rutinaNueva[posicionASubir].posicion - 1) && rutinaNueva[i].dia == dia) {
+          if (rutinaNueva[i].combinado == null) {
+            posicionABajar = i
+          } else {
+            posicionABajar = (i - 1)
+          }
         }
       }
-    }
       if (combinado == null) {
         //Ninguno Combinado
         if (rutinaNueva[posicionABajar].combinado == null) {
           console.log("Ninguno Combinado")
-          aux= rutinaNueva[posicionASubir].posicion
+          aux = rutinaNueva[posicionASubir].posicion
 
           rutinaNueva[posicionASubir].posicion = rutinaNueva[posicionABajar].posicion
           rutinaNueva[posicionABajar].posicion = aux
@@ -250,7 +260,7 @@ showInterstitialTiempo = async () => {
         //El que sube es combinado
         if (rutinaNueva[posicionABajar].combinado == null) {
           console.log("El que sube es combinado")
-          aux= rutinaNueva[posicionASubir].posicion
+          aux = rutinaNueva[posicionASubir].posicion
 
           rutinaNueva[posicionASubir].posicion = rutinaNueva[posicionABajar].posicion
           rutinaNueva[(posicionASubir + 1)].posicion = rutinaNueva[posicionABajar].posicion
@@ -259,16 +269,16 @@ showInterstitialTiempo = async () => {
         } else {
           //Dos Combinados
           console.log("Dos Combinados")
-          aux= rutinaNueva[posicionASubir].posicion
+          aux = rutinaNueva[posicionASubir].posicion
 
           rutinaNueva[posicionASubir].posicion = rutinaNueva[posicionABajar].posicion
           rutinaNueva[(posicionASubir + 1)].posicion = rutinaNueva[posicionABajar].posicion
           rutinaNueva[posicionABajar].posicion = aux
           rutinaNueva[(posicionABajar + 1)].posicion = aux
-        
+
         }
       }
-      this.setState({rutina: rutinaNueva })
+      this.setState({ rutina: rutinaNueva })
       this.termino()
     }
   }
@@ -276,38 +286,37 @@ showInterstitialTiempo = async () => {
   bajar(dia, id_ejercicio, combinado) {
     var rutinaNueva = []
     var aux = 0
-    var maxPosDia=0
+    var maxPosDia = 0
     var posicionASubir = (-5)
     var posicionABajar = 0
-    var flag=0
+    var flag = 0
 
-    for(i=0; i<this.state.rutina.length; i++){
+    for (var i = 0; i < this.state.rutina.length; i++) {
       rutinaNueva.push(this.state.rutina[i])
-      if(rutinaNueva[i].dia == dia){
-      if(rutinaNueva[i].id_ejercicio == id_ejercicio){
-        posicionABajar=i
-        flag=1
-      }
-      if(flag != 0 && (rutinaNueva[i].posicion == parseInt(rutinaNueva[posicionABajar].posicion)+1)){
-        if(rutinaNueva[i].combinado == null){
-          posicionASubir=i
-        }else{
-          posicionASubir=(i-1)
+      if (rutinaNueva[i].dia == dia) {
+        if (rutinaNueva[i].id_ejercicio == id_ejercicio) {
+          posicionABajar = i
+          flag = 1
         }
+        if (flag != 0 && (rutinaNueva[i].posicion == parseInt(rutinaNueva[posicionABajar].posicion) + 1)) {
+          if (rutinaNueva[i].combinado == null) {
+            posicionASubir = i
+          } else {
+            posicionASubir = (i - 1)
+          }
+        }
+        maxPosDia++
       }
-      maxPosDia++
     }
-    }
-    if((-5) == posicionASubir)
-    {
+    if ((-5) == posicionASubir) {
       this.termino()
-    }else{
-      this.setState({isLoading: true})
+    } else {
+      this.setState({ isLoading: true })
       if (combinado == null) {
         //Ninguno Combinado
         if (rutinaNueva[posicionASubir].combinado == null) {
           console.log("Ninguno Combinado")
-          aux= rutinaNueva[posicionABajar].posicion
+          aux = rutinaNueva[posicionABajar].posicion
 
           rutinaNueva[posicionABajar].posicion = rutinaNueva[posicionASubir].posicion
           rutinaNueva[posicionASubir].posicion = aux
@@ -326,7 +335,7 @@ showInterstitialTiempo = async () => {
         //El que baja es combinado
         if (rutinaNueva[posicionASubir].combinado == null) {
           console.log("El que baja es combinado")
-          aux= rutinaNueva[posicionABajar].posicion
+          aux = rutinaNueva[posicionABajar].posicion
 
           rutinaNueva[posicionABajar].posicion = rutinaNueva[posicionASubir].posicion
           rutinaNueva[(posicionABajar + 1)].posicion = rutinaNueva[posicionASubir].posicion
@@ -335,16 +344,16 @@ showInterstitialTiempo = async () => {
         } else {
           //Dos Combinados
           console.log("Dos Combinados")
-          aux= rutinaNueva[posicionABajar].posicion
+          aux = rutinaNueva[posicionABajar].posicion
 
           rutinaNueva[posicionABajar].posicion = rutinaNueva[posicionASubir].posicion
           rutinaNueva[(posicionABajar + 1)].posicion = rutinaNueva[posicionASubir].posicion
           rutinaNueva[posicionASubir].posicion = aux
           rutinaNueva[(posicionASubir + 1)].posicion = aux
-        
+
         }
       }
-      this.setState({rutina: rutinaNueva })
+      this.setState({ rutina: rutinaNueva })
       this.termino()
     }
   }
@@ -356,21 +365,20 @@ showInterstitialTiempo = async () => {
     var valorPosicionBorrada = 0
     while (i < this.state.rutina.length) {
       if (id_ejercicio == this.state.rutina[i].id_ejercicio && dia == this.state.rutina[i].dia) {
-        if(combinado == null)
-        {
+        if (combinado == null) {
           valorPosicionBorrada = this.state.rutina[i].posicion
           i++
-          flag=1
-        }else{
+          flag = 1
+        } else {
           valorPosicionBorrada = this.state.rutina[i].posicion
           i = (i + 2)
-          flag=1
+          flag = 1
         }
       }
       if (i < this.state.rutina.length) {
         rutinaNueva.push(this.state.rutina[i])
-        if(flag!=0 && this.state.rutina[i].dia == dia){
-          rutinaNueva[(rutinaNueva.length)-1].posicion = valorPosicionBorrada
+        if (flag != 0 && this.state.rutina[i].dia == dia) {
+          rutinaNueva[(rutinaNueva.length) - 1].posicion = valorPosicionBorrada
           valorPosicionBorrada = (valorPosicionBorrada - 1)
         }
       } else {
@@ -381,7 +389,7 @@ showInterstitialTiempo = async () => {
     }
     this.setState({ rutina: rutinaNueva })
     this.termino()
-}
+  }
   borrarTodo() {
     var rutinaVacia = []
     if (this.state.rutina.length != 0) {
@@ -391,10 +399,10 @@ showInterstitialTiempo = async () => {
     }
   }
   guardarRutina() {
-    this.setState({ modalGuardarVisible: false })
+    this.setState({isLoading: true, actualizando: true })
     var aux = 0
     var rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/Ejercicios/PECHO.png'), dias: '', favoritos: 1, rutina: [] }
-    for (i = 0; i < this.state.rutina.length; i++) {
+    for (var i = 0; i < this.state.rutina.length; i++) {
       if (this.state.rutina[i].dia > aux) {
         aux = this.state.rutina[i].dia
       }
@@ -419,28 +427,61 @@ showInterstitialTiempo = async () => {
     this.showInterstitial()
     this.props.onPressCancelar();
   }
-  borrarRutina(id_rutina) {
-    this.setModalGuardarVisible(!this.state.modalGuardarVisible)
-    base.borrarRutina(id_rutina, this.okRutinaBorrada.bind(this))
+  borrarRutina() {
+    this.setState({modalBorrarVisible: false, isLoading: true, borrando: true})
+    base.borrarRutina(this.state.id_rutina, this.okRutinaBorrada.bind(this))
   }
   okRutinaBorrada() {
     this.props.onPressCancelar()
   }
-  setModalGuardarVisible(visible) {
-    this.setState({ modalGuardarVisible: visible });
-  }
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.container}>
-          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-          <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
-          <AntDesign name="up" size={1} color="white" />
-          <AntDesign name="down" size={1} color="white" />
-          <AntDesign name="delete" size={1} color="white" />
-        </View>
-      );
+    if (this.state.isLoading || this.state.isLoadingIdioma) {
+      if(this.state.actualizando || this.state.borrando){
+      if (this.state.actualizando) {
+        return (
+          <View style={styles.container}>
+            <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+            <View style={styles.insideContainer} >
+              
+              <ActivityIndicator size="large" color="#3399ff" style={{}}></ActivityIndicator>
+
+              <View style={styles.slide1}>
+                <Text style={styles.slideText}>{ExportadorFrases.ActualizandoRutina(this.state.id_idioma)}</Text>
+              </View>
+            </View>
+
+          </View>
+        );
+      }
+      if (this.state.borrando) {
+        return (
+          <View style={styles.container}>
+            <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+            <View style={styles.insideContainer} >
+              
+              <ActivityIndicator size="large" color="#3399ff" style={{}}></ActivityIndicator>
+
+              <View style={styles.slide1}>
+                <Text style={styles.slideText}>{ExportadorFrases.BorrandoRutina(this.state.id_idioma)}</Text>
+              </View>
+            </View>
+
+          </View>
+        );
+      }
+    }
+      else {
+        return (
+          <View style={styles.container}>
+            <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+            <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
+            <AntDesign name="up" size={1} color="white" />
+            <AntDesign name="down" size={1} color="white" />
+            <AntDesign name="delete" size={1} color="white" />
+          </View>
+        );
+      }
     } else {
       return (
         <View style={styles.container}>
@@ -465,16 +506,16 @@ showInterstitialTiempo = async () => {
                 return item.toString();
               }}
               renderItem={({ item }) => {
-               var aux = item
-               var contadorCobinadosFlatlist = false
-               var rutinaLocal = this.state.rutina
+                var aux = item
+                var contadorCobinadosFlatlist = false
+                var rutinaLocal = this.state.rutina
                 return (
                   <View style={styles.cuadraditos}>
                     <DropDownItem key={1} contentVisible={false}
                       header={
                         <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                           <Text style={styles.detalleGenresTitles}>
-                            Día {item}
+                            {ExportadorFrases.Dia(this.state.id_idioma)} {item}
                           </Text>
                           <TouchableOpacity onPress={() => {
                             this.touch(item);
@@ -487,7 +528,6 @@ showInterstitialTiempo = async () => {
                       <FlatList
                         style={styles.contentList}
                         columnWrapperStyle={styles.listContainer}
-                        //data={this.state.rutina}
                         data={rutinaLocal.sort((a, b) => a.posicion.localeCompare(b.posicion))}
                         initialNumToRender={50}
                         keyExtractor={(item) => {
@@ -495,7 +535,7 @@ showInterstitialTiempo = async () => {
                         }}
                         renderItem={({ item }) => {
                           if (item.dia == aux) {
-                            if(item.tiempo == null){
+                            if (item.tiempo == null) {
                               if (item.combinado != null) {
                                 if (contadorCobinadosFlatlist) {
                                   contadorCobinadosFlatlist = false
@@ -504,11 +544,11 @@ showInterstitialTiempo = async () => {
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
                                       <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("60") }}>
-                                          <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
-                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                            <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
                                           </View>
                                         </View>
                                       </View>
@@ -521,11 +561,11 @@ showInterstitialTiempo = async () => {
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
                                       <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                          <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
-                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                            <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
                                           </View>
                                         </View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -549,11 +589,11 @@ showInterstitialTiempo = async () => {
                                     onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
                                     <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                        <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
                                         <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                        <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
-                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>Repeticiones:{"\n"}{item.repeticiones}</Text>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
                                         </View>
                                       </View>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -571,7 +611,7 @@ showInterstitialTiempo = async () => {
                                   </TouchableOpacity>
                                 )
                               }
-                            }else{
+                            } else {
                               if (item.combinado != null) {
                                 if (contadorCobinadosFlatlist) {
                                   contadorCobinadosFlatlist = false
@@ -580,11 +620,11 @@ showInterstitialTiempo = async () => {
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
                                       <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("60") }}>
-                                          <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
-                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
+                                            <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Tiempo(this.state.id_idioma)}:{"\n"}{item.tiempo}</Text>
                                           </View>
                                         </View>
                                       </View>
@@ -597,11 +637,11 @@ showInterstitialTiempo = async () => {
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
                                       <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                          <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
                                           <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                          <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
-                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
+                                            <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Tiempo(this.state.id_idioma)}:{"\n"}{item.tiempo}</Text>
                                           </View>
                                         </View>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -625,11 +665,11 @@ showInterstitialTiempo = async () => {
                                     onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
                                     <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.musculo)} />
+                                        <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
                                         <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                        <Text style={styles.nombreEjercicio}>{item.nombre}</Text>
-                                          <Text style={styles.subsEjercicio}>Series: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>Tiempo:{"\n"}{item.tiempo}</Text>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Tiempo(this.state.id_idioma)}:{"\n"}{item.tiempo}</Text>
                                         </View>
                                       </View>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -659,36 +699,36 @@ showInterstitialTiempo = async () => {
             **************************************************************************** */}
 
             <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
-              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalGuardarVisible: true }) }}>
+              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalBorrarVisible: true }) }}>
                 <Text style={styles.screenButtonText}>
-                  Borrar
+                  {ExportadorFrases.Borrar(this.state.id_idioma)}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.guardarButton} onPress={() => { this.guardarRutina() }}>
                 <Text style={styles.screenButtonText}>
-                  Guardar
+                  {ExportadorFrases.Guardar(this.state.id_idioma)}
                 </Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
           <Modal
             animationType="fade"
-            visible={this.state.modalGuardarVisible}
+            visible={this.state.modalBorrarVisible}
             transparent={true}
-            onRequestClose={() => this.setState({ modalGuardarVisible: false })}  >
+            onRequestClose={() => this.setState({ modalBorrarVisible: false })}  >
 
             <View style={styles.modal}>
               <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                <Text style={styles.textButton}>Esta seguro que desea borrar la rutina "{this.props.navigation.getParam("nombre_rutina")}"</Text>
+                <Text style={styles.textButton}>{ExportadorFrases.BorrarRutina(this.state.id_idioma)} "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
 
-                <TouchableOpacity onPress={() => { this.setModalGuardarVisible(!this.state.modalGuardarVisible); }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>Cancelar</Text>
+                <TouchableOpacity onPress={() => { this.setState({modalBorrarVisible: true})}} style={styles.modalButtonCancelar}>
+                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => base.conseguirIdRutinaParaBorrar(this.state.nombre, this.borrarRutina.bind(this))} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>Aceptar</Text>
+                <TouchableOpacity onPress={() => this.borrarRutina()} style={styles.modalButtonAceptar}>
+                  <Text style={styles.textButton}>{ExportadorFrases.Borrar(this.state.id_idioma)}</Text>
 
                 </TouchableOpacity>
               </View>
@@ -701,16 +741,16 @@ showInterstitialTiempo = async () => {
             onRequestClose={() => this.setState({ modalBorrarTodoVisible: false })}  >
             <View style={styles.modal}>
               <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                <Text style={styles.textButton}>Esta seguro que desea borrar todos los ejercicios de la rutina "{this.props.navigation.getParam("nombre_rutina")}"</Text>
+                <Text style={styles.textButton}>{ExportadorFrases.BorrarEjerciciosRutina(this.state.id_idioma)} "{this.props.navigation.getParam("nombre_rutina")}"</Text>
               </View>
               <View style={styles.modal2}>
 
                 <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: false }) }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>Cancelar</Text>
+                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => this.borrarTodo()} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>Borrar</Text>
+                  <Text style={styles.textButton}>{ExportadorFrases.Borrar(this.state.id_idioma)}</Text>
 
                 </TouchableOpacity>
               </View>
@@ -725,11 +765,11 @@ showInterstitialTiempo = async () => {
               <View style={styles.modalTipoEjericios}>
                 <View style={styles.modal2TipoEjericios}>
                   <TouchableOpacity onPress={() => this.agregarEjercicio()} style={{ width: width * 0.4, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderTopLeftRadius: 22, borderBottomLeftRadius: 22 }}>
-                    <Text style={styles.textButtonTipoEjercicios}>Ejercicio{"\n"}Simple</Text>
+                    <Text style={styles.textButtonTipoEjercicios}>{ExportadorFrases.EjercicioSimple(this.state.id_idioma)}</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity onPress={() => this.agregarEjercicioCombinado()} style={{ width: width * 0.4, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22, borderTopRightRadius: 22 }}>
-                    <Text style={styles.textButtonTipoEjercicios}>Ejercicio{"\n"}Combinado</Text>
+                    <Text style={styles.textButtonTipoEjercicios}>{ExportadorFrases.EjercicioCombinado(this.state.id_idioma)}</Text>
 
                   </TouchableOpacity>
                 </View>
@@ -758,6 +798,24 @@ const styles = StyleSheet.create({
     fontSize: height * 0.02,
     justifyContent: "space-between"
   },
+  insideContainer: {
+    flex: 1,
+    justifyContent: 'center'
+},
+  slide1: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 10,
+    opacity: .95,
+    alignSelf: 'center',
+    marginTop: hp(5)
+  },
+  slideText: {
+    alignSelf: "center",
+    fontSize: 18,
+    color: "#3399ff"
+  },
+
   TextContainer: {
     backgroundColor: 'grey',
     borderRadius: 10,
@@ -871,13 +929,13 @@ const styles = StyleSheet.create({
     fontSize: height * 0.021,
     marginBottom: wp("1")
   },
-  subsEjercicio:{
+  subsEjercicio: {
     fontSize: height * 0.019,
   },
   screenButtonText: {
     marginVertical: height * 0.02,
     fontWeight: 'bold',
-    fontSize: height * 0.025 
+    fontSize: height * 0.025
   },
   //MODAAAAL
   modal: {
@@ -909,7 +967,8 @@ const styles = StyleSheet.create({
     fontSize: height * 0.02,
     alignSelf: 'center',
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    padding: hp(1)
   },
 
   modalTipoEjericios: {

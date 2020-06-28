@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorFrases from './Fotos/ExportadorFrases'
 import { withNavigation } from 'react-navigation';
 import {
     StyleSheet,
@@ -15,10 +16,15 @@ import {
     TouchableWithoutFeedback,
     KeyboardAvoidingView,
     StatusBar,
+    AsyncStorage,
     Modal
 } from 'react-native';
+import Version from '../app.json';
+import ExportadorActualizarBase from './Fotos/ExportadorActualizarBase';
 import RNPickerSelect from 'react-native-picker-select';
 import Swiper from "react-native-web-swiper";
+import * as Localization from 'expo-localization';
+import i18n from 'i18n-js';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 var { height, width } = Dimensions.get('window');
@@ -37,24 +43,21 @@ class Training extends Component {
             edad: 0,
             peso: 0,
 
-            calorias: {}
+            ejercicios: [],
+            rutinas: [],
+            ejerciciosRutina: [],
+            perfil: {},
+            configuracion: {},
+            version: 0,
+
+            calorias: {},
+            id_idioma: this.props.navigation.getParam('id_idioma')
         };
     }
     componentDidMount() {
-        base.abrirBase(this.existeBase.bind(this));
-    }
-    existeBase = async (existe) => {
-        if (existe == false) {
-            base.crearBase(this.okBase.bind(this))
-        }
-        else {
-            this.props.onOmitir();
-        }
+        this.setState({isLoading: false})
     }
 
-    okBase = async () => {
-        this.setState({ isLoading: false })
-    }
     crearPlan() {
         var calorias = {
             caloriasBase: 0,
@@ -96,27 +99,27 @@ class Training extends Component {
         if (calorias.caloriasBase != 0) {
             switch (this.state.actividad) {
 
-                case '1':
+                case 1:
 
                     calorias.caloriasEjercicio = calorias.caloriasBase * 1.2
                     break;
 
-                case '2':
+                case 2:
 
                     calorias.caloriasEjercicio = calorias.caloriasBase * 1.375
                     break;
 
-                case '3':
+                case 3:
 
                     calorias.caloriasEjercicio = calorias.caloriasBase * 1.55
                     break;
 
-                case '4':
+                case 4:
 
                     calorias.caloriasEjercicio = calorias.caloriasBase * 1.725
                     break;
 
-                case '5':
+                case 5:
 
                     calorias.caloriasEjercicio = calorias.caloriasBase * 1.9
                     break;
@@ -129,27 +132,27 @@ class Training extends Component {
             if (calorias.caloriasEjercicio != 0) {
                 switch (this.state.objetivoDeseado) {
 
-                    case '1':
+                    case 1:
 
                         calorias.caloriasTotal = calorias.caloriasEjercicio + calorias.caloriasEjercicio * 0.15
                         break;
 
-                    case '2':
+                    case 2:
 
                         calorias.caloriasTotal = calorias.caloriasEjercicio - calorias.caloriasEjercicio * 0.15
                         break;
 
-                    case '3':
+                    case 3:
 
                         calorias.caloriasTotal = calorias.caloriasEjercicio
                         break;
 
-                    case '4':
+                    case 4:
 
                         calorias.caloriasTotal = calorias.caloriasEjercicio - calorias.caloriasEjercicio * 0.1
                         break;
 
-                    case '5':
+                    case 5:
 
                         calorias.caloriasTotal = calorias.caloriasEjercicio
                         break;
@@ -161,17 +164,22 @@ class Training extends Component {
                 }
             }
             this.setState({ calorias: calorias })
-            this.traerInfo()
+            this.okExperiencia(calorias)
         }
     }
-    traerInfo = async (okInfo) => {
-        base.traerInfo(this.state.experiencia, this.state.objetivoDeseado, this.okExperiencia.bind(this))
+    okExperiencia(calorias) {
+        console.log(calorias)
+        console.log(this.state.objetivoDeseado)
+        console.log(this.state.experiencia)
+        base.guardarPlan(calorias, this.state.objetivoDeseado, this.state.experiencia, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
     }
-    okExperiencia(experiencia, objetivo) {
-        base.guardarPlan(this.state.calorias, this.state.objetivoDeseado, this.state.experiencia, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
-    }
+    
     mostrarPlan() {
-        this.props.onPressCrear(this.state.caloriasEjercicio, this.state.caloriasTotal, this.state.objetivoDeseado)
+        this.props.onPressCrear(this.state.id_idioma)
+    }
+
+    okOmitir(){
+        this.props.onOmitir(this.state.id_idioma);
     }
 
     render() {
@@ -203,7 +211,7 @@ class Training extends Component {
                                 <Image style={styles.Logo} source={require('../assets/Logo_Solo.png')} />
                             </View>
                             <View style={styles.slide1}>
-                                <Text style={styles.slideText}>Desliza para crear tu plan de entrenamiento a medida</Text>
+                                <Text style={styles.slideText}>{ExportadorFrases.DeslizarTraining(this.state.id_idioma)}</Text>
                             </View>
                         </View>
                         <KeyboardAvoidingView style={[styles.slideContainer]} behavior="position" keyboardVerticalOffset={height * 0.11} enabled>
@@ -211,13 +219,13 @@ class Training extends Component {
                             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                                 <View style={[styles.slideContainerInside2]}>
                                     <View style={styles.slide2}>
-                                        <Text style={styles.slideText2}>Ficha Personal{"\n"}y{"\n"}Objetivos a Alcanzar</Text>
+                                        <Text style={styles.slideText2}>{ExportadorFrases.FichaTitulo(this.state.id_idioma)}</Text>
                                     </View>
                                     <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
                                         <RNPickerSelect
                                             useNativeAndroidPickerStyle={false}
                                             placeholder={{
-                                                label: 'Nivel de Actividad',
+                                                label: ExportadorFrases.NivelActividad(this.state.id_idioma),
                                                 value: ''
                                             }}
                                             placeholderTextColor="black"
@@ -255,17 +263,17 @@ class Training extends Component {
                                             }}
                                             onValueChange={(value) => this.setState({ actividad: value })}
                                             items={[
-                                                { label: 'Casi Nulo (1 dia o menos)', value: '1' },
-                                                { label: 'Lijero (2 a 3 dias)', value: '2' },
-                                                { label: 'Moderado (4 a 5 dias)', value: '3' },
-                                                { label: 'Fuerte (5 a 7 dias)', value: '4' },
-                                                { label: 'Deportista (2 veces al dia)', value: '5' }
+                                                { label: ExportadorFrases.NivelActividadOpciones(this.state.id_idioma, 1), value: 1 },
+                                                { label: ExportadorFrases.NivelActividadOpciones(this.state.id_idioma, 2), value: 2 },
+                                                { label: ExportadorFrases.NivelActividadOpciones(this.state.id_idioma, 3), value: 3 },
+                                                { label: ExportadorFrases.NivelActividadOpciones(this.state.id_idioma, 4), value: 4 },
+                                                { label: ExportadorFrases.NivelActividadOpciones(this.state.id_idioma, 5), value: 5 }
                                             ]}
                                         />
                                         <RNPickerSelect
                                             useNativeAndroidPickerStyle={false}
                                             placeholder={{
-                                                label: 'Genero',
+                                                label: ExportadorFrases.Genero(this.state.id_idioma),
                                                 value: ''
                                             }}
                                             placeholderTextColor="black"
@@ -303,15 +311,15 @@ class Training extends Component {
                                             }}
                                             onValueChange={(value) => this.setState({ genero: value })}
                                             items={[
-                                                { label: 'Masculino', value: 'Masculino' },
-                                                { label: 'Femenino', value: 'Femenino' },
+                                                { label: ExportadorFrases.GeneroOpciones(this.state.id_idioma, 1), value: 'Masculino' },
+                                                { label: ExportadorFrases.GeneroOpciones(this.state.id_idioma, 2), value: 'Femenino' }
                                             ]}
                                         />
                                     </View>
                                     <RNPickerSelect
                                         useNativeAndroidPickerStyle={false}
                                         placeholder={{
-                                            label: 'Objetivo Deseado',
+                                            label: ExportadorFrases.ObjetivoDeseado(this.state.id_idioma),
                                             value: ''
                                         }}
                                         placeholderTextColor="black"
@@ -351,17 +359,17 @@ class Training extends Component {
 
                                         onValueChange={(value) => this.setState({ objetivoDeseado: value })}
                                         items={[
-                                            { label: 'Ganar Masa Muscualar', value: '1' },
-                                            { label: 'Perder Peso', value: '2' },
-                                            { label: 'Ganar Resistencia', value: '3' },
-                                            { label: 'Definir', value: '4' },
-                                            { label: 'Mantener', value: '5' }
+                                            { label: ExportadorFrases.ObjetivoDeseadoOpciones(this.state.id_idioma, 1), value: 1 },
+                                            { label: ExportadorFrases.ObjetivoDeseadoOpciones(this.state.id_idioma, 2), value: 2 },
+                                            { label: ExportadorFrases.ObjetivoDeseadoOpciones(this.state.id_idioma, 3), value: 3 },
+                                            { label: ExportadorFrases.ObjetivoDeseadoOpciones(this.state.id_idioma, 4), value: 4 },
+                                            { label: ExportadorFrases.ObjetivoDeseadoOpciones(this.state.id_idioma, 5), value: 5 }
                                         ]}
                                     />
                                     <RNPickerSelect
                                         useNativeAndroidPickerStyle={false}
                                         placeholder={{
-                                            label: 'Experiencia en Entrenamiento',
+                                            label: ExportadorFrases.ExperienciaEntrenamiento(this.state.id_idioma),
                                             value: ''
                                         }}
                                         placeholderTextColor="black"
@@ -400,15 +408,15 @@ class Training extends Component {
                                         }}
                                         onValueChange={(value) => this.setState({ experiencia: value })}
                                         items={[
-                                            { label: 'Principiante', value: '1' },
-                                            { label: 'Basico', value: '2' },
-                                            { label: 'Experimentado', value: '3' },
+                                            { label: ExportadorFrases.ExperienciaEntrenamientoOpciones(this.state.id_idioma, 1), value: 1 },
+                                            { label: ExportadorFrases.ExperienciaEntrenamientoOpciones(this.state.id_idioma, 2), value: 2 },
+                                            { label: ExportadorFrases.ExperienciaEntrenamientoOpciones(this.state.id_idioma, 3), value: 3 }
                                         ]}
                                     />
                                     <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
-                                        <TextInput style={styles.TextContainer} maxLength={3} keyboardType='numeric' placeholder='Altura cm' placeholderTextColor='black' onChangeText={(altura) => this.setState({ altura })} value={this.state.altura}></TextInput>
-                                        <TextInput style={styles.TextContainer} maxLength={2} keyboardType='numeric' placeholder='Edad' placeholderTextColor='black' onChangeText={(edad) => this.setState({ edad })} value={this.state.edad}></TextInput>
-                                        <TextInput style={styles.TextContainer} maxLength={5} keyboardType='numeric' placeholder='Peso Kg' placeholderTextColor='black' onChangeText={(peso) => this.setState({ peso })} value={this.state.peso}></TextInput>
+                                        <TextInput style={styles.TextContainer} maxLength={3} keyboardType='numeric' placeholder= {ExportadorFrases.AlturaDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(altura) => this.setState({ altura })} value={this.state.altura}></TextInput>
+                                        <TextInput style={styles.TextContainer} maxLength={2} keyboardType='numeric' placeholder= {ExportadorFrases.EdadDeseada(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(edad) => this.setState({ edad })} value={this.state.edad}></TextInput>
+                                        <TextInput style={styles.TextContainer} maxLength={5} keyboardType='numeric' placeholder= {ExportadorFrases.PesoDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(peso) => this.setState({ peso })} value={this.state.peso}></TextInput>
                                     </View>
                                 </View>
                             </TouchableWithoutFeedback>
@@ -417,19 +425,17 @@ class Training extends Component {
                         {/* </View> */}
                         <View style={[styles.slideContainer]}>
                             <View style={styles.slideContainerInside3}>
-                                <Text style={styles.slideText3}>• Se le creará un plan de entrenamiento en base a los datos personales y objetivos señalados anteriormente.
-                                        {"\n"}{"\n"}• Se incluirá un plan de alimentación y las rutinas que son mas útiles para el objetivo deseado.
-                                        {"\n"}{"\n"}• Podrás cambiar tu ficha personal y objetivos en el momento que quieras accediendo en la parte de {"\n"}"Perfil" desde el SideMenu.</Text>
+                                <Text style={styles.slideText3}>{ExportadorFrases.PlanTitulo(this.state.id_idioma)}</Text>
                             </View>
                             <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
                                 <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalVisible: true }) }}>
                                     <Text style={styles.screenButtonText}>
-                                        Omitir Plan
+                                        {ExportadorFrases.OmitirPlan(this.state.id_idioma)}
                                 </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.guardarButton} onPress={() => { this.crearPlan() }}>
+                                <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({isLoading: true}),this.crearPlan() }}>
                                     <Text style={styles.screenButtonText}>
-                                        Crear Plan
+                                    {ExportadorFrases.CrearPlan(this.state.id_idioma)}
                                 </Text>
                                 </TouchableOpacity>
                             </View>
@@ -443,16 +449,16 @@ class Training extends Component {
 
                         <View style={styles.modal}>
                             <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                                <Text style={styles.textButton}>Desea omitir la creacion de su plan?</Text>
+                                    <Text style={styles.textButton}>{ExportadorFrases.OmitirPlanModalLabel(this.state.id_idioma)}</Text>
                             </View>
                             <View style={styles.modal2}>
 
                                 <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
-                                    <Text style={styles.textButton}>Cancelar</Text>
+                                    <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity onPress={() => this.props.onOmitir()} style={styles.modalButtonAceptar}>
-                                    <Text style={styles.textButton}>Aceptar</Text>
+                                <TouchableOpacity onPress={() => this.okOmitir(this.state.id_idioma)} style={styles.modalButtonAceptar}>
+                                    <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
                                 </TouchableOpacity>
 
                             </View>

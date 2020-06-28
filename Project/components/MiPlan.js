@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { View, Image, StyleSheet, ActivityIndicator, Text, ScrollView, Dimensions, Keyboard, TouchableOpacity } from 'react-native';
-import { AsyncStorage } from 'react-native';
 import Swiper from "react-native-web-swiper";
 
 import { withNavigation } from 'react-navigation';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import base from './GenerarBase';
+import ExportadorFrases from './Fotos/ExportadorFrases';
 
 var { height, width } = Dimensions.get('window');
 
@@ -16,38 +16,28 @@ class MiPlan extends Component {
         super(props);
         this.state = {
             perfil: {},
-            isLoading: true
+            isLoading: true,
+            id_idioma: 0
         };
     }
     componentDidMount() {
-        base.traerPlan(this.okPlan.bind(this))
+        base.traerIdIdioma(this.traerPlan.bind(this))
         this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
         this.keyboardWillShow = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
         this.keyboardWillHide = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
     }
-
-    componentWillReceiveProps() {
-        this.setState({ isLoading: true })
-        base.traerPlan(this.okPlan.bind(this))
+    UNSAFE_componentWillReceiveProps = async () => {
+        this.setState({isLoading: true})
+        base.traerIdIdioma(this.traerPlan.bind(this))
     }
 
+    traerPlan(id_idioma){
+        this.setState({id_idioma: id_idioma})
+        base.traerPlan(this.okPlan.bind(this))
+    }
     okPlan(perfil) {
         this.setState({ perfil: perfil, isLoading: false })
     }
-    _retrieveData = async () => {
-        try {
-            const value = await AsyncStorage.getItem('IdUser');
-            if (value !== null) {
-                this.setState({
-                    IdUser: value,
-                })
-                this.getUserData(this.state.IdUser);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     keyboardDidShow = () => {
         this.setState({ searchBarFocused: true })
     }
@@ -76,7 +66,7 @@ class MiPlan extends Component {
                             <Image style={styles.Logo} source={require('../assets/Logo_Solo.png')} />
                         </View>
                         <View style={styles.ContainerInsideNull}>
-                            <Text style={styles.Text}> Si desea crear su plan de entrenamiento solo debe completar la ficha tecnica en la seccion de "Cambiar Plan"</Text>
+                            <Text style={styles.Text}>{ExportadorFrases.NoPlan(this.state.id_idioma)}</Text>
                         </View>
                     </View>
                 )
@@ -95,33 +85,33 @@ class MiPlan extends Component {
                         >
                             <View style={styles.slideContainer}>
                                 <View style={styles.ContainerInside}>
-                                    <Text style={styles.calories}>{this.state.perfil.caloriasEjercicio - 188} - {this.state.perfil.caloriasEjercicio}</Text>
-                                    <Text style={styles.Text}>Calorias a consumir para mantener tu peso en base a la vida que llevas</Text>
+                                    <Text style={styles.calories}>{(this.state.perfil.caloriasEjercicio - 188).toString()} - {(this.state.perfil.caloriasEjercicio).toString()}</Text>
+                                    <Text style={styles.Text}>{ExportadorFrases.CaloriasNormal(this.state.id_idioma)}</Text>
                                 </View>
                                 <View style={styles.ContainerInside}>
-                                    <Text style={styles.calories}>{this.state.perfil.caloriasTotal - 188} - {this.state.perfil.caloriasTotal}</Text>
-                                    <Text style={styles.Text}>Calorias a consumir para cumplir con tu objetivo</Text>
+                                    <Text style={styles.calories}>{(this.state.perfil.caloriasTotal - 188).toString()} - {(this.state.perfil.caloriasTotal).toString()}</Text>
+                                    <Text style={styles.Text}>{ExportadorFrases.CaloriasAConsumir(this.state.id_idioma)}</Text>
                                 </View>
                             </View>
                             <ScrollView style={{ paddingHorizontal: height * 0.03 }}>
                                 <View style={styles.ContainerInsideTitle2}>
-                                    <Text style={styles.TextTitle}>{this.state.perfil.obj_nombre}</Text>
+                                    <Text style={styles.TextTitle}>{this.state.perfil.nombre_objetivo}</Text>
                                 </View>
                                 <View style={styles.ContainerInside2}>
-                                    <Text style={styles.Text}>{this.state.perfil.obj_descripcion}</Text>
+                                    <Text style={styles.Text}>{this.state.perfil.descripcion_objetivo}</Text>
                                 </View>
                             </ScrollView>
                             <View style={{ paddingHorizontal: height * 0.03 }}>
                             <ScrollView style={{ paddingHorizontal: height * 0.03 }}>
                                 <View style={styles.ContainerInsideTitle3}>
-                                    <Text style={styles.TextTitle}>{this.state.perfil.exp_nombre}</Text>
+                                    <Text style={styles.TextTitle}>{this.state.perfil.nombre_experiencia}</Text>
                                 </View>
                                 <View style={styles.ContainerInside3}>
-                                    <Text style={styles.Text}>{this.state.perfil.exp_descripcion}</Text>
+                                    <Text style={styles.Text}>{this.state.perfil.descripcion_experiencia}</Text>
                                 </View>
                                 <TouchableOpacity style={styles.guardarButton} onPress={() => this.props.navigation.openDrawer()}>
                                         <Text style={styles.screenButtonText}>
-                                           ¡¡Empezar!!
+                                           {ExportadorFrases.Empezar(this.state.id_idioma)}
                                         </Text>
                                 </TouchableOpacity>
                             </ScrollView>

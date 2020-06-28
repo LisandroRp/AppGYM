@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { SearchBar } from 'react-native-elements';
 import base from './GenerarBase';
+import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion';
+import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
-import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion';
 import ExportadorAds from './Fotos/ExportadorAds';
 import {
   StyleSheet,
@@ -14,10 +15,12 @@ import {
   FlatList,
   Keyboard,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  ImageBackground
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { withNavigation } from 'react-navigation';
+import * as Font from 'expo-font';
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
@@ -31,15 +34,26 @@ class SuplementacionTipos extends Component {
       modalVisible: false,
       suplementos: [],
       isLoading: true,
+      isLoadingFont: true,
+      id_idioma: 0
     };
     this.cargarSuplementos();
+    this.loadFont()
   }
   cargarSuplementos = async () => {
-    base.traerSuplementos(await this.props.navigation.getParam('tipo_suplementacion'), this.okSuplementos.bind(this))
+    base.traerSuplementos(await this.props.navigation.getParam('id_suplemento'), this.okSuplementos.bind(this))
   }
-  okSuplementos(suplementos) {
+  loadFont = async() => {
+    await Font.loadAsync({
+      'font1': require('../assets/fonts/BebasNeue-Regular.ttf'),
+      'font2': require('../assets/fonts/BebasNeue-Bold.ttf'),
+    });
+    this.setState({ isLoadingFont: false })
+  }
+  okSuplementos(suplementos, id_idioma) {
     this.setState({
       suplementos: suplementos,
+      id_idioma: id_idioma,
       memory: suplementos,
       isLoading: false,
     });
@@ -66,9 +80,7 @@ class SuplementacionTipos extends Component {
   searchSuplementos = value => {
     const filterDeSuplementos = this.state.memory.filter(suplemento => {
       let suplementoLowercase = (
-        suplemento.nombre +
-        ' ' +
-        suplemento.descripcion +
+        suplemento.nombre_suplemento +
         ' ' +
         suplemento.marca +
         ' ' +
@@ -119,30 +131,30 @@ class SuplementacionTipos extends Component {
   }
   favoritosLabel(favoritos) {
     if (favoritos) {
-      return "Favorito"
+      return ExportadorFrases.FavoritosLabel(this.state.id_idioma)
     }
     else {
-      return "No Favorito"
+      return ExportadorFrases.FavoritosNoLabel(this.state.id_idioma)
     }
   }
   favoritosHint(favoritos) {
     if (favoritos) {
-      return "Sacar de Favoritos este Suplemento"
+      return ExportadorFrases.FavoritosNoHint(this.state.id_idioma)
     }
     else {
-      return "Agregar este Suplemento a favoritos"
+      return ExportadorFrases.FavoritosHint(this.state.id_idioma)
     }
   }
-  marginSize(item){
-    if(item.id_suplemento !=  this.state.suplementos[this.state.suplementos.length-1].id_suplemento){
-      return {marginTop: height * 0.02}
-    }else{
-      return {marginBottom: height * 0.02, marginTop: height * 0.02}
+  marginSize(item) {
+    if (item.id_suplemento != this.state.suplementos[this.state.suplementos.length - 1].id_suplemento) {
+      return { marginTop: height * 0.02 }
+    } else {
+      return { marginBottom: height * 0.02, marginTop: height * 0.02 }
     }
   }
 
   render() {
-    if (this.state.isLoading) {
+    if (this.state.isLoadingFont || this.state.isLoading) {
       return (
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
@@ -155,7 +167,7 @@ class SuplementacionTipos extends Component {
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <View>
             <SearchBar
-              placeholder="Search..."
+              placeholder={ExportadorFrases.Search(this.state.id_idioma) + '...'}
               platform='ios'
               onChangeText={value => this.searchSuplementos(value)}
               value={this.state.value}
@@ -169,18 +181,20 @@ class SuplementacionTipos extends Component {
           <FlatList
             style={styles.contentList}
             columnWrapperStyle={styles.listContainer}
-            data={this.state.suplementos.sort((a, b) => a.nombre.localeCompare(b.nombre))}
+            data={this.state.suplementos.sort((a, b) => a.nombre_suplemento.localeCompare(b.nombre_suplemento))}
             initialNumToRender={50}
             keyExtractor={(item) => {
               return item.id_suplemento;
             }}
             renderItem={({ item }) => {
               return (
-                <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre)}>
+                <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre_suplemento)}>
                   <View style={{ flexDirection: "row" }} >
-                    <Image style={styles.image} source={ExportadorSuplementacion.queSuplementacion(item.tipo)} />
+                    <ImageBackground style={styles.image} source={ExportadorSuplementacion.default(this.state.id_idioma)}>
+                      <Text style={[styles.textImage, { fontFamily: 'font2' }]} >{item.nombre_tipo}</Text>
+                    </ImageBackground>
                     <View style={styles.cardContent}>
-                      <Text style={styles.name}>{item.nombre}</Text>
+                      <Text style={styles.name}>{item.nombre_suplemento}</Text>
                       <Text style={styles.marca}>{item.marca}</Text>
                     </View>
                     <View style={styles.ViewEstrella} >
@@ -193,14 +207,13 @@ class SuplementacionTipos extends Component {
               )
             }
             } />
-            <View style={styles.bannerContainer}></View>
+          <View style={styles.bannerContainer}></View>
           <AdMobBanner
             accessible={true}
-            accessibilityLabel={"Add Banner"}
-            accessibilityHint={"Navega al Anuncio"}
+            accessibilityLabel={"Banner"}
+            accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
             style={styles.bottomBanner}
             adUnitID={ExportadorAds.Banner()}
-            useEffect={setTestDeviceIDAsync('EMULATOR')}
             onDidFailToReceiveAdWithError={err => {
               console.log(err)
             }}
@@ -208,7 +221,6 @@ class SuplementacionTipos extends Component {
               console.log("Ad Recieved");
             }}
             adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-          //didFailToReceiveAdWithError={this.bannerError()}
           />
         </View>
       );
@@ -229,7 +241,6 @@ const styles = StyleSheet.create({
   bottomBanner: {
     position: "absolute",
     bottom: 0,
-    height: height * 0.08
   },
   contentList: {
     flex: 1,
@@ -251,17 +262,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
-    //width: 90,
-    width: wp("20"),
-    //height: 90,
-    height: hp("11"),
+    width: hp("12.2"),
+    height: hp("12.2"),
     borderWidth: 2,
     borderColor: "#ebf0f7",
     margin: 5,
     marginRight: 5,
-    alignSelf: "center"
+    alignSelf: "center",
+    resizeMode: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    overflow: 'hidden'
   },
-
+  textImage: {
+    textAlign: 'center',
+    fontSize: hp(2),
+    textTransform: 'uppercase',
+    color: "#2A73E0",
+    letterSpacing: wp(0.5),
+    padding: 1,
+    fontWeight: 'bold',
+    textShadowColor: 'black',
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 0.1
+  },
   card: {
     shadowColor: '#00000021',
     shadowOffset: {

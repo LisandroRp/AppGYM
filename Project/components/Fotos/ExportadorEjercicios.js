@@ -4,38 +4,37 @@ import { withNavigation } from 'react-navigation';
 
 class ExportadorEjercicios extends Component {
 
-    queMusculo(nombre) {
-        switch (nombre) {
+    queMusculo(id_musculo) {
+        switch (id_musculo) {
 
-            case "Abdominales":
+            case 1:
+                return require('./Ejercicios/PECHO.png')
 
-                return require('./Ejercicios/ABS.png')
-
-            case "Espalda":
+            case 2:
 
                 return require('./Ejercicios/ESPALDA.png')
 
-            case "Hombros":
+            case 3:
 
                 return require('./Ejercicios/HOMBROS.png')
 
-            case "Biceps":
-
-                return require('./Ejercicios/BICEPS.png')
-
-            case "Triceps":
-
-                return require('./Ejercicios/TRICEPS.png')
-
-            case "Pecho":
-
-                return require('./Ejercicios/PECHO.png')
-
-            case "Piernas":
+            case 4:
 
                 return require('./Ejercicios/PIERNAS.png')
 
-            case "Cardio":
+            case 5:
+
+                return require('./Ejercicios/BICEPS.png')
+
+            case 6:
+
+                return require('./Ejercicios/TRICEPS.png')
+
+            case 7:
+
+                return require('./Ejercicios/ABS.png')
+
+            case 8:
 
                 return require('./Ejercicios/CARDIO.png')
         }

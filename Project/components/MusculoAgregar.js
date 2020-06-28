@@ -4,6 +4,7 @@ import { withNavigation } from 'react-navigation';
 import { AsyncStorage, Modal, TextInput } from 'react-native';
 import base from './GenerarBase';
 import ExportadorEjercicios from './Fotos/ExportadorEjercicios';
+import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
@@ -32,7 +33,7 @@ class MusculoAgregar extends Component {
     super(props);
     this.state = {
       searchBarFocused: false,
-      musculo: this.props.navigation.getParam('musculo'),
+      id_musculo: this.props.navigation.getParam('id_musculo'),
       dia: this.props.navigation.getParam('dia'),
       tipo: this.props.navigation.getParam('tipo'),
       combinado: this.props.navigation.getParam('combinado'),
@@ -43,8 +44,9 @@ class MusculoAgregar extends Component {
       favoritos: null,
       memory: [],
       ejercicios: [],
-      isLoading: false,
+      isLoading: true,
       id_ejercicio: 0,
+      id_idioma: 0,
       nombreEjercicio: '',
       musculoEjercicio: '',
       series: '0',
@@ -57,7 +59,7 @@ class MusculoAgregar extends Component {
       contador2: 0,
       tiempo: 0,
       minutos: 0,
-      segundos: 0
+      segundos: 0,
     };
     var { height, width } = Dimensions.get('window');
     this.cargarEjercicios();
@@ -66,30 +68,46 @@ class MusculoAgregar extends Component {
   //Trae los ejercicios especificios del musculo seleccionado en la screen anterior
   cargarEjercicios = async () => {
     if (this.state.favoritos == false || this.state.favoritos == null) {
-      base.traerEjercicios(await this.props.navigation.getParam('musculo'), this.okEjercicios.bind(this))
+      base.traerEjercicios(await this.props.navigation.getParam('id_musculo'), this.okEjercicios.bind(this))
     }
     else {
-      base.traerEjerciciosMusculoFavs(this.state.musculo, this.okEjerciciosFavs.bind(this))
+      base.traerEjerciciosMusculoFavs(this.state.id_musculo, this.okEjerciciosFavs.bind(this))
     }
   }
   //Setea los ejercicios y renderiza la screen
   okEjercicios(ejercicios) {
-    this.setState({
-      favoritos: true,
-      ejercicios: ejercicios,
-      memory: ejercicios,
-      isLoading: false
-    });
+    if (ejercicios.length == 0) {
+      this.setState({ ejercicios: ejercicios, memory: ejercicios, favoritos: true});
+      base.traerIdIdioma(this.okIdIdioma.bind(this))
+    } else {
+      this.setState({
+        id_idioma: ejercicios[0].id_idioma,
+        favoritos: true,
+        ejercicios: ejercicios,
+        memory: ejercicios,
+        isLoading: false
+      });
+    }
   }
-  okEjerciciosFavs(ejercicios) {
-    this.setState({
-      favoritos: false,
-      ejercicios: ejercicios,
-      memory: ejercicios,
-      isLoading: false
-    });
+  okEjerciciosFavs(ejercicios, id_idioma) {
+    if (ejercicios.length == 0) {
+      this.setState({ ejercicios: ejercicios, memory: ejercicios, favoritos: false});
+      base.traerIdIdioma(this.okIdIdioma.bind(this))
+    } else {
+      this.setState({
+        favoritos: false,
+        id_idioma: id_idioma,
+        ejercicios: ejercicios,
+        memory: ejercicios,
+        isLoading: false
+      });
+    }
   }
-  
+
+  okIdIdioma(id_idioma) {
+    this.setState({ id_idioma: id_idioma, isLoading: false });
+  }
+
   queEstrella() {
     if (this.state.favoritos == false) {
       return ExportadorLogos.traerEstrellaBlanca(true)
@@ -102,7 +120,7 @@ class MusculoAgregar extends Component {
     if (this.state.repeticiones.length != 0) {
       while (i < this.state.repeticiones.length) {
         if (this.state.repeticiones[i] == undefined || this.state.repeticiones[i] == "") {
-          alert("Debe completar todos los casilleros")
+          alert(ExportadorFrases.CompletarCasilleros(this.state.id_idioma))
           return
         }
         i++
@@ -110,12 +128,12 @@ class MusculoAgregar extends Component {
       this.setState({ modalRepeticionesVisible: false })
       this._retrieveData(this.repeticionesString(), null);
     } else {
-      alert("Debe completar todos los casilleros")
+      alert(ExportadorFrases.CompletarCasilleros(this.state.id_idioma))
     }
   }
   guardarEjercicioTiempo() {
     if (this.state.minutos == 0 && this.state.segundos == 0) {
-      alert("Debe marcar un tiempo")
+      alert(ExportadorFrases.CompletarTiempo(this.state.id_idioma))
     } else {
       this.setState({ modalTiempoVisible: false })
       this._retrieveData(null, (this.state.minutos + " : " + this.state.segundos));
@@ -123,7 +141,7 @@ class MusculoAgregar extends Component {
   }
   repeticionesString() {
     var repeticiones = this.state.repeticiones[0]
-    for (i = 1; i < this.state.repeticiones.length; i++) {
+    for (var i = 1; i < this.state.repeticiones.length; i++) {
       repeticiones = repeticiones + " - " + this.state.repeticiones[i]
     }
     return repeticiones
@@ -150,8 +168,8 @@ class MusculoAgregar extends Component {
     if (tiempo == null) {
       var terminada = {
         id_ejercicio: this.state.id_ejercicio,
-        musculo: this.state.musculoEjercicio,
-        nombre: this.state.nombreEjercicio,
+        id_musculo: this.state.musculoEjercicio,
+        nombre_ejercicio: this.state.nombreEjercicio,
         repeticiones: repeticiones,
         series: this.state.series,
         dia: this.state.dia,
@@ -162,8 +180,8 @@ class MusculoAgregar extends Component {
     } else {
       var terminada = {
         id_ejercicio: this.state.id_ejercicio,
-        musculo: this.state.musculoEjercicio,
-        nombre: this.state.nombreEjercicio,
+        id_musculo: this.state.musculoEjercicio,
+        nombre_ejercicio: this.state.nombreEjercicio,
         repeticiones: null,
         series: this.state.series,
         dia: this.state.dia,
@@ -183,7 +201,7 @@ class MusculoAgregar extends Component {
   }
   setModalRepeticionesOTiempo(visible) {
     if (parseInt(this.state.series) == 0) {
-      alert("Debe ingresar una cantidad de series")
+      alert(ExportadorFrases.CompletarSeries(this.state.id_idioma))
     }
     else {
       if (this.state.musculo != "Cardio" && this.state.id_ejercicio != 68 && this.state.id_ejercicio != 69) {
@@ -202,7 +220,7 @@ class MusculoAgregar extends Component {
   setModalRepeticionesVisible(visible) {
     var contadorRepeticiones = []
     contadorRepeticiones.length = parseInt(this.state.series)
-    for (i = 0; i < parseInt(this.state.series); i++) {
+    for (var i = 0; i < parseInt(this.state.series); i++) {
       contadorRepeticiones[i] = (i + 1)
     }
     this.setState({ modalSeriesVisible: !visible, modalRepeticionesVisible: visible, contadorRepeticiones: contadorRepeticiones })
@@ -239,11 +257,11 @@ class MusculoAgregar extends Component {
   searchEjercicio = value => {
     const filterDeEjercicios = this.state.memory.filter(ejercicio => {
       let ejercicioLowercase = (
-        ejercicio.nombre +
+        ejercicio.nombre_musculo +
         ' ' +
-        ejercicio.elemento +
+        ejercicio.nombre_ejercicio +
         ' ' +
-        ejercicio.musculo
+        ejercicio.nombre_elemento
       ).toLowerCase();
 
       let searchTermLowercase = value.toLowerCase();
@@ -253,12 +271,12 @@ class MusculoAgregar extends Component {
     this.setState({ ejercicios: filterDeEjercicios });
     this.setState({ value })
   };
-  marginSize(item){
-    if(item.id_ejercicio !=  this.state.ejercicios[this.state.ejercicios.length-1].id_ejercicio){
-      
-      return {marginTop: height * 0.028}
-    }else{
-      return {marginBottom: height * 0.028, marginTop: height * 0.028}
+  marginSize(item) {
+    if (item.id_ejercicio != this.state.ejercicios[this.state.ejercicios.length - 1].id_ejercicio) {
+
+      return { marginTop: height * 0.028 }
+    } else {
+      return { marginBottom: height * 0.028, marginTop: height * 0.028 }
     }
   }
   render() {
@@ -275,7 +293,7 @@ class MusculoAgregar extends Component {
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <View>
             <SearchBar
-              placeholder="Search..."
+              placeholder={ExportadorFrases.Search(this.state.id_idioma)}
               platform='ios'
               onChangeText={value => this.searchEjercicio(value)}
               value={this.state.value}
@@ -292,23 +310,23 @@ class MusculoAgregar extends Component {
             </TouchableOpacity>
             <FlatList
               style={styles.contentList}
-              data={this.state.ejercicios.sort((a, b) => a.nombre.localeCompare(b.nombre))}
+              data={this.state.ejercicios.sort((a, b) => a.nombre_ejercicio.localeCompare(b.nombre_ejercicio))}
               initialNumToRender={50}
               keyExtractor={(item) => {
                 return item.id_ejercicio.toString();
               }}
               renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre, item.descripcion)}>
+                  <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
                     <View style={{ flexDirection: "row" }} >
-                      <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.musculo)} />
+                      <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
                       <View style={styles.cardContent}>
-                        <Text style={styles.name}>{item.nombre}</Text>
-                        <Text style={styles.elemento}>{item.elemento}</Text>
+                        <Text style={styles.name}>{item.nombre_ejercicio}</Text>
+                        <Text style={styles.elemento}>{item.nombre_elemento}</Text>
                       </View>
                       <View style={styles.masita}>
                         <FontAwesome name="plus" style={styles.plus}
-                          onPress={() => this.setModalSeriesVisible(true, item.id_ejercicio, item.nombre, item.musculo)}
+                          onPress={() => this.setModalSeriesVisible(true, item.id_ejercicio, item.nombre_ejercicio, item.id_musculo)}
                           size={height * 0.055}
                         /></View>
                     </View>
@@ -325,11 +343,11 @@ class MusculoAgregar extends Component {
             onRequestClose={() => this.setState({ modalSeriesVisible: false })}  >
             <View style={styles.modalSeries}>
               <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                <Text style={styles.modalTextSeries}>Selecione la cantidad de series</Text>
+                <Text style={styles.modalTextSeries}>{ExportadorFrases.CantidadSeries(this.state.id_idioma)}</Text>
                 <RNPickerSelect
                   useNativeAndroidPickerStyle={false}
                   placeholder={{
-                    label: 'Series',
+                    label: ExportadorFrases.Series(this.state.id_idioma),
                     value: '0'
                   }}
                   placeholderTextColor="grey"
@@ -352,10 +370,10 @@ class MusculoAgregar extends Component {
               </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>Cancelar</Text>
+                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.setModalRepeticionesOTiempo(true)} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>Aceptar</Text>
+                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
 
                 </TouchableOpacity>
               </View>
@@ -368,7 +386,7 @@ class MusculoAgregar extends Component {
             onRequestClose={() => this.setState({ modalRepeticionesVisible: false })}  >
 
             <View style={[{ height: height * this.state.modalRepeticionesHeigh }, styles.modalReps]}>
-              <Text style={styles.modalText}>Selecione el orden y la cantidad de sus repeticiones</Text>
+              <Text style={styles.modalText}>{ExportadorFrases.CantidadSeries(this.state.id_idioma)}</Text>
               <FlatList
                 scrollEnabled={false}
                 contentContainerStyle={styles.contentList2}
@@ -389,10 +407,10 @@ class MusculoAgregar extends Component {
 
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({ repeticiones: [] }) }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>Cancelar</Text>
+                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.guardarEjercicio()} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>Aceptar</Text>
+                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
 
                 </TouchableOpacity>
               </View>
@@ -405,7 +423,7 @@ class MusculoAgregar extends Component {
             onRequestClose={() => this.setState({ modalTiempoVisible: false })}  >
 
             <View style={[{ height: height * this.state.modalRepeticionesHeigh }, styles.modalReps]}>
-              <Text style={styles.modalText}>Escriba el tiempo del ejercicio</Text>
+              <Text style={styles.modalText}>{ExportadorFrases.CantidadTiempo(this.state.id_idioma)}</Text>
               <View style={styles.contentList3}>
                 <View style={styles.containerInputReps}>
                   <TextInput keyboardType={'numeric'} placeholder='Mins.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarMinutos(parseInt(text))} value={this.state.minutos}></TextInput>
@@ -419,10 +437,10 @@ class MusculoAgregar extends Component {
               </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({ minutos: 0, segundos: 0 }) }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>Cancelar</Text>
+                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.guardarEjercicioTiempo()} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>Aceptar</Text>
+                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
 
                 </TouchableOpacity>
               </View>
@@ -431,7 +449,7 @@ class MusculoAgregar extends Component {
           <AdMobBanner
             accessible={true}
             accessibilityLabel={"Add Banner"}
-            accessibilityHint={"Navega al Anuncio"}
+            accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
             style={styles.bottomBanner}
             adUnitID={ExportadorAds.Banner()}
             onDidFailToReceiveAdWithError={err => {
@@ -475,7 +493,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     alignSelf: 'center',
-    height: height * 0.08,
   },
   textInput: {
     color: '#3399ff',
@@ -647,7 +664,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   containerInputReps: {
-    marginTop: height * 0.02,
+    marginTop: height * 0.038,
     marginBottom: hp(0.5),
     marginHorizontal: wp(0.8),
     borderRadius: 11,
