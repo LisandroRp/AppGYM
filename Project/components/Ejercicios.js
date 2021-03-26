@@ -89,6 +89,7 @@ class Ejercicios extends Component {
               {
                 array.map((item, itemPos) => (
                   <TouchableOpacity
+                    key={item.id_musculo.toString()}
                     accessible={true}
                     accessibilityLabel={item.nombre_musculo}
                     accessibilityHint={ExportadorFrases.EjerciciosHint(this.state.id_idioma) + item.nombre_musculo}

@@ -172,9 +172,6 @@ class Training extends Component {
         }
     }
     okExperiencia(calorias) {
-        console.log(calorias)
-        console.log(this.state.objetivoDeseado)
-        console.log(this.state.experiencia)
         base.guardarPlan(calorias, this.state.objetivoDeseado, this.state.experiencia, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
     }
 

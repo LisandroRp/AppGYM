@@ -60,7 +60,7 @@ class RutinaModificable extends Component {
     base.traerIdIdioma(this.okIdIdioma.bind(this))
   }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     this._retrieveData()
   }
   componentWillMount() {

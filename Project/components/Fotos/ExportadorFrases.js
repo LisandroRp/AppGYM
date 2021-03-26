@@ -1119,8 +1119,6 @@ class ExportadorFrases extends Component {
         }
     }
     EjerciciosDrawer(idioma) {
-        console.log("************************")
-        console.log(idioma)
         switch (idioma) {
             case es:
                 return "Ejercicios"

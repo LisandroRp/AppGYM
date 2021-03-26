@@ -56,7 +56,7 @@ class RutinaNew extends Component {
       id_idioma: 0
     };
   }
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     this._retrieveData()
   }
 

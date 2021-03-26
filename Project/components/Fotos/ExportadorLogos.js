@@ -58,7 +58,6 @@ class ExportadorLogos extends Component {
         return require("./Logos/Instagram.png")
     }
     traerSideMenu(menu) {
-        console.log(menu)
         return require('./Logos/Star_Borde_Blanca.png')
     }
 

@@ -85,6 +85,7 @@ class Suplementacion extends Component {
               {
                 array.map((item, itemPos) => (
                   <TouchableOpacity
+                    key={item.id_tipo.toString()}
                     accessible={true}
                     accessibilityLabel={item.nombre_tipo}
                     accessibilityHint={ExportadorFrases.EjerciciosHint(this.state.id_idioma) + item.nombre_tipo}
