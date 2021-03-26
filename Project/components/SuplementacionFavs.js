@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorFrases from './Fotos/ExportadorFrases';
+import { BlackShadowForBlack, BlackShadow } from './Estilos/Shadows'
 import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion';
 import {
   StyleSheet,
@@ -56,9 +57,9 @@ class SuplementacionFavs extends Component {
       });
     }
   }
-  okIdIdioma(id_idioma){
-    this.setState({id_idioma: id_idioma, isLoading: false});
-}
+  okIdIdioma(id_idioma) {
+    this.setState({ id_idioma: id_idioma, isLoading: false });
+  }
 
   componentDidMount() {
     this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
@@ -136,9 +137,9 @@ class SuplementacionFavs extends Component {
   }
   marginSize(item) {
     if (item.id_suplemento != this.state.suplementos[this.state.suplementos.length - 1].id_suplemento) {
-      return { marginTop: height * 0.02 }
+      return { marginTop: hp(2) }
     } else {
-      return { marginBottom: height * 0.02, marginTop: height * 0.02 }
+      return { marginBottom: hp(2), marginTop: hp(2) }
     }
   }
 
@@ -155,10 +156,10 @@ class SuplementacionFavs extends Component {
         return (
           <View style={[styles.NoItemsContainer]}>
             <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-            <View style={styles.NoItems}>
+            <View style={[styles.NoItemsTextContainer, BlackShadowForBlack()]}>
               <Text style={styles.NoItemsText}>{ExportadorFrases.SuplementosNo(this.state.id_idioma)}</Text>
             </View>
-            <View style={styles.NoItemsImageContainer}>
+            <View style={[styles.NoItemsImageContainer, BlackShadowForBlack()]}>
               <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
             </View>
             <AdMobBanner
@@ -191,20 +192,20 @@ class SuplementacionFavs extends Component {
               }}
               renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre_suplemento)}>
-                    <View style={{ flexDirection: "row" }} >
+                  <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre_suplemento)}>
+                    <View style={styles.imageContainer}>
                       <ImageBackground style={styles.image} source={ExportadorSuplementacion.default(this.state.id_idioma)}>
                         <Text style={[styles.textImage, { fontFamily: 'font2' }]} >{item.nombre_tipo}</Text>
                       </ImageBackground>
-                      <View style={styles.cardContent}>
-                        <Text style={styles.name}>{item.nombre_suplemento}</Text>
-                        <Text style={styles.marca}>{item.marca}</Text>
-                      </View>
-                      <View style={styles.ViewEstrella} >
-                        <TouchableOpacity onPress={() => { this.modalVisible(item.id_suplemento, item.nombre_suplemento) }}>
-                          <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
-                        </TouchableOpacity>
-                      </View>
+                    </View>
+                    <View style={styles.cardContent}>
+                      <Text style={styles.name}>{item.nombre_suplemento}</Text>
+                      <Text style={styles.marca}>{item.marca}</Text>
+                    </View>
+                    <View style={styles.ViewEstrella} >
+                      <TouchableOpacity onPress={() => { this.modalVisible(item.id_suplemento, item.nombre_suplemento) }}>
+                        <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
+                      </TouchableOpacity>
                     </View>
                   </TouchableOpacity>
                 )
@@ -217,7 +218,7 @@ class SuplementacionFavs extends Component {
               transparent={true}
               onRequestClose={() => this.setState({ modalVisible: false })}  >
 
-              <View style={styles.modal}>
+              <View style={[styles.modal, BlackShadow()]}>
 
                 <View style={{ flexDirection: 'column', marginVertical: height * 0.03, marginHorizontal: width * 0.05 }}>
                   <Text style={styles.textButton}>{ExportadorFrases.SacarSuplementoFavs1(this.state.id_idioma)} "{this.state.nombre_suplemento}" {ExportadorFrases.SacarSuplementoFavs2(this.state.id_idioma)}?</Text>
@@ -273,39 +274,40 @@ const styles = StyleSheet.create({
   },
   NoItemsContainer: {
     backgroundColor: 'grey',
-    flex: 1,
+    justifyContent: "center",
+    flex: 1
   },
+  NoItemsTextContainer: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: hp(1),
+    opacity: .95,
+    marginHorizontal: wp(5),
+    marginBottom: height * 0.028
+  },
+
   NoItemsText: {
     alignSelf: "center",
-    fontSize: height * 0.028,
+    fontSize: wp(5),
     color: "#3399ff",
     textAlign: 'center'
   },
   NoItemsImageContainer: {
-    height: height * 0.55,
-    width: height * 0.50,
-    marginBottom: height * 0.028,
-    marginTop: height * 0.028,
-    alignSelf: "center",
+    flex: 0.7,
+    paddingHorizontal: wp(5),
+    marginHorizontal: wp(5),
+    borderRadius: hp(1),
+    margin: wp(2.5),
+    alignItems: 'center',
     backgroundColor: 'black',
-    borderWidth: 4,
-    borderRadius: 10,
+    marginBottom: height * 0.08,
   },
 
   NoItemsLogo: {
-    height: height * 0.45,
-    width: height * 0.45,
-    alignSelf: "center",
-    marginTop: hp(9),
-    marginBottom: hp(6.6)
-  },
-  NoItems: {
-    backgroundColor: "black",
-    padding: 10,
-    borderRadius: 10,
-    opacity: .95,
-    marginHorizontal: wp(5),
-    marginTop: height * 0.028
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    resizeMode: 'contain',
   },
   bgImage: {
     flex: 1,
@@ -316,29 +318,48 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
+  shadow: {
+    shadowColor: '#00000021',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12,
+  },
+  card: {
+    flex: 1,
+    backgroundColor: "black",
+    marginHorizontal: wp(2),
+    flexDirection: 'row'
+  },
   cardContent: {
-    marginLeft: height * 0.028,
-    paddingRight: 5,
-    width: wp("40"),
+    flex: 1,
+    paddingHorizontal: 5,
     justifyContent: 'center',
   },
+  imageContainer: {
+    flex: 0.4,
+    margin: wp(2.5),
+    alignItems: 'center',
+    justifyContent: "center",
+  },
   image: {
-    width: hp("12.2"),
-    height: hp("12.2"),
-    borderWidth: 2,
-    borderColor: "#ebf0f7",
-    margin: 5,
-    marginRight: 5,
-    alignSelf: "center",
-    resizeMode: 'stretch',
+    flex: 1,
+    height: wp(20),
+    width: wp(20),
+    borderWidth: 1.5,
+    borderColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
+    resizeMode: 'stretch',
     overflow: 'hidden'
   },
   textImage: {
     textAlign: 'center',
-    fontSize: hp(2),
+    fontSize: wp(4),
     textTransform: 'uppercase',
     color: "#2A73E0",
     letterSpacing: wp(0.5),
@@ -348,46 +369,28 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 0.1
   },
-
-  card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-
-    marginLeft: height * 0.028,
-    marginRight: height * 0.028,
-    backgroundColor: "black",
-    padding: 10,
-    flexDirection: 'row'
-  },
-
   name: {
-    fontSize: height * 0.028,
+    fontSize: wp(5),
     color: "#3399ff",
     fontWeight: 'bold'
   },
   marca: {
-    fontSize: height * 0.02,
-    marginTop: 5,
+    marginTop: 1,
+    fontSize: wp(3.5),
     color: "white"
   },
   StarImage: {
-    width: hp(5.5),
-    height: hp(5.5)
+    width: hp(4.5),
+    height: hp(4.5),
   },
   ViewEstrella: {
+    flex: 0.4,
     alignItems: 'center',
     justifyContent: "center",
-    paddingHorizontal: wp("5")
   },
   //MODAAAAL
   modal: {
-    height: height * 0.22,
+    height: hp(20),
     width: width * 0.75,
     position: 'absolute',
     top: height * 0.4,
@@ -405,28 +408,28 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderTopWidth: 2,
     width: width * 0.74,
-    height: height * 0.08,
+    height: hp(6),
     position: 'absolute',
     bottom: 0,
     opacity: .95
   },
   textButton: {
     color: 'white',
-    fontSize: height * 0.02,
+    fontSize: wp(3.8),
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'
   },
   modalButtonCancelar: {
     width: width * 0.37,
-    height: height * 0.0775,
+    height: hp(6),
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 22
+    borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
-    width: width * 0.37,
-    height: height * 0.0775,
+    width: width * 0.366,
+    height: hp(6),
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: "center",

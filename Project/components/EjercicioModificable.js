@@ -4,6 +4,8 @@ import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorAds from './Fotos/ExportadorAds';
 import { withNavigation } from 'react-navigation';
+import { BlackShadow } from './Estilos/Shadows'
+import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
 import {
   StyleSheet,
   Text,
@@ -71,12 +73,12 @@ class EjerciciosNew extends Component {
 
   okEjercicio(data) {
     this.setState({
-      ejercicio: data[0],
-      musculo: data[0].id_musculo,
-      elemento: data[0].id_elemento,
-      nombre: data[0].nombre_ejercicio,
-      descripcion: data[0].descripcion,
-      ejecucion: data[0].ejecucion,
+      ejercicio: data,
+      musculo: data.id_musculo,
+      elemento: data.id_elemento,
+      nombre: data.nombre_ejercicio,
+      descripcion: data.descripcion,
+      ejecucion: data.ejecucion,
     });
     base.traerIdIdioma(this.okIdIdioma.bind(this))
   }
@@ -146,13 +148,9 @@ class EjerciciosNew extends Component {
           return (
             <View style={styles.container}>
               <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-              <View style={styles.insideContainer} >
-
-                <ActivityIndicator size="large" color="#3399ff" style={{}}></ActivityIndicator>
-
-                <View style={styles.slide1}>
-                  <Text style={styles.slideText}>{ExportadorFrases.ActualizandoEjercicio(this.state.id_idioma)}</Text>
-                </View>
+              <View style={styles.insideContainer}>
+                <ActivityIndicator size="large" color="#3399ff" style={{}} />
+                <Text style={styles.slideText}>{ExportadorFrases.ActualizandoEjercicio(this.state.id_idioma)}</Text>
               </View>
             </View>
           );
@@ -161,13 +159,9 @@ class EjerciciosNew extends Component {
           return (
             <View style={styles.container}>
               <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-              <View style={styles.insideContainer} >
-
-                <ActivityIndicator size="large" color="#3399ff" style={{}}></ActivityIndicator>
-
-                <View style={styles.slide1}>
-                  <Text style={styles.slideText}>{ExportadorFrases.BorrandoEjercicio(this.state.id_idioma)}</Text>
-                </View>
+              <View style={styles.insideContainer}>
+                <ActivityIndicator size="large" color="#3399ff" style={{}} />
+                <Text style={styles.slideText}>{ExportadorFrases.BorrandoEjercicio(this.state.id_idioma)}</Text>
               </View>
             </View>
           );
@@ -186,10 +180,9 @@ class EjerciciosNew extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
-
-            <KeyboardAvoidingView style={[styles.inputContainer]} behavior="position" keyboardVerticalOffset={height * 0.008} enabled>
+            <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={height * 0.008} enabled>
               <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <View style={styles.inputContainerView}>
+                <View>
                   <RNPickerSelect
                     useNativeAndroidPickerStyle={false}
                     placeholder={{
@@ -198,38 +191,12 @@ class EjerciciosNew extends Component {
                     }}
                     value={this.state.musculo}
                     placeholderTextColor="black"
-                    placeholderfontWeight="bold"
+                    // placeholderfontWeight="bold"
                     style={{
-                      inputIOS: {
-                        backgroundColor: 'grey',
-                        borderRadius: 10,
-                        paddingLeft: 10,
-                        margin: height * 0.028,
-                        width: wp("70"),
-                        height: hp("5.5"),
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        fontWeight: 'bold',
-                        fontSize: height * 0.02,
-                        color: "black",
-                      },
-                      inputAndroid: {
-                        backgroundColor: 'grey',
-                        borderRadius: 10,
-                        paddingLeft: 10,
-                        margin: height * 0.028,
-                        width: wp("70"),
-                        height: hp("5.5"),
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        fontWeight: 'bold',
-                        fontSize: height * 0.02,
-                        //fontSize: 15,
-                        color: "black",
-                      }
+                      inputIOS: [styles.PikerIos, BlackShadow()],
+                      inputAndroid: [styles.PikerAndroid, BlackShadow()]
                     }}
+
                     onValueChange={(value) => this.setState({ musculo: value })}
                     items={[
                       { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 1), value: 1 },
@@ -251,34 +218,8 @@ class EjerciciosNew extends Component {
                     value={this.state.elemento}
                     placeholderTextColor="black"
                     style={{
-                      inputIOS: {
-                        backgroundColor: 'grey',
-                        borderRadius: 10,
-                        paddingLeft: 10,
-                        margin: height * 0.028,
-                        width: wp("70"),
-                        height: hp("5.5"),
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        fontWeight: 'bold',
-                        fontSize: height * 0.02,
-                        color: "black",
-                      },
-                      inputAndroid: {
-                        backgroundColor: 'grey',
-                        borderRadius: 10,
-                        paddingLeft: 10,
-                        margin: height * 0.028,
-                        width: wp("70"),
-                        height: hp("5.5"),
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        fontWeight: 'bold',
-                        fontSize: height * 0.02,
-                        color: "black",
-                      }
+                      inputIOS: [styles.PikerIos, BlackShadow()],
+                      inputAndroid: [styles.PikerAndroid, BlackShadow()]
                     }}
                     onValueChange={(value) => this.setState({ elemento: value })}
                     items={[
@@ -289,21 +230,21 @@ class EjerciciosNew extends Component {
                       { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 5), value: 5 },
                     ]}
                   />
-                  <TextInput style={styles.TextContainer} maxLength={33} placeholder={ExportadorFrases.Nombre(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
-                  <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder={ExportadorFrases.Descripcion(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(descripcion) => this.setState({ descripcion })} value={this.state.descripcion}></TextInput>
-                  <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder={ExportadorFrases.Ejecucion(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(ejecucion) => this.setState({ ejecucion })} value={this.state.ejecucion}></TextInput>
+                  <TextInput style={[styles.TextContainer, BlackShadow()]} maxLength={33} placeholder={ExportadorFrases.Nombre(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
+                  <TextInput style={[styles.TextContainerLarge, BlackShadow()]} multiline={true} maxLength={222} placeholder={ExportadorFrases.Descripcion(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(descripcion) => this.setState({ descripcion })} value={this.state.descripcion}></TextInput>
+                  <TextInput style={[styles.TextContainerLarge, BlackShadow()]} multiline={true} maxLength={222} placeholder={ExportadorFrases.Ejecucion(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(ejecucion) => this.setState({ ejecucion })} value={this.state.ejecucion}></TextInput>
 
-                  <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
-                    <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalBorrarVisible: true }) }}>
-                      <Text style={styles.screenButtonText}>
+                  <View style={{ flexDirection: "row", justifyContent: 'space-around', height: hp("11") }}>
+                    <BlueParallelButton onPress={() => { this.setState({ modalBorrarVisible: true }) }}>
+                      <BlackButtonText>
                         {ExportadorFrases.Borrar(this.state.id_idioma)}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.guardarButton} onPress={() => { this.botonGuardar() }}>
-                      <Text style={styles.screenButtonText}>
+                      </BlackButtonText>
+                    </BlueParallelButton>
+                    <BlueParallelButton onPress={() => { this.botonGuardar() }}>
+                      <BlackButtonText>
                         {ExportadorFrases.Actualizar(this.state.id_idioma)}
-                      </Text>
-                    </TouchableOpacity>
+                      </BlackButtonText>
+                    </BlueParallelButton>
                   </View>
 
                 </View>
@@ -316,20 +257,17 @@ class EjerciciosNew extends Component {
             transparent={true}
             onRequestClose={() => this.setState({ modalGuardarVisible: false })}  >
 
-            <View style={styles.modal}>
-              <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                <Text style={styles.textButton}>{ExportadorFrases.ActualizarEjercicioModal(this.state.id_idioma)} "{this.state.nombre}"</Text>
+            <View style={[styles.modal, BlackShadow()]}>
+              <View style={styles.modal1}>
+                <Text style={styles.modalText}>{ExportadorFrases.ActualizarEjercicioModal(this.state.id_idioma)} "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
-
                 <TouchableOpacity onPress={() => { this.setState({ modalGuardarVisible: false }) }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
+                  <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
-
                 <TouchableOpacity onPress={() => this.actualizarEjercicio()} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
+                  <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
-
               </View>
             </View>
           </Modal>
@@ -339,19 +277,17 @@ class EjerciciosNew extends Component {
             transparent={true}
             onRequestClose={() => this.setState({ modalBorrarVisible: false })}  >
 
-            <View style={styles.modal}>
-              <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                <Text style={styles.textButton}>{ExportadorFrases.BorrarEjercicio(this.state.id_idioma)} "{this.state.nombre}"</Text>
+            <View style={[styles.modal, BlackShadow()]}>
+              <View style={styles.modal1}>
+                <Text style={styles.modalText}>{ExportadorFrases.BorrarEjercicio(this.state.id_idioma)} "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
-
                 <TouchableOpacity onPress={() => { this.setState({ modalBorrarVisible: false }) }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
+                  <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => this.borrarEjercicio()} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
-
+                  <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
               </View>
             </View>
@@ -363,14 +299,12 @@ class EjerciciosNew extends Component {
             onRequestClose={() => this.setState({ modalExiste: false })}  >
 
             <View style={styles.modalExiste}>
-              <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: height * 0.05 }}>
-                <Text style={styles.textButton}>{ExportadorFrases.EjercicioPertenece1(this.state.id_idioma)} {this.state.nombre} {ExportadorFrases.EjercicioPertenece2(this.state.id_idioma)} {this.state.nombresRutinas} {"\n"}{ExportadorFrases.EjercicioPertenece3(this.state.id_idioma)}</Text>
+            <View style={styles.modal1}>
+                <Text style={styles.modalText}>{ExportadorFrases.EjercicioPertenece1(this.state.id_idioma)} {this.state.nombre} {ExportadorFrases.EjercicioPertenece2(this.state.id_idioma)} {this.state.nombresRutinas} {"\n"}{ExportadorFrases.EjercicioPertenece3(this.state.id_idioma)}</Text>
               </View>
               <View style={styles.modal2}>
-
                 <TouchableOpacity onPress={() => this.setState({ modalExiste: false })} style={styles.modalExisteButtonAceptar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
-
+                  <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
               </View>
             </View>
@@ -388,30 +322,16 @@ const styles = StyleSheet.create({
     backgroundColor: "grey"
   },
   insideContainer: {
-    flex: 1,
-    justifyContent: 'center'
-  },
-  slide1: {
     backgroundColor: "black",
-    padding: 10,
-    borderRadius: 10,
-    opacity: .95,
-    alignSelf: 'center',
-    marginTop: hp(5)
+    justifyContent: 'center',
+    alignSelf: "center",
+    borderRadius: 20,
+    padding: wp(5)
   },
   slideText: {
-    alignSelf: "center",
-    fontSize: 18,
+    marginTop: hp(2.5),
+    fontSize: wp(4),
     color: "#3399ff"
-  },
-
-  inputContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  inputContainerView: {
-    flexDirection: 'column',
-    alignItems: 'center',
   },
   TextContainer: {
     backgroundColor: 'grey',
@@ -423,7 +343,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     fontWeight: 'bold',
-    fontSize: height * 0.02
+    fontSize: wp(3.8),
+    alignSelf: "center"
   },
   TextContainerLarge: {
     backgroundColor: 'grey',
@@ -435,7 +356,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     fontWeight: 'bold',
-    fontSize: height * 0.02
+    fontSize: wp(3.8),
+    alignSelf: "center"
   },
 
   bgImage: {
@@ -447,23 +369,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  guardarButton: {
+  PikerIos: {
     backgroundColor: 'grey',
     borderRadius: 10,
+    paddingLeft: 10,
+    margin: height * 0.028,
+    width: wp("70"),
+    height: hp("5.5"),
+    flexDirection: 'row',
     alignItems: 'center',
-    width: width * 0.33,
-    marginHorizontal: 22,
     alignSelf: 'center',
-    opacity: .95
-  },
-  screenButtonText: {
-    marginVertical: height * 0.02,
     fontWeight: 'bold',
-    fontSize: height * 0.025
+    fontSize: wp(3.8),
+    color: "black",
+  },
+  PikerAndroid: {
+    backgroundColor: 'grey',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    paddingLeft: 10,
+    margin: height * 0.028,
+    width: wp("70"),
+    height: hp("5.5"),
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    fontSize: wp(3.8),
+    color: "black",
   },
   //MODAAAAL
   modal: {
-    height: height * 0.22,
+    height: hp(20),
     width: width * 0.75,
     position: 'absolute',
     top: height * 0.4,
@@ -474,6 +413,19 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 5.0,
     borderRadius: 22,
+    opacity: .95
+  },
+  modal1: {
+    flex: 1,
+    paddingHorizontal: wp(2),
+    justifyContent: "center"
+  },
+  modal2: {
+    flexDirection: 'row',
+    borderColor: 'black',
+    borderTopWidth: 2,
+    width: width * 0.74,
+    height: hp(6),
     opacity: .95
   },
   modalExiste: {
@@ -490,34 +442,24 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     opacity: .95
   },
-  modal2: {
-    flexDirection: 'row',
-    borderColor: 'black',
-    borderTopWidth: 2,
-    width: width * 0.74,
-    height: height * 0.08,
-    position: 'absolute',
-    bottom: 0,
-    opacity: .95
-  },
-  textButton: {
+  modalText: {
     color: 'white',
-    fontSize: height * 0.02,
+    fontSize: wp(4),
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold',
-    padding: hp(1)
+    marginTop: hp(2),
   },
   modalButtonCancelar: {
     width: width * 0.37,
-    height: height * 0.0775,
+    height: hp(6),
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
-    width: width * 0.37,
-    height: height * 0.0775,
+    width: width * 0.366,
+    height: hp(6),
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: "center",
@@ -526,7 +468,7 @@ const styles = StyleSheet.create({
   },
   modalExisteButtonAceptar: {
     width: width * 0.74,
-    height: height * 0.0775,
+    height: hp(6),
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: "center",

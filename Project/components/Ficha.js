@@ -6,6 +6,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import ExportadorFrases from './Fotos/ExportadorFrases'
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorAds from './Fotos/ExportadorAds'
+import { BlackShadow, BlackShadowForBlack } from './Estilos/Shadows'
+import { BlueParallelButton, BlackButtonText, BlueButton, WhiteModalText } from './Estilos/PreMadeComponents'
 import base from './GenerarBase';
 import { AdMobRewarded } from 'expo-ads-admob';
 
@@ -157,7 +159,7 @@ class Ficha extends Component {
                 }
             }
             this.setState({ calorias: calorias })
-            base.traerPlan(this.okExperiencia.bind(this))           
+            base.traerPlan(this.okExperiencia.bind(this))
         }
     }
 
@@ -171,7 +173,7 @@ class Ficha extends Component {
     }
 
     mostrarPlan() {
-        this.setState({isLoading: false})
+        this.setState({ isLoading: false })
         this.props.onPressUpdate(true)
     }
 
@@ -194,7 +196,7 @@ class Ficha extends Component {
 
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                         <View style={[styles.ContainerInside]}>
-                            <View style={styles.slide}>
+                            <View style={[styles.slide, BlackShadowForBlack()]}>
                                 <Text style={styles.slideText}>{ExportadorFrases.FichaTitulo(this.state.id_idioma)}</Text>
                             </View>
                             <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
@@ -206,36 +208,8 @@ class Ficha extends Component {
                                     }}
                                     placeholderTextColor="black"
                                     style={{
-                                        inputIOS: {
-                                            backgroundColor: 'grey',
-                                            borderRadius: 10,
-                                            width: wp("44"),
-                                            height: hp("5.5"),
-                                            marginBottom: height * 0.028,
-                                            alignItems: 'center',
-                                            alignSelf: 'center',
-                                            fontWeight: 'bold',
-                                            fontSize: height * 0.02,
-                                            color: "black",
-                                            textAlign: 'center'
-                                        },
-                                        inputAndroid: {
-                                            backgroundColor: 'grey',
-                                            borderTopLeftRadius: 10,
-                                            borderTopRightRadius: 10,
-                                            borderBottomLeftRadius: 10,
-                                            borderBottomRightRadius: 10,
-                                            width: wp("44"),
-                                            height: hp("5.5"),
-                                            marginBottom: height * 0.028,
-                                            alignSelf: 'center',
-                                            justifyContent: 'center',
-                                            textAlign: 'center',
-                                            fontWeight: 'bold',
-                                            fontSize: height * 0.02,
-                                            color: "black",
-                                            textAlign: 'center'
-                                        }
+                                        inputIOS: [styles.mediumPikerIOS, BlackShadow()],
+                                        inputAndroid: [styles.mediumPikerAndroid, BlackShadow()]
                                     }}
                                     onValueChange={(value) => this.setState({ actividad: value })}
                                     items={[
@@ -254,36 +228,8 @@ class Ficha extends Component {
                                     }}
                                     placeholderTextColor="black"
                                     style={{
-                                        inputIOS: {
-                                            backgroundColor: 'grey',
-                                            borderRadius: 10,
-                                            width: wp("22"),
-                                            height: hp("5.5"),
-                                            marginBottom: height * 0.028,
-                                            alignItems: 'center',
-                                            alignSelf: 'center',
-                                            fontWeight: 'bold',
-                                            fontSize: height * 0.02,
-                                            color: "black",
-                                            textAlign: 'center'
-                                        },
-                                        inputAndroid: {
-                                            backgroundColor: 'grey',
-                                            borderTopLeftRadius: 10,
-                                            borderTopRightRadius: 10,
-                                            borderBottomLeftRadius: 10,
-                                            borderBottomRightRadius: 10,
-                                            width: wp("22"),
-                                            height: hp("5.5"),
-                                            marginBottom: height * 0.028,
-                                            alignSelf: 'center',
-                                            justifyContent: 'center',
-                                            textAlign: 'center',
-                                            fontWeight: 'bold',
-                                            fontSize: height * 0.02,
-                                            color: "black",
-                                            textAlign: 'center'
-                                        }
+                                        inputIOS: [styles.smallPikerIOS, BlackShadow()],
+                                        inputAndroid: [styles.smallPikerAndroid, BlackShadow()]
                                     }}
                                     onValueChange={(value) => this.setState({ genero: value })}
                                     items={[
@@ -300,36 +246,8 @@ class Ficha extends Component {
                                 }}
                                 placeholderTextColor="black"
                                 style={{
-                                    inputIOS: {
-                                        backgroundColor: 'grey',
-                                        borderRadius: 10,
-                                        width: wp("70"),
-                                        height: hp("5.5"),
-                                        margin: height * 0.028,
-                                        alignItems: 'center',
-                                        alignSelf: 'center',
-                                        fontWeight: 'bold',
-                                        fontSize: height * 0.02,
-                                        color: "black",
-                                        textAlign: 'center'
-                                    },
-                                    inputAndroid: {
-                                        backgroundColor: 'grey',
-                                        borderTopLeftRadius: 10,
-                                        borderTopRightRadius: 10,
-                                        borderBottomLeftRadius: 10,
-                                        borderBottomRightRadius: 10,
-                                        width: wp("70"),
-                                        height: hp("5.5"),
-                                        margin: height * 0.028,
-                                        alignSelf: 'center',
-                                        justifyContent: 'center',
-                                        textAlign: 'center',
-                                        fontWeight: 'bold',
-                                        fontSize: height * 0.02,
-                                        color: "black",
-                                        textAlign: 'center'
-                                    }
+                                    inputIOS: [styles.largePikerIOS, BlackShadow()],
+                                    inputAndroid: [styles.largePikerAndroid, BlackShadow()]
                                 }}
 
                                 onValueChange={(value) => this.setState({ objetivoDeseado: value })}
@@ -349,36 +267,8 @@ class Ficha extends Component {
                                 }}
                                 placeholderTextColor="black"
                                 style={{
-                                    inputIOS: {
-                                        backgroundColor: 'grey',
-                                        borderRadius: 10,
-                                        width: wp("70"),
-                                        height: hp("5.5"),
-                                        margin: height * 0.028,
-                                        alignItems: 'center',
-                                        alignSelf: 'center',
-                                        fontWeight: 'bold',
-                                        fontSize: height * 0.02,
-                                        color: "black",
-                                        textAlign: 'center'
-                                    },
-                                    inputAndroid: {
-                                        backgroundColor: 'grey',
-                                        borderTopLeftRadius: 10,
-                                        borderTopRightRadius: 10,
-                                        borderBottomLeftRadius: 10,
-                                        borderBottomRightRadius: 10,
-                                        width: wp("70"),
-                                        height: hp("5.5"),
-                                        margin: height * 0.028,
-                                        alignSelf: 'center',
-                                        justifyContent: 'center',
-                                        textAlign: 'center',
-                                        fontWeight: 'bold',
-                                        fontSize: height * 0.02,
-                                        color: "black",
-                                        textAlign: 'center'
-                                    }
+                                    inputIOS: [styles.largePikerIOS, BlackShadow()],
+                                    inputAndroid: [styles.largePikerAndroid, BlackShadow()]
                                 }}
                                 onValueChange={(value) => this.setState({ experiencia: value })}
                                 items={[
@@ -387,18 +277,17 @@ class Ficha extends Component {
                                     { label: ExportadorFrases.ExperienciaEntrenamientoOpciones(this.state.id_idioma, 3), value: 3 }
                                 ]}
                             />
-                            <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
-                                <TextInput style={styles.TextContainer} maxLength={3} keyboardType='numeric' placeholder={ExportadorFrases.AlturaDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(altura) => this.setState({ altura })} value={this.state.altura}></TextInput>
-                                <TextInput style={styles.TextContainer} maxLength={2} keyboardType='numeric' placeholder={ExportadorFrases.EdadDeseada(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(edad) => this.setState({ edad })} value={this.state.edad}></TextInput>
-                                <TextInput style={styles.TextContainer} maxLength={4} keyboardType='numeric' placeholder={ExportadorFrases.PesoDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(peso) => this.setState({ peso })} value={this.state.peso}></TextInput>
+                            <View style={{ flexDirection: "row", width: wp("70"), marginBottom: hp(4), justifyContent: "space-between" }}>
+                                <TextInput style={[styles.TextContainer, BlackShadow()]} maxLength={3} keyboardType='numeric' placeholder={ExportadorFrases.AlturaDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(altura) => this.setState({ altura })} value={this.state.altura}></TextInput>
+                                <TextInput style={[styles.TextContainer, BlackShadow()]} maxLength={2} keyboardType='numeric' placeholder={ExportadorFrases.EdadDeseada(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(edad) => this.setState({ edad })} value={this.state.edad}></TextInput>
+                                <TextInput style={[styles.TextContainer, BlackShadow()]} maxLength={4} keyboardType='numeric' placeholder={ExportadorFrases.PesoDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(peso) => this.setState({ peso })} value={this.state.peso}></TextInput>
                             </View>
 
-
-                            <TouchableOpacity style={styles.guardarButton} onPress={() => { this.chequearInfo() }}>
-                                <Text style={{ margin: height * 0.02, fontWeight: 'bold', fontSize: height * 0.025 }}>
-                                   {ExportadorFrases.Actualizar(this.state.id_idioma)}
-                                </Text>
-                            </TouchableOpacity>
+                            <BlueButton onPress={() => { this.chequearInfo() }}>
+                                <BlackButtonText>
+                                    {ExportadorFrases.Actualizar(this.state.id_idioma)}
+                                </BlackButtonText>
+                            </BlueButton>
 
                         </View>
                     </TouchableWithoutFeedback>
@@ -407,18 +296,17 @@ class Ficha extends Component {
                         visible={this.state.modalVisible}
                         transparent={true}
                         onRequestClose={() => this.setState({ modalVisible: false })}  >
-                        <View style={styles.modal}>
-                            <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                                <Text style={styles.textButton}>{ExportadorFrases.ActualizarPlanModalLabel(this.state.id_idioma)}</Text>
+                        <View style={[styles.modal, BlackShadow()]}>
+                            <View style={styles.modal1}>
+                                <Text style={styles.modalText}>{ExportadorFrases.ActualizarPlanModalLabel(this.state.id_idioma)}</Text>
                             </View>
                             <View style={styles.modal2}>
                                 <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
-                                    <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
+                                    <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity onPress={() => {this.setState({ modalVisible: false }), this.setState({isLoading:true}), this.showRewarded(), this.crearPlan()}} style={styles.modalButtonAceptar}>
-                                    <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
-
+                                <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }), this.setState({ isLoading: true }), this.showRewarded(), this.crearPlan() }} style={styles.modalButtonAceptar}>
+                                    <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -452,10 +340,9 @@ const styles = StyleSheet.create({
 
     slideText: {
         textAlign: "center",
-        fontSize: height * 0.03,
+        fontSize: wp(5.5),
         color: "#3399ff"
     },
-
     bgImage: {
         flex: 1,
         resizeMode,
@@ -478,7 +365,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         fontWeight: 'bold',
-        fontSize: height * 0.02,
+        fontSize: wp(3.5),
         textAlign: 'center',
         marginTop: height * 0.028,
         opacity: .95
@@ -489,21 +376,10 @@ const styles = StyleSheet.create({
         height: height,
         alignItems: "center",
     },
-    guardarButton: {
-        backgroundColor: 'grey',
-        borderRadius: 10,
-        alignItems: 'center',
-        width: width * 0.33,
-        marginHorizontal: 22,
-        marginTop: height * 0.05,
-        alignSelf: 'center',
-        opacity: .95
-    },
-
     /*************************************** */
     //MODAAAAL
     modal: {
-        height: height * 0.22,
+        height: hp(20),
         width: width * 0.75,
         position: 'absolute',
         top: height * 0.4,
@@ -516,40 +392,134 @@ const styles = StyleSheet.create({
         borderRadius: 22,
         opacity: .95
     },
+    modal1: {
+        flex: 1,
+        paddingHorizontal: wp(2),
+        justifyContent: "center"
+    },
     modal2: {
         flexDirection: 'row',
         borderColor: 'black',
         borderTopWidth: 2,
         width: width * 0.74,
-        height: height * 0.08,
-        position: 'absolute',
-        bottom: 0,
+        height: hp(6),
         opacity: .95
     },
-    textButton: {
+    modalText: {
         color: 'white',
-        fontSize: height * 0.02,
+        fontSize: wp(4),
         alignSelf: 'center',
         textAlign: 'center',
         fontWeight: 'bold',
-        padding: hp(1)
+        marginTop: hp(2),
     },
-
     modalButtonCancelar: {
         width: width * 0.37,
-        height: height * 0.0775,
+        height: hp(6),
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomLeftRadius: 22
     },
     modalButtonAceptar: {
-        width: width * 0.37,
-        height: height * 0.0775,
+        width: width * 0.366,
+        height: hp(6),
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: "center",
         borderLeftWidth: 2,
         borderBottomRightRadius: 22
+    },
+    ///////////////////////////////////////
+    //Pikers
+    //////////////////////////////////////
+    smallPikerIOS: {
+        backgroundColor: 'grey',
+        borderRadius: 10,
+        width: wp("22"),
+        height: hp("5.5"),
+        marginBottom: height * 0.028,
+        alignItems: 'center',
+        alignSelf: 'center',
+        fontWeight: 'bold',
+        fontSize: wp(3.5),
+        color: "black",
+        textAlign: 'center'
+    },
+    smallPikerAndroid: {
+        backgroundColor: 'grey',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        width: wp("22"),
+        height: hp("5.5"),
+        marginBottom: height * 0.028,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: wp(3.5),
+        color: "black",
+        textAlign: 'center'
+    },
+    mediumPikerIOS: {
+        backgroundColor: 'grey',
+        borderRadius: 10,
+        width: wp("44"),
+        height: hp("5.5"),
+        marginBottom: height * 0.028,
+        alignItems: 'center',
+        alignSelf: 'center',
+        fontWeight: 'bold',
+        fontSize: wp(3.5),
+        color: "black",
+        paddingLeft: wp(2.5)
+    },
+    mediumPikerAndroid: {
+        backgroundColor: 'grey',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        width: wp("44"),
+        height: hp("5.5"),
+        marginBottom: height * 0.028,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        fontWeight: 'bold',
+        fontSize: wp(3.5),
+        color: "black",
+        paddingLeft: wp(2.5)
+    },
+    largePikerIOS: {
+        backgroundColor: 'grey',
+        borderRadius: 10,
+        width: wp("70"),
+        height: hp("5.5"),
+        margin: height * 0.028,
+        alignItems: 'center',
+        alignSelf: 'center',
+        fontWeight: 'bold',
+        fontSize: wp(3.5),
+        color: "black",
+        textAlign: 'center'
+    },
+    largePikerAndroid: {
+        backgroundColor: 'grey',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        width: wp("70"),
+        height: hp("5.5"),
+        margin: height * 0.028,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: wp(3.5),
+        color: "black",
+        textAlign: 'center'
     }
 })
 export default Ficha;

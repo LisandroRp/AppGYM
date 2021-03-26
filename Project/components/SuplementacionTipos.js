@@ -3,6 +3,7 @@ import { SearchBar } from 'react-native-elements';
 import base from './GenerarBase';
 import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion';
 import ExportadorFrases from './Fotos/ExportadorFrases';
+import { BlackShadowForBlack } from './Estilos/Shadows'
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
@@ -43,7 +44,7 @@ class SuplementacionTipos extends Component {
   cargarSuplementos = async () => {
     base.traerSuplementos(await this.props.navigation.getParam('id_suplemento'), this.okSuplementos.bind(this))
   }
-  loadFont = async() => {
+  loadFont = async () => {
     await Font.loadAsync({
       'font1': require('../assets/fonts/BebasNeue-Regular.ttf'),
       'font2': require('../assets/fonts/BebasNeue-Bold.ttf'),
@@ -147,9 +148,9 @@ class SuplementacionTipos extends Component {
   }
   marginSize(item) {
     if (item.id_suplemento != this.state.suplementos[this.state.suplementos.length - 1].id_suplemento) {
-      return { marginTop: height * 0.02 }
+      return { marginTop: hp(2) }
     } else {
-      return { marginBottom: height * 0.02, marginTop: height * 0.02 }
+      return { marginBottom: hp(2), marginTop: hp(2) }
     }
   }
 
@@ -165,7 +166,7 @@ class SuplementacionTipos extends Component {
       return (
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-          <View>
+          <View style={BlackShadowForBlack()} >
             <SearchBar
               placeholder={ExportadorFrases.Search(this.state.id_idioma) + '...'}
               platform='ios'
@@ -173,7 +174,7 @@ class SuplementacionTipos extends Component {
               value={this.state.value}
               inputContainerStyle={{ backgroundColor: 'grey' }}
               placeholderTextColor='black'
-              containerStyle={{ backgroundColor: 'black', height: 50, paddingBottom: 22 }}
+              containerStyle={{ backgroundColor: 'black', paddingBottom: 22 }}
               buttonStyle={{ marginBottom: 30 }}
               searchIcon={{ color: 'black' }}
             />
@@ -184,24 +185,24 @@ class SuplementacionTipos extends Component {
             data={this.state.suplementos.sort((a, b) => a.nombre_suplemento.localeCompare(b.nombre_suplemento))}
             initialNumToRender={50}
             keyExtractor={(item) => {
-              return item.id_suplemento;
+              return item.id_suplemento.toString();
             }}
             renderItem={({ item }) => {
               return (
-                <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre_suplemento)}>
-                  <View style={{ flexDirection: "row" }} >
+                <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre_suplemento)}>
+                  <View style={styles.imageContainer}>
                     <ImageBackground style={styles.image} source={ExportadorSuplementacion.default(this.state.id_idioma)}>
                       <Text style={[styles.textImage, { fontFamily: 'font2' }]} >{item.nombre_tipo}</Text>
                     </ImageBackground>
-                    <View style={styles.cardContent}>
-                      <Text style={styles.name}>{item.nombre_suplemento}</Text>
-                      <Text style={styles.marca}>{item.marca}</Text>
-                    </View>
-                    <View style={styles.ViewEstrella} >
-                      <TouchableOpacity onPress={() => { this.favear(item.id_suplemento) }}>
-                        <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
-                      </TouchableOpacity>
-                    </View>
+                  </View>
+                  <View style={styles.cardContent}>
+                    <Text style={styles.name}>{item.nombre_suplemento}</Text>
+                    <Text style={styles.marca}>{item.marca}</Text>
+                  </View>
+                  <View style={styles.ViewEstrella} >
+                    <TouchableOpacity onPress={() => { this.favear(item.id_suplemento) }}>
+                      <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
+                    </TouchableOpacity>
                   </View>
                 </TouchableOpacity>
               )
@@ -254,75 +255,66 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
+  card: {
+    flex: 1,
+    backgroundColor: "black",
+    marginHorizontal: wp(2),
+    flexDirection: 'row'
+  },
   cardContent: {
-    marginLeft: height * 0.028,
-    //marginTop: 10,
-    paddingRight: 5,
-    width: wp("40"),
+    flex: 1,
     justifyContent: 'center',
   },
+  imageContainer: {
+    flex: 0.5,
+    margin: wp(2.5),
+    alignItems: 'center',
+    justifyContent: "center",
+  },
   image: {
-    width: hp("12.2"),
-    height: hp("12.2"),
-    borderWidth: 2,
-    borderColor: "#ebf0f7",
-    margin: 5,
-    marginRight: 5,
-    alignSelf: "center",
-    resizeMode: 'stretch',
+    flex: 1,
+    height: wp(22),
+    width: wp(22),
+    borderWidth: 1.5,
+    borderColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
+    resizeMode: 'stretch',
     overflow: 'hidden'
   },
   textImage: {
     textAlign: 'center',
-    fontSize: hp(2),
+    fontSize: wp(3.7),
     textTransform: 'uppercase',
     color: "#2A73E0",
     letterSpacing: wp(0.5),
     padding: 1,
     fontWeight: 'bold',
     textShadowColor: 'black',
-    textShadowOffset: {width: 1, height: 1},
+    textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 0.1
-  },
-  card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-
-    marginLeft: height * 0.028,
-    marginRight: height * 0.028,
-    marginTop: height * 0.028,
-    backgroundColor: "black",
-    padding: 10,
-    flexDirection: 'row'
   },
 
   name: {
-    fontSize: height * 0.028,
+    fontSize: wp(5),
     color: "#3399ff",
     fontWeight: 'bold'
   },
+
   marca: {
-    fontSize: height * 0.02,
+    marginTop: 1,
+    fontSize: wp(3.5),
     color: "white"
   },
   StarImage: {
-    width: hp(5.5),
-    height: hp(5.5),
-    paddingHorizontal: wp("5"),
+    width: hp(4.5),
+    height: hp(4.5),
   },
   ViewEstrella: {
-    alignItems: "center",
-    alignContent: 'center',
-    justifyContent: 'center',
+    flex: 0.4,
+    alignItems: 'center',
+    justifyContent: "center",
   }
 })
 

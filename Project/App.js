@@ -29,6 +29,8 @@ import Training from './components/Training';
 import Ajustes from './components/Ajustes';
 import ExportadorLogos from './components/Fotos/ExportadorLogos';
 import ExportadorFrases from './components/Fotos/ExportadorFrases';
+import {AzulPrincipal} from './components/Estilos/Colors';
+import { BlackShadow, BlackShadowForBlack } from './components/Estilos/Shadows'
 import base from './components/GenerarBase';
 import { AsyncStorage } from 'react-native';
 import {
@@ -48,8 +50,9 @@ import Version from './app.json';
 
 console.disableYellowBox = true
 var { height, width } = Dimensions.get('window');
-var id_idioma = base.traerIdIdiomaSideMenu()
-
+//var id_idioma = base.traerIdIdiomaSideMenu()
+var id_idioma = 1
+const azulPrincipal = AzulPrincipal()
 
 
 i18n.translations = {
@@ -69,11 +72,11 @@ class App extends Component {
     }
   }
   componentDidMount() {
-		base.traerIdIdioma(this.okIdIdioma.bind(this))
+		//base.traerIdIdioma(this.okIdIdioma.bind(this))
   }
   okIdIdioma(id_idiomaApp){
     console.log(" ")
-    //_storeData(id_idiomaApp)
+    _storeData(id_idiomaApp)
     id_idioma = id_idiomaApp
   }
   render() {
@@ -140,12 +143,12 @@ class MusculoScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('nombre_musculo', 'Musculo'),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     };
   }
   render() {
@@ -181,12 +184,12 @@ class MusculoAgregarScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('nombre_musculo', 'Musculo'),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     };
   }
   render() {
@@ -259,15 +262,15 @@ class EjerciciosScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: ExportadorFrases.Ejercicios(navigation.getParam('id_idioma')),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
       headerRight: (
         <View style={{ flexDirection: 'row' }}>
-          <FontAwesome name="plus" style={{ marginRight: 20, color: '#3399ff' }}
+          <FontAwesome name="plus" style={{ marginRight: 20, color: azulPrincipal }}
             onPress={() => navigation.navigate('EjerciciosNew', {id_idioma: navigation.getParam('id_idioma') })}
             size={22}
           />
@@ -294,19 +297,19 @@ class EjerciciosEspecificoMScreen extends React.Component {
     return {
       headerRight: (
         <View style={{ flexDirection: 'row' }}>
-          <FontAwesome name="edit" style={{ marginRight: 20, color: '#3399ff' }}
+          <FontAwesome name="edit" style={{ marginRight: 20, color: azulPrincipal }}
             onPress={() => navigation.navigate('EjercicioModificable', { nombre_Ejercicio: nombre, id_ejercicio: id_ejercicio })}
             size={22}
           />
         </View>
       ),
       title: navigation.getParam('nombre_Ejercicio', 'Detalles'),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     }
   };
   constructor(props) {
@@ -331,12 +334,12 @@ class EjerciciosEspecificoNoMScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('nombre_Ejercicio', 'Detalles'),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     }
   };
   constructor(props) {
@@ -368,13 +371,13 @@ class EjercicioAgregarScreen extends React.Component {
   }
   static navigationOptions = ({ navigation }) => {
     return {
-      title: ExportadorFrases.Musuclos(navigation.getParam('id_idioma')),
-      headerStyle: {
+      title: ExportadorFrases.Musculos(navigation.getParam('id_idioma')),
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     };
   }
   render() {
@@ -393,12 +396,12 @@ class EjerciciosNewScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: ExportadorFrases.CrearEjercicios(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     }
   };
   constructor(props) {
@@ -422,12 +425,12 @@ class EjercicioModificableScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: ExportadorFrases.Editar(id_idioma) + ' ' + '"' + navigation.getParam('nombre_Ejercicio', 'Detalles') + '"',
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     };
   }
   render() {
@@ -461,12 +464,12 @@ class RutinasScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: ExportadorFrases.Rutinas(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     }
   };
   constructor(props) {
@@ -493,12 +496,12 @@ class RutinasTiposScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('tipo_rutina', 'Rutinas'),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff'
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal
     }
   };
   render() {
@@ -511,7 +514,9 @@ class RutinasTiposScreen extends React.Component {
   irRutina(id_rutina, nombre_rutina, modificable, rutina) {
 
     if (modificable) {
-      this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina, rutina: JSON.stringify(rutina) });
+      //Funcionalidad de compartir rutinas
+      //this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina, rutina: JSON.stringify(rutina) });
+      this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina});
     } else {
       this.props.navigation.navigate('RutinaEspecificaNoM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina });
     }
@@ -525,12 +530,12 @@ class RutinaNewScreen extends React.Component {
   static navigationOptions = () => {
     return {
       title: ExportadorFrases.RutinaNueva(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     };
   }
   render() {
@@ -542,8 +547,8 @@ class RutinaNewScreen extends React.Component {
       />
     );
   }
-  agregarEjercicio(dia, id_tipo, combinado, ultimaPos) {
-    this.props.navigation.navigate('EjercicioAgregar', { dia: dia, id_tipo: id_tipo, combinado: combinado, ultimaPos: ultimaPos });
+  agregarEjercicio(dia, id_tipo, combinado, ultimaPos, id_idioma) {
+    this.props.navigation.navigate('EjercicioAgregar', { dia: dia, id_tipo: id_tipo, combinado: combinado, ultimaPos: ultimaPos, id_idioma: id_idioma });
   }
   verInfo(id_ejercicio) {
     this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio });
@@ -565,23 +570,23 @@ class RutinaEspecificaMScreen extends React.Component {
     return {
       headerRight: (
         <View style={{ flexDirection: 'row' }}>
-          <FontAwesome name="share" style={{ marginRight: 20, color: '#3399ff' }}
+          {/* <FontAwesome name="share" style={{ marginRight: 20, color: azulPrincipal }}
             onPress={() => Share.share(({ message: rutina }))}
             size={22}
-          />
-          <FontAwesome name="edit" style={{ marginRight: 20, color: '#3399ff' }}
+          /> */}
+          <FontAwesome name="edit" style={{ marginRight: 20, color: azulPrincipal }}
             onPress={() => navigation.navigate('RutinaModificable', { nombre_rutina: nombre, id_rutina: id_rutina })}
             size={22}
           />
         </View>
       ),
       title: navigation.getParam('nombre_rutina', 'Rutina'),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     };
   }
 
@@ -613,12 +618,12 @@ class RutinaEspecificaNoMScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('nombre_rutina', 'Rutina'),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     };
   }
   render() {
@@ -647,12 +652,12 @@ class RutinaModificableScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: ExportadorFrases.Editar(id_idioma) + ' ' + navigation.getParam('nombre_rutina'),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     };
   }
   render() {
@@ -686,12 +691,12 @@ class SuplementacionEspecificaScreen extends React.Component {
   static navigationOptions = ({ }) => {
     return {
       title: ExportadorFrases.Detalles(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     };
   }
   render() {
@@ -706,12 +711,12 @@ class SuplementacionTiposScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('tipo_suplementacion', 'Suplementos'),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     }
   };
   constructor(props) {
@@ -733,12 +738,12 @@ class SuplementacionScreen extends React.Component {
   static navigationOptions = ({ }) => {
     return {
       title: ExportadorFrases.Suplementos(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     };
   }
   constructor(props) {
@@ -762,12 +767,12 @@ class FavoritosScreen extends React.Component {
   static navigationOptions = ({ }) => {
     return {
       title: ExportadorFrases.Favoritos(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     }
   };
   constructor(props) {
@@ -797,12 +802,12 @@ class EjerciciosFavsScreen extends React.Component {
   static navigationOptions = ({ }) => {
     return {
       title: ExportadorFrases.Ejercicios(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     };
   }
   constructor(props) {
@@ -827,12 +832,12 @@ class MusculoFavsScreen extends React.Component {
     return {
     }, {
       title: ExportadorFrases.EjerciciosFavs(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     }
   }
   render() {
@@ -853,12 +858,12 @@ class RutinasFavsScreen extends React.Component {
   static navigationOptions = () => {
     return {
       title: ExportadorFrases.RutinasFavs(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     }
   }
   render() {
@@ -868,12 +873,11 @@ class RutinasFavsScreen extends React.Component {
       />
     );
   }
-  irRutina(id_rutina, nombre_rutina, modificable) {
-    console.log(id_rutina)
-    console.log(nombre_rutina)
-    console.log(modificable)
+  irRutina(id_rutina, nombre_rutina, modificable, rutina) {
     if (modificable) {
-      this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina, rutina: JSON.stringify(rutina) });
+      //Funcionalidad de compartir rutinas
+      //this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina, rutina: JSON.stringify(rutina) });
+      this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina});
     } else {
       this.props.navigation.navigate('RutinaEspecificaNoM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina });
     }
@@ -883,12 +887,12 @@ class SuplementacionFavsScreen extends React.Component {
   static navigationOptions = ({ }) => {
     return {
       title: ExportadorFrases.Suplementos(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff'
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal
     }
   };
   constructor(props) {
@@ -912,12 +916,12 @@ class MiPlanScreen extends React.Component {
   static navigationOptions = ({ }) => {
     return {
       title: ExportadorFrases.MiPlan(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     }
   };
   constructor(props) {
@@ -934,12 +938,12 @@ class FichaScreen extends React.Component {
   static navigationOptions = ({ }) => {
     return {
       title: ExportadorFrases.CambiarPlan(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     }
   };
   constructor(props) {
@@ -961,12 +965,12 @@ class AjustesScreen extends React.Component {
   static navigationOptions = ({ }) => {
     return {
       title: ExportadorFrases.Ajustes(id_idioma),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      },
-      headerTintColor: '#3399ff',
+      }, BlackShadowForBlack()],
+      headerTintColor: azulPrincipal,
     }
   };
   constructor(props) {
@@ -994,7 +998,7 @@ const EjerciciosStackNavigator = createStackNavigator(
         return {
           headerLeft: (
             <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
+              style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
               name="md-menu"
               size={30}
@@ -1026,7 +1030,7 @@ const RutinasStackNavigator = createStackNavigator(
         return {
           headerLeft: (
             <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
+              style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
               name="md-menu"
               size={30}
@@ -1034,7 +1038,7 @@ const RutinasStackNavigator = createStackNavigator(
           ),
           headerRight: (
             <View style={{ flexDirection: 'row' }}>
-              <FontAwesome name="plus" style={{ marginRight: 20, color: '#3399ff' }}
+              <FontAwesome name="plus" style={{ marginRight: 20, color: azulPrincipal }}
                 onPress={() => navigation.navigate('RutinaNew', { tipo: 'nuevo' })}
                 size={22}
               />
@@ -1064,7 +1068,7 @@ const SuplementacionStackNavigator = createStackNavigator(
         return {
           headerLeft: (
             <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
+              style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
               name="md-menu"
               size={30}
@@ -1088,7 +1092,7 @@ const FavoritosStackNavigator = createStackNavigator(
         return {
           headerLeft: (
             <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
+              style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
               name="md-menu"
               size={30}
@@ -1119,7 +1123,7 @@ const AjustesStackNavigator = createStackNavigator(
         return {
           headerLeft: (
             <Icon
-              style={{ paddingLeft: 10, color: '#3399ff' }}
+              style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
               name="md-menu"
               size={30}
@@ -1148,20 +1152,20 @@ const PerfilTabNavigator = createBottomTabNavigator({
     const { routeName } = navigation.state.routes[navigation.state.index]
     return {
       headerTitle: 'Perfil',
-      headerTintColor: '#3399ff',
+      headerTintColor: azulPrincipal,
       headerLeft: (
         <Icon
-          style={{ paddingLeft: 10, color: '#3399ff' }}
+          style={{ paddingLeft: 10, color: azulPrincipal }}
           onPress={() => navigation.openDrawer()}
           name="md-menu"
           size={30}
         />
       ),
-      headerStyle: {
+      headerStyle: [{
         backgroundColor: 'black',
-        height: 55,
+        height: hp(6),
         borderBottomWidth: 0
-      }
+      }, BlackShadowForBlack()]
     }
   },
 swipeEnabled: true,
@@ -1169,7 +1173,7 @@ swipeEnabled: true,
   tabBarOptions: {
     Title: 'Mi Plan',
     activeTintColor: 'white',
-    inactiveTintColor: '#3399ff',
+    inactiveTintColor: azulPrincipal,
     style: {
       backgroundColor: 'black',
       borderTopColor: 'black'
@@ -1196,7 +1200,7 @@ const DrawerConfig = {
     return (<MenuDrawer navigation={navigation} />)
   },
   contentOptions: {
-    activeTintColor: '#3399ff'
+    activeTintColor: azulPrincipal
   }
 }
 const customDrawerComponent = (props) => (
@@ -1210,7 +1214,7 @@ const customDrawerComponent = (props) => (
     <ScrollView style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }}>
         <DrawerItems {...props} style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }}/>
     </ScrollView>
-    <Text style={{alignSelf: 'flex-end', color: '#3399ff', padding: 5 }}>Version: {Version.expo.version}</Text>
+    <Text style={{alignSelf: 'flex-end', color: azulPrincipal, padding: 5 }}>Version: {Version.expo.version}</Text>
   </View>
 )
 const AppDrawerNavigator = createDrawerNavigator({
@@ -1271,9 +1275,9 @@ const AppDrawerNavigator = createDrawerNavigator({
     contentOptions: {
       //Esto sirve para cambiar algunos colores
       activeTintColor: 'white',
-      inactiveTintColor: '#3399ff',
+      inactiveTintColor: azulPrincipal,
       labelStyle: {
-        fontSize: height * 0.022
+        fontSize: wp(3.8)
       }
     },
   },
@@ -1282,7 +1286,7 @@ const AppDrawerNavigator = createDrawerNavigator({
   //     contentOptions: {
   //       //Esto sirve para cambiar algunos colores
   //       activeTintColor: '#6666ff',
-  //       inactiveTintColor:'#3399ff'
+  //       inactiveTintColor:azulPrincipal
   //     }
   //   }
 );
@@ -1321,8 +1325,8 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 50,
     borderBottomWidth: 0,
-    borderBottomColor: '#3399ff',
-    backgroundColor: '#3399ff',
+    borderBottomColor: azulPrincipal,
+    backgroundColor: azulPrincipal,
     height: hp(22),
   },
   imgView: {

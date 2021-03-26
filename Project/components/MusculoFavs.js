@@ -4,6 +4,7 @@ import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorEjercicios from './Fotos/ExportadorEjercicios'
 import ExportadorFrases from './Fotos/ExportadorFrases';
+import { BlackShadowForBlack, BlackShadow } from './Estilos/Shadows'
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorLogos from './Fotos/ExportadorLogos'
 import ExportadorAds from './Fotos/ExportadorAds'
@@ -36,23 +37,18 @@ class MusculoFavs extends Component {
             nombre_ejercicio: "",
             id_idioma: 0
         };
-        this.cargarEjerciciosFavoritas();
     }
-
-    cargarEjerciciosFavoritas = async () => {
-        base.traerEjerciciosFavoritos(this.okEjercicios.bind(this))
-    }
-    okEjercicios(ejercicios) {
-        if(ejercicios.length == 0){
-            this.setState({ ejercicios: ejercicios, memory: ejercicios, });
-            base.traerIdIdioma(this.okIdIdioma.bind(this))
-        }else{
-            this.setState({ ejercicios: ejercicios, id_idioma: ejercicios[0].id_idioma, isLoading: false, memory: ejercicios, });
-        }
+    componentDidMount = async () => {
+        base.traerIdIdioma(this.okIdIdioma.bind(this))
     }
     
-    okIdIdioma(id_idioma){
-        this.setState({id_idioma: id_idioma, isLoading: false});
+    okIdIdioma(id_idioma) {
+        this.setState({ id_idioma: id_idioma});
+        base.traerEjerciciosFavoritos(id_idioma, this.okEjercicios.bind(this))
+    }
+
+    okEjercicios(ejercicios) {
+        this.setState({ ejercicios: ejercicios, memory: ejercicios, isLoading: false});
     }
 
     modalVisible(id, nombre_ejercicio) {
@@ -88,28 +84,28 @@ class MusculoFavs extends Component {
 
     favoritos(favoritos) {
         if (favoritos) {
-          return ExportadorLogos.traerEstrella(true)
+            return ExportadorLogos.traerEstrella(true)
         }
         else {
-          return ExportadorLogos.traerEstrella(false)
+            return ExportadorLogos.traerEstrella(false)
         }
-      }
-      favoritosLabel(favoritos) {
+    }
+    favoritosLabel(favoritos) {
         if (favoritos) {
-          return ExportadorFrases.FavoritosLabel(this.state.id_idioma)
+            return ExportadorFrases.FavoritosLabel(this.state.id_idioma)
         }
         else {
-          return ExportadorFrases.FavoritosNoLabel(this.state.id_idioma)
+            return ExportadorFrases.FavoritosNoLabel(this.state.id_idioma)
         }
-      }
-      favoritosHint(favoritos) {
+    }
+    favoritosHint(favoritos) {
         if (favoritos) {
-          return ExportadorFrases.FavoritosNoHint(this.state.id_idioma)
+            return ExportadorFrases.FavoritosNoHint(this.state.id_idioma)
         }
         else {
-          return ExportadorFrases.FavoritosHint(this.state.id_idioma)
+            return ExportadorFrases.FavoritosHint(this.state.id_idioma)
         }
-      }
+    }
     searchEjercicio = value => {
         const filterDeEjercicios = this.state.memory.filter(ejercicio => {
             let ejercicioLowercase = (
@@ -129,9 +125,9 @@ class MusculoFavs extends Component {
     };
     marginSize(item) {
         if (item.id_ejercicio != this.state.ejercicios[this.state.ejercicios.length - 1].id_ejercicio) {
-            return { marginTop: height * 0.02 }
+            return { marginTop: hp(2) }
         } else {
-            return { marginBottom: height * 0.02, marginTop: height * 0.02 }
+            return { marginBottom: hp(2), marginTop: hp(2) }
         }
     }
 
@@ -148,10 +144,10 @@ class MusculoFavs extends Component {
                 return (
                     <View style={[styles.NoItemsContainer]}>
                         <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                        <View style={styles.NoItems}>
+                        <View style={[styles.NoItemsTextContainer, BlackShadowForBlack()]}>
                             <Text style={styles.NoItemsText}>{ExportadorFrases.EjerciciosNo(this.state.id_idioma)}</Text>
                         </View>
-                        <View style={styles.NoItemsImageContainer}>
+                        <View style={[styles.NoItemsImageContainer, BlackShadowForBlack()]}>
                             <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
                         </View>
                         <AdMobBanner
@@ -174,7 +170,7 @@ class MusculoFavs extends Component {
                 return (
                     <View style={styles.container}>
                         <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                        <View>
+                        <View style={BlackShadowForBlack()}>
                             <SearchBar
                                 placeholder={ExportadorFrases.SearchOpciones(this.state.id_idioma)}
                                 platform='ios'
@@ -198,22 +194,22 @@ class MusculoFavs extends Component {
                             renderItem={({ item }) => {
                                 if (item.favoritos) {
                                     return (
-                                        <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
-                                            <View style={{ flexDirection: "row" }} >
+                                        <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
+                                            <View style={styles.imageContainer}>
                                                 <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
-                                                <View style={styles.cardContent}>
-                                                    <Text style={styles.name}>{item.nombre_ejercicio}</Text>
-                                                    <Text style={styles.elemento}>{item.nombre_elemento}</Text>
-                                                </View>
-                                                <View style={styles.ViewEstrella} >
-                                                    <TouchableOpacity 
+                                            </View>
+                                            <View style={styles.cardContent}>
+                                                <Text style={styles.name}>{item.nombre_ejercicio}</Text>
+                                                <Text style={styles.elemento}>{item.nombre_elemento}</Text>
+                                            </View>
+                                            <View style={styles.ViewEstrella} >
+                                                <TouchableOpacity
                                                     accessible={true}
                                                     accessibilityLabel={this.favoritosLabel(item.favoritos)}
                                                     accessibilityHint={this.favoritosHint(item.favoritos)}
                                                     onPress={() => this.modalVisible(item.id_ejercicio, item.nombre_ejercicio)}>
-                                                        <Image style={styles.StarImage} source={ExportadorLogos.traerEstrella(true)} />
-                                                    </TouchableOpacity>
-                                                </View>
+                                                    <Image style={styles.StarImage} source={ExportadorLogos.traerEstrella(true)} />
+                                                </TouchableOpacity>
                                             </View>
                                         </TouchableOpacity>
                                     )
@@ -226,7 +222,7 @@ class MusculoFavs extends Component {
                             transparent={true}
                             onRequestClose={() => this.setState({ modalVisible: false })}  >
 
-                            <View style={styles.modal}>
+                            <View style={[styles.modal, BlackShadow()]}>
 
                                 <View style={{ flexDirection: 'column', marginTop: height * 0.033, marginHorizontal: width * 0.05 }}>
                                     <Text style={styles.textButton}>{ExportadorFrases.SacarEjercicioFavs1(this.state.id_idioma)} "{this.state.nombre_ejercicio}" {ExportadorFrases.SacarEjercicioFavs2(this.state.id_idioma)}?</Text>
@@ -287,41 +283,42 @@ const styles = StyleSheet.create({
     },
     NoItemsContainer: {
         backgroundColor: 'grey',
-        flex: 1,
+        justifyContent: "center",
+        flex: 1
     },
+    NoItemsTextContainer: {
+        backgroundColor: "black",
+        padding: 10,
+        borderRadius: hp(1),
+        opacity: .95,
+        marginHorizontal: wp(5),
+        marginBottom: height * 0.028
+    },
+
     NoItemsText: {
         alignSelf: "center",
-        fontSize: height * 0.028,
+        fontSize: wp(5),
         color: "#3399ff",
         textAlign: 'center'
     },
     NoItemsImageContainer: {
-        height: height * 0.55,
-        width: height * 0.50,
-        marginBottom: height * 0.028,
-        marginTop: height * 0.028,
-        alignSelf: "center",
-        justifyContent: "center",
+        flex: 0.7,
+        paddingHorizontal: wp(5),
+        marginHorizontal: wp(5),
+        borderRadius: hp(1),
+        margin: wp(2.5),
+        alignItems: 'center',
         backgroundColor: 'black',
-        borderWidth: 4,
-        borderRadius: 10,
+        marginBottom: height * 0.08,
     },
 
     NoItemsLogo: {
-        height: height * 0.45,
-        width: height * 0.45,
-        alignSelf: "center",
-        marginTop: hp(9),
-        marginBottom: hp(6.6)
+        flex: 1,
+        width: "100%",
+        height: "100%",
+        resizeMode: 'contain',
     },
-    NoItems: {
-        backgroundColor: "black",
-        padding: 10,
-        borderRadius: 10,
-        opacity: .95,
-        marginHorizontal: wp(5),
-        marginTop: height * 0.028
-    },
+
     bgImage: {
         flex: 1,
         resizeMode,
@@ -331,23 +328,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         resizeMode: 'cover'
     },
-    cardContent: {
-        marginLeft: height * 0.028,
-        paddingRight: 5,
-        width: wp("40"),
-        justifyContent: 'center'
-    },
-    image: {
-        width: wp("20"),
-        height: hp("11"),
-        borderWidth: 2,
-        borderColor: "#ebf0f7",
-        margin: 5,
-        marginRight: 5,
-        alignSelf: "center"
-    },
-
-    card: {
+    shadow: {
         shadowColor: '#00000021',
         shadowOffset: {
             width: 0,
@@ -356,40 +337,62 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.37,
         shadowRadius: 7.49,
         elevation: 12,
-
-        marginLeft: height * 0.028,
-        marginRight: height * 0.028,
-        marginTop: height * 0.028,
+    },
+    card: {
+        flex: 1,
         backgroundColor: "black",
-        padding: 10,
-        flexDirection: 'row',
+        marginHorizontal: wp(2),
+        paddingVertical: wp(1.5),
+        flexDirection: 'row'
+    },
+    cardContent: {
+        flex: 1,
+        paddingHorizontal: 5,
+        justifyContent: 'center',
+    },
+    imageContainer: {
+        flex: 0.4,
+        margin: wp(2.5),
+        alignItems: 'center',
+        justifyContent: "center",
+    },
+    image: {
+        flex: 1,
+        height: wp(18),
+        width: wp(18),
+        borderWidth: 1.5,
+        borderColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center',
+        resizeMode: 'stretch',
+        overflow: 'hidden'
     },
 
     name: {
-        fontSize: height * 0.028,
+        fontSize: wp(5),
         color: "#3399ff",
         fontWeight: 'bold'
     },
 
     elemento: {
         marginTop: 1,
-        fontSize: height * 0.02,
+        fontSize: wp(3.5),
         color: "white"
     },
 
     StarImage: {
-        width: hp(5.5),
-        height: hp(5.5),
+        width: hp(4.5),
+        height: hp(4.5),
     },
-
     ViewEstrella: {
+        flex: 0.4,
         alignItems: 'center',
         justifyContent: "center",
-        paddingHorizontal: wp("5")
     },
     //MODAAAAL
     modal: {
-        height: height * 0.22,
+        height: hp(20),
         width: width * 0.75,
         position: 'absolute',
         top: height * 0.4,
@@ -407,28 +410,28 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderTopWidth: 2,
         width: width * 0.74,
-        height: height * 0.08,
+        height: hp(6),
         position: 'absolute',
         bottom: 0,
         opacity: .95
     },
     textButton: {
         color: 'white',
-        fontSize: height * 0.02,
+        fontSize: wp(3.8),
         alignSelf: 'center',
         textAlign: 'center',
         fontWeight: 'bold'
     },
     modalButtonCancelar: {
         width: width * 0.37,
-        height: height * 0.0775,
+        height: hp(6),
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomLeftRadius: 22
     },
     modalButtonAceptar: {
         width: width * 0.366,
-        height: height * 0.0775,
+        height: hp(6),
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: "center",

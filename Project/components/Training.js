@@ -3,6 +3,9 @@ import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorFrases from './Fotos/ExportadorFrases'
 import { withNavigation } from 'react-navigation';
+import { BlackShadow, BlackShadowForBlack } from './Estilos/Shadows'
+import { AzulPrincipal } from './Estilos/Colors'
+import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
 import {
     StyleSheet,
     Text,
@@ -34,6 +37,7 @@ class Training extends Component {
         super(props);
         this.state = {
             isLoading: true,
+            creandoPlan: false,
             modalVisible: false,
             objetivoDeseado: '',
             experiencia: '',
@@ -55,7 +59,7 @@ class Training extends Component {
         };
     }
     componentDidMount() {
-        this.setState({isLoading: false})
+        this.setState({ isLoading: false })
     }
 
     crearPlan() {
@@ -173,25 +177,38 @@ class Training extends Component {
         console.log(this.state.experiencia)
         base.guardarPlan(calorias, this.state.objetivoDeseado, this.state.experiencia, this.state.edad, this.state.peso, this.mostrarPlan.bind(this))
     }
-    
+
     mostrarPlan() {
         this.props.onPressCrear(this.state.id_idioma)
     }
 
-    okOmitir(){
+    okOmitir() {
         this.props.onOmitir(this.state.id_idioma);
     }
 
     render() {
-        if (this.state.isLoading) {
-            return (
-                <View style={styles.container}>
-                    <StatusBar barStyle="light-content" />
-                    <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                    <View style={styles.StatusBar} />
-                    <ActivityIndicator size="large" color="#3399ff" style={{ flex: 2 }}></ActivityIndicator>
-                </View>
-            );
+        if (this.state.creandoPlan) {
+            if (this.state.creandoPlan) {
+                return (
+                    <View style={styles.container}>
+                        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                        <View style={styles.insideContainer} >
+                            <ActivityIndicator size="large" color="#3399ff" style={{}} />
+                            <Text style={styles.activatorContainer}>{ExportadorFrases.CreandoPlan(this.state.id_idioma)}</Text>
+                        </View>
+                    </View>
+                );
+            }
+            else {
+                return (
+                    <View style={styles.container}>
+                        <StatusBar barStyle="light-content" />
+                        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+                        <View style={styles.StatusBar} />
+                        <ActivityIndicator size="large" color="#3399ff" style={{ flex: 2 }}></ActivityIndicator>
+                    </View>
+                );
+            }
         } else {
             return (
                 <View style={styles.container}>
@@ -200,17 +217,17 @@ class Training extends Component {
                     <View style={styles.StatusBar} />
                     <Swiper
                         controlsProps={{
-                            prevTitle: 'Ant',
-                            nextTitle: 'Sig',
+                            prevTitle: ExportadorFrases.SwipperAnterior(this.state.id_idioma),
+                                nextTitle: ExportadorFrases.SwipperSiguienteidioma(this.state.id_idioma),
                             nextTitleStyle: styles.swiperButtons,
                             prevTitleStyle: styles.swiperButtons
                         }}
                     >
                         <View style={[styles.slideContainer]}>
-                            <View style={styles.imageContainer}>
+                            <View style={[styles.imageContainer, BlackShadowForBlack()]}>
                                 <Image style={styles.Logo} source={require('../assets/Logo_Solo.png')} />
                             </View>
-                            <View style={styles.slide1}>
+                            <View style={[styles.slide1, BlackShadowForBlack()]}>
                                 <Text style={styles.slideText}>{ExportadorFrases.DeslizarTraining(this.state.id_idioma)}</Text>
                             </View>
                         </View>
@@ -218,7 +235,7 @@ class Training extends Component {
 
                             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                                 <View style={[styles.slideContainerInside2]}>
-                                    <View style={styles.slide2}>
+                                    <View style={[styles.slide2, BlackShadowForBlack()]}>
                                         <Text style={styles.slideText2}>{ExportadorFrases.FichaTitulo(this.state.id_idioma)}</Text>
                                     </View>
                                     <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
@@ -230,36 +247,8 @@ class Training extends Component {
                                             }}
                                             placeholderTextColor="black"
                                             style={{
-                                                inputIOS: {
-                                                    backgroundColor: 'grey',
-                                                    borderRadius: 10,
-                                                    width: wp("44"),
-                                                    height: hp("5.5"),
-                                                    marginBottom: height * 0.028,
-                                                    alignItems: 'center',
-                                                    alignSelf: 'center',
-                                                    fontWeight: 'bold',
-                                                    fontSize: height * 0.02,
-                                                    color: "black",
-                                                    textAlign: 'center'
-                                                },
-                                                inputAndroid: {
-                                                    backgroundColor: 'grey',
-                                                    borderTopLeftRadius: 10,
-                                                    borderTopRightRadius: 10,
-                                                    borderBottomLeftRadius: 10,
-                                                    borderBottomRightRadius: 10,
-                                                    width: wp("44"),
-                                                    height: hp("5.5"),
-                                                    marginBottom: height * 0.02,
-                                                    alignSelf: 'center',
-                                                    justifyContent: 'center',
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                    fontSize: height * 0.02,
-                                                    color: "black",
-                                                    textAlign: 'center'
-                                                }
+                                                inputIOS: [styles.mediumPikerIOS, BlackShadow()],
+                                                inputAndroid: [styles.mediumPikerAndroid, BlackShadow()]
                                             }}
                                             onValueChange={(value) => this.setState({ actividad: value })}
                                             items={[
@@ -278,36 +267,8 @@ class Training extends Component {
                                             }}
                                             placeholderTextColor="black"
                                             style={{
-                                                inputIOS: {
-                                                    backgroundColor: 'grey',
-                                                    borderRadius: 10,
-                                                    width: wp("22"),
-                                                    height: hp("5.5"),
-                                                    marginBottom: height * 0.028,
-                                                    alignItems: 'center',
-                                                    alignSelf: 'center',
-                                                    fontWeight: 'bold',
-                                                    fontSize: height * 0.02,
-                                                    color: "black",
-                                                    textAlign: 'center'
-                                                },
-                                                inputAndroid: {
-                                                    backgroundColor: 'grey',
-                                                    borderTopLeftRadius: 10,
-                                                    borderTopRightRadius: 10,
-                                                    borderBottomLeftRadius: 10,
-                                                    borderBottomRightRadius: 10,
-                                                    width: wp("22"),
-                                                    height: hp("5.5"),
-                                                    marginBottom: height * 0.028,
-                                                    alignSelf: 'center',
-                                                    justifyContent: 'center',
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                    fontSize: height * 0.02,
-                                                    color: "black",
-                                                    textAlign: 'center'
-                                                }
+                                                inputIOS: [styles.smallPikerIOS, BlackShadow()],
+                                                inputAndroid: [styles.smallPikerAndroid, BlackShadow()]
                                             }}
                                             onValueChange={(value) => this.setState({ genero: value })}
                                             items={[
@@ -324,37 +285,8 @@ class Training extends Component {
                                         }}
                                         placeholderTextColor="black"
                                         style={{
-                                            inputIOS: {
-                                                backgroundColor: 'grey',
-                                                borderRadius: 10,
-                                                width: wp("70"),
-                                                height: hp("5.5"),
-                                                margin: height * 0.028,
-                                                alignSelf: 'center',
-                                                justifyContent: 'center',
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: height * 0.02,
-                                                color: "black",
-                                                textAlign: 'center'
-                                            },
-                                            inputAndroid: {
-                                                backgroundColor: 'grey',
-                                                borderTopLeftRadius: 10,
-                                                borderTopRightRadius: 10,
-                                                borderBottomLeftRadius: 10,
-                                                borderBottomRightRadius: 10,
-                                                width: wp("70"),
-                                                height: hp("5.5"),
-                                                margin: height * 0.028,
-                                                alignSelf: 'center',
-                                                justifyContent: 'center',
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: height * 0.02,
-                                                color: "black",
-                                                textAlign: 'center'
-                                            }
+                                            inputIOS: [styles.largePikerIOS, BlackShadow()],
+                                            inputAndroid: [styles.largePikerAndroid, BlackShadow()]
                                         }}
 
                                         onValueChange={(value) => this.setState({ objetivoDeseado: value })}
@@ -374,37 +306,8 @@ class Training extends Component {
                                         }}
                                         placeholderTextColor="black"
                                         style={{
-                                            inputIOS: {
-                                                backgroundColor: 'grey',
-                                                borderRadius: 10,
-                                                width: wp("70"),
-                                                height: hp("5.5"),
-                                                margin: height * 0.028,
-                                                alignSelf: 'center',
-                                                justifyContent: 'center',
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: height * 0.02,
-                                                color: "black",
-                                                textAlign: 'center'
-                                            },
-                                            inputAndroid: {
-                                                backgroundColor: 'grey',
-                                                borderTopLeftRadius: 10,
-                                                borderTopRightRadius: 10,
-                                                borderBottomLeftRadius: 10,
-                                                borderBottomRightRadius: 10,
-                                                width: wp("70"),
-                                                height: hp("5.5"),
-                                                margin: height * 0.028,
-                                                alignSelf: 'center',
-                                                justifyContent: 'center',
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: height * 0.02,
-                                                color: "black",
-                                                textAlign: 'center'
-                                            }
+                                            inputIOS: [styles.largePikerIOS, BlackShadow()],
+                                            inputAndroid: [styles.largePikerAndroid, BlackShadow()]
                                         }}
                                         onValueChange={(value) => this.setState({ experiencia: value })}
                                         items={[
@@ -414,9 +317,9 @@ class Training extends Component {
                                         ]}
                                     />
                                     <View style={{ flexDirection: "row", width: wp("70"), justifyContent: "space-between" }}>
-                                        <TextInput style={styles.TextContainer} maxLength={3} keyboardType='numeric' placeholder= {ExportadorFrases.AlturaDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(altura) => this.setState({ altura })} value={this.state.altura}></TextInput>
-                                        <TextInput style={styles.TextContainer} maxLength={2} keyboardType='numeric' placeholder= {ExportadorFrases.EdadDeseada(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(edad) => this.setState({ edad })} value={this.state.edad}></TextInput>
-                                        <TextInput style={styles.TextContainer} maxLength={5} keyboardType='numeric' placeholder= {ExportadorFrases.PesoDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(peso) => this.setState({ peso })} value={this.state.peso}></TextInput>
+                                        <TextInput style={[styles.TextContainer, BlackShadow()]} maxLength={3} keyboardType='numeric' placeholder={ExportadorFrases.AlturaDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(altura) => this.setState({ altura })} value={this.state.altura}></TextInput>
+                                        <TextInput style={[styles.TextContainer, BlackShadow()]} maxLength={2} keyboardType='numeric' placeholder={ExportadorFrases.EdadDeseada(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(edad) => this.setState({ edad })} value={this.state.edad}></TextInput>
+                                        <TextInput style={[styles.TextContainer, BlackShadow()]} maxLength={5} keyboardType='numeric' placeholder={ExportadorFrases.PesoDeseado(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(peso) => this.setState({ peso })} value={this.state.peso}></TextInput>
                                     </View>
                                 </View>
                             </TouchableWithoutFeedback>
@@ -427,17 +330,17 @@ class Training extends Component {
                             <View style={styles.slideContainerInside3}>
                                 <Text style={styles.slideText3}>{ExportadorFrases.PlanTitulo(this.state.id_idioma)}</Text>
                             </View>
-                            <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
-                                <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalVisible: true }) }}>
-                                    <Text style={styles.screenButtonText}>
+                            <View style={{ flexDirection: "row", justifyContent: 'space-around', height: hp("11") }}>
+                                <BlueParallelButton onPress={() => { this.setState({ modalVisible: true }) }}>
+                                    <BlackButtonText>
                                         {ExportadorFrases.OmitirPlan(this.state.id_idioma)}
-                                </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({isLoading: true}),this.crearPlan() }}>
-                                    <Text style={styles.screenButtonText}>
-                                    {ExportadorFrases.CrearPlan(this.state.id_idioma)}
-                                </Text>
-                                </TouchableOpacity>
+                                    </BlackButtonText>
+                                </BlueParallelButton>
+                                <BlueParallelButton onPress={() => { this.setState({ isLoading: true, creandoPlan: true }), this.crearPlan() }}>
+                                    <BlackButtonText>
+                                        {ExportadorFrases.CrearPlan(this.state.id_idioma)}
+                                    </BlackButtonText>
+                                </BlueParallelButton>
                             </View>
                         </View>
                     </Swiper>
@@ -447,18 +350,17 @@ class Training extends Component {
                         transparent={true}
                         onRequestClose={() => this.setState({ modalVisible: false })}  >
 
-                        <View style={styles.modal}>
-                            <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                                    <Text style={styles.textButton}>{ExportadorFrases.OmitirPlanModalLabel(this.state.id_idioma)}</Text>
+                        <View style={[styles.modal, BlackShadow()]}>
+                            <View style={styles.modal1}>
+                                <Text style={styles.modalText}>{ExportadorFrases.OmitirPlanModalLabel(this.state.id_idioma)}</Text>
                             </View>
                             <View style={styles.modal2}>
-
                                 <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
-                                    <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
+                                    <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity onPress={() => this.okOmitir(this.state.id_idioma)} style={styles.modalButtonAceptar}>
-                                    <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
+                                    <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
                                 </TouchableOpacity>
 
                             </View>
@@ -474,42 +376,54 @@ const resizeMode = 'center';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
         backgroundColor: "grey"
     },
+    insideContainer: {
+        backgroundColor: "black",
+        justifyContent: 'center',
+        alignSelf: "center",
+        borderRadius: 20,
+        padding: wp(5)
+    },
+    activatorContainer: {
+        marginTop: hp(2.5),
+        fontSize: wp(4),
+        color: "#3399ff"
+    },
     StatusBar: {
-        height: hp(3),
+        height: hp(4),
         backgroundColor: "black"
     },
     swiperButtons: {
-        fontSize: height * 0.025,
+        fontSize: wp(5),
         marginBottom: height * 0.011
     },
 
     imageContainer: {
-        height: height * 0.55,
-        width: height * 0.50,
-        margin: 10,
-        justifyContent: 'center',
+        flex: 0.7,
+        padding: wp(5),
+        marginHorizontal: wp(5),
+        borderRadius: hp(1),
+        margin: wp(2.5),
         alignItems: 'center',
         backgroundColor: 'black',
-        borderWidth: 4,
-        borderRadius: 10,
-        marginTop: hp(8)
+        marginBottom: height * 0.08,
     },
 
     Logo: {
-        height: height * 0.45,
-        width: height * 0.45,
-        marginTop: hp(9),
-        marginBottom: hp(6.6)
+        flex: 1,
+        width: "100%",
+        height: "100%",
+        resizeMode: 'contain',
     },
     slide1: {
         backgroundColor: "black",
         padding: 10,
-        borderRadius: 10,
+        borderRadius: hp(1),
         opacity: .95,
         marginHorizontal: wp(5),
-        marginVertical: hp(6)
+        marginBottom: height * 0.028
     },
     slide2: {
         backgroundColor: "black",
@@ -524,20 +438,20 @@ const styles = StyleSheet.create({
 
     slideText: {
         alignSelf: "center",
-        fontSize: 18,
-        color: "#3399ff"
+        fontSize: wp(5),
+        color: "#3399ff",
+        textAlign: 'center'
     },
 
     slideText2: {
         textAlign: "center",
-        alignSelf: 'center',
-        fontSize: height * 0.03,
+        fontSize: wp(5.5),
         color: "#3399ff"
     },
 
     slideText3: {
         padding: wp(10),
-        fontSize: height * 0.028,
+        fontSize: wp(5),
         color: "#3399ff"
     },
 
@@ -552,7 +466,7 @@ const styles = StyleSheet.create({
     },
     slideContainer: {
         flex: 1,
-        alignItems: "center"
+        justifyContent: "center",
     },
 
     TextContainer: {
@@ -563,9 +477,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         fontWeight: 'bold',
-        fontSize: height * 0.02,
+        fontSize: wp(3.5),
         textAlign: 'center',
-        marginTop: height * 0.028
+        marginTop: height * 0.028,
+        opacity: .95
     },
     slideContainerInside2: {
         width: width,
@@ -575,8 +490,7 @@ const styles = StyleSheet.create({
     slideContainerInside3: {
         backgroundColor: "black",
         marginHorizontal: wp(5),
-        marginTop: hp(10),
-        marginBottom: hp(6),
+        marginBottom: hp(5),
         borderRadius: 10,
         alignItems: "center",
         justifyContent: 'center',
@@ -591,15 +505,100 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         opacity: .95
     },
-    screenButtonText: {
-        marginVertical: height * 0.02,
+    ///////////////////////////////////////
+    //Pikers
+    //////////////////////////////////////
+    smallPikerIOS: {
+        backgroundColor: 'grey',
+        borderRadius: 10,
+        width: wp("22"),
+        height: hp("5.5"),
+        marginBottom: height * 0.028,
+        alignItems: 'center',
+        alignSelf: 'center',
         fontWeight: 'bold',
-        fontSize: height * 0.025
+        fontSize: wp(3.5),
+        color: "black",
+        textAlign: 'center'
     },
-
+    smallPikerAndroid: {
+        backgroundColor: 'grey',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        width: wp("22"),
+        height: hp("5.5"),
+        marginBottom: height * 0.028,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        fontWeight: 'bold',
+        fontSize: wp(3.5),
+        color: "black",
+        textAlign: 'center'
+    },
+    mediumPikerIOS: {
+        backgroundColor: 'grey',
+        borderRadius: 10,
+        width: wp("44"),
+        height: hp("5.5"),
+        marginBottom: height * 0.028,
+        alignItems: 'center',
+        alignSelf: 'center',
+        fontWeight: 'bold',
+        fontSize: wp(3.5),
+        color: "black",
+        paddingLeft: wp(2.5)
+    },
+    mediumPikerAndroid: {
+        backgroundColor: 'grey',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        width: wp("44"),
+        height: hp("5.5"),
+        marginBottom: height * 0.028,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        fontWeight: 'bold',
+        fontSize: wp(3.5),
+        color: "black",
+        paddingLeft: wp(2.5)
+    },
+    largePikerIOS: {
+        backgroundColor: 'grey',
+        borderRadius: 10,
+        width: wp("70"),
+        height: hp("5.5"),
+        margin: height * 0.028,
+        alignItems: 'center',
+        alignSelf: 'center',
+        fontWeight: 'bold',
+        fontSize: wp(3.5),
+        color: "black",
+        textAlign: 'center'
+    },
+    largePikerAndroid: {
+        backgroundColor: 'grey',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        width: wp("70"),
+        height: hp("5.5"),
+        margin: height * 0.028,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: wp(3.5),
+        color: "black",
+        textAlign: 'center'
+    },
     //MODAAAAL
     modal: {
-        height: height * 0.22,
+        height: hp(20),
         width: width * 0.75,
         position: 'absolute',
         top: height * 0.4,
@@ -612,33 +611,37 @@ const styles = StyleSheet.create({
         borderRadius: 22,
         opacity: .95
     },
+    modal1: {
+        flex: 1,
+        paddingHorizontal: wp(2),
+        justifyContent: "center"
+    },
     modal2: {
         flexDirection: 'row',
         borderColor: 'black',
         borderTopWidth: 2,
         width: width * 0.74,
-        height: height * 0.08,
-        position: 'absolute',
-        bottom: 0,
+        height: hp(6),
         opacity: .95
     },
-    textButton: {
+    modalText: {
         color: 'white',
-        fontSize: height * 0.02,
+        fontSize: wp(4),
         alignSelf: 'center',
         textAlign: 'center',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginTop: hp(2),
     },
     modalButtonCancelar: {
         width: width * 0.37,
-        height: height * 0.0775,
+        height: hp(6),
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomLeftRadius: 22
     },
     modalButtonAceptar: {
-        width: width * 0.37,
-        height: height * 0.0775,
+        width: width * 0.366,
+        height: hp(6),
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: "center",

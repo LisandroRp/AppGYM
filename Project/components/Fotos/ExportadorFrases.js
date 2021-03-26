@@ -114,6 +114,17 @@ class ExportadorFrases extends Component {
                 return "Borrando Rutina"
         }
     }
+    CreandoPlan(idioma) {
+        switch (idioma) {
+
+            case es:
+                return "Creando Plan"
+            case en:
+                return "Creating Plan"
+            default:
+                return "Creando Plan"
+        }
+    }
     ActualizandoPlan(idioma) {
         switch (idioma) {
 
@@ -800,7 +811,28 @@ class ExportadorFrases extends Component {
                 return "¡¡Empezar!!"
         }
     }
+    SwipperSiguienteidioma(idioma){
+        switch (idioma) {
 
+            case es:
+                return "Sig"
+            case en:
+                return "Next"
+            default:
+                return "Sig"
+        }
+    }
+    SwipperAnterior(idioma){
+        switch (idioma) {
+
+            case es:
+                return "Ant"
+            case en:
+                return "Back"
+            default:
+                return "Ant"
+        }
+    }
     //**************************************** */
     //MODAL
     //**************************************** */
@@ -1142,7 +1174,7 @@ class ExportadorFrases extends Component {
                 return "Nueva Rutina"
         }
     }
-    Musuclos(idioma) {
+    Musculos(idioma) {
         switch (idioma) {
 
             case es:

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import ExportadorFondo from './Fotos/ExportadorFondo'
+import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion'
 import base from './GenerarBase';
 import * as Font from 'expo-font';
@@ -15,7 +16,8 @@ import {
   ImageBackground,
   Text
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { BlackShadow, BlackShadowForBlack } from './Estilos/Shadows';
 
 class Suplementacion extends Component {
 
@@ -27,90 +29,101 @@ class Suplementacion extends Component {
       suplementos: [],
       id_idioma: 0,
       isLoading: true,
-      isLoadingFont: true, 
+      isLoadingFont: true,
     };
   }
-  componentDidMount = async() => {
+  componentDidMount = async () => {
     this.loadFont()
     this.loadSuplementos()
   }
-  loadFont = async() => {
+  loadFont = async () => {
     await Font.loadAsync({
       'font1': require('../assets/fonts/BebasNeue-Regular.ttf'),
       'font2': require('../assets/fonts/BebasNeue-Bold.ttf'),
     });
     this.setState({ isLoadingFont: false })
   }
-  loadSuplementos = async() => {
+  loadSuplementos = async () => {
     base.traerTipoSuplementos(this.okSuplementos.bind(this))
   }
-  okSuplementos(suplementos, id_idioma){
-    this.setState({suplementos: suplementos, id_idioma, isLoading: false})
+  okSuplementos(suplementos, id_idioma) {
+    this.ordenarSuplementos(suplementos, id_idioma)
+  }
+  ordenarSuplementos(suplementos, id_idioma) {
+    var suplementosNuevos = suplementos.reduce(function (rows, key, index) {
+      return (index % 2 == 0 ? rows.push([key])
+        : rows[rows.length - 1].push(key)) && rows;
+    }, []);
+    this.setState({ suplementos: suplementosNuevos, id_idioma, isLoading: false })
+  }
+  esUltimaFila(posicion, ultimaPosicion, itemPos) {
+    if (posicion == ultimaPosicion) {
+      if (itemPos == 0) {
+        return { borderBottomLeftRadius: wp(10) }
+      }
+      else {
+        return { borderBottomRightRadius: wp(10) }
+      }
+    }
+
   }
   render() {
     if (this.state.isLoadingFont || this.state.isLoading) {
       return (
-          <View style={styles.container}>
-          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()}/>
-              <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
-          </View>
+        <View style={styles.container}>
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+          <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
+        </View>
       );
-  } else {
-    return (
-      <View style={styles.container}>
-      <StatusBar backgroundColor="#3399ff" barStyle="light-content" />
-      <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()}/>
-        <FlatList
-          style={styles.contentList}
-          numColumns={2}
-          data={this.state.suplementos}
-          initialNumToRender={50}
-          keyExtractor={(item) => {
-              return item.id_tipo.toString();
-            }}
-          renderItem={({ item }) => {
-            return (
-              <TouchableOpacity onPress={() => this.props.onPressGo(item.id_tipo, item.nombre_tipo)}>
-                <ImageBackground style={styles.image} source={ExportadorSuplementacion.default(this.state.id_idioma)}>
-                  <Text style={[styles.textImage, {fontFamily: 'font2'}]} >{item.nombre_tipo}</Text>
-                </ImageBackground>
-              </TouchableOpacity>
-            )
-          }} />
-      </View>
-    );
+    } else {
+      return (
+        <View style={styles.container}>
+          <StatusBar backgroundColor="#3399ff" barStyle="light-content" />
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+          {this.state.suplementos.map((array, arrayPos) => (
+            <View style={{ flexDirection: "row", flex: 1 }}>
+              {
+                array.map((item, itemPos) => (
+                  <TouchableOpacity
+                    accessible={true}
+                    accessibilityLabel={item.nombre_tipo}
+                    accessibilityHint={ExportadorFrases.EjerciciosHint(this.state.id_idioma) + item.nombre_tipo}
+                    onPress={() => this.props.onPressGo(item.id_tipo, item.nombre_tipo)}
+                    style={[styles.imageContainer, BlackShadowForBlack()]}>
+                    <ImageBackground style={[styles.image, this.esUltimaFila(arrayPos, this.state.suplementos.length - 1, itemPos)]} source={ExportadorSuplementacion.default(this.state.id_idioma)}>
+                      <Text style={[styles.textImage, { fontFamily: 'font2' }]} >{item.nombre_tipo}</Text>
+                    </ImageBackground>
+                  </TouchableOpacity>
+                ))
+              }
+            </View>
+          ))}
+        </View>
+      );
+    }
   }
-}
 }
 const resizeMode = 'center';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     backgroundColor: "grey"
   },
-  contentList: {
+  imageContainer: {
     flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding:2,
-    alignSelf: 'center'
   },
   image: {
-    width: wp(49),
-    height: hp(29.5),
+    flex: 1,
     margin: 1,
-    //marginVertical: hp(0.2),
-    //marginHorizontal: wp(0.1),
     borderWidth: 1.5,
     borderColor: 'black',
-    resizeMode: 'stretch',
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
+    resizeMode: 'stretch',
     overflow: 'hidden'
   },
-  bgImage:{
+  bgImage: {
     flex: 1,
     resizeMode,
     position: 'absolute',
@@ -121,13 +134,13 @@ const styles = StyleSheet.create({
   },
   textImage: {
     textAlign: 'center',
-    fontSize: hp(5),
+    fontSize: wp(9),
     textTransform: 'uppercase',
     color: "#2A73E0",
     letterSpacing: wp(1),
     fontWeight: 'bold',
     textShadowColor: 'black',
-    textShadowOffset: {width: 2.2, height: 2.2},
+    textShadowOffset: { width: 2.2, height: 2.2 },
     textShadowRadius: 0.1
   }
 })

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorFrases from './Fotos/ExportadorFrases';
+import { BlackShadowForBlack } from './Estilos/Shadows'
+import { AzulPrincipal } from './Estilos/Colors'
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorAds from './Fotos/ExportadorAds';
 import {
@@ -16,6 +18,7 @@ import {
 import DropDownItem from 'react-native-drop-down-item';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
+import { AntDesign } from '@expo/vector-icons';
 
 var { height, width } = Dimensions.get('window');
 
@@ -66,9 +69,11 @@ class SuplementacionEspecifica extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
-            <View style={styles.todo}>
-              <View>
-                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{this.state.nombre_suplemento}</Text></View>
+            <View style={[styles.todo, BlackShadowForBlack()]}>
+              <View style={{ paddingBottom: hp(2) }}>
+                <View style={styles.backgroundTitulo}>
+                  <Text style={styles.titulo}>{this.state.nombre_suplemento}</Text>
+                </View>
                 <View style={{ flexDirection: "row" }}>
                   <Text style={styles.descripcionUnderline}>{ExportadorFrases.Marca(this.state.id_idioma)}:</Text>
                   <Text style={styles.descripcion}> {this.state.detalle.marca}</Text>
@@ -78,13 +83,18 @@ class SuplementacionEspecifica extends Component {
                   <Text style={styles.descripcion}>{this.state.detalle.sabores}</Text>
                 </View>
                 <Text style={styles.descripcion}>{this.state.detalle.descripcion}</Text>
-                </View>
+              </View>
             </View>
 
-            <View style={styles.todo}>
+            <View style={[styles.todo, BlackShadowForBlack()]}>
               <DropDownItem contentVisible={false}
                 header={
-                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{ExportadorFrases.Beneficios(this.state.id_idioma)}</Text></View>
+                  <View style={styles.backgroundTitulo}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.titulo}>{ExportadorFrases.Beneficios(this.state.id_idioma)}</Text>
+                    </View>
+                    <AntDesign style={{ textAlign: 'center', marginRight: wp(3.3) }} name={"caretdown"} size={wp(3.3)} color={AzulPrincipal()} />
+                  </View>
                 }
               >
 
@@ -93,10 +103,15 @@ class SuplementacionEspecifica extends Component {
               </DropDownItem>
             </View>
 
-            <View style={styles.todo}>
+            <View style={[styles.todo, BlackShadowForBlack()]}>
               <DropDownItem contentVisible={false}
                 header={
-                  <View style={styles.backgroundTitulo}><Text style={styles.titulo}>{ExportadorFrases.Uso(this.state.id_idioma)}</Text></View>
+                  <View style={styles.backgroundTitulo}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.titulo}>{ExportadorFrases.Uso(this.state.id_idioma)}</Text>
+                    </View>
+                    <AntDesign style={{ textAlign: 'center', marginRight: wp(3.3) }} name={"caretdown"} size={wp(3.3)} color={AzulPrincipal()} />
+                  </View>
                 }
               >
 
@@ -104,7 +119,7 @@ class SuplementacionEspecifica extends Component {
                 <Text style={styles.descripcion}>{this.state.detalle.uso}</Text>
               </DropDownItem>
             </View>
-                
+
           </ScrollView>
           <View style={styles.bannerContainer}></View>
           <AdMobBanner
@@ -154,7 +169,7 @@ const styles = StyleSheet.create({
   todo: {
     backgroundColor: 'grey',
     marginHorizontal: wp("4"),
-    marginVertical: hp("2"),
+    marginVertical: hp(1),
     opacity: 2
   },
   backgroundTitulo: {
@@ -162,25 +177,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: wp("2"),
     paddingVertical: hp("2"),
+    flexDirection: "row"
   },
   titulo: {
-    fontSize: height * 0.04,
+    fontSize: wp(7),
     fontWeight: 'bold',
-    color: '#3399ff'
+    color: '#3399ff',
+    paddingLeft: wp(5)
   },
   descripcion: {
     color: 'black',
-    marginHorizontal: wp("5"),
-    marginVertical: hp("2"),
-    fontSize: height * 0.025,
+    marginTop: wp(4),
+    marginHorizontal: wp(4.5),
+    fontSize: wp(4.5),
     paddingBottom: hp("1.1")
   },
   descripcionUnderline: {
     color: 'black',
+    marginTop: wp(4),
+    marginHorizontal: wp(4.5),
+    fontSize: wp(5),
     textDecorationLine: 'underline',
-    marginLeft: wp("5"),
-    marginVertical: hp("2"),
-    fontSize: height * 0.025,
   },
 })
 

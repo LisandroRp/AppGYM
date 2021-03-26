@@ -7,8 +7,12 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import base from './GenerarBase';
 import ExportadorFrases from './Fotos/ExportadorFrases';
+import {BlackShadowForBlack} from './Estilos/Shadows'
+import {AzulPrincipal} from './Estilos/Colors'
+import { BlackButtonText, BlueButton } from './Estilos/PreMadeComponents';
 
 var { height, width } = Dimensions.get('window');
+const azulPrincipal = AzulPrincipal()
 
 class MiPlan extends Component {
 
@@ -54,19 +58,19 @@ class MiPlan extends Component {
             return (
                 <View style={styles.container}>
                     <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                    <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 1 }}></ActivityIndicator>
+                    <ActivityIndicator size="large" color={azulPrincipal} backgroundColor=' #616161' style={{ flex: 1 }}></ActivityIndicator>
                 </View>
             );
         } else {
             if (this.state.perfil == null) {
                 return (
-                    <View style={styles.containerNull}>
+                    <View style={styles.NoItemsContainer}>
                         <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                        <View style={styles.imageContainer}>
-                            <Image style={styles.Logo} source={require('../assets/Logo_Solo.png')} />
+                        <View style={[styles.NoItemsImageContainer, BlackShadowForBlack()]}>
+                            <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
                         </View>
-                        <View style={styles.ContainerInsideNull}>
-                            <Text style={styles.Text}>{ExportadorFrases.NoPlan(this.state.id_idioma)}</Text>
+                        <View style={[styles.NoItemsTextContainer, BlackShadowForBlack()]}>
+                            <Text style={styles.NoItemsText}>{ExportadorFrases.NoPlan(this.state.id_idioma)}</Text>
                         </View>
                     </View>
                 )
@@ -77,45 +81,45 @@ class MiPlan extends Component {
                         <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
                         <Swiper style={styles.swiper}
                             controlsProps={{
-                                prevTitle: 'Ant',
-                                nextTitle: 'Sig',
+                                prevTitle: ExportadorFrases.SwipperAnterior(this.state.id_idioma),
+                                nextTitle: ExportadorFrases.SwipperSiguienteidioma(this.state.id_idioma),
                                 nextTitleStyle: styles.swiperButtons,
                                 prevTitleStyle: styles.swiperButtons
                             }}
                         >
                             <View style={styles.slideContainer}>
-                                <View style={styles.ContainerInside}>
+                                <View style={[styles.ContainerInside, BlackShadowForBlack()]}>
                                     <Text style={styles.calories}>{(this.state.perfil.caloriasEjercicio - 188).toString()} - {(this.state.perfil.caloriasEjercicio).toString()}</Text>
                                     <Text style={styles.Text}>{ExportadorFrases.CaloriasNormal(this.state.id_idioma)}</Text>
                                 </View>
-                                <View style={styles.ContainerInside}>
+                                <View style={[styles.ContainerInside, BlackShadowForBlack()]}>
                                     <Text style={styles.calories}>{(this.state.perfil.caloriasTotal - 188).toString()} - {(this.state.perfil.caloriasTotal).toString()}</Text>
                                     <Text style={styles.Text}>{ExportadorFrases.CaloriasAConsumir(this.state.id_idioma)}</Text>
                                 </View>
                             </View>
-                            <ScrollView style={{ paddingHorizontal: height * 0.03 }}>
-                                <View style={styles.ContainerInsideTitle2}>
+                            <ScrollView>
+                                <View style={[styles.ContainerInsideTitle2, BlackShadowForBlack()]}>
                                     <Text style={styles.TextTitle}>{this.state.perfil.nombre_objetivo}</Text>
                                 </View>
-                                <View style={styles.ContainerInside2}>
+                                <View style={[styles.ContainerInside2, BlackShadowForBlack()]}>
                                     <Text style={styles.Text}>{this.state.perfil.descripcion_objetivo}</Text>
                                 </View>
                             </ScrollView>
-                            <View style={{ paddingHorizontal: height * 0.03 }}>
-                            <ScrollView style={{ paddingHorizontal: height * 0.03 }}>
-                                <View style={styles.ContainerInsideTitle3}>
+                            <ScrollView style={{paddingBottom: hp(5)}}>
+                                <View style={[styles.ContainerInsideTitle3, BlackShadowForBlack()]}>
                                     <Text style={styles.TextTitle}>{this.state.perfil.nombre_experiencia}</Text>
                                 </View>
-                                <View style={styles.ContainerInside3}>
+                                <View style={[styles.ContainerInside3, BlackShadowForBlack()]}>
                                     <Text style={styles.Text}>{this.state.perfil.descripcion_experiencia}</Text>
                                 </View>
-                                <TouchableOpacity style={styles.guardarButton} onPress={() => this.props.navigation.openDrawer()}>
-                                        <Text style={styles.screenButtonText}>
+                                <View style={{marginBottom: hp(10)}}>
+                                <BlueButton onPress={() => this.props.navigation.openDrawer()}>
+                                        <BlackButtonText>
                                            {ExportadorFrases.Empezar(this.state.id_idioma)}
-                                        </Text>
-                                </TouchableOpacity>
+                                        </BlackButtonText>
+                                </BlueButton>
+                                </View>
                             </ScrollView>
-                            </View>
                         </Swiper>
                     </View>
                 )
@@ -125,42 +129,46 @@ class MiPlan extends Component {
 };
 const resizeMode = 'center';
 const styles = StyleSheet.create({
-    containerNull: {
-        backgroundColor: "grey",
+    NoItemsContainer: {
         flex: 1,
-        justifyContent: "center"
+        backgroundColor: 'grey',
+        justifyContent: "center",
     },
-    ContainerInsideNull: {
+    NoItemsTextContainer: {
         backgroundColor: "black",
-        marginTop: hp(5),
-        padding: height * 0.04,
-        borderRadius: 10,
-        marginHorizontal: height * 0.05,
-        alignItems: "center",
-        justifyContent: 'center',
-    },
-    swiperButtons: {
-        fontSize: height * 0.025,
-        marginBottom: height * 0.011
-    },
-    imageContainer: {
-        height: height * 0.44,
-        width: height * 0.40,
-        margin: 10,
-        justifyContent: 'center',
-        alignSelf: 'center',
-        alignItems: 'center',
-        backgroundColor: 'black',
-        borderWidth: 4,
-        borderRadius: 10,
-        marginTop: hp(2)
+        padding: 10,
+        borderRadius: hp(1),
+        opacity: .95,
+        marginHorizontal: wp(5),
+        marginBottom: height * 0.028
     },
 
-    Logo: {
-        height: height * 0.35,
-        width: height * 0.35,
-        marginTop: hp(9),
-        marginBottom: hp(6.6)
+    NoItemsText: {
+        alignSelf: "center",
+        fontSize: wp(5),
+        color: azulPrincipal,
+        textAlign: 'center'
+    },
+    NoItemsImageContainer: {
+        flex: 0.7,
+        padding: wp(5),
+        marginHorizontal: wp(5),
+        borderRadius: hp(1),
+        margin: wp(2.5),
+        alignItems: 'center',
+        backgroundColor: 'black',
+        marginBottom: height * 0.08,
+    },
+
+    NoItemsLogo: {
+        flex: 1,
+        width: "100%",
+        height: "100%",
+        resizeMode: 'contain',
+    },
+    swiperButtons: {
+        fontSize: wp(5),
+        marginBottom: height * 0.011
     },
 
     // EXISTE PLAN
@@ -179,7 +187,7 @@ const styles = StyleSheet.create({
     slideContainer: {
         flex: 1,
         alignItems: "center",
-        height: height
+        justifyContent: "center"
     },
     bgImage: {
         flex: 1,
@@ -192,78 +200,71 @@ const styles = StyleSheet.create({
     },
 
     ContainerInside: {
+        height: hp(30),
+        width: wp(88),
+        paddingHorizontal: wp(2),
         backgroundColor: "black",
-        marginTop: hp(5),
-        padding: height * 0.04,
+        marginTop: hp(2.5),
         borderRadius: 10,
         alignItems: "center",
         justifyContent: 'center',
-        height: height * 0.33,
-        width: width * 0.88
     },
     ContainerInsideTitle2: {
+        width: wp(88),
         backgroundColor: "black",
         marginTop: hp(5),
         padding: height * 0.028,
         borderRadius: 10,
+        alignSelf: "center",
         alignItems: "center",
         justifyContent: 'center',
     },
     ContainerInside2: {
+        width: wp(88),
         backgroundColor: "black",
         marginTop: hp(5),
         padding: height * 0.028,
         borderRadius: 10,
+        alignSelf: "center",
         alignItems: "center",
         justifyContent: 'center',
         marginBottom: height * 0.11
     },
     ContainerInsideTitle3: {
+        width: wp(88),
         backgroundColor: "black",
         marginTop: hp(5),
         padding: height * 0.028,
         borderRadius: 10,
+        alignSelf: "center",
         alignItems: "center",
         justifyContent: 'center',
     },
     ContainerInside3: {
+        width: wp(88),
         backgroundColor: "black",
         marginTop: hp(5),
         padding: height * 0.028,
         borderRadius: 10,
+        alignSelf: "center",
         alignItems: "center",
         justifyContent: 'center',
         marginBottom: height * 0.05
     },
     Text: {
-        fontSize: height * 0.027,
-        color: "#3399ff",
+        fontSize: wp(5),
+        color: azulPrincipal,
         textAlign: "center"
     },
     TextTitle: {
-        fontSize: height * 0.04,
-        color: "#3399ff",
+        fontSize: wp(8),
+        color: azulPrincipal,
         textAlign: "center"
     },
     calories: {
-        fontSize: height * 0.07,
+        fontSize: wp(12),
         marginBottom: height * 0.02,
-        color: "#3399ff"
+        color: azulPrincipal
     },
-    screenButtonText: {
-        marginVertical: height * 0.02,
-        fontWeight: 'bold',
-        fontSize: height * 0.025
-      },
-      guardarButton: {
-        backgroundColor: 'grey',
-        borderRadius: 10,
-        alignItems: 'center',
-        width: width * 0.33,
-        marginHorizontal: height * 0.025,
-        marginBottom: height * 0.10,
-        alignSelf: 'center',
-        opacity: .95
-      }
 })
 export default withNavigation(MiPlan);

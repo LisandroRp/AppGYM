@@ -14,6 +14,7 @@ import {
   ImageBackground
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { BlackShadowForBlack } from './Estilos/Shadows';
 
 class Favoritos extends Component {
 
@@ -57,20 +58,20 @@ class Favoritos extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
 
-          <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoRutinas()}>
+          <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoRutinas()}>
             <ImageBackground style={styles.image} source={ExportadorMenus.Rutinas()} >
               <Text style={[styles.textImage, { fontFamily: 'font2' }]}>{ExportadorFrases.Rutinas(this.state.id_idioma)}</Text>
             </ImageBackground>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoEjercicios()}>
+          <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoEjercicios()}>
             <ImageBackground style={styles.image} source={ExportadorMenus.Ejercicios()} >
               <Text style={[styles.textImage, { fontFamily: 'font2' }]}>{ExportadorFrases.Ejercicios(this.state.id_idioma)}</Text>
             </ImageBackground>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.imageContainer} onPress={() => this.props.onPressGoSuplementos()}>
-            <ImageBackground style={styles.image} source={ExportadorMenus.Suplementacion()} >
+          <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoSuplementos()}>
+            <ImageBackground style={[styles.image, {borderBottomRadius: wp(40)}]} source={ExportadorMenus.Suplementacion()} >
               <Text style={[styles.textImage, { fontFamily: 'font2' }]}>{ExportadorFrases.Suplementos(this.state.id_idioma)}</Text>
             </ImageBackground>
           </TouchableOpacity>
@@ -97,14 +98,12 @@ const styles = StyleSheet.create({
     resizeMode: 'cover'
   },
   imageContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex:1,
+    marginVertical: hp(0.2),
+    marginHorizontal: hp(0.2),
   },
   image: {
-    height: hp(29.5),
-    width: wp(99),
-    marginVertical: hp(0.2),
-    marginHorizontal: wp(0.1),
+    height: "100%",
     borderWidth: 1.5,
     borderColor: 'black',
     justifyContent: 'center',
@@ -112,7 +111,7 @@ const styles = StyleSheet.create({
   },
   textImage: {
     textAlign: 'center',
-    fontSize: hp(8),
+    fontSize: wp(15),
     textTransform: 'uppercase',
     color: "#2A73E0",
     letterSpacing: wp(2),

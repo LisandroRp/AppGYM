@@ -3,6 +3,7 @@ import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorCreadores from './Fotos/ExportadorCreadores';
 import ExportadorFrases from './Fotos/ExportadorFrases';
+import { BlackShadowForBlack, BlackShadow } from './Estilos/Shadows'
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
@@ -23,6 +24,15 @@ import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 
+function createData(item, nombre) {
+    return {
+      id_rutina: item.id_rutina,
+      nombre_rutina: nombre,
+      modificable: item.modificable,
+      rutina: [],
+    };
+  }
+  
 class RutinasFavs extends Component {
     constructor(props) {
         super(props);
@@ -81,35 +91,52 @@ class RutinasFavs extends Component {
     }
 
     okFavorito() {
-        this.cargarRutinasFavoritas()
+        this.cargarRutinasFavoritas(this.state.idioma)
     }
+    crearDatosAEnviar(rutina, nombre_rutina) {
+        this.props.onPressGo(rutina.id_rutina, nombre_rutina, rutina.modificable)
+        //Esta comentado porque forma parte de la funcionalidad de enviar rutinas (al descomentar comentar lo de arriba)
+        //this.setState({ isLoading: true })
+        //base.traerEjerciciosRutinaJoin(createData(rutina, nombre_rutina), this.enviar.bind(this))
+
+    }
+    enviar(rutina) {
+        this.props.onPressGo(rutina.id_rutina, rutina.nombre_rutina, rutina.modificable, rutina.rutina)
+        this.setState({ isLoading: false })
+    }
+    creador(creador) {
+        if (creador == 'Propia') {
+          return ExportadorFrases.Propia(this.state.idioma.id_idioma)
+        }
+        return creador
+      }
     marginSize(item) {
         if (item.id_rutina != this.state.rutinas[this.state.rutinas.length - 1].id_rutina) {
-            return { marginTop: height * 0.02 }
+            return { marginTop: hp(2) }
         } else {
-            return { marginBottom: height * 0.02, marginTop: height * 0.02 }
+            return { marginBottom: hp(2), marginTop: hp(2) }
         }
     }
-    queNombreRutina(rutina){
-        if(rutina.nombre_rutina == null){
-          if(this.state.idioma.id_idioma == 1){
-            return rutina.nombre_rutina_es
-          }
-          if(this.state.idioma.id_idioma == 2){
-            return rutina.nombre_rutina_en
-          }
-        }else{
+    queNombreRutina(rutina) {
+        if (rutina.nombre_rutina == null) {
+            if (this.state.idioma.id_idioma == 1) {
+                return rutina.nombre_rutina_es
+            }
+            if (this.state.idioma.id_idioma == 2) {
+                return rutina.nombre_rutina_en
+            }
+        } else {
             return rutina.nombre_rutina
-          }
-       }
-       diaDias(dias, id_idioma){
-        if(dias > 1){
-          return ExportadorFrases.Dias(id_idioma)
         }
-        else{
-         return ExportadorFrases.Dia(id_idioma)
+    }
+    diaDias(dias, id_idioma) {
+        if (dias > 1) {
+            return ExportadorFrases.Dias(id_idioma)
         }
-      }
+        else {
+            return ExportadorFrases.Dia(id_idioma)
+        }
+    }
     render() {
         if (this.state.isLoading) {
             return (
@@ -124,10 +151,10 @@ class RutinasFavs extends Component {
                 return (
                     <View style={[styles.NoItemsContainer]}>
                         <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                        <View style={styles.NoItems}>
+                        <View style={[styles.NoItemsTextContainer, BlackShadowForBlack()]}>
                             <Text style={styles.NoItemsText}>{ExportadorFrases.RutinasNo(this.state.idioma.id_idioma)}</Text>
                         </View>
-                        <View style={styles.NoItemsImageContainer}>
+                        <View style={[styles.NoItemsImageContainer, BlackShadowForBlack()]}>
                             <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
                         </View>
                         <AdMobBanner
@@ -179,12 +206,15 @@ class RutinasFavs extends Component {
                             renderItem={({ item }) => {
                                 if (item.favoritos) {
                                     return (
-                                        <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_rutina, item.nombre_rutina, item.modificable)}>
-                                            <Image style={styles.image} source={ExportadorCreadores.queImagen(item.id_creador)} />
+                                        <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]}
+                                            onPress={() =>  this.crearDatosAEnviar(item, this.queNombreRutina(item))}>
+                                            <View style={styles.imageContainer}>
+                                                <Image style={styles.image} source={ExportadorCreadores.queImagen(item.id_creador)} />
+                                            </View>
                                             <View style={styles.cardContent}>
                                                 <Text style={styles.name}>{this.queNombreRutina(item)}</Text>
                                                 <Text style={styles.dias}>{item.dias} {this.diaDias(item.dias, this.state.idioma.id_idioma)}</Text>
-                                                <Text style={styles.dias}>{ExportadorFrases.Autor(this.state.idioma.id_idioma)}: {item.nombre_creador}</Text>
+                                                <Text style={styles.dias}>{ExportadorFrases.Autor(this.state.idioma.id_idioma)}: {this.creador(item.nombre_creador)}</Text>
                                             </View>
                                             <View style={styles.ViewEstrella} >
                                                 <TouchableOpacity onPress={() => { this.modalVisible(item.id_rutina, item.nombre_rutina) }}>
@@ -202,7 +232,7 @@ class RutinasFavs extends Component {
                             transparent={true}
                             onRequestClose={() => this.setState({ modalVisible: false })}  >
 
-                            <View style={styles.modal}>
+                            <View style={[styles.modal, BlackShadow()]}>
 
                                 <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: width * 0.05 }}>
                                     <Text style={styles.textButton}>{ExportadorFrases.SacarRutinaFavs1(this.state.idioma.id_idioma)} "{this.state.nombre_rutina}" {ExportadorFrases.SacarRutinaFavs2(this.state.idioma.id_idioma)}?</Text>
@@ -260,40 +290,40 @@ const styles = StyleSheet.create({
     },
     NoItemsContainer: {
         backgroundColor: 'grey',
-        flex: 1,
+        justifyContent: "center",
+        flex: 1
     },
+    NoItemsTextContainer: {
+        backgroundColor: "black",
+        padding: 10,
+        borderRadius: hp(1),
+        opacity: .95,
+        marginHorizontal: wp(5),
+        marginBottom: height * 0.028
+    },
+
     NoItemsText: {
         alignSelf: "center",
-        fontSize: height * 0.028,
+        fontSize: wp(5),
         color: "#3399ff",
         textAlign: 'center'
     },
     NoItemsImageContainer: {
-        height: height * 0.55,
-        width: height * 0.50,
-        marginBottom: height * 0.028,
-        marginTop: height * 0.028,
-        justifyContent: "center",
-        alignSelf: "center",
+        flex: 0.7,
+        paddingHorizontal: wp(5),
+        marginHorizontal: wp(5),
+        borderRadius: hp(1),
+        margin: wp(2.5),
+        alignItems: 'center',
         backgroundColor: 'black',
-        borderWidth: 4,
-        borderRadius: 10,
+        marginBottom: height * 0.08,
     },
 
     NoItemsLogo: {
-        height: height * 0.45,
-        width: height * 0.45,
-        alignSelf: "center",
-        marginTop: hp(9),
-        marginBottom: hp(6.6)
-    },
-    NoItems: {
-        backgroundColor: "black",
-        padding: 10,
-        borderRadius: 10,
-        opacity: .95,
-        marginHorizontal: wp(5),
-        marginTop: height * 0.028
+        flex: 1,
+        width: "100%",
+        height: "100%",
+        resizeMode: 'contain',
     },
     bgImage: {
         flex: 1,
@@ -304,22 +334,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         resizeMode: 'cover'
     },
-    cardContent: {
-        marginLeft: height * 0.028,
-        paddingRight: 5,
-        width: wp("40"),
-        justifyContent: 'center'
-    },
-    image: {
-        width: wp("20"),
-        height: hp("11"),
-        borderWidth: 2,
-        borderColor: "#ebf0f7",
-        margin: 5,
-        marginRight: 5
-    },
-
-    card: {
+    shadow: {
         shadowColor: '#00000021',
         shadowOffset: {
             width: 0,
@@ -328,41 +343,58 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.37,
         shadowRadius: 7.49,
         elevation: 12,
-
-        marginLeft: height * 0.028,
-        marginRight: height * 0.028,
-        marginTop: height * 0.028,
-        backgroundColor: "black",
-        padding: 10,
-        flexDirection: 'row',
     },
-
+    card: {
+        flex: 1,
+        backgroundColor: "black",
+        marginHorizontal: wp(2),
+        flexDirection: 'row'
+    },
+    cardContent: {
+        flex: 1,
+        paddingHorizontal: 5,
+        justifyContent: 'center',
+    },
+    imageContainer: {
+        flex: 0.4,
+        margin: wp(2.5),
+        alignItems: 'center',
+        justifyContent: "center",
+    },
+    image: {
+        flex: 1,
+        height: wp(20),
+        width: wp(20),
+        borderWidth: 1.5,
+        borderColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center',
+        resizeMode: 'stretch',
+        overflow: 'hidden'
+    },
     name: {
-        fontSize: height * 0.028,
+        fontSize: wp(5),
         color: "#3399ff",
         fontWeight: 'bold'
     },
     dias: {
-        fontSize: height * 0.02,
-        marginTop: 5,
-        color: "white",
+        marginTop: 1,
+        fontSize: wp(3.5),
+        color: "white"
     },
     StarImage: {
-        width: hp(5.5),
-        height: hp(5.5),
-        alignSelf: "center"
+        width: hp(4.5),
+        height: hp(4.5),
     },
     ViewEstrella: {
+        flex: 0.4,
         alignItems: 'center',
-        alignSelf: "center",
         justifyContent: "center",
-        paddingHorizontal: wp("5"),
-        position: "absolute",
-        right: 0,
     },
     //MODAAAAL
     modal: {
-        height: height * 0.22,
+        height: hp(20),
         width: width * 0.75,
         position: 'absolute',
         top: height * 0.4,
@@ -380,28 +412,28 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderTopWidth: 2,
         width: width * 0.74,
-        height: height * 0.08,
+        height: hp(6),
         position: 'absolute',
         bottom: 0,
         opacity: .95
     },
     textButton: {
         color: 'white',
-        fontSize: height * 0.02,
+        fontSize: wp(3.8),
         alignSelf: 'center',
         textAlign: 'center',
         fontWeight: 'bold'
     },
     modalButtonCancelar: {
         width: width * 0.37,
-        height: height * 0.0775,
+        height: hp(6),
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 22
     },
     modalButtonAceptar: {
         width: width * 0.37,
-        height: height * 0.0775,
+        height: hp(6),
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: "center",

@@ -6,6 +6,8 @@ import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
+import { BlackShadowForBlack } from './Estilos/Shadows'
+import { AzulPrincipal } from './Estilos/Colors'
 import {
     StyleSheet,
     Text,
@@ -21,6 +23,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
+const blueColor = AzulPrincipal()
 
 class Ajustes extends Component {
 
@@ -32,12 +35,12 @@ class Ajustes extends Component {
         };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         base.traerIdIdioma(this.okIdIdioma.bind(this))
     }
 
     okIdIdioma(id_idioma) {
-        this.setState({id_idioma: id_idioma, isLoading: false })
+        this.setState({ id_idioma: id_idioma, isLoading: false })
     }
 
     setIdioma(id_idioma) {
@@ -45,7 +48,7 @@ class Ajustes extends Component {
     }
 
     okSetIdIdioma(id_idioma) {
-        this.setState({id_idioma: id_idioma, isLoading: false })
+        this.setState({ id_idioma: id_idioma, isLoading: false })
         this.props.navigation.navigate("Actualizacion")
     }
 
@@ -54,48 +57,48 @@ class Ajustes extends Component {
             return 5
         }
     }
-    backgroundColor(id_flag){
+    backgroundColor(id_flag) {
         if (id_flag == this.state.id_idioma) {
-            return "#3399ff"
+            return blueColor
         }
     }
     botonFunciona(id_flag) {
         if (id_flag == this.state.id_idioma) {
             return true
         }
-        else{
+        else {
             return false
         }
     }
 
-    
+
     render() {
         if (this.state.isLoading) {
             return (
                 <View style={styles.NoItemsContainer}>
                     <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                    <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
+                    <ActivityIndicator size="large" color={blueColor} backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
                 </View>
             )
         } else {
             return (
                 <View style={[styles.NoItemsContainer]}>
                     <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-                    <View style={styles.NoItemsImageContainer}>
+                    <View style={[styles.NoItemsImageContainer, BlackShadowForBlack()]}>
                         <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
                     </View>
                     <View style={styles.LanguageView}>
-                    <View style={[styles.flagView, { borderWidth: this.borderColor(1), backgroundColor:  this.backgroundColor(1)}]}>
-                        <TouchableOpacity style={styles.flag} disabled={this.botonFunciona(1)} onPress={() => this.setIdioma(1)}>
-                            <Image style={styles.flagIcon} source={require('./Fotos/Logos/Flag_Spain.png')} />
-                            <Text style={styles.flagText}>Español</Text>
-                        </TouchableOpacity>
+                        <View style={[styles.flagView, { borderWidth: this.borderColor(1), backgroundColor: this.backgroundColor(1) }]}>
+                            <TouchableOpacity style={[styles.flag, BlackShadowForBlack()]} disabled={this.botonFunciona(1)} onPress={() => this.setIdioma(1)}>
+                                <Image style={styles.flagIcon} source={require('./Fotos/Logos/Flag_Spain.png')} />
+                                <Text style={styles.flagText}>Español</Text>
+                            </TouchableOpacity>
                         </View>
-                        <View style={[styles.flagView, { borderWidth: this.borderColor(2), backgroundColor:  this.backgroundColor(2)}]}>
-                        <TouchableOpacity style={styles.flag} disabled={this.botonFunciona(2)} onPress={() => this.setIdioma(2)}>
-                            <Image style={styles.flagIcon} source={require('./Fotos/Logos/Flag_Ingles.png')} />
-                            <Text style={styles.flagText}>English</Text>
-                        </TouchableOpacity>
+                        <View style={[styles.flagView, { borderWidth: this.borderColor(2), backgroundColor: this.backgroundColor(2) }]}>
+                            <TouchableOpacity style={[styles.flag, BlackShadowForBlack()]} disabled={this.botonFunciona(2)} onPress={() => this.setIdioma(2)}>
+                                <Image style={styles.flagIcon} source={require('./Fotos/Logos/Flag_Ingles.png')} />
+                                <Text style={styles.flagText}>English</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                     <AdMobBanner
@@ -130,23 +133,20 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     NoItemsImageContainer: {
-        height: height * 0.55,
-        width: height * 0.50,
-        marginBottom: height * 0.028,
-        marginTop: height * 0.028,
-        justifyContent: "center",
-        alignSelf: "center",
-        backgroundColor: 'black',
-        borderWidth: 4,
-        borderRadius: 10,
+        flex: 0.7,
+        padding: wp(5),
+        marginHorizontal: wp(5),
+        borderRadius: hp(1),
+        margin: wp(5),
+        alignItems: 'center',
+        backgroundColor: 'black'
     },
 
     NoItemsLogo: {
-        height: height * 0.45,
-        width: height * 0.45,
-        alignSelf: "center",
-        marginTop: hp(9),
-        marginBottom: hp(6.6)
+        flex: 1,
+        width: "100%",
+        height: "100%",
+        resizeMode: 'contain',
     },
     NoItems: {
         backgroundColor: "black",
@@ -178,13 +178,13 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         flexDirection: 'row'
     },
-    flagView:{
-        borderColor: "#3399ff",
+    flagView: {
+        borderColor: blueColor,
         borderRadius: 10
     },
     flag: {
         backgroundColor: "black",
-        borderColor: "#3399ff",
+        borderColor: blueColor,
         borderRadius: 10,
         padding: 10
     },
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     },
     flagText: {
         textAlign: "center",
-        color: "#3399ff",
+        color: blueColor,
     }
 })
 

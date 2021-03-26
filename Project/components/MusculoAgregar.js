@@ -8,6 +8,8 @@ import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
+import { BlackShadowForBlack, BlackShadow } from './Estilos/Shadows'
+import { AzulPrincipal } from './Estilos/Colors'
 import { FontAwesome } from '@expo/vector-icons';
 import { AdMobBanner } from 'expo-ads-admob';
 import {
@@ -26,6 +28,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 var { height, width } = Dimensions.get('window');
+const blueColor = AzulPrincipal()
 
 class MusculoAgregar extends Component {
 
@@ -61,7 +64,6 @@ class MusculoAgregar extends Component {
       minutos: 0,
       segundos: 0,
     };
-    var { height, width } = Dimensions.get('window');
     this.cargarEjercicios();
   }
 
@@ -77,7 +79,7 @@ class MusculoAgregar extends Component {
   //Setea los ejercicios y renderiza la screen
   okEjercicios(ejercicios) {
     if (ejercicios.length == 0) {
-      this.setState({ ejercicios: ejercicios, memory: ejercicios, favoritos: true});
+      this.setState({ ejercicios: ejercicios, memory: ejercicios, favoritos: true });
       base.traerIdIdioma(this.okIdIdioma.bind(this))
     } else {
       this.setState({
@@ -91,7 +93,7 @@ class MusculoAgregar extends Component {
   }
   okEjerciciosFavs(ejercicios, id_idioma) {
     if (ejercicios.length == 0) {
-      this.setState({ ejercicios: ejercicios, memory: ejercicios, favoritos: false});
+      this.setState({ ejercicios: ejercicios, memory: ejercicios, favoritos: false });
       base.traerIdIdioma(this.okIdIdioma.bind(this))
     } else {
       this.setState({
@@ -220,8 +222,23 @@ class MusculoAgregar extends Component {
   setModalRepeticionesVisible(visible) {
     var contadorRepeticiones = []
     contadorRepeticiones.length = parseInt(this.state.series)
-    for (var i = 0; i < parseInt(this.state.series); i++) {
-      contadorRepeticiones[i] = (i + 1)
+    var primerFila = []
+    if (parseInt(this.state.series) < 4) {
+      for (var i = 0; i < parseInt(this.state.series); i++) {
+        primerFila.push(i + 1)
+      }
+      contadorRepeticiones.push(primerFila)
+    }
+    else {
+      var segundaFila = []
+      for (var i = 0; i < 4; i++) {
+        primerFila.push(i + 1)
+      }
+      contadorRepeticiones.push(primerFila)
+      for (var i = 4; i < parseInt(this.state.series); i++) {
+        segundaFila.push(i + 1)
+      }
+      contadorRepeticiones.push(segundaFila)
     }
     this.setState({ modalSeriesVisible: !visible, modalRepeticionesVisible: visible, contadorRepeticiones: contadorRepeticiones })
   }
@@ -284,14 +301,14 @@ class MusculoAgregar extends Component {
       return (
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-          <ActivityIndicator size="large" color="#3399ff" backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
+          <ActivityIndicator size="large" color={blueColor} backgroundColor=' #616161' style={{ flex: 2 }}></ActivityIndicator>
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-          <View>
+          <View style={BlackShadowForBlack()} >
             <SearchBar
               placeholder={ExportadorFrases.Search(this.state.id_idioma)}
               platform='ios'
@@ -305,35 +322,28 @@ class MusculoAgregar extends Component {
             />
           </View>
           <ScrollView>
-            <TouchableOpacity onPress={() => { this.cargarEjercicios() }} style={styles.favoritos}>
-              <Image style={styles.StarImage} source={this.queEstrella()} />
+            <TouchableOpacity onPress={() => { this.cargarEjercicios() }} style={[styles.starButton, BlackShadow()]}>
+              <Image style={styles.starImage} source={this.queEstrella()} />
             </TouchableOpacity>
-            <FlatList
-              style={styles.contentList}
-              data={this.state.ejercicios.sort((a, b) => a.nombre_ejercicio.localeCompare(b.nombre_ejercicio))}
-              initialNumToRender={50}
-              keyExtractor={(item) => {
-                return item.id_ejercicio.toString();
-              }}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
-                    <View style={{ flexDirection: "row" }} >
-                      <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
-                      <View style={styles.cardContent}>
-                        <Text style={styles.name}>{item.nombre_ejercicio}</Text>
-                        <Text style={styles.elemento}>{item.nombre_elemento}</Text>
-                      </View>
-                      <View style={styles.masita}>
-                        <FontAwesome name="plus" style={styles.plus}
-                          onPress={() => this.setModalSeriesVisible(true, item.id_ejercicio, item.nombre_ejercicio, item.id_musculo)}
-                          size={height * 0.055}
-                        /></View>
-                    </View>
-                  </TouchableOpacity>
-                )
-              }
-              } />
+            {this.state.ejercicios.map((item, itemPos) => (
+              <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
+                <View style={styles.imageContainer}>
+                  <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
+                </View>
+                <View style={styles.cardContent}>
+                  <Text style={styles.name}>{item.nombre_ejercicio}</Text>
+                  <Text style={styles.elemento}>{item.nombre_elemento}</Text>
+                </View>
+                <View style={styles.plusContainer}>
+                  <FontAwesome name="plus"
+                    onPress={() => this.setModalSeriesVisible(true, item.id_ejercicio, item.nombre_ejercicio, item.id_musculo)}
+                    color={"white"}
+                    size={wp(8)}
+                  /></View>
+              </TouchableOpacity>
+            )
+            )
+            }
           </ScrollView>
           <View style={styles.bannerContainer}></View>
           <Modal
@@ -342,8 +352,8 @@ class MusculoAgregar extends Component {
             transparent={true}
             onRequestClose={() => this.setState({ modalSeriesVisible: false })}  >
             <View style={styles.modalSeries}>
-              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                <Text style={styles.modalTextSeries}>{ExportadorFrases.CantidadSeries(this.state.id_idioma)}</Text>
+            <Text style={styles.modalText}>{ExportadorFrases.CantidadSeries(this.state.id_idioma)}</Text>
+              <View style={styles.modal1}>
                 <RNPickerSelect
                   useNativeAndroidPickerStyle={false}
                   placeholder={{
@@ -367,7 +377,7 @@ class MusculoAgregar extends Component {
                     { label: '8', value: '8' },
                   ]}
                 />
-              </View>
+                </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={styles.modalButtonCancelar}>
                   <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
@@ -387,24 +397,26 @@ class MusculoAgregar extends Component {
 
             <View style={[{ height: height * this.state.modalRepeticionesHeigh }, styles.modalReps]}>
               <Text style={styles.modalText}>{ExportadorFrases.CantidadSeries(this.state.id_idioma)}</Text>
-              <FlatList
-                scrollEnabled={false}
-                contentContainerStyle={styles.contentList2}
-                data={this.state.contadorRepeticiones}
-                initialNumToRender={10}
-                numColumns={4}
-                keyExtractor={(item) => {
-                  return item;
-                }}
-                renderItem={({ item }) => {
-                  return (
-                    <View style={styles.containerInputReps}>
-                      <TextInput keyboardType={'numeric'} placeholder='Reps.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarRepeticiones(item, text)} value={this.state.repeticiones[parseInt(item - 1)]}></TextInput>
+              <View style={styles.modal1}>
+                  {this.state.contadorRepeticiones.map((array, arrayPos) => (
+                    <View style={{ flexDirection: "row"}}>
+                      {
+                        array.map((item, itemPos) => (
+                          <View style={styles.containerInputReps}>
+                            <TextInput
+                              keyboardType={'numeric'}
+                              placeholder='Reps.'
+                              style={styles.modalTextInputFont}
+                              multiline={true} maxLength={2}
+                              onChangeText={(text) => this.guardarRepeticiones(item, text)}
+                              value={this.state.repeticiones[parseInt(item - 1)]}>
+                            </TextInput>
+                          </View>
+                        )
+                        )}
                     </View>
-                  )
-                }
-                } />
-
+                  ))}
+              </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({ repeticiones: [] }) }} style={styles.modalButtonCancelar}>
                   <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
@@ -426,13 +438,13 @@ class MusculoAgregar extends Component {
               <Text style={styles.modalText}>{ExportadorFrases.CantidadTiempo(this.state.id_idioma)}</Text>
               <View style={styles.contentList3}>
                 <View style={styles.containerInputReps}>
-                  <TextInput keyboardType={'numeric'} placeholder='Mins.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarMinutos(parseInt(text))} value={this.state.minutos}></TextInput>
+                  <TextInput keyboardType={'numeric'} placeholder='Mins.' style={styles.modalTextInputFont} multiline={true} maxLength={2} onChangeText={(text) => this.guardarMinutos(parseInt(text))} value={this.state.minutos}></TextInput>
                 </View>
                 <View style={{ marginHorizontal: height * 0.02, justifyContent: "center" }}>
                   <Text>:</Text>
                 </View>
                 <View style={styles.containerInputReps}>
-                  <TextInput keyboardType={'numeric'} placeholder='Segs.' style={styles.textInput} multiline={true} maxLength={2} onChangeText={(text) => this.guardarSegundos(parseInt(text))} value={this.state.segundos}></TextInput>
+                  <TextInput keyboardType={'numeric'} placeholder='Segs.' style={styles.modalTextInputFont} multiline={true} maxLength={2} onChangeText={(text) => this.guardarSegundos(parseInt(text))} value={this.state.segundos}></TextInput>
                 </View>
               </View>
               <View style={styles.modal2}>
@@ -477,14 +489,23 @@ const styles = StyleSheet.create({
   },
   contentList2: {
     flexDirection: "row",
-    justifyContent: "center",
-    flexWrap: 'wrap'
+    justifyContent: "center"
   },
   contentList3: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: height * 0.02
+    alignItems: "center"
   },
+  modalText: {
+    color: 'white',
+    fontSize: wp(4),
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginTop: hp(2),
+  },
+
   bannerContainer: {
     height: height * 0.08,
     backgroundColor: 'black',
@@ -494,17 +515,18 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignSelf: 'center',
   },
-  textInput: {
-    color: '#3399ff',
-    fontSize: height * 0.028,
-    alignSelf: 'center'
+
+  containerInputReps: {
+    borderRadius: 11,
+    backgroundColor: 'white',
+    width: wp(15),
+    margin: wp(1),
+    padding: wp(1)
   },
-  textButton: {
-    color: 'white',
-    fontSize: height * 0.02,
-    alignSelf: 'center',
-    textAlign: 'center',
-    fontWeight: 'bold',
+  modalTextInputFont: {
+    color: blueColor,
+    fontSize: wp(4),
+    textAlign: "center"
   },
   bgImage: {
     flex: 1,
@@ -515,10 +537,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-  masita: {
-    alignItems: "center",
-    alignContent: 'center',
-    justifyContent: 'center',
+  plusContainer: {
+    flex: 0.4,
+    alignItems: 'center',
+    justifyContent: "center",
   },
   plus: {
     alignItems: "center",
@@ -527,96 +549,104 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("5"),
     color: 'white',
   },
+  card: {
+    flex: 1,
+    backgroundColor: "black",
+    marginHorizontal: wp(2),
+    paddingVertical: wp(1.5),
+    flexDirection: 'row'
+  },
   cardContent: {
-    marginLeft: height * 0.028,
-    paddingRight: 5,
-    width: wp("40"),
+    flex: 1,
+    paddingHorizontal: 5,
     justifyContent: 'center',
   },
-  image: {
-    width: wp("20"),
-    height: hp("11"),
-    borderWidth: 2,
-    borderColor: "#ebf0f7",
-    margin: 5,
-    marginRight: 5,
-    alignSelf: "center"
+  imageContainer: {
+    flex: 0.4,
+    margin: wp(2.5),
+    alignItems: 'center',
+    justifyContent: "center",
   },
-
-  card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-
-    marginLeft: height * 0.028,
-    marginRight: height * 0.028,
-    marginTop: height * 0.028,
-    backgroundColor: "black",
-    padding: 10,
-    flexDirection: 'row',
+  image: {
+    flex: 1,
+    height: wp(18),
+    width: wp(18),
+    borderWidth: 1.5,
+    borderColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    resizeMode: 'stretch',
+    overflow: 'hidden'
   },
 
   name: {
-    fontSize: height * 0.028,
-    color: "#3399ff",
+    fontSize: wp(5),
+    color: blueColor,
     fontWeight: 'bold'
   },
 
+  elemento: {
+    marginTop: 1,
+    fontSize: wp(3.5),
+    color: "white"
+  },
+
   modalSeries: {
-    height: height * 0.25,
-    width: width * 0.75,
+    flex: 1,
+    height: height * 0.22,
     position: 'absolute',
-    top: height * 0.33,
-    left: width * 0.13,
+    alignSelf: "center",
+    top: hp(40),
     borderColor: 'black',
     borderWidth: 2,
     backgroundColor: 'grey',
     shadowColor: 'black',
     shadowOpacity: 5.0,
     borderRadius: 22,
-    opacity: .95,
-    padding: 15
+    opacity: .95
   },
   modalReps: {
-    width: width * 0.75,
+    flex: 1,
     position: 'absolute',
-    top: height * 0.3,
-    left: width * 0.13,
+    alignSelf: "center",
+    top: hp(35),
     borderColor: 'black',
     borderWidth: 2,
     backgroundColor: 'grey',
     shadowColor: 'black',
     shadowOpacity: 5.0,
     borderRadius: 22,
-    opacity: .95,
-    padding: 15
+    opacity: .95
+  },
+  modal1: {
+    flex: 1,
+    flexDirection: "column",
+    alignSelf: "center",
+    justifyContent: "center"
   },
   modal2: {
     flexDirection: 'row',
     borderColor: 'black',
     borderTopWidth: 2,
     width: width * 0.74,
-    height: height * 0.08,
-    position: 'absolute',
-    bottom: 0,
-    justifyContent: "center"
+    height: hp(6),
+    opacity: .95
+  },
+  modalButtonCancelar: {
+    flex: 1,
+    justifyContent: 'center',
+    borderBottomLeftRadius: 22
+  },
+  modalButtonAceptar: {
+    flex: 1,
+    justifyContent: 'center',
+    borderLeftWidth: 2,
+    borderBottomRightRadius: 22
   },
   modalTextSeries: {
     color: 'white',
-    fontSize: height * 0.02,
-    alignSelf: 'center',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    marginBottom: height * 0.02
-  },
-  modalText: {
-    color: 'white',
-    fontSize: height * 0.02,
+    fontSize: wp(4),
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold',
@@ -624,11 +654,10 @@ const styles = StyleSheet.create({
 
   textButton: {
     color: 'white',
-    fontSize: height * 0.02,
+    fontSize: wp(4),
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold',
-    marginHorizontal: wp(0.2)
   },
 
   containerInputSeries: {
@@ -642,71 +671,40 @@ const styles = StyleSheet.create({
   containerInputSeriesIOS: {
     backgroundColor: 'white',
     borderRadius: 11,
-    height: height * 0.045,
-    width: width * 0.20,
+    width: wp(15),
+    padding: wp(2),
     alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    fontSize: height * 0.028,
-    color: '#3399ff',
-    marginTop: height * 0.019
+    fontSize: wp(4),
+    color: blueColor,
   },
   containerInputSeriesAndroid: {
     borderRadius: 11,
+    width: wp(15),
     height: height * 0.045,
     width: width * 0.4,
     alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    fontSize: height * 0.022,
-    color: '#3399ff',
-    margin: height * 0.005,
+    fontSize: wp(4),
+    color: blueColor,
+    padding: wp(2),
     backgroundColor: 'white'
   },
-  containerInputReps: {
-    marginTop: height * 0.038,
-    marginBottom: hp(0.5),
-    marginHorizontal: wp(0.8),
-    borderRadius: 11,
-    backgroundColor: 'white',
-    textAlign: 'center',
-    height: height * 0.045,
-    width: width * 0.15,
-  },
-  modalButtonCancelar: {
-    width: width * 0.37,
-    height: height * 0.0775,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomLeftRadius: 22
-  },
-  modalButtonAceptar: {
-    width: width * 0.37,
-    height: height * 0.0775,
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: "center",
-    borderLeftWidth: 2,
-    borderBottomRightRadius: 22
-  },
-  favoritos: {
-    height: hp("6"),
-    width: hp("6"),
+  starButton: {
+    height: wp("10"),
+    width: wp("10"),
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#3399ff',
+    backgroundColor: blueColor,
     borderRadius: 30,
     marginTop: 10
   },
-  StarImage: {
-    width: hp(4),
-    height: hp(4),
-  },
-  elemento: {
-    marginTop: 1,
-    fontSize: height * 0.02,
-    color: "white"
+  starImage: {
+    width: wp(7),
+    height: wp(7),
   },
 })
 

@@ -5,6 +5,9 @@ import ExportadorFrases from './Fotos/ExportadorFrases'
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorAds from './Fotos/ExportadorAds';
+import { BlackShadow, BlackShadowForBlack } from './Estilos/Shadows'
+import { AzulPrincipal } from './Estilos/Colors'
+import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
 import {
   StyleSheet,
   Text,
@@ -25,6 +28,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { AdMobInterstitial } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
+const colorAzul = AzulPrincipal();
 
 class RutinaModificable extends Component {
 
@@ -399,7 +403,7 @@ class RutinaModificable extends Component {
     }
   }
   guardarRutina() {
-    this.setState({isLoading: true, actualizando: true })
+    this.setState({ isLoading: true, actualizando: true })
     var aux = 0
     var rutinaNueva = { id_rutina: 0, nombre: '', imagen: require('./Fotos/Ejercicios/PECHO.png'), dias: '', favoritos: 1, rutina: [] }
     for (var i = 0; i < this.state.rutina.length; i++) {
@@ -428,7 +432,7 @@ class RutinaModificable extends Component {
     this.props.onPressCancelar();
   }
   borrarRutina() {
-    this.setState({modalBorrarVisible: false, isLoading: true, borrando: true})
+    this.setState({ modalBorrarVisible: false, isLoading: true, borrando: true })
     base.borrarRutina(this.state.id_rutina, this.okRutinaBorrada.bind(this))
   }
   okRutinaBorrada() {
@@ -437,40 +441,35 @@ class RutinaModificable extends Component {
 
   render() {
     if (this.state.isLoading || this.state.isLoadingIdioma) {
-      if(this.state.actualizando || this.state.borrando){
-      if (this.state.actualizando) {
-        return (
-          <View style={styles.container}>
-            <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-            <View style={styles.insideContainer} >
-              
-              <ActivityIndicator size="large" color="#3399ff" style={{}}></ActivityIndicator>
-
-              <View style={styles.slide1}>
-                <Text style={styles.slideText}>{ExportadorFrases.ActualizandoRutina(this.state.id_idioma)}</Text>
+      if (this.state.actualizando || this.state.borrando) {
+        if (this.state.actualizando) {
+          return (
+            <View style={styles.container}>
+              <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+              <View style={styles.insideContainer} >
+                <ActivityIndicator size="large" color="#3399ff" style={{}} />
+                <Text style={styles.slideText}>{ExportadorFrases.CreandoRutina(this.state.id_idioma)}</Text>
               </View>
             </View>
+          );
+        }
+        if (this.state.borrando) {
+          return (
+            <View style={styles.container}>
+              <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+              <View style={styles.insideContainer} >
 
-          </View>
-        );
-      }
-      if (this.state.borrando) {
-        return (
-          <View style={styles.container}>
-            <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-            <View style={styles.insideContainer} >
-              
-              <ActivityIndicator size="large" color="#3399ff" style={{}}></ActivityIndicator>
+                <ActivityIndicator size="large" color="#3399ff" style={{}}></ActivityIndicator>
 
-              <View style={styles.slide1}>
-                <Text style={styles.slideText}>{ExportadorFrases.BorrandoRutina(this.state.id_idioma)}</Text>
+                <View style={styles.slide1}>
+                  <Text style={styles.slideText}>{ExportadorFrases.BorrandoRutina(this.state.id_idioma)}</Text>
+                </View>
               </View>
-            </View>
 
-          </View>
-        );
+            </View>
+          );
+        }
       }
-    }
       else {
         return (
           <View style={styles.container}>
@@ -488,8 +487,8 @@ class RutinaModificable extends Component {
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           <ScrollView>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.TextContainer} maxLength={15} placeholder={this.props.navigation.getParam("nombre_rutina")} placeholderTextColor='black' onChangeText={(nombreNuevo) => this.setState({ nombreNuevo })} value={this.state.nombreNuevo}></TextInput>
-              <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: true }) }} style={styles.borrarTodo}>
+              <TextInput style={[styles.TextContainer, BlackShadow()]} maxLength={15} placeholder={"Nombre"} placeholderTextColor='black' onChangeText={(nombreNuevo) => this.setState({ nombreNuevo })} value={this.state.nombreNuevo}></TextInput>
+              <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: true }) }} style={[styles.roundButtonBorrar, BlackShadow()]}>
                 <AntDesign name="delete" size={height * 0.03} color="white" />
               </TouchableOpacity>
             </View>
@@ -510,17 +509,17 @@ class RutinaModificable extends Component {
                 var contadorCobinadosFlatlist = false
                 var rutinaLocal = this.state.rutina
                 return (
-                  <View style={styles.cuadraditos}>
+                  <View style={[styles.cuadraditos, BlackShadowForBlack()]}>
                     <DropDownItem key={1} contentVisible={false}
                       header={
                         <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                          <Text style={styles.detalleGenresTitles}>
+                          <Text style={styles.dropDownTitle}>
                             {ExportadorFrases.Dia(this.state.id_idioma)} {item}
                           </Text>
                           <TouchableOpacity onPress={() => {
                             this.touch(item);
-                          }} style={styles.fab}>
-                            <AntDesign name="plus" size={height * 0.028} color="white" />
+                          }} style={styles.roundButtonPlus}>
+                            <AntDesign name="plus" size={wp(5)} color="white" />
                           </TouchableOpacity>
                         </View>
                       }
@@ -542,15 +541,16 @@ class RutinaModificable extends Component {
                                   return (
                                     <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
-                                      <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <View style={styles.musculosLogoContainer}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
-                                          <View style={{ flexDirection: 'column', width: wp("60") }}>
-                                            <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
-                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
-                                          </View>
                                         </View>
+                                        <View style={styles.subTituloContainer}>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                        </View>
+                                        <View style={styles.roundButtonContainer}></View>
                                       </View>
                                     </TouchableOpacity>
                                   )
@@ -559,24 +559,24 @@ class RutinaModificable extends Component {
                                   return (
                                     <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
-                                      <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <View style={styles.musculosLogoContainer}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
-                                          <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                            <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
-                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
-                                          </View>
                                         </View>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                          <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
-                                            <AntDesign name="up" size={height * 0.02} color="white" />
+                                        <View style={styles.subTituloContainer}>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                        </View>
+                                        <View style={styles.roundButtonContainer}>
+                                          <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                            <AntDesign name="up" size={15} color="white" />
                                           </TouchableOpacity>
-                                          <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
-                                            <AntDesign name="down" size={height * 0.02} color="white" />
+                                          <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                            <AntDesign name="down" size={15} color="white" />
                                           </TouchableOpacity>
-                                          <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                            <AntDesign name="delete" size={height * 0.022} color="white" />
+                                          <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
+                                            <AntDesign name="delete" size={17} color="white" />
                                           </TouchableOpacity>
                                         </View>
                                       </View>
@@ -587,24 +587,24 @@ class RutinaModificable extends Component {
                                 return (
                                   <TouchableOpacity style={styles.cuadraditosDeAdentro}
                                     onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
-                                    <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <View style={styles.musculosLogoContainer}>
                                         <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
-                                        <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                          <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
-                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
-                                        </View>
                                       </View>
-                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                          <AntDesign name="up" size={height * 0.02} color="white" />
+                                      <View style={styles.subTituloContainer}>
+                                        <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                        <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                        <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                      </View>
+                                      <View style={styles.roundButtonContainer}>
+                                        <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                          <AntDesign name="up" size={15} color="white" />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                          <AntDesign name="down" size={height * 0.02} color="white" />
+                                        <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                          <AntDesign name="down" size={15} color="white" />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                          <AntDesign name="delete" size={height * 0.022} color="white" />
+                                        <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
+                                          <AntDesign name="delete" size={17} color="white" />
                                         </TouchableOpacity>
                                       </View>
                                     </View>
@@ -618,15 +618,16 @@ class RutinaModificable extends Component {
                                   return (
                                     <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
-                                      <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <View style={styles.musculosLogoContainer}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
-                                          <View style={{ flexDirection: 'column', width: wp("60") }}>
-                                            <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
-                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Tiempo(this.state.id_idioma)}:{"\n"}{item.tiempo}</Text>
-                                          </View>
                                         </View>
+                                        <View style={styles.subTituloContainer}>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                        </View>
+                                        <View style={styles.roundButtonContainer}></View>
                                       </View>
                                     </TouchableOpacity>
                                   )
@@ -635,24 +636,24 @@ class RutinaModificable extends Component {
                                   return (
                                     <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
-                                      <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <View style={styles.musculosLogoContainer}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
-                                          <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                            <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
-                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                            <Text style={styles.subsEjercicio}>{ExportadorFrases.Tiempo(this.state.id_idioma)}:{"\n"}{item.tiempo}</Text>
-                                          </View>
                                         </View>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                          <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
-                                            <AntDesign name="up" size={height * 0.02} color="white" />
+                                        <View style={styles.subTituloContainer}>
+                                          <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                        </View>
+                                        <View style={styles.roundButtonContainer}>
+                                          <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                            <AntDesign name="up" size={15} color="white" />
                                           </TouchableOpacity>
-                                          <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.fab}>
-                                            <AntDesign name="down" size={height * 0.02} color="white" />
+                                          <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                            <AntDesign name="down" size={15} color="white" />
                                           </TouchableOpacity>
-                                          <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                            <AntDesign name="delete" size={height * 0.022} color="white" />
+                                          <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
+                                            <AntDesign name="delete" size={17} color="white" />
                                           </TouchableOpacity>
                                         </View>
                                       </View>
@@ -663,24 +664,24 @@ class RutinaModificable extends Component {
                                 return (
                                   <TouchableOpacity style={styles.cuadraditosDeAdentro}
                                     onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
-                                    <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
-                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                      <View style={styles.musculosLogoContainer}>
                                         <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
-                                        <View style={{ flexDirection: 'column', width: wp("33") }}>
-                                          <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
-                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Tiempo(this.state.id_idioma)}:{"\n"}{item.tiempo}</Text>
-                                        </View>
                                       </View>
-                                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                          <AntDesign name="up" size={height * 0.02} color="white" />
+                                      <View style={styles.subTituloContainer}>
+                                        <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
+                                        <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
+                                        <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                      </View>
+                                      <View style={styles.roundButtonContainer}>
+                                        <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                          <AntDesign name="up" size={15} color="white" />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio) }} style={styles.fab}>
-                                          <AntDesign name="down" size={height * 0.02} color="white" />
+                                        <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                          <AntDesign name="down" size={15} color="white" />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio), this.setState({ isLoading: true }) }} style={styles.fab}>
-                                          <AntDesign name="delete" size={height * 0.022} color="white" />
+                                        <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
+                                          <AntDesign name="delete" size={17} color="white" />
                                         </TouchableOpacity>
                                       </View>
                                     </View>
@@ -698,17 +699,17 @@ class RutinaModificable extends Component {
             ******************************Ya no Mas*********************************
             **************************************************************************** */}
 
-            <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
-              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.setState({ modalBorrarVisible: true }) }}>
-                <Text style={styles.screenButtonText}>
+            <View style={{ flexDirection: "row", justifyContent: 'space-around', height: hp("11") }}>
+              <BlueParallelButton onPress={() => { this.setState({ modalBorrarVisible: true }) }}>
+                <BlackButtonText>
                   {ExportadorFrases.Borrar(this.state.id_idioma)}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.guardarButton} onPress={() => { this.guardarRutina() }}>
-                <Text style={styles.screenButtonText}>
+                </BlackButtonText>
+              </BlueParallelButton>
+              <BlueParallelButton onPress={() => { this.guardarRutina() }}>
+                <BlackButtonText>
                   {ExportadorFrases.Guardar(this.state.id_idioma)}
-                </Text>
-              </TouchableOpacity>
+                </BlackButtonText>
+              </BlueParallelButton>
             </View>
           </ScrollView>
           <Modal
@@ -717,18 +718,18 @@ class RutinaModificable extends Component {
             transparent={true}
             onRequestClose={() => this.setState({ modalBorrarVisible: false })}  >
 
-            <View style={styles.modal}>
-              <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                <Text style={styles.textButton}>{ExportadorFrases.BorrarRutina(this.state.id_idioma)} "{this.state.nombre}"</Text>
+            <View style={[styles.modal, BlackShadow()]}>
+              <View style={styles.modal1}>
+                <Text style={styles.modalText}>{ExportadorFrases.BorrarRutina(this.state.id_idioma)} "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
 
-                <TouchableOpacity onPress={() => { this.setState({modalBorrarVisible: true})}} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
+                <TouchableOpacity onPress={() => { this.setState({ modalBorrarVisible: false }) }} style={styles.modalButtonCancelar}>
+                  <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => this.borrarRutina()} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Borrar(this.state.id_idioma)}</Text>
+                  <WhiteModalText>{ExportadorFrases.Borrar(this.state.id_idioma)}</WhiteModalText>
 
                 </TouchableOpacity>
               </View>
@@ -739,18 +740,18 @@ class RutinaModificable extends Component {
             visible={this.state.modalBorrarTodoVisible}
             transparent={true}
             onRequestClose={() => this.setState({ modalBorrarTodoVisible: false })}  >
-            <View style={styles.modal}>
-              <View style={{ flexDirection: 'column', marginTop: height * 0.05 }}>
-                <Text style={styles.textButton}>{ExportadorFrases.BorrarEjerciciosRutina(this.state.id_idioma)} "{this.props.navigation.getParam("nombre_rutina")}"</Text>
+            <View style={[styles.modal, BlackShadow()]}>
+              <View style={styles.modal1}>
+                <Text style={styles.modalText}>{ExportadorFrases.BorrarEjerciciosRutina(this.state.id_idioma)} "{this.props.navigation.getParam("nombre_rutina")}"</Text>
               </View>
               <View style={styles.modal2}>
 
                 <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: false }) }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
+                  <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => this.borrarTodo()} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Borrar(this.state.id_idioma)}</Text>
+                  <WhiteModalText>{ExportadorFrases.Borrar(this.state.id_idioma)}</WhiteModalText>
 
                 </TouchableOpacity>
               </View>
@@ -795,41 +796,38 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    fontSize: height * 0.02,
     justifyContent: "space-between"
   },
   insideContainer: {
     flex: 1,
     justifyContent: 'center'
-},
-  slide1: {
+  },
+  insideContainer: {
     backgroundColor: "black",
-    padding: 10,
-    borderRadius: 10,
-    opacity: .95,
-    alignSelf: 'center',
-    marginTop: hp(5)
+    justifyContent: 'center',
+    alignSelf: "center",
+    borderRadius: 20,
+    padding: wp(5)
   },
   slideText: {
-    alignSelf: "center",
-    fontSize: 18,
+    marginTop: hp(2.5),
+    fontSize: wp(4),
     color: "#3399ff"
   },
 
   TextContainer: {
     backgroundColor: 'grey',
     borderRadius: 10,
-    paddingLeft: 10,
     width: wp("70"),
     height: hp("5.5"),
     margin: height * 0.028,
-    flexDirection: 'row',
-    alignItems: 'center',
+    alignSelf: 'center',
     fontWeight: 'bold',
-    fontSize: height * 0.02,
-    opacity: .95
+    fontSize: wp(3.5),
+    color: "black",
+    paddingLeft: wp(2.5)
   },
-  borrarTodo: {
+  roundButtonBorrar: {
     height: hp("6"),
     width: hp("6"),
     alignItems: 'center',
@@ -850,7 +848,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginTop: 2,
     paddingVertical: 10,
-    paddingLeft: 10,
     alignSelf: 'stretch',
     width: Dimensions.get('window').width * 0.88
   },
@@ -860,7 +857,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginTop: 2,
     paddingVertical: 10,
-    paddingLeft: 10,
     alignSelf: 'stretch',
     width: Dimensions.get('window').width * 0.88
   },
@@ -868,8 +864,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     backgroundColor: 'grey',
     marginBottom: 5,
-    paddingBottom: 10,
-    paddingLeft: 10,
+    paddingVertical: 10,
     alignSelf: 'stretch',
     width: Dimensions.get('window').width * 0.88
   },
@@ -882,24 +877,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
-
-  name: {
-    paddingTop: height * 0.018,
-    fontSize: height * 0.025,
-    flex: 1,
-    color: "#3399ff",
-    fontWeight: 'bold'
-  },
-  detalleGenresTitles: {
-    fontSize: height * 0.044,
+  dropDownTitle: {
+    fontSize: wp(7),
     margin: 10,
     alignSelf: "center",
-    color: '#3399ff',
+    color: colorAzul,
     fontWeight: 'bold'
   },
-  fab: {
-    width: hp("5"),
-    height: hp("5"),
+  roundButtonPlus: {
+    width: wp(8),
+    height: wp(8),
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3399ff',
+    borderRadius: 30,
+    marginRight: 10,
+  },
+  roundButton: {
+    width: wp(7.7),
+    height: wp(7.7),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#3399ff',
@@ -918,28 +914,37 @@ const styles = StyleSheet.create({
   DropDownItem: {
     alignItems: 'stretch'
   },
+  musculosLogoContainer: {
+    flex: 0.45,
+    margin: wp(2.5)
+  },
   musculosLogo: {
-    width: wp("10.5"),
-    height: hp("6"),
-    marginRight: 12,
-    resizeMode: 'cover',
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    resizeMode: 'contain',
+  },
+  subTituloContainer: {
+    flex: 1.2,
+    marginRight: wp(2.5)
+  },
+  roundButtonContainer: {
+    flex: 1.2,
+    flexDirection: 'row',
+    justifyContent: "flex-end",
+    alignItems: 'center'
   },
   nombreEjercicio: {
     fontWeight: 'bold',
-    fontSize: height * 0.021,
+    fontSize: wp(4),
     marginBottom: wp("1")
   },
   subsEjercicio: {
-    fontSize: height * 0.019,
-  },
-  screenButtonText: {
-    marginVertical: height * 0.02,
-    fontWeight: 'bold',
-    fontSize: height * 0.025
+    fontSize: wp(3.5),
   },
   //MODAAAAL
   modal: {
-    height: height * 0.22,
+    height: hp(20),
     width: width * 0.75,
     position: 'absolute',
     top: height * 0.4,
@@ -952,25 +957,27 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     opacity: .95
   },
+  modal1: {
+    flex: 1,
+    paddingHorizontal: wp(2),
+    justifyContent: "center"
+  },
   modal2: {
     flexDirection: 'row',
     borderColor: 'black',
     borderTopWidth: 2,
     width: width * 0.74,
-    height: height * 0.08,
-    position: 'absolute',
-    bottom: 0,
+    height: hp(6),
     opacity: .95
   },
-  textButton: {
+  modalText: {
     color: 'white',
-    fontSize: height * 0.02,
+    fontSize: wp(4),
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold',
-    padding: hp(1)
+    marginTop: hp(2),
   },
-
   modalTipoEjericios: {
     width: width * 0.80,
     height: height * 0.33,
@@ -995,21 +1002,21 @@ const styles = StyleSheet.create({
   },
   textButtonTipoEjercicios: {
     color: 'white',
-    fontSize: height * 0.028,
+    fontSize: wp(5),
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold'
   },
   modalButtonCancelar: {
     width: width * 0.37,
-    height: height * 0.0775,
+    height: hp(6),
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
-    width: width * 0.37,
-    height: height * 0.0775,
+    width: width * 0.366,
+    height: hp(6),
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: "center",

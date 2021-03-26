@@ -27,7 +27,7 @@ class GenerarBase extends Component {
                 existeBase(existe = false, null, null)
             },
             () => {
-                console.log("Correcto")
+                console.log("Correcto abrio base existente")
                 db._db.close();
                 existeBase(existe = true, configuracion.id_idioma, configuracion.version)
             }
@@ -40,8 +40,8 @@ class GenerarBase extends Component {
         FileSystem.downloadAsync(
             Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
             `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        ).then(db = SQLite.openDatabase('appgym.db'));
-        db._db.close()
+        ).then(db = SQLite.openDatabase('appgym.db'))
+        db._db.close();
             setTimeout(function(){
 
             //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
@@ -237,7 +237,13 @@ class GenerarBase extends Component {
             () => {
                 console.log("Correcto Ejercicios Propios")
                 db._db.close()
-                okEjercicios(ejercicios)
+                setTimeout(function(){
+
+                    //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
+        
+                    okEjercicios(ejercicios)
+              
+                  }, 500);
             }
         );
     }
@@ -263,7 +269,13 @@ class GenerarBase extends Component {
             () => {
                 console.log("Correcto Rutinas Propias")
                 db._db.close()
-                okRutinas(rutinas)
+                setTimeout(function(){
+
+                    //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
+        
+                    okRutinas(rutinas)
+              
+                  }, 500);
             }
         );
     }
@@ -289,7 +301,13 @@ class GenerarBase extends Component {
             () => {
                 console.log("Correcto Ejercicios Rutina Propio")
                 db._db.close()
-                okEjerciciosRutina(ejerciciosRutina)
+                setTimeout(function(){
+
+                    //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
+        
+                    okEjerciciosRutina(ejerciciosRutina)
+              
+                  }, 500);
             }
         );
     }
@@ -307,12 +325,19 @@ class GenerarBase extends Component {
             },
             error => {
                 console.log("error al traer configuracion propios")
+                console.log(error)
                 db._db.close()
             },
             () => {
                 console.log("Correcto Configuracion  Propio")
                 db._db.close()
-                okConfiguracion(configuracion)
+                setTimeout(function(){
+
+                    //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
+        
+                    okConfiguracion(configuracion)
+              
+                  }, 500);
             }
         );
     }
@@ -336,7 +361,13 @@ class GenerarBase extends Component {
             () => {
                 console.log("Correcto Perfil Propio")
                 db._db.close();
-                okPerfil(perfil)
+                setTimeout(function(){
+
+                    //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
+        
+                    okPerfil(perfil)
+              
+                  }, 500);
             }
         );
     }
@@ -344,6 +375,16 @@ class GenerarBase extends Component {
     // ********************M.Actualizar*********************
     // *****************************************************
 
+    borrarBase(okBaseBorrada){
+        FileSystem.deleteAsync(`${FileSystem.documentDirectory}/SQLite/appgym.db`)
+        setTimeout(function(){
+
+            //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
+
+            okBaseBorrada()
+      
+          }, 2000);
+    }
     actualizarEjercicios(ejercicios, ejerciciosRutina, maxId, okEjerciciosGuardados){
 
         let db = SQLite.openDatabase('appgym.db');
@@ -476,7 +517,7 @@ class GenerarBase extends Component {
 
         db.transaction(
             tx => {
-                tx.executeSql('UPDATE Configuracion set id_idioma = ?, version = ?', [configuracion.id_idioma, version])
+                tx.executeSql('UPDATE Configuracion set id_idioma = ?, version = ? WHERE id_configuracion = 1', [configuracion.id_idioma, version])
             },
             error => {
                 console.log(error)
@@ -721,7 +762,7 @@ class GenerarBase extends Component {
             tx => {
                 tx.executeSql('SELECT id_idioma, id_ejercicio, id_elemento, id_musculo, nombre_ejercicio, descripcion, ejecucion'
                     + ' FROM Ejercicios WHERE id_ejercicio = ? AND (id_idioma = (SELECT id_idioma FROM Configuracion) OR id_idioma = 0)', [id_ejercicio], function (tx, res) {
-                        ejercicio = res.rows._array;
+                        ejercicio = res.rows._array[0];
                     });
             },
             error => {
@@ -1380,7 +1421,7 @@ class GenerarBase extends Component {
     // *****************************************************
 
     //Trae todos los ejercicios que esten en favoritos en la screen EjerciciosFavs
-    traerEjerciciosFavoritos(okEjercicios) {
+    traerEjerciciosFavoritos(id_idioma, okEjercicios) {
 
         var ejercicios = []
 
@@ -1388,10 +1429,9 @@ class GenerarBase extends Component {
 
         db.transaction(
             tx => {
-                tx.executeSql('SELECT ej.id_idioma, ej.id_ejercicio, ej.id_musculo, ej.nombre_ejercicio, ej.favoritos, ej.modificable, el.nombre_elemento'
-                    + ' FROM Configuracion c JOIN Ejercicios ej ON c.id_idioma = ej.id_idioma JOIN Ejercicios_Elemento el ON ej.id_elemento = el.id_elemento'
-                    + ' WHERE el.id_idioma = c.id_idioma AND ej.favoritos = 1', [], function (tx, res) {
-                        
+                tx.executeSql('SELECT ej.id_idioma, el.id_idioma, ej.id_ejercicio, ej.id_musculo, ej.nombre_ejercicio, ej.favoritos, ej.modificable, el.nombre_elemento'
+                    + ' FROM Ejercicios ej JOIN Ejercicios_Elemento el ON ej.id_elemento = el.id_elemento'
+                    + ' WHERE el.id_idioma = ?  AND ej.favoritos = 1', [id_idioma], function (tx, res) {
                         for (let i = 0; i < res.rows.length; ++i) {
                             ejercicios.push(res.rows._array[i]);
                         }
@@ -1403,7 +1443,6 @@ class GenerarBase extends Component {
                 alert("Algo Salio Mal")
             },
             () => {
-                console.log(ejercicios)
                 console.log("Correcto")
                 db._db.close()
                 okEjercicios(ejercicios)

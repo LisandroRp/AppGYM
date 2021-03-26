@@ -6,6 +6,7 @@ import ExportadorEjercicios from './Fotos/ExportadorEjercicios';
 import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
+import { BlackShadowForBlack } from './Estilos/Shadows'
 import ExportadorAds from './Fotos/ExportadorAds';
 import {
   StyleSheet,
@@ -46,7 +47,7 @@ class Musculo extends Component {
 
   //Setea los ejercicios y renderiza la screen
   okEjercicios(ejercicios) {
-    
+    console.log(ejercicios)
     this.setState({
       ejercicios: ejercicios,
       id_idioma: ejercicios[0].id_idioma,
@@ -150,12 +151,11 @@ class Musculo extends Component {
       return ExportadorFrases.FavoritosHint(this.state.id_idioma)
     }
   }
-  marginSize(item){
-    if(item.id_ejercicio !=  this.state.ejercicios[this.state.ejercicios.length-1].id_ejercicio){
-      
-      return {marginTop: height * 0.028}
-    }else{
-      return {marginBottom: height * 0.028, marginTop: height * 0.028}
+  marginSize(item) {
+    if (item.id_ejercicio != this.state.ejercicios[this.state.ejercicios.length - 1].id_ejercicio) {
+      return { marginTop: hp(2) }
+    } else {
+      return { marginBottom: hp(2), marginTop: hp(2) }
     }
   }
 
@@ -171,9 +171,9 @@ class Musculo extends Component {
       return (
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-          <View>
+          <View style={BlackShadowForBlack()}>
             <SearchBar
-              placeholder= {ExportadorFrases.Search(this.state.id_idioma)+"..."}
+              placeholder={ExportadorFrases.Search(this.state.id_idioma) + "..."}
               platform='ios'
               onChangeText={value => this.searchEjercicio(value)}
               value={this.state.value}
@@ -194,32 +194,30 @@ class Musculo extends Component {
             }}
             renderItem={({ item }) => {
               return (
-                <View>
-                <TouchableOpacity style={[this.marginSize(item), styles.card]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio,this.state.id_idioma, item.modificable)}>
-                  <View style={{ flexDirection: "row" }} >
+                <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, this.state.id_idioma, item.modificable)}>
+                  <View style={styles.imageContainer}>
                     <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
-                    <View style={styles.cardContent}>
-                      <Text style={styles.name}>{item.nombre_ejercicio}</Text>
-                      <Text style={styles.elemento}>{item.nombre_elemento}</Text>
-                    </View>
-                    <View style={styles.ViewEstrella} >
-                      <TouchableOpacity
-                        accessible={true}
-                        accessibilityLabel={this.favoritosLabel(item.favoritos)}
-                        accessibilityHint={this.favoritosHint(item.favoritos)}
-                        onPress={() => { this.favear(item.id_ejercicio) }}>
-                        <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
-                      </TouchableOpacity>
-                    </View>
+                  </View>
+                  <View style={styles.cardContent}>
+                    <Text style={styles.name}>{item.nombre_ejercicio}</Text>
+                    <Text style={styles.elemento}>{item.nombre_elemento}</Text>
+                  </View>
+                  <View style={styles.starContainer} >
+                    <TouchableOpacity
+                      accessible={true}
+                      accessibilityLabel={this.favoritosLabel(item.favoritos)}
+                      accessibilityHint={this.favoritosHint(item.favoritos)}
+                      onPress={() => { this.favear(item.id_ejercicio) }}>
+                      <Image style={styles.starImage} source={this.favoritos(item.favoritos)} />
+                    </TouchableOpacity>
                   </View>
                 </TouchableOpacity>
-                </View>
               )
             }
             } />
-            <View style={styles.bannerContainer}></View>
+          <View style={styles.bannerContainer}></View>
           <AdMobBanner
-          
+
             accessible={true}
             accessibilityLabel={"Banner"}
             accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
@@ -266,61 +264,59 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     resizeMode: 'cover'
   },
+  card: {
+    flex: 1,
+    backgroundColor: "black",
+    marginHorizontal: wp(2),
+    paddingVertical: wp(1.5),
+    flexDirection: 'row'
+  },
   cardContent: {
-    marginLeft: height * 0.028,
-    paddingRight: 5,
-    width: wp("40"),
+    flex: 1,
+    paddingHorizontal: 5,
     justifyContent: 'center',
   },
-  image: {
-    width: wp("20"),
-    height: hp("11"),
-    borderWidth: 2,
-    borderColor: "#ebf0f7",
-    margin: 5,
-    marginRight: 5,
-    alignSelf: "center"
+  imageContainer: {
+    flex: 0.4,
+    margin: wp(2.5),
+    alignItems: 'center',
+    justifyContent: "center",
   },
-
-  card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-
-    marginLeft: height * 0.028,
-    marginRight: height * 0.028,
-    //marginBottom: height * 0.028,
-    backgroundColor: "black",
-    padding: 10,
-    flexDirection: 'row',
+  image: {
+    flex: 1,
+    height: wp(18),
+    width: wp(18),
+    borderWidth: 1.5,
+    borderColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    resizeMode: 'stretch',
+    overflow: 'hidden'
   },
 
   name: {
-    fontSize: height * 0.028,
+    fontSize: wp(5),
     color: "#3399ff",
     fontWeight: 'bold'
   },
 
   elemento: {
     marginTop: 1,
-    fontSize: height * 0.02,
+    fontSize: wp(3.5),
     color: "white"
   },
 
-  StarImage: {
-    width: hp(5.5),
-    height: hp(5.5),
-  },
-  ViewEstrella: {
+  starContainer: {
+    flex: 0.4,
     alignItems: 'center',
     justifyContent: "center",
-    paddingHorizontal: wp("5")
-  }
+  },
+
+  starImage: {
+    width: hp(4.5),
+    height: hp(4.5),
+  },
 })
 
 export default withNavigation(Musculo);

@@ -4,6 +4,7 @@ import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorAds from './Fotos/ExportadorAds'
 import { withNavigation } from 'react-navigation';
+import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
 import {
   StyleSheet,
   Text,
@@ -22,6 +23,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { AdMobInterstitial } from 'expo-ads-admob';
+import { BlackShadow } from './Estilos/Shadows';
 
 
 var { height, width } = Dimensions.get('window');
@@ -49,7 +51,7 @@ class EjerciciosNew extends Component {
   }
 
   okIdIdioma(id_idioma) {
-    this.setState({id_idioma: id_idioma, isLoading: false})
+    this.setState({ id_idioma: id_idioma, isLoading: false })
   }
 
   showInterstitial = async () => {
@@ -89,22 +91,18 @@ class EjerciciosNew extends Component {
 
   render() {
     if (this.state.isLoading) {
-      if(this.state.actualizando){
+      if (this.state.actualizando) {
         return (
           <View style={styles.container}>
             <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-            <View style={styles.insideContainer} >
-              
-              <ActivityIndicator size="large" color="#3399ff" style={{}}></ActivityIndicator>
-
-              <View style={styles.slide1}>
-                <Text style={styles.slideText}>{ExportadorFrases.CreandoEjercicio(this.state.id_idioma)}</Text>
-              </View>
+            <View style={styles.insideContainer}>
+              <ActivityIndicator size="large" color="#3399ff" style={{}} />
+              <Text style={styles.slideText}>{ExportadorFrases.CreandoEjercicio(this.state.id_idioma)}</Text>
             </View>
           </View>
         );
       }
-      else{
+      else {
         return (
           <View style={styles.container}>
             <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
@@ -113,105 +111,105 @@ class EjerciciosNew extends Component {
         );
       }
     } else {
-    return (
-      <View style={styles.container}>
-        <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
-        <ScrollView>
+      return (
+        <View style={styles.container}>
+          <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
+          <ScrollView>
 
-          <KeyboardAvoidingView style={[styles.inputContainer]} behavior="position" keyboardVerticalOffset={height * 0.008} enabled>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-              <View style={styles.inputContainerView}>
-                <RNPickerSelect
-                  useNativeAndroidPickerStyle={false}
-                  placeholder={{
-                    label: ExportadorFrases.MusculoEjercicio(this.state.id_idioma),
-                    value: '0',
-                  }}
-                  placeholderTextColor="black"
-                  style={{
-                    inputIOS: styles.PikerIos,
-                    inputAndroid: styles.PikerAndroid
-                  }}
-                  onValueChange={(value) => this.setState({ id_musculo: value })}
-                  items={[
-                    { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 1), value: 1 },
-                    { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 2), value: 2 },
-                    { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 3), value: 3 },
-                    { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 4), value: 4 },
-                    { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 5), value: 5 },
-                    { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 6), value: 6 },
-                    { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 7), value: 7 },
-                    { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 8), value: 8 },
-                  ]}
-                />
-                <RNPickerSelect
-                  useNativeAndroidPickerStyle={false}
-                  placeholder={{
-                    label: ExportadorFrases.ElementoEjercicio(this.state.id_idioma),
-                    value: '0',
-                  }}
-                  placeholderTextColor="black"
-                  style={{
-                    inputIOS: styles.PikerIos,
-                    inputAndroid: styles.PikerAndroid
-                  }}
-                  onValueChange={(value) => this.setState({ id_elemento: value })}
-                  items={[
-                    { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 1), value: 1 },
-                    { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 2), value: 2 },
-                    { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 3), value: 3 },
-                    { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 4), value: 4 },
-                    { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 5), value: 5 },
-                  ]}
-                />
-                <TextInput style={styles.TextContainer} maxLength={33} placeholder= {ExportadorFrases.Nombre(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
-                <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder={ExportadorFrases.Descripcion(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(descripcion) => this.setState({ descripcion })} value={this.state.descripcion}></TextInput>
-                <TextInput style={styles.TextContainerLarge} multiline={true} maxLength={222} placeholder={ExportadorFrases.Ejecucion(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(ejecucion) => this.setState({ ejecucion })} value={this.state.ejecucion}></TextInput>
+            <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={height * 0.008} enabled>
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View>
+                  <RNPickerSelect
+                    useNativeAndroidPickerStyle={false}
+                    placeholder={{
+                      label: ExportadorFrases.MusculoEjercicio(this.state.id_idioma),
+                      value: '0',
+                    }}
+                    placeholderTextColor="black"
+                    style={{
+                      inputIOS: [styles.PikerIos, BlackShadow()],
+                      inputAndroid: [styles.PikerAndroid, BlackShadow()]
+                    }}
+                    onValueChange={(value) => this.setState({ id_musculo: value })}
+                    items={[
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 1), value: 1 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 2), value: 2 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 3), value: 3 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 4), value: 4 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 5), value: 5 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 6), value: 6 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 7), value: 7 },
+                      { label: ExportadorFrases.MusculoEjercicioOpciones(this.state.id_idioma, 8), value: 8 },
+                    ]}
+                  />
+                  <RNPickerSelect
+                    useNativeAndroidPickerStyle={false}
+                    placeholder={{
+                      label: ExportadorFrases.ElementoEjercicio(this.state.id_idioma),
+                      value: '0',
+                    }}
+                    placeholderTextColor="black"
+                    style={{
+                      inputIOS: [styles.PikerIos, BlackShadow()],
+                      inputAndroid: [styles.PikerAndroid, BlackShadow()]
+                    }}
+                    onValueChange={(value) => this.setState({ id_elemento: value })}
+                    items={[
+                      { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 1), value: 1 },
+                      { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 2), value: 2 },
+                      { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 3), value: 3 },
+                      { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 4), value: 4 },
+                      { label: ExportadorFrases.ElementoEjercicioOpciones(this.state.id_idioma, 5), value: 5 },
+                    ]}
+                  />
+                  <TextInput style={[styles.TextContainer, BlackShadow()]} maxLength={33} placeholder={ExportadorFrases.Nombre(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(nombre) => this.setState({ nombre })} value={this.state.nombre}></TextInput>
+                  <TextInput style={[styles.TextContainerLarge, BlackShadow()]} multiline={true} maxLength={222} placeholder={ExportadorFrases.Descripcion(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(descripcion) => this.setState({ descripcion })} value={this.state.descripcion}></TextInput>
+                  <TextInput style={[styles.TextContainerLarge, BlackShadow()]} multiline={true} maxLength={222} placeholder={ExportadorFrases.Ejecucion(this.state.id_idioma)} placeholderTextColor='black' onChangeText={(ejecucion) => this.setState({ ejecucion })} value={this.state.ejecucion}></TextInput>
 
-                <View style={{ flexDirection: "row", justifyContent: 'center', height: hp("11") }}>
-                  <TouchableOpacity style={styles.guardarButton} onPress={() => { this.cancelarEjercicio() }}>
-                    <Text style={styles.screenButtonText}>
-                      {ExportadorFrases.Cancelar(this.state.id_idioma)}
-                </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.guardarButton} onPress={() => { this.botonGuardar() }}>
-                    <Text style={styles.screenButtonText}>
-                      {ExportadorFrases.Guardar(this.state.id_idioma)}
-                </Text>
-                  </TouchableOpacity>
+                  <View style={{ flexDirection: "row", justifyContent: 'space-around', height: hp("11") }}>
+                    <BlueParallelButton onPress={() => { this.cancelarEjercicio() }}>
+                      <BlackButtonText>
+                        {ExportadorFrases.Cancelar(this.state.id_idioma)}
+                      </BlackButtonText>
+                    </BlueParallelButton>
+                    <BlueParallelButton onPress={() => { this.botonGuardar() }}>
+                      <BlackButtonText>
+                        {ExportadorFrases.Guardar(this.state.id_idioma)}
+                      </BlackButtonText>
+                    </BlueParallelButton>
+                  </View>
+
                 </View>
+              </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+          </ScrollView>
+          <Modal
+            animationType="fade"
+            visible={this.state.modalGuardarVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalGuardarVisible: false })}  >
+
+            <View style={[styles.modal, BlackShadow()]}>
+              <View style={styles.modal1}>
+                <Text style={styles.modalText}>{ExportadorFrases.CrearEjercicioModal(this.state.id_idioma)} "{this.state.nombre}"?</Text>
+              </View>
+              <View style={styles.modal2}>
+
+                <TouchableOpacity onPress={() => { this.setState({ modalGuardarVisible: false }) }} style={styles.modalButtonCancelar}>
+                  <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => { this.guardarEjercicio(), this.showInterstitial() }} style={styles.modalButtonAceptar}>
+                  <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
+                </TouchableOpacity>
 
               </View>
-            </TouchableWithoutFeedback>
-          </KeyboardAvoidingView>
-        </ScrollView>
-        <Modal
-          animationType="fade"
-          visible={this.state.modalGuardarVisible}
-          transparent={true}
-          onRequestClose={() => this.setState({ modalGuardarVisible: false })}  >
-
-          <View style={styles.modal}>
-            <View style={{ flexDirection: 'column', marginTop: height * 0.03 }}>
-              <Text style={styles.textButton}>{ExportadorFrases.CrearEjercicioModal(this.state.id_idioma)} "{this.state.nombre}"?</Text>
             </View>
-            <View style={styles.modal2}>
-
-              <TouchableOpacity onPress={() => { this.setState({ modalGuardarVisible: false }) }} style={styles.modalButtonCancelar}>
-                <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => {this.guardarEjercicio(), this.showInterstitial()}} style={styles.modalButtonAceptar}>
-                <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
-              </TouchableOpacity>
-
-            </View>
-          </View>
-        </Modal>
-      </View>
-    );
+          </Modal>
+        </View>
+      );
+    }
   }
-}
 }
 const resizeMode = 'center';
 const styles = StyleSheet.create({
@@ -221,68 +219,54 @@ const styles = StyleSheet.create({
     backgroundColor: "grey"
   },
   insideContainer: {
-    flex: 1,
-    justifyContent: 'center'
-},
-  slide1: {
     backgroundColor: "black",
-    padding: 10,
-    borderRadius: 10,
-    opacity: .95,
-    alignSelf: 'center',
-    marginTop: hp(5)
+    justifyContent: 'center',
+    alignSelf: "center",
+    borderRadius: 20,
+    padding: wp(5)
   },
   slideText: {
-    alignSelf: "center",
-    fontSize: 18,
+    marginTop: hp(2.5),
+    fontSize: wp(4),
     color: "#3399ff"
-  },
-
-  inputContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  inputContainerView: {
-    flexDirection: 'column',
-    alignItems: 'center',
   },
   TextContainer: {
     backgroundColor: 'grey',
     borderRadius: 10,
-    paddingLeft: 10,
+    paddingLeft: wp(2.5),
     width: wp("70"),
     height: hp("5.5"),
     margin: height * 0.028,
-    flexDirection: 'row',
     alignItems: 'center',
     fontWeight: 'bold',
-    fontSize: height * 0.02
+    fontSize: wp(3.8),
+    alignSelf: "center"
   },
   TextContainerLarge: {
     backgroundColor: 'grey',
     borderRadius: 10,
-    paddingLeft: 10,
+    paddingLeft: wp(2.5),
     width: wp("70"),
     height: hp("15"),
     margin: height * 0.028,
-    flexDirection: 'row',
     alignItems: 'center',
     fontWeight: 'bold',
-    fontSize: height * 0.02
+    fontSize: wp(3.8),
+    alignSelf: "center"
   },
   PikerIos: {
-      backgroundColor: 'grey',
-      borderRadius: 10,
-      paddingLeft: 10,
-      margin: height * 0.028,
-      width: wp("70"),
-      height: hp("5.5"),
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignSelf: 'center',
-      fontWeight: 'bold',
-      fontSize: height * 0.02,
-      color: "black",
+    backgroundColor: 'grey',
+    borderRadius: 10,
+    paddingLeft: wp(2.5),
+    margin: height * 0.028,
+    width: wp("70"),
+    height: hp("5.5"),
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    fontSize: wp(3.8),
+    color: "black",
   },
   PikerAndroid: {
     backgroundColor: 'grey',
@@ -290,7 +274,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    paddingLeft: 10,
+    paddingLeft: wp(2.5),
     margin: height * 0.028,
     width: wp("70"),
     height: hp("5.5"),
@@ -298,7 +282,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     fontWeight: 'bold',
-    fontSize: height * 0.02,
+    fontSize: wp(3.8),
     color: "black",
   },
   bgImage: {
@@ -320,13 +304,13 @@ const styles = StyleSheet.create({
     opacity: .95
   },
   screenButtonText: {
-    marginVertical: height * 0.02,
+    marginVertical: wp(3.8),
     fontWeight: 'bold',
-    fontSize: height * 0.025
+    fontSize: wp(3.8)
   },
   //MODAAAAL
   modal: {
-    height: height * 0.22,
+    height: hp(20),
     width: width * 0.75,
     position: 'absolute',
     top: height * 0.4,
@@ -339,34 +323,37 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     opacity: .95
   },
+  modal1: {
+    flex: 1,
+    paddingHorizontal: wp(2),
+    justifyContent: "center"
+  },
   modal2: {
     flexDirection: 'row',
     borderColor: 'black',
     borderTopWidth: 2,
     width: width * 0.74,
-    height: height * 0.08,
-    position: 'absolute',
-    bottom: 0,
+    height: hp(6),
     opacity: .95
   },
-  textButton: {
+  modalText: {
     color: 'white',
-    fontSize: height * 0.02,
+    fontSize: wp(4),
     alignSelf: 'center',
     textAlign: 'center',
     fontWeight: 'bold',
-    padding: hp(1)
+    marginTop: hp(2),
   },
   modalButtonCancelar: {
     width: width * 0.37,
-    height: height * 0.0775,
+    height: hp(6),
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
-    width: width * 0.37,
-    height: height * 0.0775,
+    width: width * 0.366,
+    height: hp(6),
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: "center",
