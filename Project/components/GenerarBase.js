@@ -949,7 +949,6 @@ class GenerarBase extends Component {
     borrarEjercicio(id_ejercicio, okEjercicioBorrado) {
 
         const db = SQLite.openDatabase('appgym.db');
-        console.log(id_ejercicio)
 
         db.exec([{ sql: 'PRAGMA foreign_keys = ON;', args: [] }], false, () => console.log('Foreign keys turned on'));
 

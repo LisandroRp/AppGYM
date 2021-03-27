@@ -93,7 +93,6 @@ class RutinaNew extends Component {
     this.showInterstitialTiempo()
     try {
       const value = await AsyncStorage.getItem('rutina');
-      console.log(value)
       if (value !== null) {
         if (JSON.parse(value)[0].combinado) {
           var combinada1 = JSON.parse(value)[0]
