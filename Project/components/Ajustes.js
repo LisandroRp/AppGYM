@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
-import ExportadorCreadores from './Fotos/ExportadorCreadores';
-import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
-import ExportadorLogos from './Fotos/ExportadorLogos';
-import ExportadorAds from './Fotos/ExportadorAds';
-import { BlackShadowForBlack } from './Estilos/Shadows'
+import { BlackShadowForBlack } from './Estilos/Styles'
 import { AzulPrincipal } from './Estilos/Colors'
 import {
     StyleSheet,
@@ -20,7 +16,6 @@ import {
     Modal
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 const blueColor = AzulPrincipal()
@@ -43,13 +38,13 @@ class Ajustes extends Component {
         this.setState({ id_idioma: id_idioma, isLoading: false })
     }
 
-    setIdioma(id_idioma) {
-        base.setIdioma(id_idioma, this.okSetIdIdioma.bind(this))
+    setIdioma(id_idioma, nombre_idioma) {
+        base.setIdioma(id_idioma, nombre_idioma, this.okSetIdIdioma.bind(this))
     }
 
-    okSetIdIdioma(id_idioma) {
+    okSetIdIdioma(id_idioma, nombre_idioma) {
         this.setState({ id_idioma: id_idioma, isLoading: false })
-        this.props.navigation.navigate("Actualizacion")
+        this.props.navigation.navigate("Actualizacion", {id_idioma: id_idioma, nombre_idioma: nombre_idioma})
     }
 
     borderColor(id_flag) {
@@ -89,32 +84,18 @@ class Ajustes extends Component {
                     </View>
                     <View style={styles.LanguageView}>
                         <View style={[styles.flagView, { borderWidth: this.borderColor(1), backgroundColor: this.backgroundColor(1) }]}>
-                            <TouchableOpacity style={[styles.flag, BlackShadowForBlack()]} disabled={this.botonFunciona(1)} onPress={() => this.setIdioma(1)}>
+                            <TouchableOpacity style={[styles.flag, BlackShadowForBlack()]} disabled={this.botonFunciona(1)} onPress={() => this.setIdioma(1, "es")}>
                                 <Image style={styles.flagIcon} source={require('./Fotos/Logos/Flag_Spain.png')} />
                                 <Text style={styles.flagText}>Español</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={[styles.flagView, { borderWidth: this.borderColor(2), backgroundColor: this.backgroundColor(2) }]}>
-                            <TouchableOpacity style={[styles.flag, BlackShadowForBlack()]} disabled={this.botonFunciona(2)} onPress={() => this.setIdioma(2)}>
+                            <TouchableOpacity style={[styles.flag, BlackShadowForBlack()]} disabled={this.botonFunciona(2)} onPress={() => this.setIdioma(2, "en")}>
                                 <Image style={styles.flagIcon} source={require('./Fotos/Logos/Flag_Ingles.png')} />
                                 <Text style={styles.flagText}>English</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <AdMobBanner
-                        accessible={true}
-                        accessibilityLabel={"Banner"}
-                        accessibilityHint={ExportadorFrases.BannerHint(this.state.idioma)}
-                        style={styles.bottomBanner}
-                        adUnitID={ExportadorAds.Banner()}
-                        onDidFailToReceiveAdWithError={err => {
-                            console.log(err)
-                        }}
-                        onAdViewDidReceiveAd={() => {
-                            console.log("Ad Recieved");
-                        }}
-                        adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-                    />
                 </View>
             );
         }
@@ -124,10 +105,6 @@ class Ajustes extends Component {
 const resizeMode = 'center';
 const styles = StyleSheet.create({
 
-    bottomBanner: {
-        position: "absolute",
-        bottom: 0,
-    },
     NoItemsContainer: {
         backgroundColor: 'grey',
         flex: 1,

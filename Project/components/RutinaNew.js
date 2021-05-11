@@ -3,8 +3,7 @@ import base from './GenerarBase';
 import ExportadorFrases from './Fotos/ExportadorFrases'
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorLogos from './Fotos/ExportadorLogos';
-import ExportadorAds from './Fotos/ExportadorAds';
-import { BlackShadow, BlackShadowForBlack } from './Estilos/Shadows'
+import { BlackShadow, BlackShadowForBlack } from './Estilos/Styles'
 import { AzulPrincipal } from './Estilos/Colors'
 import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
 import { withNavigation } from 'react-navigation';
@@ -27,7 +26,6 @@ import { AntDesign } from '@expo/vector-icons';
 import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import { AdMobInterstitial } from 'expo-ads-admob';
 
 
 var { height, width } = Dimensions.get('window');
@@ -39,6 +37,7 @@ class RutinaNew extends Component {
     this.state = {
       nombre: '',
       id_tipo: '',
+      modalExisteVisible: false,
       modalGuardarVisible: false,
       modalBorrarTodoVisible: false,
       modalTipoEjercicioTodoVisible: false,
@@ -107,7 +106,8 @@ class RutinaNew extends Component {
             this.state.rutina.push(combinada2)
             this.termino()
           } else {
-            alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
+            //alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
+            this.setState({modalExisteVisible: true})
             this._storeData()
           }
         } else {
@@ -118,7 +118,8 @@ class RutinaNew extends Component {
             this.state.rutina.push(simple)
             this.termino()
           } else {
-            alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
+            //alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
+            this.setState({modalExisteVisible: true})
             this._storeData()
           }
         }
@@ -425,6 +426,14 @@ class RutinaNew extends Component {
     }
     this.setState({ modalGuardarVisible: true })
   }
+  repeticionesOTiempo(ejercicio, id_idioma){
+    if(ejercicio.repeticiones){
+      return (<Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(id_idioma)}: {"\n"}{ejercicio.repeticiones}</Text>)
+    }
+    else{
+      return (<Text style={styles.subsEjercicio}>{ExportadorFrases.Tiempo(id_idioma)}: {"\n"}{ejercicio.tiempo}</Text>)
+    }
+  }
 
   render() {
     if (this.state.isLoading) {
@@ -525,7 +534,7 @@ class RutinaNew extends Component {
                                   contadorCobinadosFlatlist = false
                                   return (
                                     <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
-                                      onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                      onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <View style={styles.musculosLogoContainer}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
@@ -533,7 +542,7 @@ class RutinaNew extends Component {
                                         <View style={styles.subTituloContainer}>
                                           <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
                                           <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                          {this.repeticionesOTiempo(item, this.state.id_idioma)}
                                         </View>
                                         <View style={styles.roundButtonContainer}></View>
                                       </View>
@@ -543,7 +552,7 @@ class RutinaNew extends Component {
                                   contadorCobinadosFlatlist = true
                                   return (
                                     <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
-                                      onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                      onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <View style={styles.musculosLogoContainer}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
@@ -551,7 +560,7 @@ class RutinaNew extends Component {
                                         <View style={styles.subTituloContainer}>
                                           <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
                                           <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                          {this.repeticionesOTiempo(item, this.state.id_idioma)}
                                         </View>
                                         <View style={styles.roundButtonContainer}>
                                           <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
@@ -571,7 +580,7 @@ class RutinaNew extends Component {
                               } else {
                                 return (
                                   <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                    onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                    onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                       <View style={styles.musculosLogoContainer}>
                                         <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
@@ -579,7 +588,7 @@ class RutinaNew extends Component {
                                       <View style={styles.subTituloContainer}>
                                         <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
                                         <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                        <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                        {this.repeticionesOTiempo(item, this.state.id_idioma)}
                                       </View>
                                       <View style={styles.roundButtonContainer}>
                                         <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
@@ -602,7 +611,7 @@ class RutinaNew extends Component {
                                   contadorCobinadosFlatlist = false
                                   return (
                                     <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
-                                      onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                      onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <View style={styles.musculosLogoContainer}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
@@ -610,7 +619,7 @@ class RutinaNew extends Component {
                                         <View style={styles.subTituloContainer}>
                                           <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
                                           <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                          {this.repeticionesOTiempo(item, this.state.id_idioma)}
                                         </View>
                                         <View style={styles.roundButtonContainer}></View>
                                       </View>
@@ -620,7 +629,7 @@ class RutinaNew extends Component {
                                   contadorCobinadosFlatlist = true
                                   return (
                                     <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
-                                      onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                      onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <View style={styles.musculosLogoContainer}>
                                           <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
@@ -628,7 +637,7 @@ class RutinaNew extends Component {
                                         <View style={styles.subTituloContainer}>
                                           <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
                                           <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                          <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                          {this.repeticionesOTiempo(item, this.state.id_idioma)}
                                         </View>
                                         <View style={styles.roundButtonContainer}>
                                           <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
@@ -648,7 +657,7 @@ class RutinaNew extends Component {
                               } else {
                                 return (
                                   <TouchableOpacity style={styles.cuadraditosDeAdentro}
-                                    onPress={() => this.props.onPressInfo(item.id_ejercicio)}>
+                                    onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                       <View style={styles.musculosLogoContainer}>
                                         <Image style={styles.musculosLogo} source={ExportadorLogos.traerLogo(item.id_musculo)} />
@@ -656,7 +665,7 @@ class RutinaNew extends Component {
                                       <View style={styles.subTituloContainer}>
                                         <Text style={styles.nombreEjercicio}>{item.nombre_ejercicio}</Text>
                                         <Text style={styles.subsEjercicio}>{ExportadorFrases.Series(this.state.id_idioma)}: {item.series}</Text>
-                                        <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
+                                        {this.repeticionesOTiempo(item, this.state.id_idioma)}
                                       </View>
                                       <View style={styles.roundButtonContainer}>
                                         <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
@@ -763,6 +772,23 @@ class RutinaNew extends Component {
               </View>
             </TouchableOpacity>
           </Modal>
+          <Modal
+            animationType="fade"
+            visible={this.state.modalExisteVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalExisteVisible: false })}  >
+
+            <View style={styles.modalExisteVisible}>
+            <View style={styles.modal1}>
+                <Text style={styles.modalText}>{ExportadorFrases.EjercicioRepetido(this.state.id_idioma)}</Text>
+              </View>
+              <View style={styles.modal2}>
+                <TouchableOpacity onPress={() => this.setState({ modalExisteVisible: false })} style={styles.modalExisteButtonAceptar}>
+                  <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
           <AwesomeAlert
             show={this.state.showAlert}
             showProgress={false}
@@ -845,7 +871,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: wp(3.5),
     color: "black",
-    textAlign: 'center'
   },
   ////////////////////////////////
   //////Piker
@@ -1005,15 +1030,28 @@ const styles = StyleSheet.create({
   },
   modal1: {
     flex: 1,
-    paddingHorizontal: wp(2),
+    paddingHorizontal: wp(2.5),
     justifyContent: "center"
   },
   modal2: {
     flexDirection: 'row',
     borderColor: 'black',
     borderTopWidth: 2,
-    width: width * 0.74,
     height: hp(6),
+    opacity: .95
+  },
+  modalExisteVisible: {
+    flex: 1,
+    height: height * 0.20,
+    position: 'absolute',
+    alignSelf: "center",
+    top: hp(40),
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22,
     opacity: .95
   },
   modalTipoEjericios: {
@@ -1068,7 +1106,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     borderLeftWidth: 2,
     borderBottomRightRadius: 22
-  }
+  },
+  modalExisteButtonAceptar: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+    borderBottomRightRadius: 22,
+    borderBottomLeftRadius: 22
+  },
 })
 
 

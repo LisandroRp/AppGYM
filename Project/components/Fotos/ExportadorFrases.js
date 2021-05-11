@@ -1458,7 +1458,17 @@ class ExportadorFrases extends Component {
                 return "Debe ingresar una cantidad de series"
         }
     }
+    MismoEjercicio(idioma) {
+        switch (idioma) {
 
+            case es:
+                return "No puedes combinar el mismo ejercicio"
+            case en:
+                return "You cannot combine the same exercise"
+            default:
+                return "No puedes combinar el mismo ejercicio"
+        }
+    }
     //**************************************** */
     //Ayudas de Google
     //**************************************** */

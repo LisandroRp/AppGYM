@@ -17,7 +17,8 @@ import {
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { withNavigation } from 'react-navigation';
 import * as Font from 'expo-font';
-import { BlackShadowForBlack } from './Estilos/Shadows';
+import { BlackShadowForBlack, marginTitlesPlataform } from './Estilos/Styles';
+import { BackgroundTitleImage } from './Estilos/PreMadeComponents';
 
 class EjercicioAgregar extends Component {
 
@@ -41,8 +42,8 @@ class EjercicioAgregar extends Component {
   }
   loadFont = async () => {
     await Font.loadAsync({
-      'font1': require('../assets/fonts/BebasNeue-Regular.ttf'),
-      'font2': require('../assets/fonts/BebasNeue-Bold.ttf'),
+      'font1': require('../assets/fonts/MorganFuente-Regular.ttf'),
+      'font2': require('../assets/fonts/MorganFuente-Bold.ttf'),
     });
     this.setState({ isLoadingFont: false })
   }
@@ -94,7 +95,10 @@ class EjercicioAgregar extends Component {
                     onPress={() => this.props.onPressGo(this.state.dia, item.id_musculo, item.nombre_musculo, this.state.id_tipo, this.state.combinado, this.state.ultimaPos)}
                     style={[styles.imageContainer, BlackShadowForBlack()]}>
                     <ImageBackground style={[styles.image, this.esUltimaFila(arrayPos, this.state.musculos.length - 1, itemPos)]} source={ExportadorEjercicios.queMusculo(item.id_musculo)}>
-                      <Text style={[styles.textImage, { fontFamily: 'font2' }]}>{item.nombre_musculo}</Text>
+                    <BackgroundTitleImage>
+                        <Text style={[styles.textImage, marginTitlesPlataform(),{ fontFamily: 'font2'}]}>{item.nombre_musculo}</Text>
+                      </BackgroundTitleImage>
+                      <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{item.nombre_musculo}</Text>
                     </ImageBackground>
                   </TouchableOpacity>
                 ))
@@ -122,7 +126,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    alignContent: 'center',
     resizeMode: 'stretch',
     overflow: 'hidden'
   },
@@ -137,10 +140,9 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: "#2A73E0",
     letterSpacing: wp(1),
-    fontWeight: 'bold',
     textShadowColor: 'black',
     textShadowOffset: { width: 2.2, height: 2.2 },
-    textShadowRadius: 0.1
+    textShadowRadius: 1
   }
 })
 

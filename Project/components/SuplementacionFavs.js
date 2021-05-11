@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorFrases from './Fotos/ExportadorFrases';
-import { BlackShadowForBlack, BlackShadow } from './Estilos/Shadows'
+import { BlackShadowForBlack, BlackShadow } from './Estilos/Styles'
 import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion';
 import {
   StyleSheet,
@@ -341,14 +341,16 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 0.4,
+    height: wp(22),
+    width: wp(22),
     margin: wp(2.5),
     alignItems: 'center',
     justifyContent: "center",
   },
   image: {
     flex: 1,
-    height: wp(20),
-    width: wp(20),
+    height: wp(22),
+    width: wp(22),
     borderWidth: 1.5,
     borderColor: 'white',
     justifyContent: 'center',
@@ -364,13 +366,12 @@ const styles = StyleSheet.create({
     color: "#2A73E0",
     letterSpacing: wp(0.5),
     padding: 1,
-    fontWeight: 'bold',
     textShadowColor: 'black',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 0.1
   },
   name: {
-    fontSize: wp(5),
+    fontSize: wp(4.4),
     color: "#3399ff",
     fontWeight: 'bold'
   },

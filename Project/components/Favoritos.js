@@ -14,7 +14,8 @@ import {
   ImageBackground
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { BlackShadowForBlack } from './Estilos/Shadows';
+import { BlackShadowForBlack, marginTitlesPlataform } from './Estilos/Styles';
+import { BackgroundTitleImage } from './Estilos/PreMadeComponents'
 
 class Favoritos extends Component {
 
@@ -29,20 +30,20 @@ class Favoritos extends Component {
       isLoadingFont: true,
     };
   }
-  componentDidMount = async() => {
+  componentDidMount = async () => {
     this.loadFont()
     base.traerIdIdioma(this.okIdIdioma.bind(this))
   }
-  loadFont = async() => {
+  loadFont = async () => {
     await Font.loadAsync({
-      'font1': require('../assets/fonts/BebasNeue-Regular.ttf'),
-      'font2': require('../assets/fonts/BebasNeue-Bold.ttf'),
+      'font1': require('../assets/fonts/MorganFuente-Regular.ttf'),
+      'font2': require('../assets/fonts/MorganFuente-Bold.ttf'),
     });
     this.setState({ isLoadingFont: false })
   }
 
-  okIdIdioma(id_idioma){
-    this.setState({id_idioma: id_idioma, isLoading: false})
+  okIdIdioma(id_idioma) {
+    this.setState({ id_idioma: id_idioma, isLoading: false })
   }
 
   render() {
@@ -60,19 +61,28 @@ class Favoritos extends Component {
 
           <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoRutinas()}>
             <ImageBackground style={styles.image} source={ExportadorMenus.Rutinas()} >
-              <Text style={[styles.textImage, { fontFamily: 'font2' }]}>{ExportadorFrases.Rutinas(this.state.id_idioma)}</Text>
+              <BackgroundTitleImage>
+                <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Rutinas(this.state.id_idioma)}</Text>
+              </BackgroundTitleImage>
+              <Text style={[styles.textImage, marginTitlesPlataform(),{ fontFamily: 'font2' }]}>{ExportadorFrases.Rutinas(this.state.id_idioma)}</Text>
             </ImageBackground>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoEjercicios()}>
             <ImageBackground style={styles.image} source={ExportadorMenus.Ejercicios()} >
-              <Text style={[styles.textImage, { fontFamily: 'font2' }]}>{ExportadorFrases.Ejercicios(this.state.id_idioma)}</Text>
+              <BackgroundTitleImage>
+                <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Ejercicios(this.state.id_idioma)}</Text>
+              </BackgroundTitleImage>
+              <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Ejercicios(this.state.id_idioma)}</Text>
             </ImageBackground>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoSuplementos()}>
-            <ImageBackground style={[styles.image, {borderBottomRadius: wp(40)}]} source={ExportadorMenus.Suplementacion()} >
-              <Text style={[styles.textImage, { fontFamily: 'font2' }]}>{ExportadorFrases.Suplementos(this.state.id_idioma)}</Text>
+            <ImageBackground style={[styles.image]} source={ExportadorMenus.Suplementacion()} >
+              <BackgroundTitleImage>
+                <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Suplementos(this.state.id_idioma)}</Text>
+              </BackgroundTitleImage>
+              <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Suplementos(this.state.id_idioma)}</Text>
             </ImageBackground>
           </TouchableOpacity>
 
@@ -98,7 +108,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover'
   },
   imageContainer: {
-    flex:1,
+    flex: 1,
     marginVertical: hp(0.2),
     marginHorizontal: hp(0.2),
   },
@@ -107,17 +117,17 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: 'black',
     justifyContent: 'center',
+    alignItems: 'center',
     overflow: 'hidden'
   },
   textImage: {
     textAlign: 'center',
-    fontSize: wp(15),
+    fontSize: wp(12),
     textTransform: 'uppercase',
     color: "#2A73E0",
     letterSpacing: wp(2),
-    fontWeight: 'bold',
     textShadowColor: 'black',
-    textShadowOffset: {width: 2.5, height: 2.5},
+    textShadowOffset: { width: 2.5, height: 2.5 },
     textShadowRadius: 0.1
   }
 })

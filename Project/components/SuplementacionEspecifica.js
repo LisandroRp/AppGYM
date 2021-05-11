@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorFrases from './Fotos/ExportadorFrases';
-import { BlackShadowForBlack } from './Estilos/Shadows'
+import { BlackShadowForBlack } from './Estilos/Styles'
 import { AzulPrincipal } from './Estilos/Colors'
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorAds from './Fotos/ExportadorAds';
@@ -78,7 +78,7 @@ class SuplementacionEspecifica extends Component {
                   <Text style={styles.descripcionUnderline}>{ExportadorFrases.Marca(this.state.id_idioma)}:</Text>
                   <Text style={styles.descripcion}> {this.state.detalle.marca}</Text>
                 </View>
-                <View style={{ flexDirection: "row" }}>
+                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                   <Text style={styles.descripcionUnderline}>{ExportadorFrases.Sabor(this.state.id_idioma)}:</Text>
                   <Text style={styles.descripcion}>{this.state.detalle.sabores}</Text>
                 </View>

@@ -3,7 +3,7 @@ import base from './GenerarBase';
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorFrases from './Fotos/ExportadorFrases'
 import { withNavigation } from 'react-navigation';
-import { BlackShadow, BlackShadowForBlack } from './Estilos/Shadows'
+import { BlackShadow, BlackShadowForBlack } from './Estilos/Styles'
 import { AzulPrincipal } from './Estilos/Colors'
 import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
 import {
@@ -19,6 +19,7 @@ import {
     TouchableWithoutFeedback,
     KeyboardAvoidingView,
     StatusBar,
+    ScrollView,
     AsyncStorage,
     Modal
 } from 'react-native';
@@ -323,11 +324,12 @@ class Training extends Component {
                         </KeyboardAvoidingView>
 
                         {/* </View> */}
+                        <ScrollView style={{flex: 1}}>
                         <View style={[styles.slideContainer]}>
                             <View style={styles.slideContainerInside3}>
                                 <Text style={styles.slideText3}>{ExportadorFrases.PlanTitulo(this.state.id_idioma)}</Text>
                             </View>
-                            <View style={{ flexDirection: "row", justifyContent: 'space-around', height: hp("11") }}>
+                            <View style={{ flexDirection: "row", justifyContent: 'space-around'}}>
                                 <BlueParallelButton onPress={() => { this.setState({ modalVisible: true }) }}>
                                     <BlackButtonText>
                                         {ExportadorFrases.OmitirPlan(this.state.id_idioma)}
@@ -340,6 +342,7 @@ class Training extends Component {
                                 </BlueParallelButton>
                             </View>
                         </View>
+                        </ScrollView>
                     </Swiper>
                     <Modal
                         animationType="fade"
@@ -487,6 +490,7 @@ const styles = StyleSheet.create({
     slideContainerInside3: {
         backgroundColor: "black",
         marginHorizontal: wp(5),
+        marginTop: hp(10),
         marginBottom: hp(5),
         borderRadius: 10,
         alignItems: "center",

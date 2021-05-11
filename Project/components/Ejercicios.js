@@ -18,7 +18,10 @@ import {
 import * as Font from 'expo-font';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { withNavigation } from 'react-navigation';
-import { BlackShadowForBlack } from './Estilos/Shadows';
+import { BlackShadowForBlack, marginTitlesPlataform } from './Estilos/Styles';
+import { BackgroundTitleImage } from './Estilos/PreMadeComponents'
+
+var {Platform} = React;
 
 class Ejercicios extends Component {
 
@@ -41,9 +44,9 @@ class Ejercicios extends Component {
 
   loadFont = async () => {
     await Font.loadAsync({
-      'font1': require('../assets/fonts/BebasNeue-Regular.ttf'),
-      'font2': require('../assets/fonts/BebasNeue-Bold.ttf'),
-    });
+      'font1': require('../assets/fonts/MorganFuente-Regular.ttf'),
+      'font2': require('../assets/fonts/MorganFuente-Bold.ttf'),
+    })
     this.setState({ isLoadingFont: false })
   }
   loadMuscles = async () => {
@@ -59,17 +62,7 @@ class Ejercicios extends Component {
     }, []);
     this.setState({ musculos: musculosOrdenados, isLoading: false })
   }
-  esUltimaFila(posicion, ultimaPosicion, itemPos){
-    if(posicion == ultimaPosicion){
-      if(itemPos == 0){
-        return {borderBottomLeftRadius: wp(10)}
-      }
-      else{
-        return {borderBottomRightRadius: wp(10)}
-      }
-    }
 
-  }
   render() {
 
     if (this.state.isLoadingFont || this.state.isLoading) {
@@ -85,7 +78,7 @@ class Ejercicios extends Component {
           <StatusBar backgroundColor="#3399ff" barStyle="light-content" />
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
           {this.state.musculos.map((array, arrayPos) => (
-            <View style={{ flexDirection: "row", flex: 1 }}>
+            <View key={arrayPos.toString()} style={{ flexDirection: "row", flex: 1 }}>
               {
                 array.map((item, itemPos) => (
                   <TouchableOpacity
@@ -95,8 +88,11 @@ class Ejercicios extends Component {
                     accessibilityHint={ExportadorFrases.EjerciciosHint(this.state.id_idioma) + item.nombre_musculo}
                     onPress={() => this.props.onPressGo(item.nombre_musculo, item.id_musculo)}
                     style={[styles.imageContainer, BlackShadowForBlack()]}>
-                    <ImageBackground style={[styles.image, this.esUltimaFila(arrayPos, this.state.musculos.length -1, itemPos)]} source={ExportadorEjercicios.queMusculo(item.id_musculo)}>
-                      <Text style={[styles.textImage, { fontFamily: 'font2' }]}>{item.nombre_musculo}</Text>
+                    <ImageBackground style={[styles.image]} source={ExportadorEjercicios.queMusculo(item.id_musculo)}>
+                      <BackgroundTitleImage>
+                        <Text style={[styles.textImage, marginTitlesPlataform(), {fontFamily: 'font2'}]}>{item.nombre_musculo}</Text>
+                      </BackgroundTitleImage>
+                      <Text style={[styles.textImage, marginTitlesPlataform(), {fontFamily: 'font2'}]}>{item.nombre_musculo}</Text>
                     </ImageBackground>
                   </TouchableOpacity>
                 ))
@@ -124,7 +120,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    alignContent: 'center',
     resizeMode: 'stretch',
     overflow: 'hidden'
   },
@@ -134,15 +129,14 @@ const styles = StyleSheet.create({
     height: hp(100),
   },
   textImage: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: wp(10),
     textTransform: 'uppercase',
     color: "#2A73E0",
     letterSpacing: wp(1),
-    fontWeight: 'bold',
     textShadowColor: 'black',
     textShadowOffset: { width: 2.2, height: 2.2 },
-    textShadowRadius: 0.1
+    textShadowRadius: 1
   }
 })
 export default withNavigation(Ejercicios);

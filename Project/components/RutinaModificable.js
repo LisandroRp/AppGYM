@@ -5,7 +5,7 @@ import ExportadorFrases from './Fotos/ExportadorFrases'
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorAds from './Fotos/ExportadorAds';
-import { BlackShadow, BlackShadowForBlack } from './Estilos/Shadows'
+import { BlackShadow, BlackShadowForBlack } from './Estilos/Styles'
 import { AzulPrincipal } from './Estilos/Colors'
 import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
 import {
@@ -23,9 +23,9 @@ import {
 } from 'react-native';
 import DropDownItem from 'react-native-drop-down-item';
 import { TextInput } from 'react-native-gesture-handler';
+import { AdMobInterstitial } from 'expo-ads-admob';
 import { AntDesign } from '@expo/vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { AdMobInterstitial } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
 const colorAzul = AzulPrincipal();
@@ -42,6 +42,7 @@ class RutinaModificable extends Component {
       id_rutina: this.props.navigation.getParam("id_rutina"),
       nombre: this.props.navigation.getParam("nombre_rutina"),
       nombreNuevo: this.props.navigation.getParam("nombre_rutina"),
+      modalExisteVisible: false,
       modalBorrarVisible: false,
       modalBorrarTodoVisible: false,
       modalTipoEjercicioTodoVisible: false,
@@ -125,7 +126,8 @@ class RutinaModificable extends Component {
             this.state.rutina.push(combinada2)
             this.termino()
           } else {
-            alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
+            // alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
+            this.setState({modalExisteVisible: true})
             this._storeData()
           }
         } else {
@@ -136,9 +138,10 @@ class RutinaModificable extends Component {
             this.state.rutina.push(simple)
             this.termino()
           } else {
-            alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
+            // alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
+            this.setState({modalExisteVisible: true})
             this._storeData()
-            this.setState({ showAlert: true })
+            // this.setState({ showAlert: true })
           }
         }
       } else {
@@ -448,7 +451,7 @@ class RutinaModificable extends Component {
               <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
               <View style={styles.insideContainer} >
                 <ActivityIndicator size="large" color="#3399ff" style={{}} />
-                <Text style={styles.slideText}>{ExportadorFrases.CreandoRutina(this.state.id_idioma)}</Text>
+                <Text style={styles.slideText}>{ExportadorFrases.ActualizandoRutina(this.state.id_idioma)}</Text>
               </View>
             </View>
           );
@@ -777,6 +780,23 @@ class RutinaModificable extends Component {
               </View>
             </TouchableOpacity>
           </Modal>
+          <Modal
+            animationType="fade"
+            visible={this.state.modalExisteVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalExisteVisible: false })}  >
+
+            <View style={styles.modalExisteVisible}>
+            <View style={styles.modal1}>
+                <Text style={styles.modalText}>{ExportadorFrases.EjercicioRepetido(this.state.id_idioma)}</Text>
+              </View>
+              <View style={styles.modal2}>
+                <TouchableOpacity onPress={() => this.setState({ modalExisteVisible: false })} style={styles.modalExisteButtonAceptar}>
+                  <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </View>
       );
     }
@@ -959,15 +979,28 @@ const styles = StyleSheet.create({
   },
   modal1: {
     flex: 1,
-    paddingHorizontal: wp(2),
+    paddingHorizontal: wp(2.5),
     justifyContent: "center"
   },
   modal2: {
     flexDirection: 'row',
     borderColor: 'black',
     borderTopWidth: 2,
-    width: width * 0.74,
     height: hp(6),
+    opacity: .95
+  },
+  modalExisteVisible: {
+    flex: 1,
+    height: height * 0.20,
+    position: 'absolute',
+    alignSelf: "center",
+    top: hp(40),
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22,
     opacity: .95
   },
   modalText: {
@@ -1022,7 +1055,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     borderLeftWidth: 2,
     borderBottomRightRadius: 22
-  }
+  },
+  modalExisteButtonAceptar: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+    borderBottomRightRadius: 22,
+    borderBottomLeftRadius: 22
+  },
 })
 
 

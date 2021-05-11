@@ -4,7 +4,7 @@ import base from './GenerarBase';
 import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorGifs from './Fotos/ExportadorGifs';
 import ExportadorFondo from './Fotos/ExportadorFondo';
-import { BlackShadowForBlack } from './Estilos/Shadows'
+import { BlackShadowForBlack } from './Estilos/Styles'
 import { AzulPrincipal } from './Estilos/Colors'
 import ExportadorAds from './Fotos/ExportadorAds';
 import {
@@ -19,8 +19,9 @@ import {
 import DropDownItem from 'react-native-drop-down-item';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { AntDesign } from '@expo/vector-icons';
-var { height, width } = Dimensions.get('window');
 import { AdMobBanner } from 'expo-ads-admob';
+
+var { height, width } = Dimensions.get('window');
 
 class EjercicioEspecifico extends Component {
 

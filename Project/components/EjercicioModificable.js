@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import base from './GenerarBase';
 import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
-import ExportadorAds from './Fotos/ExportadorAds';
 import { withNavigation } from 'react-navigation';
-import { BlackShadow } from './Estilos/Shadows'
+import { BlackShadow } from './Estilos/Styles'
 import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
 import {
   StyleSheet,
@@ -22,8 +21,8 @@ import {
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import RNPickerSelect from 'react-native-picker-select';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { AdMobInterstitial } from 'expo-ads-admob';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 var { height, width } = Dimensions.get('window');
@@ -110,7 +109,7 @@ class EjerciciosNew extends Component {
       base.borrarEjercicio(id_ejercicio, this.okEjercicioBorrado.bind(this))
     } else {
       var nombresRutinas = ''
-      for (i = 0; i < rutina.length; i++) {
+      for (var i = 0; i < rutina.length; i++) {
         nombresRutinas = nombresRutinas + '"' + rutina[i].nombre_rutina + '"' + ' '
       }
       this.setModalExisteVisible(true, nombresRutinas)

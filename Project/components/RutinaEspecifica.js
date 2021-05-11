@@ -6,7 +6,7 @@ import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
-import { BlackShadowForBlack } from './Estilos/Shadows'
+import { BlackShadowForBlack } from './Estilos/Styles'
 import { AzulPrincipal } from './Estilos/Colors'
 import {
   StyleSheet,
@@ -398,6 +398,7 @@ const styles = StyleSheet.create({
   },
   socialMedia: {
     color: "white",
+    fontSize: wp(3.5),
     textDecorationLine: 'underline',
   },
 

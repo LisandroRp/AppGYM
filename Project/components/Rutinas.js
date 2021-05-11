@@ -15,7 +15,8 @@ import {
 import * as Font from 'expo-font';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { withNavigation } from 'react-navigation';
-import { BlackShadowForBlack } from './Estilos/Shadows';
+import { BlackShadowForBlack, marginTitlesPlataform } from './Estilos/Styles';
+import { BackgroundTitleImage } from './Estilos/PreMadeComponents'
 
 class Rutinas extends Component {
 
@@ -30,22 +31,22 @@ class Rutinas extends Component {
       id_idioma: 0
     };
   }
-  componentDidMount = async() => {
+  componentDidMount = async () => {
     this.loadFont()
     this.loadIdioma()
   }
-  loadFont = async() => {
+  loadFont = async () => {
     await Font.loadAsync({
-      'font1': require('../assets/fonts/BebasNeue-Regular.ttf'),
-      'font2': require('../assets/fonts/BebasNeue-Bold.ttf'),
+      'font1': require('../assets/fonts/MorganFuente-Regular.ttf'),
+      'font2': require('../assets/fonts/MorganFuente-Bold.ttf'),
     });
     this.setState({ isLoadingFont: false })
   }
-  loadIdioma = async() => {
+  loadIdioma = async () => {
     base.traerIdIdioma(this.okIdIdioma.bind(this))
   }
-  okIdIdioma(id_idioma){
-    this.setState({id_idioma: id_idioma, isLoading: false})
+  okIdIdioma(id_idioma) {
+    this.setState({ id_idioma: id_idioma, isLoading: false })
   }
 
   render() {
@@ -61,23 +62,32 @@ class Rutinas extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
 
-            <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoRutinas(1, ExportadorFrases.Musculacion(this.state.id_idioma))}>
-              <ImageBackground style={styles.image} source={ExportadorMenus.Musculacion()}>
-                <Text style={[styles.textImage, {fontFamily: 'font2'}]}>{ExportadorFrases.Musculacion(this.state.id_idioma)}</Text>
-              </ImageBackground>
-            </TouchableOpacity>
+          <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoRutinas(1, ExportadorFrases.Musculacion(this.state.id_idioma))}>
+            <ImageBackground style={styles.image} source={ExportadorMenus.Musculacion()}>
+              <BackgroundTitleImage>
+                <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Musculacion(this.state.id_idioma)}</Text>
+              </BackgroundTitleImage>
+              <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Musculacion(this.state.id_idioma)}</Text>
+            </ImageBackground>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoRutinas(2, ExportadorFrases.Aerobico(this.state.id_idioma))}>
-              <ImageBackground style={styles.image} source={ExportadorMenus.Aerobico()}>
-                <Text style={[styles.textImage, {fontFamily: 'font2'}]}>{ExportadorFrases.Aerobico(this.state.id_idioma)}</Text>
-              </ImageBackground>
-            </TouchableOpacity>
+          <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoRutinas(2, ExportadorFrases.Aerobico(this.state.id_idioma))}>
+            <ImageBackground style={styles.image} source={ExportadorMenus.Aerobico()}>
+              <BackgroundTitleImage>
+                <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Aerobico(this.state.id_idioma)}</Text>
+              </BackgroundTitleImage>
+              <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Aerobico(this.state.id_idioma)}</Text>
+            </ImageBackground>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoRutinas(null, ExportadorFrases.MisRutinas(this.state.id_idioma))}>
-              <ImageBackground style={[styles.image, {borderBottomRadius: wp(40)}]} source={ExportadorMenus.Propias()}>
-                <Text style={[styles.textImage, {fontFamily: 'font2'}]}>{ExportadorFrases.MisRutinas(this.state.id_idioma)}</Text>
-              </ImageBackground>
-            </TouchableOpacity>
+          <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoRutinas(null, ExportadorFrases.MisRutinas(this.state.id_idioma))}>
+            <ImageBackground style={[styles.image]} source={ExportadorMenus.Propias()}>
+              <BackgroundTitleImage>
+                <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.MisRutinas(this.state.id_idioma)}</Text>
+              </BackgroundTitleImage>
+              <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.MisRutinas(this.state.id_idioma)}</Text>
+            </ImageBackground>
+          </TouchableOpacity>
 
         </View>
       );
@@ -99,7 +109,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover'
   },
   imageContainer: {
-    flex:1,
+    flex: 1,
     marginVertical: hp(0.2),
     marginHorizontal: hp(0.2)
   },
@@ -108,17 +118,17 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: 'black',
     justifyContent: 'center',
+    alignItems: 'center',
     overflow: 'hidden'
   },
   textImage: {
     textAlign: 'center',
-    fontSize: wp(15),
+    fontSize: wp(12),
     textTransform: 'uppercase',
     color: "#2A73E0",
     letterSpacing: wp(2),
-    fontWeight: 'bold',
     textShadowColor: 'black',
-    textShadowOffset: {width: 2.5, height: 2.5},
+    textShadowOffset: { width: 2.5, height: 2.5 },
     textShadowRadius: 0.1
   }
 })

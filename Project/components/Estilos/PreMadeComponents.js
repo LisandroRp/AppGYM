@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import {BlackShadow, BlackShadowForBlack} from '../Estilos/Shadows'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {BlackShadow, BlackShadowForBlack} from './Styles'
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
@@ -44,6 +44,13 @@ export function WhiteModalText({ invalid, ...props }) {
         </Text>
     );
 }
+
+export function BackgroundTitleImage({ invalid, ...props }) {
+    return (
+        <View {...props} style={{backgroundColor: 'black', opacity: 0.6, position: "absolute"}}>
+        </View>
+    );
+}
 //////////////////////////
 //Texto
 //////////////////////////
@@ -69,7 +76,8 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontWeight: 'bold',
-        fontSize: wp(4.4)
+        fontSize: wp(4),
+        textAlign: "center"
     },
     modalText: {
         fontWeight: 'bold',

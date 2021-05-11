@@ -17,7 +17,7 @@ import {
   Text
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { BlackShadow, BlackShadowForBlack } from './Estilos/Shadows';
+import { BlackShadow, BlackShadowForBlack } from './Estilos/Styles';
 
 class Suplementacion extends Component {
 
@@ -38,8 +38,8 @@ class Suplementacion extends Component {
   }
   loadFont = async () => {
     await Font.loadAsync({
-      'font1': require('../assets/fonts/BebasNeue-Regular.ttf'),
-      'font2': require('../assets/fonts/BebasNeue-Bold.ttf'),
+      'font1': require('../assets/fonts/MorganFuente-Regular.ttf'),
+      'font2': require('../assets/fonts/MorganFuente-Bold.ttf'),
     });
     this.setState({ isLoadingFont: false })
   }
@@ -56,17 +56,7 @@ class Suplementacion extends Component {
     }, []);
     this.setState({ suplementos: suplementosNuevos, id_idioma, isLoading: false })
   }
-  esUltimaFila(posicion, ultimaPosicion, itemPos) {
-    if (posicion == ultimaPosicion) {
-      if (itemPos == 0) {
-        return { borderBottomLeftRadius: wp(10) }
-      }
-      else {
-        return { borderBottomRightRadius: wp(10) }
-      }
-    }
 
-  }
   render() {
     if (this.state.isLoadingFont || this.state.isLoading) {
       return (
@@ -91,7 +81,7 @@ class Suplementacion extends Component {
                     accessibilityHint={ExportadorFrases.EjerciciosHint(this.state.id_idioma) + item.nombre_tipo}
                     onPress={() => this.props.onPressGo(item.id_tipo, item.nombre_tipo)}
                     style={[styles.imageContainer, BlackShadowForBlack()]}>
-                    <ImageBackground style={[styles.image, this.esUltimaFila(arrayPos, this.state.suplementos.length - 1, itemPos)]} source={ExportadorSuplementacion.default(this.state.id_idioma)}>
+                    <ImageBackground style={[styles.image]} source={ExportadorSuplementacion.default(this.state.id_idioma)}>
                       <Text style={[styles.textImage, { fontFamily: 'font2' }]} >{item.nombre_tipo}</Text>
                     </ImageBackground>
                   </TouchableOpacity>
@@ -139,7 +129,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: "#2A73E0",
     letterSpacing: wp(1),
-    fontWeight: 'bold',
     textShadowColor: 'black',
     textShadowOffset: { width: 2.2, height: 2.2 },
     textShadowRadius: 0.1

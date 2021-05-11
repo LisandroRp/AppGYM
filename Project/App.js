@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, Image, Share, Text } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, Share, Text, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
 import Icon from '@expo/vector-icons/Ionicons';
-import { FontAwesome, FontAwesome5, Entypo, Ionicons } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import Ejercicios from './components/Ejercicios'
 import EjerciciosEspecifico from './components/EjercicioEspecifico'
 import EjercicioAgregar from './components/EjercicioAgregar'
@@ -29,38 +29,50 @@ import Training from './components/Training';
 import Ajustes from './components/Ajustes';
 import ExportadorLogos from './components/Fotos/ExportadorLogos';
 import ExportadorFrases from './components/Fotos/ExportadorFrases';
-import {AzulPrincipal} from './components/Estilos/Colors';
-import { BlackShadow, BlackShadowForBlack } from './components/Estilos/Shadows'
+import { AzulPrincipal } from './components/Estilos/Colors';
+import { BlackShadow, BlackShadowForBlack } from './components/Estilos/Styles'
 import base from './components/GenerarBase';
 import { AsyncStorage } from 'react-native';
 import {
   createSwitchNavigator,
-  createAppContainer,
-  createDrawerNavigator,
-  createBottomTabNavigator,
-  createStackNavigator,
-  DrawerItems,
+  createAppContainer
 } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 import { ScrollView } from 'react-native-gesture-handler';
 import MusculoFavs from './components/MusculoFavs';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import * as Localization from 'expo-localization';
 import i18n, { localize } from 'i18n-js';
 import Version from './app.json';
+import { SearchBar } from 'react-native-elements';
 
+Text.defaultProps = {
+  ...(Text.defaultProps || {}),
+  allowFontScaling: false,
+};
+TextInput.defaultProps = {
+  ...(TextInput.defaultProps || {}),
+  allowFontScaling: false,
+};
+SearchBar.defaultProps = {
+  ...(SearchBar.defaultProps || {}),
+  allowFontScaling: false,
+};
 console.disableYellowBox = true
 var { height, width } = Dimensions.get('window');
 //var id_idioma = base.traerIdIdiomaSideMenu()
 var id_idioma = 1
+var nombre_idioma = "es"
 const azulPrincipal = AzulPrincipal()
 
-
 i18n.translations = {
-  es: {id_idioma: 1, ejercicios: 'Ejercicios', rutinas: 'Rutinas', suplementos: 'Suplementos', favoritos: 'Favoritos', ajustes: 'Ajustes', perfil: 'Perfil' },
-  en: {id_idioma: 2, ejercicios: 'Exercises', rutinas: 'Routines', suplementos: 'Supplements', favoritos: 'Favorites', ajustes: 'Settings', perfil: 'Profile' },
+  es: { id_idioma: 1, ejercicios: 'Ejercicios', rutinas: 'Rutinas', suplementos: 'Suplementos', favoritos: 'Favoritos', ajustes: 'Ajustes', perfil: 'Perfil' },
+  en: { id_idioma: 2, ejercicios: 'Exercises', rutinas: 'Routines', suplementos: 'Supplements', favoritos: 'Favorites', ajustes: 'Settings', perfil: 'Profile' },
 };
 i18n.locale = Localization.locale
-i18n.defaultLocale = 'es'
+i18n.defaultLocale = 'en'
 i18n.fallbacks = true;
 
 
@@ -72,9 +84,9 @@ class App extends Component {
     }
   }
   componentDidMount() {
-		//base.traerIdIdioma(this.okIdIdioma.bind(this))
+    //base.traerIdIdioma(this.okIdIdioma.bind(this))
   }
-  okIdIdioma(id_idiomaApp){
+  okIdIdioma(id_idiomaApp) {
     console.log(" ")
     _storeData(id_idiomaApp)
     id_idioma = id_idiomaApp
@@ -98,13 +110,17 @@ class ActualizacionScreen extends React.Component {
       />
     )
   }
-  goTraining(id_idioma){
+  goTraining(id_idioma1) {
+    id_idioma = id_idioma1
     this.props.navigation.navigate('Training', { id_idioma: id_idioma });
   }
   goPass() {
-    base.traerIdIdioma(this.okIdIdioma.bind(this))
+    base.traerIdioma(this.okIdIdioma.bind(this))
   }
-  okIdIdioma(id_idioma){
+  okIdIdioma(idioma) {
+    id_idioma = idioma.id_idioma
+    nombre_idioma = idioma.nombre_idioma
+    i18n.locale = idioma.nombre_idioma
     this.props.navigation.navigate('EjerciciosScreen', { id_idioma: id_idioma });
   }
 }
@@ -145,10 +161,13 @@ class MusculoScreen extends React.Component {
       title: navigation.getParam('nombre_musculo', 'Musculo'),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
-        borderBottomWidth: 0
+        borderBottomWidth: 0,
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     };
   }
   render() {
@@ -161,9 +180,9 @@ class MusculoScreen extends React.Component {
   }
   pasarEjercicio(id_ejercicio, nombre, id_idioma, modificable) {
     if (modificable) {
-      this.props.navigation.navigate('EjercicioEspecificoM', { id_ejercicio: id_ejercicio, nombre_Ejercicio: nombre, id_idioma: id_idioma });
+      this.props.navigation.navigate('EjercicioEspecificoM', { id_ejercicio: id_ejercicio, nombre_ejercicio: nombre, id_idioma: id_idioma });
     } else {
-      this.props.navigation.navigate('EjercicioEspecificoNoM', { id_ejercicio: id_ejercicio, nombre_Ejercicio: nombre, id_idioma: id_idioma });
+      this.props.navigation.navigate('EjercicioEspecificoNoM', { id_ejercicio: id_ejercicio, nombre_ejercicio: nombre, id_idioma: id_idioma });
     }
   }
 
@@ -186,10 +205,13 @@ class MusculoAgregarScreen extends React.Component {
       title: navigation.getParam('nombre_musculo', 'Musculo'),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     };
   }
   render() {
@@ -201,8 +223,8 @@ class MusculoAgregarScreen extends React.Component {
       />
     );
   }
-  pasarEjercicio(id_ejercicio, nombre, descripcion) {
-    this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio, nombreEjercicio: nombre, descripcionEjercicio: descripcion });
+  pasarEjercicio(id_ejercicio, nombre_ejercicio, descripcion_ejercicio) {
+    this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio, nombre_ejercicio: nombre_ejercicio, descripcion_ejercicio: descripcion_ejercicio });
   }
   guardarRutina(rutina, tipo, ultimaPos) {
     this._storeData(rutina);
@@ -245,11 +267,11 @@ class MusculoAgregarScreen extends React.Component {
 class EjerciciosScreen extends React.Component {
 
   componentDidMount() {
-		base.traerIdIdioma(this.okIdIdioma.bind(this))
+    base.traerIdIdioma(this.okIdIdioma.bind(this))
   }
-  okIdIdioma(id_idiomaApp){
-    id_idioma= id_idiomaApp
-    console.log("cambio"+id_idioma)
+  okIdIdioma(id_idiomaApp) {
+    id_idioma = id_idiomaApp
+    console.log("cambio" + id_idioma)
   }
 
   constructor(props) {
@@ -258,21 +280,24 @@ class EjerciciosScreen extends React.Component {
       musculo: props.navigation.getParam('idioma')
     }
   }
-  
+
   static navigationOptions = ({ navigation }) => {
     return {
       title: ExportadorFrases.Ejercicios(navigation.getParam('id_idioma')),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
       headerRight: (
         <View style={{ flexDirection: 'row' }}>
           <FontAwesome name="plus" style={{ marginRight: 20, color: azulPrincipal }}
-            onPress={() => navigation.navigate('EjerciciosNew', {id_idioma: navigation.getParam('id_idioma') })}
-            size={22}
+            onPress={() => navigation.navigate('EjerciciosNew', { id_idioma: navigation.getParam('id_idioma') })}
+            size={wp(5.5)}
           />
         </View>
       ),
@@ -292,24 +317,27 @@ class EjerciciosScreen extends React.Component {
 class EjerciciosEspecificoMScreen extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
-    var nombre = navigation.getParam('nombre_Ejercicio');
+    var nombre = navigation.getParam('nombre_ejercicio');
     var id_ejercicio = navigation.getParam('id_ejercicio');
     return {
       headerRight: (
         <View style={{ flexDirection: 'row' }}>
           <FontAwesome name="edit" style={{ marginRight: 20, color: azulPrincipal }}
-            onPress={() => navigation.navigate('EjercicioModificable', { nombre_Ejercicio: nombre, id_ejercicio: id_ejercicio })}
-            size={22}
+            onPress={() => navigation.navigate('EjercicioModificable', { nombre_ejercicio: nombre, id_ejercicio: id_ejercicio })}
+            size={wp(5.5)}
           />
         </View>
       ),
-      title: navigation.getParam('nombre_Ejercicio', 'Detalles'),
+      title: navigation.getParam('nombre_ejercicio', 'Detalles'),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     }
   };
   constructor(props) {
@@ -325,21 +353,24 @@ class EjerciciosEspecificoMScreen extends React.Component {
       />
     );
   }
-  pasarEjercicio(idEjercicio, nombre_Ejercicio) {
-    this.props.navigation.navigate('EjercicioEspecifico', { id_Ejercicio: idEjercicio, nombre_Ejercicio: nombre_Ejercicio });
+  pasarEjercicio(idEjercicio, nombre_ejercicio) {
+    this.props.navigation.navigate('EjercicioEspecifico', { id_Ejercicio: idEjercicio, nombre_ejercicio: nombre_ejercicio });
   }
 }
 class EjerciciosEspecificoNoMScreen extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.getParam('nombre_Ejercicio', 'Detalles'),
+      title: navigation.getParam('nombre_ejercicio', 'Detalles'),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      }
     }
   };
   constructor(props) {
@@ -374,10 +405,13 @@ class EjercicioAgregarScreen extends React.Component {
       title: ExportadorFrases.Musculos(navigation.getParam('id_idioma')),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     };
   }
   render() {
@@ -398,10 +432,13 @@ class EjerciciosNewScreen extends React.Component {
       title: ExportadorFrases.CrearEjercicios(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     }
   };
   constructor(props) {
@@ -424,13 +461,16 @@ class EjercicioModificableScreen extends React.Component {
   }
   static navigationOptions = ({ navigation }) => {
     return {
-      title: ExportadorFrases.Editar(id_idioma) + ' ' + '"' + navigation.getParam('nombre_Ejercicio', 'Detalles') + '"',
+      title: ExportadorFrases.Editar(id_idioma) + ' ' + '"' + navigation.getParam('nombre_ejercicio', 'Detalles') + '"',
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     };
   }
   render() {
@@ -466,10 +506,13 @@ class RutinasScreen extends React.Component {
       title: ExportadorFrases.Rutinas(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     }
   };
   constructor(props) {
@@ -498,9 +541,12 @@ class RutinasTiposScreen extends React.Component {
       title: navigation.getParam('tipo_rutina', 'Rutinas'),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
+      height: hp(6),
       headerTintColor: azulPrincipal
     }
   };
@@ -516,7 +562,7 @@ class RutinasTiposScreen extends React.Component {
     if (modificable) {
       //Funcionalidad de compartir rutinas
       //this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina, rutina: JSON.stringify(rutina) });
-      this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina});
+      this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina });
     } else {
       this.props.navigation.navigate('RutinaEspecificaNoM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina });
     }
@@ -532,10 +578,13 @@ class RutinaNewScreen extends React.Component {
       title: ExportadorFrases.RutinaNueva(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     };
   }
   render() {
@@ -552,6 +601,7 @@ class RutinaNewScreen extends React.Component {
   }
   verInfo(id_ejercicio) {
     this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio });
+    // this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio, nombre_ejercicio: nombre_ejercicio });
   }
   cancelar() {
     this.props.navigation.navigate('RutinasScreen');
@@ -576,17 +626,20 @@ class RutinaEspecificaMScreen extends React.Component {
           /> */}
           <FontAwesome name="edit" style={{ marginRight: 20, color: azulPrincipal }}
             onPress={() => navigation.navigate('RutinaModificable', { nombre_rutina: nombre, id_rutina: id_rutina })}
-            size={22}
+            size={wp(5.5)}
           />
         </View>
       ),
       title: navigation.getParam('nombre_rutina', 'Rutina'),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     };
   }
 
@@ -620,10 +673,13 @@ class RutinaEspecificaNoMScreen extends React.Component {
       title: navigation.getParam('nombre_rutina', 'Rutina'),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     };
   }
   render() {
@@ -654,10 +710,13 @@ class RutinaModificableScreen extends React.Component {
       title: ExportadorFrases.Editar(id_idioma) + ' ' + navigation.getParam('nombre_rutina'),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     };
   }
   render() {
@@ -693,10 +752,13 @@ class SuplementacionEspecificaScreen extends React.Component {
       title: ExportadorFrases.Detalles(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     };
   }
   render() {
@@ -713,10 +775,13 @@ class SuplementacionTiposScreen extends React.Component {
       title: navigation.getParam('tipo_suplementacion', 'Suplementos'),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     }
   };
   constructor(props) {
@@ -740,10 +805,13 @@ class SuplementacionScreen extends React.Component {
       title: ExportadorFrases.Suplementos(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     };
   }
   constructor(props) {
@@ -769,10 +837,13 @@ class FavoritosScreen extends React.Component {
       title: ExportadorFrases.Favoritos(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     }
   };
   constructor(props) {
@@ -804,10 +875,13 @@ class EjerciciosFavsScreen extends React.Component {
       title: ExportadorFrases.Ejercicios(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     };
   }
   constructor(props) {
@@ -834,10 +908,13 @@ class MusculoFavsScreen extends React.Component {
       title: ExportadorFrases.EjerciciosFavs(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     }
   }
   render() {
@@ -847,8 +924,8 @@ class MusculoFavsScreen extends React.Component {
       />
     );
   }
-  pasarMusculo(id_ejercicio, nombre, descripcion) {
-    this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio, nombreEjercicio: nombre, descripcionEjercicio: descripcion });
+  pasarMusculo(id_ejercicio, nombre_ejercicio, descripcion_ejercicio) {
+    this.props.navigation.navigate('EjercicioEspecifico', { id_ejercicio: id_ejercicio, nombre_ejercicio: nombre_ejercicio, descripcion_ejercicio: descripcion_ejercicio });
   }
 }
 class RutinasFavsScreen extends React.Component {
@@ -860,10 +937,13 @@ class RutinasFavsScreen extends React.Component {
       title: ExportadorFrases.RutinasFavs(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     }
   }
   render() {
@@ -877,7 +957,7 @@ class RutinasFavsScreen extends React.Component {
     if (modificable) {
       //Funcionalidad de compartir rutinas
       //this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina, rutina: JSON.stringify(rutina) });
-      this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina});
+      this.props.navigation.navigate('RutinaEspecificaM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina });
     } else {
       this.props.navigation.navigate('RutinaEspecificaNoM', { id_rutina: id_rutina, nombre_rutina: nombre_rutina });
     }
@@ -889,9 +969,12 @@ class SuplementacionFavsScreen extends React.Component {
       title: ExportadorFrases.Suplementos(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
+      height: hp(6),
       headerTintColor: azulPrincipal
     }
   };
@@ -918,10 +1001,13 @@ class MiPlanScreen extends React.Component {
       title: ExportadorFrases.MiPlan(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     }
   };
   constructor(props) {
@@ -940,10 +1026,13 @@ class FichaScreen extends React.Component {
       title: ExportadorFrases.CambiarPlan(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     }
   };
   constructor(props) {
@@ -958,7 +1047,7 @@ class FichaScreen extends React.Component {
 
   }
   cambiarPlan(recargar) {
-    this.props.navigation.navigate('MiPlan', {isLoading: recargar});
+    this.props.navigation.navigate('MiPlan', { isLoading: recargar });
   }
 }
 class AjustesScreen extends React.Component {
@@ -967,10 +1056,13 @@ class AjustesScreen extends React.Component {
       title: ExportadorFrases.Ajustes(id_idioma),
       headerStyle: [{
         backgroundColor: 'black',
-        height: hp(6),
         borderBottomWidth: 0
       }, BlackShadowForBlack()],
+      height: hp(6),
       headerTintColor: azulPrincipal,
+      headerTitleStyle: {
+        fontSize: wp(4),
+      },
     }
   };
   constructor(props) {
@@ -1001,7 +1093,7 @@ const EjerciciosStackNavigator = createStackNavigator(
               style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
               name="md-menu"
-              size={30}
+              size={wp(6.6)}
             />
           ),
         }
@@ -1033,14 +1125,14 @@ const RutinasStackNavigator = createStackNavigator(
               style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
               name="md-menu"
-              size={30}
+              size={wp(6.6)}
             />
           ),
           headerRight: (
             <View style={{ flexDirection: 'row' }}>
               <FontAwesome name="plus" style={{ marginRight: 20, color: azulPrincipal }}
                 onPress={() => navigation.navigate('RutinaNew', { tipo: 'nuevo' })}
-                size={22}
+                size={wp(5.5)}
               />
             </View>
           )
@@ -1071,7 +1163,7 @@ const SuplementacionStackNavigator = createStackNavigator(
               style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
               name="md-menu"
-              size={30}
+              size={wp(6.6)}
             />
           ),
         }
@@ -1095,7 +1187,7 @@ const FavoritosStackNavigator = createStackNavigator(
               style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
               name="md-menu"
-              size={30}
+              size={wp(6.6)}
             />
           ),
         }
@@ -1126,7 +1218,7 @@ const AjustesStackNavigator = createStackNavigator(
               style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
               name="md-menu"
-              size={30}
+              size={wp(6.6)}
             />
           ),
         }
@@ -1144,48 +1236,64 @@ const AjustesStackNavigator = createStackNavigator(
 // *****************************************************
 
 const PerfilTabNavigator = createBottomTabNavigator({
-  MiPlan: MiPlanScreen,
-  Ficha: FichaScreen
-},
- {
-  navigationOptions: ({ navigation }) => {
-    const { routeName } = navigation.state.routes[navigation.state.index]
-    return {
-      headerTitle: 'Perfil',
-      headerTintColor: azulPrincipal,
-      headerLeft: (
-        <Icon
-          style={{ paddingLeft: 10, color: azulPrincipal }}
-          onPress={() => navigation.openDrawer()}
-          name="md-menu"
-          size={30}
-        />
-      ),
-      headerStyle: [{
-        backgroundColor: 'black',
-        height: hp(6),
-        borderBottomWidth: 0
-      }, BlackShadowForBlack()]
+  MiPlan: {
+    screen: MiPlanScreen,
+    navigationOptions: {
+      tabBarLabel: ({ focused }) => <Text style={{ fontSize: wp(3), textAlign: "center", color: (focused ? "white" : azulPrincipal) }}>Mi Plan</Text>,
+      tabBarIcon: ({ tintColor }) => { return (<MaterialCommunityIcons name="playlist-check" size={wp(6.6)} color={tintColor} />) }
     }
   },
-swipeEnabled: true,
-  Title: 'Ficha',
-  tabBarOptions: {
-    Title: 'Mi Plan',
-    activeTintColor: 'white',
-    inactiveTintColor: azulPrincipal,
-    style: {
-      backgroundColor: 'black',
-      borderTopColor: 'black'
-
-    },
-    labelStyle: {
-      fontSize: 18,
-      paddingVertical: 10
+  Ficha: {
+    screen: FichaScreen,
+    navigationOptions: {
+      tabBarLabel: ({ focused }) => <Text style={{ fontSize: wp(3), textAlign: "center", color: (focused ? "white" : azulPrincipal) }}>Cambiar Plan</Text>,
+      tabBarIcon: ({ tintColor }) => { return (<MaterialCommunityIcons name="playlist-edit" size={wp(6.6)} color={tintColor} />) }
     }
+  },
+},
+  {
+    navigationOptions: ({ navigation }) => {
+      const { routeName } = navigation.state.routes[navigation.state.index]
+      return {
+        headerTitle: 'Perfil',
+        headerTintColor: azulPrincipal,
+        headerTitleStyle: {
+          fontSize: wp(4),
+        },
+        headerLeft: (
+          <Icon
+            style={{ paddingLeft: 10, color: azulPrincipal }}
+            onPress={() => navigation.openDrawer()}
+            name="md-menu"
+            size={wp(6.6)}
+          />
+        ),
+        headerStyle: [{
+          backgroundColor: 'black',
+          borderBottomWidth: 0
+        }, BlackShadowForBlack()],
+        height: hp(6),
+      }
+    },
+    swipeEnabled: true,
+    Title: 'Ficha',
+    tabBarOptions: {
+      Title: 'Mi Plan',
+      activeTintColor: 'white',
+      inactiveTintColor: azulPrincipal,
+      style: {
+        backgroundColor: 'black',
+        borderTopColor: 'black'
 
-  }
-});
+      },
+      labelStyle: {
+        fontSize: wp(4.4),
+        paddingVertical: 10
+
+      }
+
+    }
+  });
 
 const PerfilStackNavigator = createStackNavigator({
   PerfilTabNavigator: PerfilTabNavigator
@@ -1207,14 +1315,16 @@ const customDrawerComponent = (props) => (
   <View style={{ flex: 1 }}>
     <LinearGradient colors={['grey', 'black']} style={styles.profile}>
       <Image style={styles.bgImage} source={require('./assets/Pared_Fondo_Drawer.jpg')} />
-      <Image
-        style={{ width: width * 0.64, resizeMode: 'contain', alignSelf: 'center' }}
-        source={require('./assets/Logo_Drawer.png')}></Image>
+      <View style={styles.profileImageContainer}>
+        <Image
+          style={styles.profileImage}
+          source={require('./assets/Logo_Drawer.png')} />
+      </View>
     </LinearGradient>
     <ScrollView style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }}>
-        <DrawerItems {...props} style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }}/>
+      <DrawerItems {...props} style={{ borderTopWidth: 0, marginTop: 0, paddingTop: 0 }} />
     </ScrollView>
-    <Text style={{alignSelf: 'flex-end', color: azulPrincipal, padding: 5 }}>Version: {Version.expo.version}</Text>
+    <Text style={{ alignSelf: 'flex-end', color: azulPrincipal, padding: 5 }}>Version: {Version.expo.version}</Text>
   </View>
 )
 const AppDrawerNavigator = createDrawerNavigator({
@@ -1222,42 +1332,42 @@ const AppDrawerNavigator = createDrawerNavigator({
     screen: EjerciciosStackNavigator,
     navigationOptions: {
       title: i18n.t('ejercicios'),
-      drawerIcon: ({tintColor}) => (<Entypo name="home" size={24} color={tintColor} />)
+      drawerIcon: ({ tintColor }) => (<Entypo name="home" size={wp(5.5)} color={tintColor} />)
     }
   },
   Rutinas: {
     screen: RutinasStackNavigator,
     navigationOptions: {
       title: i18n.t('rutinas'),
-      drawerIcon: ({tintColor}) => (<Ionicons name="md-list" size={27} color={tintColor} />)
+      drawerIcon: ({ tintColor }) => (<Ionicons name="md-list" size={wp(6.6)} color={tintColor} />)
     }
   },
   Suplementacion: {
     screen: SuplementacionStackNavigator,
     navigationOptions: {
       title: i18n.t('suplementos'),
-      drawerIcon: ({tintColor}) => (<FontAwesome5 name="prescription-bottle" size={23} color={tintColor} />)
+      drawerIcon: ({ tintColor }) => (<FontAwesome5 name="prescription-bottle" size={wp(5.5)} color={tintColor} />)
     }
   },
   Favoritos: {
     screen: FavoritosStackNavigator,
     navigationOptions: {
       title: i18n.t('favoritos'),
-      drawerIcon: ({tintColor}) => (<Entypo name="star" size={27} color={tintColor} />)
+      drawerIcon: ({ tintColor }) => (<Entypo name="star" size={wp(6.6)} color={tintColor} />)
     }
   },
   Ajustes: {
     screen: AjustesStackNavigator,
     navigationOptions: {
       title: i18n.t('ajustes'),
-      drawerIcon: ({tintColor}) => (<Ionicons name="md-settings" size={24} color={tintColor} />)
+      drawerIcon: ({ tintColor }) => (<Ionicons name="md-settings" size={wp(6)} color={tintColor} />)
     }
   },
   Perfil: {
     screen: PerfilStackNavigator,
     navigationOptions: {
       title: i18n.t('perfil'),
-      drawerIcon: ({tintColor}) => (<FontAwesome name="user" size={24} color={tintColor} />)
+      drawerIcon: ({ tintColor }) => (<FontAwesome name="user" size={wp(6)} color={tintColor} />)
     }
   }
 },
@@ -1271,7 +1381,7 @@ const AppDrawerNavigator = createDrawerNavigator({
     drawerCloseRoute: 'DraweClose',
     drawerToggleRoute: 'DrawerToggle',
     drawerBackgroundColor: 'black',
-    //drawerWidth: width * 0.56,
+    drawerWidth: wp(66),
     contentOptions: {
       //Esto sirve para cambiar algunos colores
       activeTintColor: 'white',
@@ -1321,13 +1431,24 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   profile: {
+    height: hp(18),
+    paddingTop: hp(1)
+  },
+  profileImageContainer: {
+    flex: 1,
+    paddingHorizontal: wp(5)
+  },
+  profileImage: {
+    flex: 1,
+    width: "100%",
+    resizeMode: 'contain'
+  },
+  bgImage: {
+    position: 'absolute',
+    height: hp(18),
+    width: '100%',
     justifyContent: 'center',
-    paddingTop: 50,
-    paddingBottom: 50,
-    borderBottomWidth: 0,
-    borderBottomColor: azulPrincipal,
-    backgroundColor: azulPrincipal,
-    height: hp(22),
+    opacity: 0.7
   },
   imgView: {
     flex: 1,
@@ -1344,11 +1465,5 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     flexDirection: 'column',
     justifyContent: 'center'
-  },
-  bgImage: {
-    position: 'absolute',
-    height: hp(22),
-    width: '100%',
-    justifyContent: 'center',
   }
 });

@@ -23,7 +23,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { AdMobInterstitial } from 'expo-ads-admob';
-import { BlackShadow } from './Estilos/Shadows';
+import { BlackShadow } from './Estilos/Styles';
 
 
 var { height, width } = Dimensions.get('window');

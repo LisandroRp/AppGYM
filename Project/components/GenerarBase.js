@@ -22,8 +22,6 @@ class GenerarBase extends Component {
             },
             error => {
                 console.log("Error en Abrir Base")
-
-                db._db.close();
                 existeBase(existe = false, null, null)
             },
             () => {
@@ -40,15 +38,14 @@ class GenerarBase extends Component {
         FileSystem.downloadAsync(
             Asset.fromModule(require('../assets/db/AppGYM.db')).uri,
             `${FileSystem.documentDirectory}/SQLite/appgym.db`
-        ).then(db = SQLite.openDatabase('appgym.db'))
-        db._db.close();
+        ).then(function(){
+            db = SQLite.openDatabase('appgym.db')
             setTimeout(function(){
-
-            //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
-
+            db._db.close();
             okBase()
       
-          }, 5000);
+          }, 5000)
+        })
 
     }
     guardarConfiguracion(id_idioma, version, okVersion) {
@@ -57,7 +54,7 @@ class GenerarBase extends Component {
 
         db.transaction(
             tx => {
-                tx.executeSql("UPDATE Configuracion set id_idioma = ?, version = ?", [id_idioma, version])
+                tx.executeSql("UPDATE Configuracion set id_idioma = ?, version = ? WHERE id_configuracion = 1", [id_idioma, version])
             },
             error => {
                 //console.log("Error en guardarConfiguracion")
@@ -192,12 +189,12 @@ class GenerarBase extends Component {
             }
         );
     }
-    setIdioma(id_idioma, okIdIdioma) {
+    setIdioma(id_idioma, nombre_idioma, okIdIdioma) {
         let db = SQLite.openDatabase('appgym.db');
 
         db.transaction(
             tx => {
-                tx.executeSql('UPDATE Configuracion set id_idioma = ?', [id_idioma])
+                tx.executeSql('UPDATE Configuracion set id_idioma = ? WHERE id_configuracion = 1', [id_idioma])
             },
             error => {
                 console.log(error)
@@ -207,7 +204,7 @@ class GenerarBase extends Component {
             () => {
                 console.log("Correcto")
                 db._db.close()
-                okIdIdioma(id_idioma)
+                okIdIdioma(id_idioma, nombre_idioma)
             }
         );
     }
@@ -1428,16 +1425,18 @@ class GenerarBase extends Component {
 
         db.transaction(
             tx => {
-                tx.executeSql('SELECT ej.id_idioma, el.id_idioma, ej.id_ejercicio, ej.id_musculo, ej.nombre_ejercicio, ej.favoritos, ej.modificable, el.nombre_elemento'
-                    + ' FROM Ejercicios ej JOIN Ejercicios_Elemento el ON ej.id_elemento = el.id_elemento'
-                    + ' WHERE el.id_idioma = ?  AND ej.favoritos = 1', [id_idioma], function (tx, res) {
+                tx.executeSql('SELECT ej.id_idioma, ej.id_ejercicio, ej.id_musculo, ej.nombre_ejercicio, ej.favoritos, ej.modificable, el.nombre_elemento, m.nombre_musculo'
+                    + ' FROM Ejercicios ej'
+                    + ' JOIN Ejercicios_Elemento el ON ej.id_elemento = el.id_elemento' 
+                    + ' JOIN Ejercicios_Musculo m ON ej.id_musculo = m.id_musculo' 
+                    + ' WHERE (((ej.id_idioma = ? AND el.id_idioma = ? AND m.id_idioma = ?) OR (ej.id_idioma = 0 AND el.id_idioma = ? AND m.id_idioma = ?)) AND ej.favoritos = 1)', [id_idioma, id_idioma, id_idioma, id_idioma, id_idioma], function (tx, res) {
                         for (let i = 0; i < res.rows.length; ++i) {
                             ejercicios.push(res.rows._array[i]);
                         }
                     });
             },
             error => {
-                console.log("Error")
+                console.log(error)
                 db._db.close()
                 alert("Algo Salio Mal")
             },

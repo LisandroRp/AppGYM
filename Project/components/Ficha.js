@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { View, Image, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Modal, TextInput, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Text, Keyboard, Dimensions } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ExportadorFrases from './Fotos/ExportadorFrases'
 import ExportadorFondo from './Fotos/ExportadorFondo'
-import ExportadorAds from './Fotos/ExportadorAds'
-import { BlackShadow, BlackShadowForBlack } from './Estilos/Shadows'
-import { BlueParallelButton, BlackButtonText, BlueButton, WhiteModalText } from './Estilos/PreMadeComponents'
+import ExportadorAds from './Fotos/ExportadorAds';
+import { BlackShadow, BlackShadowForBlack } from './Estilos/Styles'
+import { BlackButtonText, BlueButton, WhiteModalText } from './Estilos/PreMadeComponents'
 import base from './GenerarBase';
 import { AdMobRewarded } from 'expo-ads-admob';
 

@@ -3,7 +3,7 @@ import { SearchBar } from 'react-native-elements';
 import base from './GenerarBase';
 import ExportadorSuplementacion from './Fotos/ExportadorSuplementacion';
 import ExportadorFrases from './Fotos/ExportadorFrases';
-import { BlackShadowForBlack } from './Estilos/Shadows'
+import { BlackShadowForBlack } from './Estilos/Styles'
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
@@ -46,8 +46,8 @@ class SuplementacionTipos extends Component {
   }
   loadFont = async () => {
     await Font.loadAsync({
-      'font1': require('../assets/fonts/BebasNeue-Regular.ttf'),
-      'font2': require('../assets/fonts/BebasNeue-Bold.ttf'),
+      'font1': require('../assets/fonts/MorganFuente-Regular.ttf'),
+      'font2': require('../assets/fonts/MorganFuente-Bold.ttf'),
     });
     this.setState({ isLoadingFont: false })
   }
@@ -267,6 +267,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 0.5,
+    height: wp(22),
+    width: wp(22),
     margin: wp(2.5),
     alignItems: 'center',
     justifyContent: "center",
@@ -290,14 +292,13 @@ const styles = StyleSheet.create({
     color: "#2A73E0",
     letterSpacing: wp(0.5),
     padding: 1,
-    fontWeight: 'bold',
     textShadowColor: 'black',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 0.1
   },
 
   name: {
-    fontSize: wp(5),
+    fontSize: wp(4.4),
     color: "#3399ff",
     fontWeight: 'bold'
   },

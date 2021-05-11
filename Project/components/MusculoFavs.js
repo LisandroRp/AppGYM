@@ -4,7 +4,7 @@ import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorEjercicios from './Fotos/ExportadorEjercicios'
 import ExportadorFrases from './Fotos/ExportadorFrases';
-import { BlackShadowForBlack, BlackShadow } from './Estilos/Shadows'
+import { BlackShadowForBlack, BlackShadow } from './Estilos/Styles'
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorLogos from './Fotos/ExportadorLogos'
 import ExportadorAds from './Fotos/ExportadorAds'
@@ -18,7 +18,6 @@ import {
     Dimensions,
     Modal,
     ActivityIndicator,
-    ScrollView
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
@@ -43,11 +42,11 @@ class MusculoFavs extends Component {
     }
     
     okIdIdioma(id_idioma) {
-        this.setState({ id_idioma: id_idioma});
         base.traerEjerciciosFavoritos(id_idioma, this.okEjercicios.bind(this))
     }
 
     okEjercicios(ejercicios) {
+        console.log(ejercicios)
         this.setState({ ejercicios: ejercicios, memory: ejercicios, isLoading: false});
     }
 
@@ -352,6 +351,8 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         flex: 0.4,
+        height: wp(18),
+        width: wp(18),
         margin: wp(2.5),
         alignItems: 'center',
         justifyContent: "center",
@@ -365,12 +366,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         alignContent: 'center',
-        resizeMode: 'stretch',
         overflow: 'hidden'
     },
 
     name: {
-        fontSize: wp(5),
+        fontSize: wp(4.4),
         color: "#3399ff",
         fontWeight: 'bold'
     },

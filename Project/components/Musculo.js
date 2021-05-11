@@ -6,8 +6,8 @@ import ExportadorEjercicios from './Fotos/ExportadorEjercicios';
 import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
-import { BlackShadowForBlack } from './Estilos/Shadows'
 import ExportadorAds from './Fotos/ExportadorAds';
+import { BlackShadowForBlack } from './Estilos/Styles'
 import {
   StyleSheet,
   Text,
@@ -47,7 +47,6 @@ class Musculo extends Component {
 
   //Setea los ejercicios y renderiza la screen
   okEjercicios(ejercicios) {
-    console.log(ejercicios)
     this.setState({
       ejercicios: ejercicios,
       id_idioma: ejercicios[0].id_idioma,
@@ -278,9 +277,11 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 0.4,
+    height: wp(18),
+    width: wp(18),
     margin: wp(2.5),
     alignItems: 'center',
-    justifyContent: "center",
+    justifyContent: "center"
   },
   image: {
     flex: 1,
@@ -291,12 +292,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
-    resizeMode: 'stretch',
     overflow: 'hidden'
   },
 
   name: {
-    fontSize: wp(5),
+    fontSize: wp(4.4),
     color: "#3399ff",
     fontWeight: 'bold'
   },

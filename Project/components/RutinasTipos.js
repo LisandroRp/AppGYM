@@ -3,7 +3,7 @@ import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorCreadores from './Fotos/ExportadorCreadores';
 import ExportadorFrases from './Fotos/ExportadorFrases'
-import { BlackShadowForBlack } from './Estilos/Shadows'
+import { BlackShadowForBlack } from './Estilos/Styles'
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
@@ -355,6 +355,8 @@ NoItemsLogo: {
   },
   imageContainer: {
     flex: 0.4,
+    height: wp(20),
+    width: wp(20),
     margin: wp(2.5),
     alignItems: 'center',
     justifyContent: "center",
@@ -373,7 +375,7 @@ NoItemsLogo: {
   },
 
   name: {
-    fontSize: wp(5),
+    fontSize: wp(4.4),
     color: "#3399ff",
     fontWeight: 'bold'
   },

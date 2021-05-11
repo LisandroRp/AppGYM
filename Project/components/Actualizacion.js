@@ -64,6 +64,7 @@ class Actualizacion extends Component {
             console.log("celu: " + version)
             console.log("idioma: " + this.state.id_idioma)
             if (this.state.version.valueOf().toString() === version.valueOf().toString()) {
+                this.setState({id_idioma: await this.props.navigation.getParam('id_idioma')})
                 this.okTodo()
             }
             else {
@@ -144,7 +145,7 @@ class Actualizacion extends Component {
 
     okBase = async () => {
         this.setState({ contador: 5 })
-        console.log(this.state.id_idioma + ' ' + this.state.version)
+        // console.log(this.state.id_idioma + ' ' + this.state.version)
         base.guardarConfiguracion(this.state.id_idioma, this.state.version, this.okIdioma.bind(this))
 
     }

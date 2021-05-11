@@ -8,7 +8,8 @@ import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
-import { BlackShadowForBlack, BlackShadow } from './Estilos/Shadows'
+import { BlackShadowForBlack, BlackShadow } from './Estilos/Styles'
+import { WhiteModalText } from './Estilos/PreMadeComponents'
 import { AzulPrincipal } from './Estilos/Colors'
 import { FontAwesome } from '@expo/vector-icons';
 import { AdMobBanner } from 'expo-ads-admob';
@@ -44,9 +45,11 @@ class MusculoAgregar extends Component {
       modalRepeticionesVisible: false,
       modalTiempoVisible: false,
       modalSeriesVisible: false,
+      modalExiste: false,
       favoritos: null,
       memory: [],
       ejercicios: [],
+      ejerciciosAux: [],
       isLoading: true,
       id_ejercicio: 0,
       id_idioma: 0,
@@ -69,49 +72,49 @@ class MusculoAgregar extends Component {
 
   //Trae los ejercicios especificios del musculo seleccionado en la screen anterior
   cargarEjercicios = async () => {
-    if (this.state.favoritos == false || this.state.favoritos == null) {
+    //if (this.state.favoritos == false || this.state.favoritos == null) {
       base.traerEjercicios(await this.props.navigation.getParam('id_musculo'), this.okEjercicios.bind(this))
-    }
-    else {
-      base.traerEjerciciosMusculoFavs(this.state.id_musculo, this.okEjerciciosFavs.bind(this))
-    }
+    //}
+    //else {
+    //  base.traerEjerciciosMusculoFavs(this.state.id_musculo, this.okEjerciciosFavs.bind(this))
+    //}
   }
   //Setea los ejercicios y renderiza la screen
   okEjercicios(ejercicios) {
-    if (ejercicios.length == 0) {
-      this.setState({ ejercicios: ejercicios, memory: ejercicios, favoritos: true });
-      base.traerIdIdioma(this.okIdIdioma.bind(this))
-    } else {
-      this.setState({
-        id_idioma: ejercicios[0].id_idioma,
-        favoritos: true,
-        ejercicios: ejercicios,
-        memory: ejercicios,
-        isLoading: false
-      });
-    }
-  }
-  okEjerciciosFavs(ejercicios, id_idioma) {
     if (ejercicios.length == 0) {
       this.setState({ ejercicios: ejercicios, memory: ejercicios, favoritos: false });
       base.traerIdIdioma(this.okIdIdioma.bind(this))
     } else {
       this.setState({
+        id_idioma: ejercicios[0].id_idioma,
         favoritos: false,
-        id_idioma: id_idioma,
         ejercicios: ejercicios,
         memory: ejercicios,
         isLoading: false
       });
     }
   }
+  // okEjerciciosFavs(ejercicios, id_idioma) {
+  //   if (ejercicios.length == 0) {
+  //     this.setState({ ejercicios: ejercicios, memory: ejercicios, favoritos: false });
+  //     base.traerIdIdioma(this.okIdIdioma.bind(this))
+  //   } else {
+  //     this.setState({
+  //       favoritos: false,
+  //       id_idioma: id_idioma,
+  //       ejercicios: ejercicios,
+  //       memory: ejercicios,
+  //       isLoading: false
+  //     });
+  //   }
+  // }
 
   okIdIdioma(id_idioma) {
     this.setState({ id_idioma: id_idioma, isLoading: false });
   }
 
   queEstrella() {
-    if (this.state.favoritos == false) {
+    if (this.state.favoritos == true) {
       return ExportadorLogos.traerEstrellaBlanca(true)
     } else {
       return ExportadorLogos.traerEstrellaBlanca(false)
@@ -138,7 +141,12 @@ class MusculoAgregar extends Component {
       alert(ExportadorFrases.CompletarTiempo(this.state.id_idioma))
     } else {
       this.setState({ modalTiempoVisible: false })
-      this._retrieveData(null, (this.state.minutos + " : " + this.state.segundos));
+      if(this.state.segundos == 0){
+        this._retrieveData(null, (this.state.minutos + " : " + this.state.segundos + "0"));
+      }
+      else{
+        this._retrieveData(null, (this.state.minutos + " : " + this.state.segundos));
+      }
     }
   }
   repeticionesString() {
@@ -167,35 +175,30 @@ class MusculoAgregar extends Component {
     }
   };
   cargarEjercicio(repeticiones, tiempo) {
-    if (tiempo == null) {
       var terminada = {
         id_ejercicio: this.state.id_ejercicio,
         id_musculo: this.state.musculoEjercicio,
         nombre_ejercicio: this.state.nombreEjercicio,
-        repeticiones: repeticiones,
+        repeticiones: tiempo ? null : repeticiones,
         series: this.state.series,
         dia: this.state.dia,
         combinado: this.state.combinado,
         posicion: this.state.ultimaPos.toString(),
-        tiempo: null
+        tiempo: tiempo ? tiempo.toString() : null
+    }
+    if(terminada.combinado && this.state.rutinaNueva.length != 0){
+      if(this.state.rutinaNueva[0].id_ejercicio == terminada.id_ejercicio){
+        this.setState({modalExiste: true})
       }
-    } else {
-      var terminada = {
-        id_ejercicio: this.state.id_ejercicio,
-        id_musculo: this.state.musculoEjercicio,
-        nombre_ejercicio: this.state.nombreEjercicio,
-        repeticiones: null,
-        series: this.state.series,
-        dia: this.state.dia,
-        combinado: this.state.combinado,
-        posicion: this.state.ultimaPos.toString(),
-        tiempo: tiempo.toString()
+      else{
+        this.state.rutinaNueva.push(terminada)
+        this.props.onPressSave(this.state.rutinaNueva, this.state.tipo, this.state.ultimaPos)
       }
     }
-
-
-    this.state.rutinaNueva.push(terminada)
-    this.props.onPressSave(this.state.rutinaNueva, this.state.tipo, this.state.ultimaPos)
+    else{
+      this.state.rutinaNueva.push(terminada)
+      this.props.onPressSave(this.state.rutinaNueva, this.state.tipo, this.state.ultimaPos)
+    }
   }
 
   setModalSeriesVisible(visible, id_ejercicio, nombre, musculo) {
@@ -206,7 +209,7 @@ class MusculoAgregar extends Component {
       alert(ExportadorFrases.CompletarSeries(this.state.id_idioma))
     }
     else {
-      if (this.state.musculo != "Cardio" && this.state.id_ejercicio != 68 && this.state.id_ejercicio != 69) {
+      if (this.state.id_musculo != 8 && this.state.id_ejercicio != 68 && this.state.id_ejercicio != 69) {
         if (parseInt(this.state.series) < 5) {
           this.setState({ modalRepeticionesHeigh: 0.25 })
           this.setModalRepeticionesVisible(visible)
@@ -322,10 +325,32 @@ class MusculoAgregar extends Component {
             />
           </View>
           <ScrollView>
-            <TouchableOpacity onPress={() => { this.cargarEjercicios() }} style={[styles.starButton, BlackShadow()]}>
+            <TouchableOpacity onPress={() => { this.setState({favoritos: !this.state.favoritos}) }} style={[styles.starButton, BlackShadow()]}>
               <Image style={styles.starImage} source={this.queEstrella()} />
             </TouchableOpacity>
-            {this.state.ejercicios.map((item, itemPos) => (
+            {this.state.favoritos ?
+              this.state.ejercicios.sort((a, b) => a.nombre_ejercicio.localeCompare(b.nombre_ejercicio)).map((item, itemPos) => (
+                item.favoritos ?
+              <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
+                <View style={styles.imageContainer}>
+                  <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
+                </View>
+                <View style={styles.cardContent}>
+                  <Text style={styles.name}>{item.nombre_ejercicio}</Text>
+                  <Text style={styles.elemento}>{item.nombre_elemento}</Text>
+                </View>
+                <View style={styles.plusContainer}>
+                  <FontAwesome name="plus"
+                    onPress={() => this.setModalSeriesVisible(true, item.id_ejercicio, item.nombre_ejercicio, item.id_musculo)}
+                    color={"white"}
+                    size={wp(8)}
+                  /></View>
+              </TouchableOpacity>
+              :
+              <View/>
+            ))
+            :
+            this.state.ejercicios.sort((a, b) => a.nombre_ejercicio.localeCompare(b.nombre_ejercicio)).map((item, itemPos) => (
               <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
                 <View style={styles.imageContainer}>
                   <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
@@ -380,11 +405,10 @@ class MusculoAgregar extends Component {
                 </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
+                  <WhiteModalText style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.setModalRepeticionesOTiempo(true)} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
-
+                  <WhiteModalText style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
               </View>
             </View>
@@ -419,11 +443,10 @@ class MusculoAgregar extends Component {
               </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({ repeticiones: [] }) }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
+                  <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.guardarEjercicio()} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
-
+                  <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
               </View>
             </View>
@@ -449,11 +472,27 @@ class MusculoAgregar extends Component {
               </View>
               <View style={styles.modal2}>
                 <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({ minutos: 0, segundos: 0 }) }} style={styles.modalButtonCancelar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
+                  <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.guardarEjercicioTiempo()} style={styles.modalButtonAceptar}>
-                  <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
+                  <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+          <Modal
+            animationType="fade"
+            visible={this.state.modalExiste}
+            transparent={true}
+            onRequestClose={() => this.setState({ modalExiste: false })}  >
 
+            <View style={styles.modalExiste}>
+            <View style={styles.modal1}>
+                <Text style={styles.modalText}>{ExportadorFrases.MismoEjercicio(this.state.id_idioma)}</Text>
+              </View>
+              <View style={styles.modal2}>
+                <TouchableOpacity onPress={() => this.setState({ modalExiste: false })} style={styles.modalExisteButtonAceptar}>
+                  <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
                 </TouchableOpacity>
               </View>
             </View>
@@ -504,6 +543,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     marginTop: hp(2),
+    marginHorizontal: wp(5)
   },
 
   bannerContainer: {
@@ -563,6 +603,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 0.4,
+    height: wp(18),
+    width: wp(18),
     margin: wp(2.5),
     alignItems: 'center',
     justifyContent: "center",
@@ -576,12 +618,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
-    resizeMode: 'stretch',
     overflow: 'hidden'
   },
 
   name: {
-    fontSize: wp(5),
+    fontSize: wp(4.4),
     color: blueColor,
     fontWeight: 'bold'
   },
@@ -597,7 +638,7 @@ const styles = StyleSheet.create({
     height: height * 0.22,
     position: 'absolute',
     alignSelf: "center",
-    top: hp(40),
+    top: hp(35),
     borderColor: 'black',
     borderWidth: 2,
     backgroundColor: 'grey',
@@ -619,8 +660,23 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     opacity: .95
   },
+  modalExiste: {
+    flex: 1,
+    height: height * 0.20,
+    position: 'absolute',
+    alignSelf: "center",
+    top: hp(35),
+    borderColor: 'black',
+    borderWidth: 2,
+    backgroundColor: 'grey',
+    shadowColor: 'black',
+    shadowOpacity: 5.0,
+    borderRadius: 22,
+    opacity: .95
+  },
   modal1: {
     flex: 1,
+    paddingHorizontal: wp(2.5),
     flexDirection: "column",
     alignSelf: "center",
     justifyContent: "center"
@@ -629,20 +685,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderColor: 'black',
     borderTopWidth: 2,
-    width: width * 0.74,
     height: hp(6),
     opacity: .95
   },
   modalButtonCancelar: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: "center",
     borderBottomLeftRadius: 22
   },
   modalButtonAceptar: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: "center",
     borderLeftWidth: 2,
     borderBottomRightRadius: 22
+  },
+  modalExisteButtonAceptar: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+    borderBottomRightRadius: 22,
+    borderBottomLeftRadius: 22
   },
   modalTextSeries: {
     color: 'white',

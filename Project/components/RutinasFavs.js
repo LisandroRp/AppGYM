@@ -3,7 +3,7 @@ import { withNavigation } from 'react-navigation';
 import base from './GenerarBase';
 import ExportadorCreadores from './Fotos/ExportadorCreadores';
 import ExportadorFrases from './Fotos/ExportadorFrases';
-import { BlackShadowForBlack, BlackShadow } from './Estilos/Shadows'
+import { BlackShadowForBlack, BlackShadow } from './Estilos/Styles'
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
@@ -32,7 +32,7 @@ function createData(item, nombre) {
       rutina: [],
     };
   }
-  
+
 class RutinasFavs extends Component {
     constructor(props) {
         super(props);
@@ -234,7 +234,7 @@ class RutinasFavs extends Component {
 
                             <View style={[styles.modal, BlackShadow()]}>
 
-                                <View style={{ flexDirection: 'column', marginTop: height * 0.05, marginHorizontal: width * 0.05 }}>
+                                <View style={styles.modal1}>
                                     <Text style={styles.textButton}>{ExportadorFrases.SacarRutinaFavs1(this.state.idioma.id_idioma)} "{this.state.nombre_rutina}" {ExportadorFrases.SacarRutinaFavs2(this.state.idioma.id_idioma)}?</Text>
                                 </View>
                                 <View style={styles.modal2}>
@@ -358,6 +358,8 @@ const styles = StyleSheet.create({
     imageContainer: {
         flex: 0.4,
         margin: wp(2.5),
+        height: wp(20),
+        width: wp(20),
         alignItems: 'center',
         justifyContent: "center",
     },
@@ -374,7 +376,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     name: {
-        fontSize: wp(5),
+        fontSize: wp(4.4),
         color: "#3399ff",
         fontWeight: 'bold'
     },
@@ -407,6 +409,12 @@ const styles = StyleSheet.create({
         borderRadius: 22,
         opacity: .95
     },
+    modal1: {
+        flex: 1,
+        paddingHorizontal: wp(2.5),
+        justifyContent: "center",
+        marginBottom: hp(6)
+      },
     modal2: {
         flexDirection: 'row',
         borderColor: 'black',

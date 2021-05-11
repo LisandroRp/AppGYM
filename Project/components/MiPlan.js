@@ -7,7 +7,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import base from './GenerarBase';
 import ExportadorFrases from './Fotos/ExportadorFrases';
-import {BlackShadowForBlack} from './Estilos/Shadows'
+import {BlackShadowForBlack} from './Estilos/Styles'
 import {AzulPrincipal} from './Estilos/Colors'
 import { BlackButtonText, BlueButton } from './Estilos/PreMadeComponents';
 
