@@ -108,7 +108,7 @@ class EjercicioEspecifico extends Component {
                 </DropDownItem>
               </View>
             </ScrollView>
-            <View style={styles.bannerContainer}></View>
+            <View style={styles.bannerContainer}>
             <AdMobBanner
               style={styles.bottomBanner}
               adUnitID={ExportadorAds.Banner()}
@@ -120,6 +120,7 @@ class EjercicioEspecifico extends Component {
               }}
               adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
             />
+            </View>
           </View>
         );
       } else {
@@ -157,7 +158,7 @@ class EjercicioEspecifico extends Component {
                 </DropDownItem>
               </View>
             </ScrollView>
-            <View style={styles.bannerContainer}></View>
+            <View style={styles.bannerContainer}>
             <AdMobBanner
               accessible={true}
               accessibilityLabel={"Add Banner"}
@@ -172,6 +173,7 @@ class EjercicioEspecifico extends Component {
               }}
               adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
             />
+            </View>
           </View>
         );
       }
@@ -186,12 +188,9 @@ const styles = StyleSheet.create({
     backgroundColor: "black"
   },
   bannerContainer: {
-    height: height * 0.08,
     backgroundColor: 'black'
   },
   bottomBanner: {
-    position: "absolute",
-    bottom: 0,
     alignSelf: 'center',
   },
   bgImage: {

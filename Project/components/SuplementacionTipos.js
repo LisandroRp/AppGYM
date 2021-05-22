@@ -12,7 +12,6 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,
   FlatList,
   Keyboard,
   ActivityIndicator,
@@ -20,6 +19,7 @@ import {
   ImageBackground
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 import { withNavigation } from 'react-navigation';
 import * as Font from 'expo-font';
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
@@ -189,7 +189,7 @@ class SuplementacionTipos extends Component {
             }}
             renderItem={({ item }) => {
               return (
-                <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre_suplemento)}>
+                <TouchableOpacityMorgan style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_suplemento, item.nombre_suplemento)}>
                   <View style={styles.imageContainer}>
                     <ImageBackground style={styles.image} source={ExportadorSuplementacion.default(this.state.id_idioma)}>
                       <Text style={[styles.textImage, { fontFamily: 'font2' }]} >{item.nombre_tipo}</Text>
@@ -200,29 +200,30 @@ class SuplementacionTipos extends Component {
                     <Text style={styles.marca}>{item.marca}</Text>
                   </View>
                   <View style={styles.ViewEstrella} >
-                    <TouchableOpacity onPress={() => { this.favear(item.id_suplemento) }}>
+                    <TouchableOpacityMorgan onPress={() => { this.favear(item.id_suplemento) }}>
                       <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
-                    </TouchableOpacity>
+                    </TouchableOpacityMorgan>
                   </View>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
               )
             }
             } />
-          <View style={styles.bannerContainer}></View>
-          <AdMobBanner
-            accessible={true}
-            accessibilityLabel={"Banner"}
-            accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
-            style={styles.bottomBanner}
-            adUnitID={ExportadorAds.Banner()}
-            onDidFailToReceiveAdWithError={err => {
-              console.log(err)
-            }}
-            onAdViewDidReceiveAd={() => {
-              console.log("Ad Recieved");
-            }}
-            adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-          />
+          <View style={styles.bannerContainer}>
+            <AdMobBanner
+              accessible={true}
+              accessibilityLabel={"Banner"}
+              accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
+              style={styles.bottomBanner}
+              adUnitID={ExportadorAds.Banner()}
+              onDidFailToReceiveAdWithError={err => {
+                console.log(err)
+              }}
+              onAdViewDidReceiveAd={() => {
+                console.log("Ad Recieved");
+              }}
+              adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+            />
+          </View>
         </View>
       );
     }
@@ -236,12 +237,10 @@ const styles = StyleSheet.create({
     backgroundColor: "black"
   },
   bannerContainer: {
-    height: height * 0.08,
     backgroundColor: 'black',
   },
   bottomBanner: {
-    position: "absolute",
-    bottom: 0,
+    alignSelf: "center"
   },
   contentList: {
     flex: 1,

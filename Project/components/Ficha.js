@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Modal, TextInput, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Text, Keyboard, Dimensions } from 'react-native';
+import { View, Image, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Modal, TextInput, StatusBar, TouchableWithoutFeedback, Text, Keyboard, Dimensions } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ExportadorFrases from './Fotos/ExportadorFrases'
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorAds from './Fotos/ExportadorAds';
 import { BlackShadow, BlackShadowForBlack } from './Estilos/Styles'
-import { BlackButtonText, BlueButton, WhiteModalText } from './Estilos/PreMadeComponents'
+import { BlackButtonText, BlueButton, WhiteModalText, TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 import base from './GenerarBase';
 import { AdMobRewarded } from 'expo-ads-admob';
 
@@ -32,7 +32,10 @@ class Ficha extends Component {
         };
         base.traerIdIdioma(this.okIdioma.bind(this))
     }
-
+    componentDidMount() {
+        AdMobRewarded.addEventListener("rewardedVideoDidRewardUser", () => this.crearPlan());
+        AdMobRewarded.addEventListener("rewardedVideoDidFailToLoad", () => this.setState({isLoading: false}));
+      }
     okIdioma(id_idioma) {
         this.setState({ id_idioma: id_idioma, isLoading: false })
     }
@@ -300,13 +303,13 @@ class Ficha extends Component {
                                 <Text style={styles.modalText}>{ExportadorFrases.ActualizarPlanModalLabel(this.state.id_idioma)}</Text>
                             </View>
                             <View style={styles.modal2}>
-                                <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
+                                <TouchableOpacityMorgan onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
                                     <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
-                                </TouchableOpacity>
+                                </TouchableOpacityMorgan>
 
-                                <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }), this.setState({ isLoading: true }), this.showRewarded(), this.crearPlan() }} style={styles.modalButtonAceptar}>
+                                <TouchableOpacityMorgan onPress={() => { this.setState({ modalVisible: false }), this.setState({ isLoading: true }), this.showRewarded()}} style={styles.modalButtonAceptar}>
                                     <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                                </TouchableOpacity>
+                                </TouchableOpacityMorgan>
                             </View>
                         </View>
                     </Modal>

@@ -9,13 +9,12 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,
   ActivityIndicator,
   ImageBackground
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { BlackShadowForBlack, marginTitlesPlataform } from './Estilos/Styles';
-import { BackgroundTitleImage } from './Estilos/PreMadeComponents'
+import { BackgroundTitleImage, TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 
 class Favoritos extends Component {
 
@@ -59,32 +58,32 @@ class Favoritos extends Component {
         <View style={styles.container}>
           <Image style={styles.bgImage} source={ExportadorFondo.traerFondo()} />
 
-          <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoRutinas()}>
+          <TouchableOpacityMorgan style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoRutinas()}>
             <ImageBackground style={styles.image} source={ExportadorMenus.Rutinas()} >
               <BackgroundTitleImage>
                 <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Rutinas(this.state.id_idioma)}</Text>
               </BackgroundTitleImage>
               <Text style={[styles.textImage, marginTitlesPlataform(),{ fontFamily: 'font2' }]}>{ExportadorFrases.Rutinas(this.state.id_idioma)}</Text>
             </ImageBackground>
-          </TouchableOpacity>
+          </TouchableOpacityMorgan>
 
-          <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoEjercicios()}>
+          <TouchableOpacityMorgan style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoEjercicios()}>
             <ImageBackground style={styles.image} source={ExportadorMenus.Ejercicios()} >
               <BackgroundTitleImage>
                 <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Ejercicios(this.state.id_idioma)}</Text>
               </BackgroundTitleImage>
               <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Ejercicios(this.state.id_idioma)}</Text>
             </ImageBackground>
-          </TouchableOpacity>
+          </TouchableOpacityMorgan>
 
-          <TouchableOpacity style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoSuplementos()}>
+          <TouchableOpacityMorgan style={[styles.imageContainer, BlackShadowForBlack()]} onPress={() => this.props.onPressGoSuplementos()}>
             <ImageBackground style={[styles.image]} source={ExportadorMenus.Suplementacion()} >
               <BackgroundTitleImage>
                 <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Suplementos(this.state.id_idioma)}</Text>
               </BackgroundTitleImage>
               <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{ExportadorFrases.Suplementos(this.state.id_idioma)}</Text>
             </ImageBackground>
-          </TouchableOpacity>
+          </TouchableOpacityMorgan>
 
         </View>
       );

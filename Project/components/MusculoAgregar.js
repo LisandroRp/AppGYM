@@ -9,7 +9,7 @@ import ExportadorFondo from './Fotos/ExportadorFondo';
 import ExportadorLogos from './Fotos/ExportadorLogos';
 import ExportadorAds from './Fotos/ExportadorAds';
 import { BlackShadowForBlack, BlackShadow } from './Estilos/Styles'
-import { WhiteModalText } from './Estilos/PreMadeComponents'
+import { WhiteModalText, TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 import { AzulPrincipal } from './Estilos/Colors'
 import { FontAwesome } from '@expo/vector-icons';
 import { AdMobBanner } from 'expo-ads-admob';
@@ -18,8 +18,6 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,
-  FlatList,
   Keyboard,
   Dimensions,
   ActivityIndicator,
@@ -141,11 +139,11 @@ class MusculoAgregar extends Component {
       alert(ExportadorFrases.CompletarTiempo(this.state.id_idioma))
     } else {
       this.setState({ modalTiempoVisible: false })
-      if(this.state.segundos == 0){
-        this._retrieveData(null, (this.state.minutos + " : " + this.state.segundos + "0"));
+      if(this.state.segundos < 10){
+        this._retrieveData(null, (this.state.minutos + " min, " + "0" + this.state.segundos + " seg"));
       }
       else{
-        this._retrieveData(null, (this.state.minutos + " : " + this.state.segundos));
+        this._retrieveData(null, (this.state.minutos + " mins, " + this.state.segundos + " segs"));
       }
     }
   }
@@ -325,13 +323,13 @@ class MusculoAgregar extends Component {
             />
           </View>
           <ScrollView>
-            <TouchableOpacity onPress={() => { this.setState({favoritos: !this.state.favoritos}) }} style={[styles.starButton, BlackShadow()]}>
+            <TouchableOpacityMorgan onPress={() => { this.setState({favoritos: !this.state.favoritos}) }} style={[styles.starButton, BlackShadow()]}>
               <Image style={styles.starImage} source={this.queEstrella()} />
-            </TouchableOpacity>
+            </TouchableOpacityMorgan>
             {this.state.favoritos ?
               this.state.ejercicios.sort((a, b) => a.nombre_ejercicio.localeCompare(b.nombre_ejercicio)).map((item, itemPos) => (
                 item.favoritos ?
-              <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
+              <TouchableOpacityMorgan style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
                 <View style={styles.imageContainer}>
                   <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
                 </View>
@@ -345,13 +343,13 @@ class MusculoAgregar extends Component {
                     color={"white"}
                     size={wp(8)}
                   /></View>
-              </TouchableOpacity>
+              </TouchableOpacityMorgan>
               :
               <View/>
             ))
             :
             this.state.ejercicios.sort((a, b) => a.nombre_ejercicio.localeCompare(b.nombre_ejercicio)).map((item, itemPos) => (
-              <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
+              <TouchableOpacityMorgan style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
                 <View style={styles.imageContainer}>
                   <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
                 </View>
@@ -365,7 +363,7 @@ class MusculoAgregar extends Component {
                     color={"white"}
                     size={wp(8)}
                   /></View>
-              </TouchableOpacity>
+              </TouchableOpacityMorgan>
             )
             )
             }
@@ -404,12 +402,12 @@ class MusculoAgregar extends Component {
                 />
                 </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={styles.modalButtonCancelar}>
+                <TouchableOpacityMorgan onPress={() => { this.setState({ modalSeriesVisible: false }); }} style={styles.modalButtonCancelar}>
                   <WhiteModalText style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.setModalRepeticionesOTiempo(true)} style={styles.modalButtonAceptar}>
+                </TouchableOpacityMorgan>
+                <TouchableOpacityMorgan onPress={() => this.setModalRepeticionesOTiempo(true)} style={styles.modalButtonAceptar}>
                   <WhiteModalText style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
               </View>
             </View>
           </Modal>
@@ -442,12 +440,12 @@ class MusculoAgregar extends Component {
                   ))}
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({ repeticiones: [] }) }} style={styles.modalButtonCancelar}>
+                <TouchableOpacityMorgan onPress={() => { this.setModalSeriesVisible(true), this.setState({ repeticiones: [] }) }} style={styles.modalButtonCancelar}>
                   <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.guardarEjercicio()} style={styles.modalButtonAceptar}>
+                </TouchableOpacityMorgan>
+                <TouchableOpacityMorgan onPress={() => this.guardarEjercicio()} style={styles.modalButtonAceptar}>
                   <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
               </View>
             </View>
           </Modal>
@@ -471,12 +469,12 @@ class MusculoAgregar extends Component {
                 </View>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setModalSeriesVisible(true), this.setState({ minutos: 0, segundos: 0 }) }} style={styles.modalButtonCancelar}>
+                <TouchableOpacityMorgan onPress={() => { this.setModalSeriesVisible(true), this.setState({ minutos: 0, segundos: 0 }) }} style={styles.modalButtonCancelar}>
                   <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.guardarEjercicioTiempo()} style={styles.modalButtonAceptar}>
+                </TouchableOpacityMorgan>
+                <TouchableOpacityMorgan onPress={() => this.guardarEjercicioTiempo()} style={styles.modalButtonAceptar}>
                   <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
               </View>
             </View>
           </Modal>
@@ -491,12 +489,13 @@ class MusculoAgregar extends Component {
                 <Text style={styles.modalText}>{ExportadorFrases.MismoEjercicio(this.state.id_idioma)}</Text>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => this.setState({ modalExiste: false })} style={styles.modalExisteButtonAceptar}>
+                <TouchableOpacityMorgan onPress={() => this.setState({ modalExiste: false })} style={styles.modalExisteButtonAceptar}>
                   <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
               </View>
             </View>
           </Modal>
+          <View style={styles.bannerContainer}>
           <AdMobBanner
             accessible={true}
             accessibilityLabel={"Add Banner"}
@@ -511,6 +510,7 @@ class MusculoAgregar extends Component {
             }}
             adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
           />
+          </View> 
         </View>
       );
     }
@@ -550,9 +550,10 @@ const styles = StyleSheet.create({
     height: height * 0.08,
     backgroundColor: 'black',
   },
+  bannerContainer: {
+    backgroundColor: 'black',
+  },
   bottomBanner: {
-    position: "absolute",
-    bottom: 0,
     alignSelf: 'center',
   },
 

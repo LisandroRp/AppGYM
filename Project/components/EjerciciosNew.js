@@ -4,13 +4,12 @@ import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorAds from './Fotos/ExportadorAds'
 import { withNavigation } from 'react-navigation';
-import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
+import { BlueParallelButton, BlackButtonText, WhiteModalText, TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 import {
   StyleSheet,
   Text,
   View,
   Image,
-  TouchableOpacity,
   Dimensions,
   ScrollView,
   Keyboard,
@@ -47,6 +46,7 @@ class EjerciciosNew extends Component {
   }
   componentDidMount() {
     AdMobInterstitial.addEventListener("interstitialDidClose", () => this.props.onPressCancelar());
+    AdMobInterstitial.addEventListener("interstitialDidFailToLoad", () => {this.props.onPressCancelar()});
     base.traerIdIdioma(this.okIdIdioma.bind(this))
   }
 
@@ -195,13 +195,13 @@ class EjerciciosNew extends Component {
               </View>
               <View style={styles.modal2}>
 
-                <TouchableOpacity onPress={() => { this.setState({ modalGuardarVisible: false }) }} style={styles.modalButtonCancelar}>
+                <TouchableOpacityMorgan onPress={() => { this.setState({ modalGuardarVisible: false }) }} style={styles.modalButtonCancelar}>
                   <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
 
-                <TouchableOpacity onPress={() => { this.guardarEjercicio(), this.showInterstitial() }} style={styles.modalButtonAceptar}>
+                <TouchableOpacityMorgan onPress={() => { this.guardarEjercicio(), this.showInterstitial() }} style={styles.modalButtonAceptar}>
                   <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
 
               </View>
             </View>

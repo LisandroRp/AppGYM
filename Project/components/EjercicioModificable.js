@@ -4,13 +4,12 @@ import ExportadorFrases from './Fotos/ExportadorFrases';
 import ExportadorFondo from './Fotos/ExportadorFondo';
 import { withNavigation } from 'react-navigation';
 import { BlackShadow } from './Estilos/Styles'
-import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
+import { BlueParallelButton, BlackButtonText, WhiteModalText, TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 import {
   StyleSheet,
   Text,
   View,
   Image,
-  TouchableOpacity,
   Dimensions,
   ScrollView,
   Keyboard,
@@ -261,12 +260,12 @@ class EjerciciosNew extends Component {
                 <Text style={styles.modalText}>{ExportadorFrases.ActualizarEjercicioModal(this.state.id_idioma)} "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setState({ modalGuardarVisible: false }) }} style={styles.modalButtonCancelar}>
+                <TouchableOpacityMorgan onPress={() => { this.setState({ modalGuardarVisible: false }) }} style={styles.modalButtonCancelar}>
                   <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.actualizarEjercicio()} style={styles.modalButtonAceptar}>
+                </TouchableOpacityMorgan>
+                <TouchableOpacityMorgan onPress={() => this.actualizarEjercicio()} style={styles.modalButtonAceptar}>
                   <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
               </View>
             </View>
           </Modal>
@@ -281,13 +280,13 @@ class EjerciciosNew extends Component {
                 <Text style={styles.modalText}>{ExportadorFrases.BorrarEjercicio(this.state.id_idioma)} "{this.state.nombre}"</Text>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setState({ modalBorrarVisible: false }) }} style={styles.modalButtonCancelar}>
+                <TouchableOpacityMorgan onPress={() => { this.setState({ modalBorrarVisible: false }) }} style={styles.modalButtonCancelar}>
                   <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
 
-                <TouchableOpacity onPress={() => this.borrarEjercicio()} style={styles.modalButtonAceptar}>
+                <TouchableOpacityMorgan onPress={() => this.borrarEjercicio()} style={styles.modalButtonAceptar}>
                   <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
               </View>
             </View>
           </Modal>
@@ -302,9 +301,9 @@ class EjerciciosNew extends Component {
                 <Text style={styles.modalText}>{ExportadorFrases.EjercicioPertenece1(this.state.id_idioma)} {this.state.nombre} {ExportadorFrases.EjercicioPertenece2(this.state.id_idioma)} {this.state.nombresRutinas} {"\n"}{ExportadorFrases.EjercicioPertenece3(this.state.id_idioma)}</Text>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => this.setState({ modalExiste: false })} style={styles.modalExisteButtonAceptar}>
+                <TouchableOpacityMorgan onPress={() => this.setState({ modalExiste: false })} style={styles.modalExisteButtonAceptar}>
                   <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
               </View>
             </View>
           </Modal>

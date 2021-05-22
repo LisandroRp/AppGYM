@@ -7,7 +7,6 @@ import {
   StyleSheet,
   View,
   Image,
-  TouchableOpacity,
   StatusBar,
   ScrollView,
   ActivityIndicator,
@@ -18,7 +17,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { withNavigation } from 'react-navigation';
 import * as Font from 'expo-font';
 import { BlackShadowForBlack, marginTitlesPlataform } from './Estilos/Styles';
-import { BackgroundTitleImage } from './Estilos/PreMadeComponents';
+import { BackgroundTitleImage, TouchableOpacityMorgan } from './Estilos/PreMadeComponents';
 
 class EjercicioAgregar extends Component {
 
@@ -88,7 +87,7 @@ class EjercicioAgregar extends Component {
             <View style={{ flexDirection: "row", flex: 1 }}>
               {
                 array.map((item, itemPos) => (
-                  <TouchableOpacity
+                  <TouchableOpacityMorgan
                     accessible={true}
                     accessibilityLabel={item.nombre_musculo}
                     accessibilityHint={ExportadorFrases.EjerciciosHint(this.state.id_idioma) + item.nombre_musculo}
@@ -100,7 +99,7 @@ class EjercicioAgregar extends Component {
                       </BackgroundTitleImage>
                       <Text style={[styles.textImage, marginTitlesPlataform(), { fontFamily: 'font2' }]}>{item.nombre_musculo}</Text>
                     </ImageBackground>
-                  </TouchableOpacity>
+                  </TouchableOpacityMorgan>
                 ))
               }
             </View>

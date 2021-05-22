@@ -9,7 +9,6 @@ import {
   StatusBar,
   View,
   Image,
-  TouchableOpacity,
   FlatList,
   Text,
   ImageBackground,
@@ -19,7 +18,7 @@ import * as Font from 'expo-font';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { withNavigation } from 'react-navigation';
 import { BlackShadowForBlack, marginTitlesPlataform } from './Estilos/Styles';
-import { BackgroundTitleImage } from './Estilos/PreMadeComponents'
+import { BackgroundTitleImage, TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 
 var {Platform} = React;
 
@@ -81,7 +80,7 @@ class Ejercicios extends Component {
             <View key={arrayPos.toString()} style={{ flexDirection: "row", flex: 1 }}>
               {
                 array.map((item, itemPos) => (
-                  <TouchableOpacity
+                  <TouchableOpacityMorgan
                     key={item.id_musculo.toString()}
                     accessible={true}
                     accessibilityLabel={item.nombre_musculo}
@@ -94,7 +93,7 @@ class Ejercicios extends Component {
                       </BackgroundTitleImage>
                       <Text style={[styles.textImage, marginTitlesPlataform(), {fontFamily: 'font2'}]}>{item.nombre_musculo}</Text>
                     </ImageBackground>
-                  </TouchableOpacity>
+                  </TouchableOpacityMorgan>
                 ))
               }
             </View>

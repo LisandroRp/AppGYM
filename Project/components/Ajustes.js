@@ -9,13 +9,13 @@ import {
     Text,
     View,
     Image,
-    TouchableOpacity,
     AsyncStorage,
     ActivityIndicator,
     Dimensions,
     Modal
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 
 var { height, width } = Dimensions.get('window');
 const blueColor = AzulPrincipal()
@@ -84,16 +84,16 @@ class Ajustes extends Component {
                     </View>
                     <View style={styles.LanguageView}>
                         <View style={[styles.flagView, { borderWidth: this.borderColor(1), backgroundColor: this.backgroundColor(1) }]}>
-                            <TouchableOpacity style={[styles.flag, BlackShadowForBlack()]} disabled={this.botonFunciona(1)} onPress={() => this.setIdioma(1, "es")}>
+                            <TouchableOpacityMorgan style={[styles.flag, BlackShadowForBlack()]} disabled={this.botonFunciona(1)} onPress={() => this.setIdioma(1, "es")}>
                                 <Image style={styles.flagIcon} source={require('./Fotos/Logos/Flag_Spain.png')} />
                                 <Text style={styles.flagText}>Español</Text>
-                            </TouchableOpacity>
+                            </TouchableOpacityMorgan>
                         </View>
                         <View style={[styles.flagView, { borderWidth: this.borderColor(2), backgroundColor: this.backgroundColor(2) }]}>
-                            <TouchableOpacity style={[styles.flag, BlackShadowForBlack()]} disabled={this.botonFunciona(2)} onPress={() => this.setIdioma(2, "en")}>
+                            <TouchableOpacityMorgan style={[styles.flag, BlackShadowForBlack()]} disabled={this.botonFunciona(2)} onPress={() => this.setIdioma(2, "en")}>
                                 <Image style={styles.flagIcon} source={require('./Fotos/Logos/Flag_Ingles.png')} />
                                 <Text style={styles.flagText}>English</Text>
-                            </TouchableOpacity>
+                            </TouchableOpacityMorgan>
                         </View>
                     </View>
                 </View>

@@ -293,7 +293,7 @@ class EjerciciosScreen extends React.Component {
       headerTitleStyle: {
         fontSize: wp(4),
       },
-      headerRight: (
+      headerRight: () => (
         <View style={{ flexDirection: 'row' }}>
           <FontAwesome name="plus" style={{ marginRight: 20, color: azulPrincipal }}
             onPress={() => navigation.navigate('EjerciciosNew', { id_idioma: navigation.getParam('id_idioma') })}
@@ -320,7 +320,7 @@ class EjerciciosEspecificoMScreen extends React.Component {
     var nombre = navigation.getParam('nombre_ejercicio');
     var id_ejercicio = navigation.getParam('id_ejercicio');
     return {
-      headerRight: (
+      headerRight: () => (
         <View style={{ flexDirection: 'row' }}>
           <FontAwesome name="edit" style={{ marginRight: 20, color: azulPrincipal }}
             onPress={() => navigation.navigate('EjercicioModificable', { nombre_ejercicio: nombre, id_ejercicio: id_ejercicio })}
@@ -618,7 +618,7 @@ class RutinaEspecificaMScreen extends React.Component {
     var rutina = navigation.getParam('rutina');
 
     return {
-      headerRight: (
+      headerRight: () => (
         <View style={{ flexDirection: 'row' }}>
           {/* <FontAwesome name="share" style={{ marginRight: 20, color: azulPrincipal }}
             onPress={() => Share.share(({ message: rutina }))}
@@ -1088,7 +1088,7 @@ const EjerciciosStackNavigator = createStackNavigator(
       screen: EjerciciosScreen,
       navigationOptions: ({ navigation }) => {
         return {
-          headerLeft: (
+          headerLeft: () =>(
             <Icon
               style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
@@ -1120,7 +1120,7 @@ const RutinasStackNavigator = createStackNavigator(
 
       navigationOptions: ({ navigation }) => {
         return {
-          headerLeft: (
+          headerLeft: () =>(
             <Icon
               style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
@@ -1128,7 +1128,7 @@ const RutinasStackNavigator = createStackNavigator(
               size={wp(6.6)}
             />
           ),
-          headerRight: (
+          headerRight: () => (
             <View style={{ flexDirection: 'row' }}>
               <FontAwesome name="plus" style={{ marginRight: 20, color: azulPrincipal }}
                 onPress={() => navigation.navigate('RutinaNew', { tipo: 'nuevo' })}
@@ -1158,7 +1158,7 @@ const SuplementacionStackNavigator = createStackNavigator(
       screen: SuplementacionScreen,
       navigationOptions: ({ navigation }) => {
         return {
-          headerLeft: (
+          headerLeft: () =>(
             <Icon
               style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
@@ -1182,7 +1182,7 @@ const FavoritosStackNavigator = createStackNavigator(
       screen: FavoritosScreen,
       navigationOptions: ({ navigation }) => {
         return {
-          headerLeft: (
+          headerLeft: () =>(
             <Icon
               style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
@@ -1213,7 +1213,7 @@ const AjustesStackNavigator = createStackNavigator(
       screen: AjustesScreen,
       navigationOptions: ({ navigation }) => {
         return {
-          headerLeft: (
+          headerLeft: () =>(
             <Icon
               style={{ paddingLeft: 10, color: azulPrincipal }}
               onPress={() => navigation.openDrawer()}
@@ -1260,7 +1260,7 @@ const PerfilTabNavigator = createBottomTabNavigator({
         headerTitleStyle: {
           fontSize: wp(4),
         },
-        headerLeft: (
+        headerLeft: () =>(
           <Icon
             style={{ paddingLeft: 10, color: azulPrincipal }}
             onPress={() => navigation.openDrawer()}
@@ -1358,6 +1358,7 @@ const AppDrawerNavigator = createDrawerNavigator({
   },
   Ajustes: {
     screen: AjustesStackNavigator,
+    
     navigationOptions: {
       title: i18n.t('ajustes'),
       drawerIcon: ({ tintColor }) => (<Ionicons name="md-settings" size={wp(6)} color={tintColor} />)

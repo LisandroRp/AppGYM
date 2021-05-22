@@ -1,8 +1,8 @@
 import React from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import Elevations from 'react-native-elevation'
 
 var {Platform} = React;
-
 export function BlackShadow() {
     return {
         shadowColor: 'black',
@@ -12,7 +12,8 @@ export function BlackShadow() {
         },
         shadowOpacity: 1,
         shadowRadius: 5,
-        elevation: 100
+        elevation: 24,
+        ...Elevations[24]
     }
 }
 export function BlackShadowForBlack() {
@@ -24,7 +25,8 @@ export function BlackShadowForBlack() {
         },
         shadowOpacity: 0.8,
         shadowRadius: 5,
-        elevation: 100
+        elevation: 24,
+        ...Elevations[24]
     }
 }
 export function marginTitlesPlataform() {

@@ -12,13 +12,13 @@ import {
     Text,
     View,
     Image,
-    TouchableOpacity,
     FlatList,
     ActivityIndicator,
     Dimensions,
     Modal
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
+import { TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
@@ -161,7 +161,7 @@ class RutinasFavs extends Component {
                             accessible={true}
                             accessibilityLabel={"Banner"}
                             accessibilityHint={ExportadorFrases.BannerHint(this.state.idioma.id_idioma)}
-                            style={styles.bottomBanner}
+                            style={styles.NoItemsBottomBanner}
                             adUnitID={ExportadorAds.Banner()}
                             onDidFailToReceiveAdWithError={err => {
                                 console.log(err)
@@ -206,7 +206,7 @@ class RutinasFavs extends Component {
                             renderItem={({ item }) => {
                                 if (item.favoritos) {
                                     return (
-                                        <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]}
+                                        <TouchableOpacityMorgan style={[this.marginSize(item), styles.card, BlackShadowForBlack()]}
                                             onPress={() =>  this.crearDatosAEnviar(item, this.queNombreRutina(item))}>
                                             <View style={styles.imageContainer}>
                                                 <Image style={styles.image} source={ExportadorCreadores.queImagen(item.id_creador)} />
@@ -217,11 +217,11 @@ class RutinasFavs extends Component {
                                                 <Text style={styles.dias}>{ExportadorFrases.Autor(this.state.idioma.id_idioma)}: {this.creador(item.nombre_creador)}</Text>
                                             </View>
                                             <View style={styles.ViewEstrella} >
-                                                <TouchableOpacity onPress={() => { this.modalVisible(item.id_rutina, item.nombre_rutina) }}>
+                                                <TouchableOpacityMorgan onPress={() => { this.modalVisible(item.id_rutina, item.nombre_rutina) }}>
                                                     <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
-                                                </TouchableOpacity>
+                                                </TouchableOpacityMorgan>
                                             </View>
-                                        </TouchableOpacity>
+                                        </TouchableOpacityMorgan>
                                     )
                                 }
                             }} />
@@ -239,17 +239,18 @@ class RutinasFavs extends Component {
                                 </View>
                                 <View style={styles.modal2}>
 
-                                    <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
+                                    <TouchableOpacityMorgan onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
                                         <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.idioma.id_idioma)}</Text>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
 
-                                    <TouchableOpacity onPress={() => this.favear(this.state.id_rutina)} style={styles.modalButtonAceptar}>
+                                    <TouchableOpacityMorgan onPress={() => this.favear(this.state.id_rutina)} style={styles.modalButtonAceptar}>
                                         <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.idioma.id_idioma)}</Text>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
 
                                 </View>
                             </View>
                         </Modal>
+                        <View style={styles.bannerContainer}>
                         <AdMobBanner
                             accessible={true}
                             accessibilityLabel={"Banner"}
@@ -264,6 +265,7 @@ class RutinasFavs extends Component {
                             }}
                             adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
                         />
+                        </View>
                     </LinearGradient>
                 );
             }
@@ -278,12 +280,15 @@ const styles = StyleSheet.create({
         backgroundColor: "grey"
     },
     bannerContainer: {
-        height: height * 0.08,
         backgroundColor: 'black',
     },
     bottomBanner: {
+        alignSelf: 'center',
+    },
+    NoItemsBottomBanner: {
         position: "absolute",
         bottom: 0,
+        backgroundColor: "black"
     },
     contentList: {
         flex: 1,

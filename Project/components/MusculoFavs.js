@@ -13,13 +13,13 @@ import {
     Text,
     View,
     Image,
-    TouchableOpacity,
     FlatList,
     Dimensions,
     Modal,
     ActivityIndicator,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
 var { height, width } = Dimensions.get('window');
@@ -40,14 +40,14 @@ class MusculoFavs extends Component {
     componentDidMount = async () => {
         base.traerIdIdioma(this.okIdIdioma.bind(this))
     }
-    
+
     okIdIdioma(id_idioma) {
         base.traerEjerciciosFavoritos(id_idioma, this.okEjercicios.bind(this))
     }
 
     okEjercicios(ejercicios) {
         console.log(ejercicios)
-        this.setState({ ejercicios: ejercicios, memory: ejercicios, isLoading: false});
+        this.setState({ ejercicios: ejercicios, memory: ejercicios, isLoading: false });
     }
 
     modalVisible(id, nombre_ejercicio) {
@@ -149,20 +149,20 @@ class MusculoFavs extends Component {
                         <View style={[styles.NoItemsImageContainer, BlackShadowForBlack()]}>
                             <Image style={styles.NoItemsLogo} source={require('../assets/Logo_Solo.png')} />
                         </View>
-                        <AdMobBanner
-                            accessible={true}
-                            accessibilityLabel={"Banner"}
-                            accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
-                            style={styles.bottomBanner}
-                            adUnitID={ExportadorAds.Banner()}
-                            onDidFailToReceiveAdWithError={err => {
-                                console.log(err)
-                            }}
-                            onAdViewDidReceiveAd={() => {
-                                console.log("Ad Recieved");
-                            }}
-                            adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-                        />
+                            <AdMobBanner
+                                accessible={true}
+                                accessibilityLabel={"Banner"}
+                                accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
+                                style={styles.NoItemsBottomBanner}
+                                adUnitID={ExportadorAds.Banner()}
+                                onDidFailToReceiveAdWithError={err => {
+                                    console.log(err)
+                                }}
+                                onAdViewDidReceiveAd={() => {
+                                    console.log("Ad Recieved");
+                                }}
+                                adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+                            />
                     </View>
                 );
             } else {
@@ -193,7 +193,7 @@ class MusculoFavs extends Component {
                             renderItem={({ item }) => {
                                 if (item.favoritos) {
                                     return (
-                                        <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
+                                        <TouchableOpacityMorgan style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} onPress={() => this.props.onPressGo(item.id_ejercicio, item.nombre_ejercicio, item.descripcion)}>
                                             <View style={styles.imageContainer}>
                                                 <Image style={styles.image} source={ExportadorEjercicios.queMusculo(item.id_musculo)} />
                                             </View>
@@ -202,15 +202,15 @@ class MusculoFavs extends Component {
                                                 <Text style={styles.elemento}>{item.nombre_elemento}</Text>
                                             </View>
                                             <View style={styles.ViewEstrella} >
-                                                <TouchableOpacity
+                                                <TouchableOpacityMorgan
                                                     accessible={true}
                                                     accessibilityLabel={this.favoritosLabel(item.favoritos)}
                                                     accessibilityHint={this.favoritosHint(item.favoritos)}
                                                     onPress={() => this.modalVisible(item.id_ejercicio, item.nombre_ejercicio)}>
                                                     <Image style={styles.StarImage} source={ExportadorLogos.traerEstrella(true)} />
-                                                </TouchableOpacity>
+                                                </TouchableOpacityMorgan>
                                             </View>
-                                        </TouchableOpacity>
+                                        </TouchableOpacityMorgan>
                                     )
                                 }
                             }} />
@@ -228,31 +228,33 @@ class MusculoFavs extends Component {
                                 </View>
                                 <View style={styles.modal2}>
 
-                                    <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
+                                    <TouchableOpacityMorgan onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
                                         <Text style={styles.textButton}>{ExportadorFrases.Cancelar(this.state.id_idioma)}</Text>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
 
-                                    <TouchableOpacity onPress={() => this.favear(this.state.id_ejercicio)} style={styles.modalButtonAceptar}>
+                                    <TouchableOpacityMorgan onPress={() => this.favear(this.state.id_ejercicio)} style={styles.modalButtonAceptar}>
                                         <Text style={styles.textButton}>{ExportadorFrases.Aceptar(this.state.id_idioma)}</Text>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
 
                                 </View>
                             </View>
                         </Modal>
-                        <AdMobBanner
-                            accessible={true}
-                            accessibilityLabel={"Banner"}
-                            accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
-                            style={styles.bottomBanner}
-                            adUnitID={ExportadorAds.Banner()}
-                            onDidFailToReceiveAdWithError={err => {
-                                console.log(err)
-                            }}
-                            onAdViewDidReceiveAd={() => {
-                                console.log("Ad Recieved");
-                            }}
-                            adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
-                        />
+                        <View style={styles.bannerContainer}>
+                            <AdMobBanner
+                                accessible={true}
+                                accessibilityLabel={"Banner"}
+                                accessibilityHint={ExportadorFrases.BannerHint(this.state.id_idioma)}
+                                style={styles.bottomBanner}
+                                adUnitID={ExportadorAds.Banner()}
+                                onDidFailToReceiveAdWithError={err => {
+                                    console.log(err)
+                                }}
+                                onAdViewDidReceiveAd={() => {
+                                    console.log("Ad Recieved");
+                                }}
+                                adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
+                            />
+                        </View>
                     </View>
                 );
             }
@@ -270,12 +272,15 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     bannerContainer: {
-        height: height * 0.08,
         backgroundColor: 'black',
     },
     bottomBanner: {
+        alignSelf: 'center',
+    },
+    NoItemsBottomBanner: {
         position: "absolute",
         bottom: 0,
+        backgroundColor: "black"
     },
     contentList: {
         flex: 1,

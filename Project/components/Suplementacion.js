@@ -10,12 +10,11 @@ import {
   StatusBar,
   View,
   Image,
-  TouchableOpacity,
-  FlatList,
   ActivityIndicator,
   ImageBackground,
   Text
 } from 'react-native';
+import { TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { BlackShadow, BlackShadowForBlack } from './Estilos/Styles';
 
@@ -74,7 +73,7 @@ class Suplementacion extends Component {
             <View style={{ flexDirection: "row", flex: 1 }}>
               {
                 array.map((item, itemPos) => (
-                  <TouchableOpacity
+                  <TouchableOpacityMorgan
                     key={item.id_tipo.toString()}
                     accessible={true}
                     accessibilityLabel={item.nombre_tipo}
@@ -84,7 +83,7 @@ class Suplementacion extends Component {
                     <ImageBackground style={[styles.image]} source={ExportadorSuplementacion.default(this.state.id_idioma)}>
                       <Text style={[styles.textImage, { fontFamily: 'font2' }]} >{item.nombre_tipo}</Text>
                     </ImageBackground>
-                  </TouchableOpacity>
+                  </TouchableOpacityMorgan>
                 ))
               }
             </View>

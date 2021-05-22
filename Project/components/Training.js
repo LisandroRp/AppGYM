@@ -5,14 +5,13 @@ import ExportadorFrases from './Fotos/ExportadorFrases'
 import { withNavigation } from 'react-navigation';
 import { BlackShadow, BlackShadowForBlack } from './Estilos/Styles'
 import { AzulPrincipal } from './Estilos/Colors'
-import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
+import { BlueParallelButton, BlackButtonText, WhiteModalText, TouchableOpacityMorgan} from './Estilos/PreMadeComponents'
 import {
     StyleSheet,
     Text,
     View,
     Image,
     Dimensions,
-    TouchableOpacity,
     ActivityIndicator,
     TextInput,
     Keyboard,
@@ -168,7 +167,7 @@ class Training extends Component {
                         break;
                 }
             }
-            this.setState({ calorias: calorias })
+            this.setState({ isLoading: true, creandoPlan: true, calorias: calorias })
             this.okExperiencia(calorias)
         }
     }
@@ -335,7 +334,7 @@ class Training extends Component {
                                         {ExportadorFrases.OmitirPlan(this.state.id_idioma)}
                                     </BlackButtonText>
                                 </BlueParallelButton>
-                                <BlueParallelButton onPress={() => { this.setState({ isLoading: true, creandoPlan: true }), this.crearPlan() }}>
+                                <BlueParallelButton onPress={() => {this.crearPlan() }}>
                                     <BlackButtonText>
                                         {ExportadorFrases.CrearPlan(this.state.id_idioma)}
                                     </BlackButtonText>
@@ -355,13 +354,13 @@ class Training extends Component {
                                 <Text style={styles.modalText}>{ExportadorFrases.OmitirPlanModalLabel(this.state.id_idioma)}</Text>
                             </View>
                             <View style={styles.modal2}>
-                                <TouchableOpacity onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
+                                <TouchableOpacityMorgan onPress={() => { this.setState({ modalVisible: false }) }} style={styles.modalButtonCancelar}>
                                     <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
-                                </TouchableOpacity>
+                                </TouchableOpacityMorgan>
 
-                                <TouchableOpacity onPress={() => this.okOmitir(this.state.id_idioma)} style={styles.modalButtonAceptar}>
+                                <TouchableOpacityMorgan onPress={() => this.okOmitir(this.state.id_idioma)} style={styles.modalButtonAceptar}>
                                     <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                                </TouchableOpacity>
+                                </TouchableOpacityMorgan>
 
                             </View>
                         </View>

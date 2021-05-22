@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet, ActivityIndicator, Text, ScrollView, Dimensions, Keyboard, TouchableOpacity } from 'react-native';
+import { View, Image, StyleSheet, ActivityIndicator, Text, ScrollView, Dimensions, Keyboard } from 'react-native';
 import Swiper from "react-native-web-swiper";
 
 import { withNavigation } from 'react-navigation';

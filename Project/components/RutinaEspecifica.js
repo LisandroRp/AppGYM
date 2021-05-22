@@ -13,7 +13,6 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,
   FlatList,
   Dimensions,
   ScrollView,
@@ -21,6 +20,7 @@ import {
   Linking
 } from 'react-native';
 import DropDownItem from 'react-native-drop-down-item';
+import { TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 var { height, width } = Dimensions.get('window');
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
@@ -156,7 +156,7 @@ class RutinaEspecifica extends Component {
                                 if (contadorCobinadosFlatlist) {
                                   contadorCobinadosFlatlist = false
                                   return (
-                                    <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
+                                    <TouchableOpacityMorgan style={styles.cuadraditosDeAdentroSegundoCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
 
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -169,12 +169,12 @@ class RutinaEspecifica extends Component {
                                           <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
                                         </View>
                                       </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
                                   )
                                 } else {
                                   contadorCobinadosFlatlist = true
                                   return (
-                                    <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
+                                    <TouchableOpacityMorgan style={styles.cuadraditosDeAdentroPrimerCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
 
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -187,12 +187,12 @@ class RutinaEspecifica extends Component {
                                           <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
                                         </View>
                                       </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
                                   )
                                 }
                               } else {
                                 return (
-                                  <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  <TouchableOpacityMorgan style={styles.cuadraditosDeAdentro}
                                     onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
 
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -205,7 +205,7 @@ class RutinaEspecifica extends Component {
                                         <Text style={styles.subsEjercicio}>{ExportadorFrases.Repeticiones(this.state.id_idioma)}:{"\n"}{item.repeticiones}</Text>
                                       </View>
                                     </View>
-                                  </TouchableOpacity>
+                                  </TouchableOpacityMorgan>
                                 )
                               }
                             } else {
@@ -213,7 +213,7 @@ class RutinaEspecifica extends Component {
                                 if (contadorCobinadosFlatlist) {
                                   contadorCobinadosFlatlist = false
                                   return (
-                                    <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
+                                    <TouchableOpacityMorgan style={styles.cuadraditosDeAdentroSegundoCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
 
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -226,12 +226,12 @@ class RutinaEspecifica extends Component {
                                           <Text style={styles.subsEjercicio}>{ExportadorFrases.Tiempo(this.state.id_idioma)}:{"\n"}{item.tiempo}</Text>
                                         </View>
                                       </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
                                   )
                                 } else {
                                   contadorCobinadosFlatlist = true
                                   return (
-                                    <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
+                                    <TouchableOpacityMorgan style={styles.cuadraditosDeAdentroPrimerCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
 
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -244,12 +244,12 @@ class RutinaEspecifica extends Component {
                                           <Text style={styles.subsEjercicio}>{ExportadorFrases.Tiempo(this.state.id_idioma)}:{"\n"}{item.tiempo}</Text>
                                         </View>
                                       </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
                                   )
                                 }
                               } else {
                                 return (
-                                  <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  <TouchableOpacityMorgan style={styles.cuadraditosDeAdentro}
                                     onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
 
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -262,7 +262,7 @@ class RutinaEspecifica extends Component {
                                         <Text style={styles.subsEjercicio}>{ExportadorFrases.Tiempo(this.state.id_idioma)}:{"\n"}{item.tiempo}</Text>
                                       </View>
                                     </View>
-                                  </TouchableOpacity>
+                                  </TouchableOpacityMorgan>
                                 )
                               }
                             }
@@ -302,14 +302,10 @@ const styles = StyleSheet.create({
     backgroundColor: "grey"
   },
   bannerContainer: {
-    height: height * 0.08,
     backgroundColor: 'black',
   },
   bottomBanner: {
-    position: "absolute",
-    bottom: 0,
     alignSelf: 'center',
-    width: width
   },
   imageContainer: {
     height: height * 0.40,

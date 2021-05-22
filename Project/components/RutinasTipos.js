@@ -12,12 +12,12 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,
   FlatList,
   ActivityIndicator,
   AsyncStorage,
   Dimensions
 } from 'react-native';
+import { TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob';
 
@@ -188,7 +188,7 @@ class RutinasTipos extends Component {
               accessible={true}
               accessibilityLabel={"Banner"}
               accessibilityHint={ExportadorFrases.BannerHint(this.state.idioma.id_idioma)}
-              style={styles.bottomBanner}
+              style={styles.NoItemsBottomBanner}
               adUnitID={ExportadorAds.Banner()}
               onDidFailToReceiveAdWithError={err => {
                 console.log(err)
@@ -232,7 +232,7 @@ class RutinasTipos extends Component {
               }}
               renderItem={({ item }) => {
                 return (
-                  <TouchableOpacity style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} 
+                  <TouchableOpacityMorgan style={[this.marginSize(item), styles.card, BlackShadowForBlack()]} 
                   onPress={() => this.crearDatosAEnviar(item, this.queNombreRutina(item))}>
                     <View style={styles.imageContainer}>
                       <Image style={styles.image} source={ExportadorCreadores.queImagen(item.id_creador)} />
@@ -243,15 +243,15 @@ class RutinasTipos extends Component {
                       <Text style={styles.dias}>{ExportadorFrases.Autor(this.state.idioma.id_idioma)}: {this.creador(item.nombre_creador)}</Text>
                     </View>
                     <View style={styles.ViewEstrella} >
-                      <TouchableOpacity
+                      <TouchableOpacityMorgan
                         accessible={true}
                         accessibilityLabel={this.favoritosLabel(item.favoritos)}
                         accessibilityHint={this.favoritosHint(item.favoritos)}
                         onPress={() => { this.favear(item.id_rutina) }}>
                         <Image style={styles.StarImage} source={this.favoritos(item.favoritos)} />
-                      </TouchableOpacity>
+                      </TouchableOpacityMorgan>
                     </View>
-                  </TouchableOpacity>
+                  </TouchableOpacityMorgan>
                 )
               }} />
             <View style={styles.bannerContainer}></View>
@@ -321,13 +321,15 @@ NoItemsLogo: {
     marginTop: height * 0.028
   },
   bannerContainer: {
-    height: height * 0.08,
     backgroundColor: 'black',
   },
   bottomBanner: {
+    alignSelf: 'center',
+  },
+  NoItemsBottomBanner: {
     position: "absolute",
     bottom: 0,
-    alignSelf: "center"
+    backgroundColor: "black"
   },
   contentList: {
     paddingBottom: height * 0.3

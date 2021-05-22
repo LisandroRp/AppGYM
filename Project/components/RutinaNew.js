@@ -3,16 +3,16 @@ import base from './GenerarBase';
 import ExportadorFrases from './Fotos/ExportadorFrases'
 import ExportadorFondo from './Fotos/ExportadorFondo'
 import ExportadorLogos from './Fotos/ExportadorLogos';
+import ExportadorAds from './Fotos/ExportadorAds';
 import { BlackShadow, BlackShadowForBlack } from './Estilos/Styles'
 import { AzulPrincipal } from './Estilos/Colors'
-import { BlueParallelButton, BlackButtonText, WhiteModalText } from './Estilos/PreMadeComponents'
+import { BlueParallelButton, BlackButtonText, WhiteModalText, TouchableOpacityMorgan } from './Estilos/PreMadeComponents'
 import { withNavigation } from 'react-navigation';
 import {
   StyleSheet,
   Text,
   View,
   Image,
-  TouchableOpacity,
   FlatList,
   Dimensions,
   ScrollView,
@@ -26,6 +26,7 @@ import { AntDesign } from '@expo/vector-icons';
 import RNPickerSelect from 'react-native-picker-select';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import { AdMobInterstitial } from 'expo-ads-admob';
 
 
 var { height, width } = Dimensions.get('window');
@@ -52,7 +53,8 @@ class RutinaNew extends Component {
       showAlert: false,
       dia: 0,
       combinado: 1,
-      id_idioma: 0
+      id_idioma: 0,
+      terminoRutina: false
     };
   }
   UNSAFE_componentWillReceiveProps() {
@@ -61,6 +63,22 @@ class RutinaNew extends Component {
 
   componentDidMount() {
     base.traerIdIdioma(this.okIdIdioma.bind(this))
+    AdMobInterstitial.addEventListener("interstitialDidClose", () => {
+      if(this.state.terminoRutina){
+        this.props.onPressCancelar();
+      }
+      else{
+        this.termino()
+      }   
+    });
+    AdMobInterstitial.addEventListener("interstitialDidFailToLoad", () => {
+      if(this.state.terminoRutina){
+        this.props.onPressCancelar();
+      }
+      else{
+        this.termino()
+      }   
+    });
   }
   okIdIdioma(id_idioma) {
     this.setState({ id_idioma: id_idioma, isLoading: false })
@@ -104,11 +122,11 @@ class RutinaNew extends Component {
             this.setState({ combinado: this.state.combinado + 1 })
             this.state.rutina.push(combinada1)
             this.state.rutina.push(combinada2)
-            this.termino()
+            //this.termino()
           } else {
             //alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
             this.setState({modalExisteVisible: true})
-            this._storeData()
+            //this._storeData()
           }
         } else {
           var simple = JSON.parse(value)[0]
@@ -116,11 +134,11 @@ class RutinaNew extends Component {
             this.setState({ isLoading: true })
             simple.combinado = null
             this.state.rutina.push(simple)
-            this.termino()
+            //this.termino()
           } else {
-            //alert(ExportadorFrases.EjercicioRepetido(this.state.id_idioma))
             this.setState({modalExisteVisible: true})
-            this._storeData()
+            //Este termino queda por si no se carga el anuncio
+            this.termino()
           }
         }
       } else {
@@ -385,7 +403,7 @@ class RutinaNew extends Component {
     }
   }
   guardarRutina() {
-    this.setState({ modalGuardarVisible: false, isLoading: true, actualizando: true })
+    this.setState({ modalGuardarVisible: false, isLoading: true, actualizando: true, terminoRutina: true })
     var aux = 0
     var rutinaNueva = { id_rutina: 0, nombre_rutina: '', imagen: require('./Fotos/Ejercicios/PECHO.png'), dias: '', favoritos: 1, rutina: [], id_tipo: this.state.id_tipo }
     for (var i = 0; i < this.state.rutina.length; i++) {
@@ -406,7 +424,7 @@ class RutinaNew extends Component {
   }
   okEjerciciosRutinaCreados() {
     this.showInterstitial()
-    this.props.onPressCancelar();
+    //this.props.onPressCancelar();
   }
   cancelarRutina() {
     this.props.onPressCancelar()
@@ -482,9 +500,9 @@ class RutinaNew extends Component {
                   ]}
                 />
               </View>
-              <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: true }) }} style={[styles.roundButtonBorrar, BlackShadow()]}>
+              <TouchableOpacityMorgan onPress={() => { this.setState({ modalBorrarTodoVisible: true }) }} style={[styles.roundButtonBorrar, BlackShadow()]}>
                 <AntDesign name="delete" size={wp(6.6)} color="white" />
-              </TouchableOpacity>
+              </TouchableOpacityMorgan>
             </View>
 
             {/* ************************************************************************
@@ -510,11 +528,11 @@ class RutinaNew extends Component {
                           <Text style={styles.dropDownTitle}>
                             {ExportadorFrases.Dia(this.state.id_idioma)} {item}
                           </Text>
-                          <TouchableOpacity onPress={() => {
+                          <TouchableOpacityMorgan onPress={() => {
                             this.touch(item);
                           }} style={styles.roundButtonPlus}>
                             <AntDesign name="plus" size={wp(5)} color="white" />
-                          </TouchableOpacity>
+                          </TouchableOpacityMorgan>
                         </View>
                       }
                     >
@@ -533,7 +551,7 @@ class RutinaNew extends Component {
                                 if (contadorCobinadosFlatlist) {
                                   contadorCobinadosFlatlist = false
                                   return (
-                                    <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
+                                    <TouchableOpacityMorgan style={styles.cuadraditosDeAdentroSegundoCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <View style={styles.musculosLogoContainer}>
@@ -546,12 +564,12 @@ class RutinaNew extends Component {
                                         </View>
                                         <View style={styles.roundButtonContainer}></View>
                                       </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
                                   )
                                 } else {
                                   contadorCobinadosFlatlist = true
                                   return (
-                                    <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
+                                    <TouchableOpacityMorgan style={styles.cuadraditosDeAdentroPrimerCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <View style={styles.musculosLogoContainer}>
@@ -563,23 +581,23 @@ class RutinaNew extends Component {
                                           {this.repeticionesOTiempo(item, this.state.id_idioma)}
                                         </View>
                                         <View style={styles.roundButtonContainer}>
-                                          <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                          <TouchableOpacityMorgan onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
                                             <AntDesign name="up" size={15} color="white" />
-                                          </TouchableOpacity>
-                                          <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                          </TouchableOpacityMorgan>
+                                          <TouchableOpacityMorgan onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
                                             <AntDesign name="down" size={15} color="white" />
-                                          </TouchableOpacity>
-                                          <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
+                                          </TouchableOpacityMorgan>
+                                          <TouchableOpacityMorgan onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
                                             <AntDesign name="delete" size={17} color="white" />
-                                          </TouchableOpacity>
+                                          </TouchableOpacityMorgan>
                                         </View>
                                       </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
                                   )
                                 }
                               } else {
                                 return (
-                                  <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  <TouchableOpacityMorgan style={styles.cuadraditosDeAdentro}
                                     onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                       <View style={styles.musculosLogoContainer}>
@@ -591,18 +609,18 @@ class RutinaNew extends Component {
                                         {this.repeticionesOTiempo(item, this.state.id_idioma)}
                                       </View>
                                       <View style={styles.roundButtonContainer}>
-                                        <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                        <TouchableOpacityMorgan onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
                                           <AntDesign name="up" size={15} color="white" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                        </TouchableOpacityMorgan>
+                                        <TouchableOpacityMorgan onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
                                           <AntDesign name="down" size={15} color="white" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
+                                        </TouchableOpacityMorgan>
+                                        <TouchableOpacityMorgan onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
                                           <AntDesign name="delete" size={17} color="white" />
-                                        </TouchableOpacity>
+                                        </TouchableOpacityMorgan>
                                       </View>
                                     </View>
-                                  </TouchableOpacity>
+                                  </TouchableOpacityMorgan>
                                 )
                               }
                             } else {
@@ -610,7 +628,7 @@ class RutinaNew extends Component {
                                 if (contadorCobinadosFlatlist) {
                                   contadorCobinadosFlatlist = false
                                   return (
-                                    <TouchableOpacity style={styles.cuadraditosDeAdentroSegundoCombinado}
+                                    <TouchableOpacityMorgan style={styles.cuadraditosDeAdentroSegundoCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <View style={styles.musculosLogoContainer}>
@@ -623,12 +641,12 @@ class RutinaNew extends Component {
                                         </View>
                                         <View style={styles.roundButtonContainer}></View>
                                       </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
                                   )
                                 } else {
                                   contadorCobinadosFlatlist = true
                                   return (
-                                    <TouchableOpacity style={styles.cuadraditosDeAdentroPrimerCombinado}
+                                    <TouchableOpacityMorgan style={styles.cuadraditosDeAdentroPrimerCombinado}
                                       onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <View style={styles.musculosLogoContainer}>
@@ -640,23 +658,23 @@ class RutinaNew extends Component {
                                           {this.repeticionesOTiempo(item, this.state.id_idioma)}
                                         </View>
                                         <View style={styles.roundButtonContainer}>
-                                          <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                          <TouchableOpacityMorgan onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
                                             <AntDesign name="up" size={15} color="white" />
-                                          </TouchableOpacity>
-                                          <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                          </TouchableOpacityMorgan>
+                                          <TouchableOpacityMorgan onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
                                             <AntDesign name="down" size={15} color="white" />
-                                          </TouchableOpacity>
-                                          <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
+                                          </TouchableOpacityMorgan>
+                                          <TouchableOpacityMorgan onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
                                             <AntDesign name="delete" size={17} color="white" />
-                                          </TouchableOpacity>
+                                          </TouchableOpacityMorgan>
                                         </View>
                                       </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacityMorgan>
                                   )
                                 }
                               } else {
                                 return (
-                                  <TouchableOpacity style={styles.cuadraditosDeAdentro}
+                                  <TouchableOpacityMorgan style={styles.cuadraditosDeAdentro}
                                     onPress={() => this.props.onPressInfo(item.id_ejercicio, item.nombre_ejercicio)}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                       <View style={styles.musculosLogoContainer}>
@@ -668,18 +686,18 @@ class RutinaNew extends Component {
                                         {this.repeticionesOTiempo(item, this.state.id_idioma)}
                                       </View>
                                       <View style={styles.roundButtonContainer}>
-                                        <TouchableOpacity onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                        <TouchableOpacityMorgan onPress={() => { this.subir(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
                                           <AntDesign name="up" size={15} color="white" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
+                                        </TouchableOpacityMorgan>
+                                        <TouchableOpacityMorgan onPress={() => { this.bajar(item.dia, item.id_ejercicio, item.combinado) }} style={styles.roundButton}>
                                           <AntDesign name="down" size={15} color="white" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
+                                        </TouchableOpacityMorgan>
+                                        <TouchableOpacityMorgan onPress={() => { this.borrar(item.dia, item.id_ejercicio, item.combinado), this.setState({ isLoading: true }) }} style={styles.roundButton}>
                                           <AntDesign name="delete" size={17} color="white" />
-                                        </TouchableOpacity>
+                                        </TouchableOpacityMorgan>
                                       </View>
                                     </View>
-                                  </TouchableOpacity>
+                                  </TouchableOpacityMorgan>
                                 )
                               }
                             }
@@ -722,13 +740,13 @@ class RutinaNew extends Component {
               </View>
               <View style={styles.modal2}>
 
-                <TouchableOpacity onPress={() => { this.setState({ modalGuardarVisible: false }) }} style={styles.modalButtonCancelar}>
+                <TouchableOpacityMorgan onPress={() => { this.setState({ modalGuardarVisible: false }) }} style={styles.modalButtonCancelar}>
                   <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
 
-                <TouchableOpacity onPress={() => this.guardarRutina()} style={styles.modalButtonAceptar}>
+                <TouchableOpacityMorgan onPress={() => this.guardarRutina()} style={styles.modalButtonAceptar}>
                   <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
 
               </View>
             </View>
@@ -744,13 +762,13 @@ class RutinaNew extends Component {
                 <Text style={styles.modalText}>{ExportadorFrases.BorrarEjerciciosRutina(this.state.id_idioma)} "{this.state.nombre}" ?</Text>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => { this.setState({ modalBorrarTodoVisible: false }) }} style={styles.modalButtonCancelar}>
+                <TouchableOpacityMorgan onPress={() => { this.setState({ modalBorrarTodoVisible: false }) }} style={styles.modalButtonCancelar}>
                   <WhiteModalText>{ExportadorFrases.Cancelar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
 
-                <TouchableOpacity onPress={() => this.borrarTodo()} style={styles.modalButtonAceptar}>
+                <TouchableOpacityMorgan onPress={() => this.borrarTodo()} style={styles.modalButtonAceptar}>
                   <WhiteModalText>{ExportadorFrases.Borrar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
               </View>
             </View>
           </Modal>
@@ -759,18 +777,18 @@ class RutinaNew extends Component {
             visible={this.state.modalTipoEjercicioTodoVisible}
             transparent={true}
             onRequestClose={() => this.setState({ modalTipoEjercicioTodoVisible: false })}  >
-            <TouchableOpacity style={{ height: height, width: width, position: "absolute", top: 0, left: 0 }} onPress={() => { this.setState({ modalTipoEjercicioTodoVisible: false }) }}>
+            <TouchableOpacityMorgan style={{ height: height, width: width, position: "absolute", top: 0, left: 0 }} onPress={() => { this.setState({ modalTipoEjercicioTodoVisible: false }) }}>
               <View style={styles.modalTipoEjericios}>
                 <View style={styles.modal2TipoEjericios}>
-                  <TouchableOpacity onPress={() => this.agregarEjercicio()} style={{ width: width * 0.4, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderTopLeftRadius: 22, borderBottomLeftRadius: 22 }}>
+                  <TouchableOpacityMorgan onPress={() => this.agregarEjercicio()} style={{ width: width * 0.4, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey', borderTopLeftRadius: 22, borderBottomLeftRadius: 22 }}>
                     <Text style={styles.textButtonTipoEjercicios}>{ExportadorFrases.EjercicioSimple(this.state.id_idioma)}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => this.agregarEjercicioCombinado()} style={{ width: width * 0.4, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22, borderTopRightRadius: 22 }}>
+                  </TouchableOpacityMorgan>
+                  <TouchableOpacityMorgan onPress={() => this.agregarEjercicioCombinado()} style={{ width: width * 0.4, justifyContent: 'center', alignItems: 'center', textAlign: "center", borderLeftWidth: 2, backgroundColor: 'grey', borderBottomRightRadius: 22, borderTopRightRadius: 22 }}>
                     <Text style={styles.textButtonTipoEjercicios}>{ExportadorFrases.EjercicioCombinado(this.state.id_idioma)}</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacityMorgan>
                 </View>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacityMorgan>
           </Modal>
           <Modal
             animationType="fade"
@@ -783,9 +801,9 @@ class RutinaNew extends Component {
                 <Text style={styles.modalText}>{ExportadorFrases.EjercicioRepetido(this.state.id_idioma)}</Text>
               </View>
               <View style={styles.modal2}>
-                <TouchableOpacity onPress={() => this.setState({ modalExisteVisible: false })} style={styles.modalExisteButtonAceptar}>
+                <TouchableOpacityMorgan onPress={() => this.setState({ modalExisteVisible: false })} style={styles.modalExisteButtonAceptar}>
                   <WhiteModalText>{ExportadorFrases.Aceptar(this.state.id_idioma)}</WhiteModalText>
-                </TouchableOpacity>
+                </TouchableOpacityMorgan>
               </View>
             </View>
           </Modal>

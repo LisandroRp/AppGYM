@@ -1,25 +1,34 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {BlackShadow, BlackShadowForBlack} from './Styles'
+import Elevations from 'react-native-elevation'
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 //////////////////////////
 //Botones
 //////////////////////////
+export function TouchableOpacityMorgan({ invalid, ...props }) {
+    return (
+        <TouchableOpacity {...props} activeOpacity = {0.69}>
+        </TouchableOpacity>
+    );
+}
+
 export function BlueButton({ invalid, ...props }) {
     return (
-        <TouchableOpacity {...props} style={[styles.blueButton, BlackShadow()]}>
-        </TouchableOpacity>
+        <TouchableOpacityMorgan {...props} style={[styles.blueButton, BlackShadow()]}>
+        </TouchableOpacityMorgan>
     );
 }
 
 export function BlueParallelButton({ invalid, ...props }) {
     return (
-        <TouchableOpacity {...props} style={[styles.blueParallelButton, BlackShadow()]}>
-        </TouchableOpacity>
+        <TouchableOpacityMorgan {...props} style={[styles.blueParallelButton, BlackShadow()]}>
+        </TouchableOpacityMorgan>
     );
 }
+
 //////////////////////////
 //Botones
 //////////////////////////

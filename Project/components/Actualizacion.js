@@ -23,7 +23,7 @@ i18n.translations = {
     es: { id_idioma: 1, ejercicios: 'Ejercicios', rutinas: 'Rutinas', suplementos: 'Suplementos', favoritos: 'Favoritos', ajustes: 'Ajustes', perfil: 'Perfil' },
     en: { id_idioma: 2, ejercicios: 'Exercises', rutinas: 'Routines', suplementos: 'Supplements', favoritos: 'Favorites', ajustes: 'Settings', perfil: 'Profile' },
 };
-i18n.locale = Localization.locale
+//i18n.locale = Localization.locale
 i18n.defaultLocale = 'es'
 i18n.fallbacks = true;
 

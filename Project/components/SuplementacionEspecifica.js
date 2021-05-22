@@ -121,7 +121,7 @@ class SuplementacionEspecifica extends Component {
             </View>
 
           </ScrollView>
-          <View style={styles.bannerContainer}></View>
+          <View style={styles.bannerContainer}>
           <AdMobBanner
             accessible={true}
             accessibilityLabel={"Banner"}
@@ -137,6 +137,7 @@ class SuplementacionEspecifica extends Component {
             adViewDidReceiveAd={(e) => { console.log('adViewDidReceiveAd', e) }}
           />
         </View>
+        </View>
       );
     }
   }
@@ -149,12 +150,9 @@ const styles = StyleSheet.create({
     backgroundColor: "black"
   },
   bannerContainer: {
-    height: height * 0.08,
     backgroundColor: 'black'
   },
   bottomBanner: {
-    position: "absolute",
-    bottom: 0,
     alignSelf: 'center',
   },
   bgImage: {
